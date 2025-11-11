@@ -1,0 +1,15 @@
+{
+  "minecraft:aqua_affinity": "enchanting_overhauled:marine",
+  "minecraft:depth_strider": "enchanting_overhauled:marine",
+  "minecraft:respiration": "enchanting_overhauled:marine",
+  "minecraft:luck_of_the_sea": "enchanting_overhauled:marine",
+  "minecraft:lure": "enchanting_overhauled:marine",
+  "minecraft:loyalty": "enchanting_overhauled:marine",
+  "minecraft:impaling": "enchanting_overhauled:marine",
+  "minecraft:riptide": "enchanting_overhauled:marine",
+  "minecraft:channeling": "enchanting_overhauled:marine",
+  "minecraft:fire_protection": "enchanting_overhauled:nether",
+  "minecraft:fire_aspect": "enchanting_overhauled:nether",
+  "minecraft:flame": "enchanting_overhauled:nether",
+  "minecraft:soul_speed": "enchanting_overhauled:nether"
+}

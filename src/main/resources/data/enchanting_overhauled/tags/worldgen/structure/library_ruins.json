@@ -1,0 +1,10 @@
+{
+    "replace": false,
+    "values": [
+        "enchanting_overhauled:library_ruins_standard",
+        "enchanting_overhauled:library_ruins_desert",
+        "enchanting_overhauled:library_ruins_forest",
+        "enchanting_overhauled:library_ruins_jungle",
+        "enchanting_overhauled:library_ruins_swamp"
+    ]
+}

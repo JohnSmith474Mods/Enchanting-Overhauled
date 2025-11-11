@@ -1,0 +1,38 @@
+{
+  "required": true,
+  "package": "johnsmith.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "accessor.AbstractBlockSettingsAccessor",
+    "accessor.EnchantingTableBlockEntityAccessor",
+    "block.EnchantingTableBlockMixin",
+    "block.PowderSnowBlockMixin",
+    "block.entity.EnchantingTableBlockEntityMixin",
+    "component.type.ItemEnchantmentsComponentMixin",
+    "enchantment.DamageEnchantmentMixin",
+    "enchantment.DepthStriderEnchantmentMixin",
+    "enchantment.EnchantmentMixin",
+    "enchantment.FrostWalkerEnchantmentMixin",
+    "enchantment.InfinityEnchantmentMixin",
+    "enchantment.MultishotEnchantmentMixin",
+    "enchantment.PiercingEnchantmentMixin",
+    "enchantment.ProtectionEnchantmentMixin",
+    "enchantment.UnbreakingEnchantmentMixin",
+    "entity.player.PlayerEntityMixin",
+    "item.ItemGroupEntriesMixin",
+    "item.ItemStackMixin",
+    "loot.EnchantRandomlyLootFunctionMixin",
+    "screen.AnvilScreenHandlerMixin",
+    "screen.EnchantingScreenHandlerMixin",
+    "screen.ForgingScreenHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "mixinextras": {
+    "minVersion": "0.5.0"
+	}
+}

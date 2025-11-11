@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "id": "enchanting_overhauled:enchanted_tome"
+    },
+    "title": {
+      "translate": "advancement.enchanting_overhauled.activate_altar.title"
+    },
+    "description": {
+      "translate": "advancement.enchanting_overhauled.activate_altar.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "minecraft:story/mine_diamond",
+  "criteria": {
+    "activated_table": {
+      "trigger": "enchanting_overhauled:activate_altar",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "activated_table"
+    ]
+  ]
+}

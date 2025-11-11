@@ -1,0 +1,41 @@
+{
+  "name": {
+    "text": "nether"
+  },
+  "color_code": 16727808,
+  "effects": {
+    "iterations": 32,
+    "chance": 32,
+    "particle": {
+      "effect": "minecraft:soul",
+      "velocity": [0.0, 0.05, 0.0],
+      "velocity_variance": [0.0, 0.05, 0.0],
+      "offset": [0.0, 0.0, 0.0],
+      "offset_variance": [0.2, 0.2, 0.2]
+    },
+    "sound": {
+      "effect": "minecraft:particle.soul_escape",
+      "volume": 0.8,
+      "volume_variance": 0.4,
+      "pitch": 0.8,
+      "pitch_variance": 0.4
+    }
+  },
+  "power_providers": [
+    {
+      "blocks": [
+        "minecraft:wither_skeleton_skull",
+        "minecraft:wither_skeleton_wall_skull"
+      ],
+      "power": 4
+    },
+    {
+      "blocks": "minecraft:potted_wither_rose",
+      "power": 3
+    },
+    {
+      "blocks": "minecraft:soul_lantern",
+      "power": 2
+    }
+  ]
+}

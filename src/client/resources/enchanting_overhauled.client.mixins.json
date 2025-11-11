@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "johnsmith.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "enchantment.EnchantmentClientMixin",
+    "gui.screen.ingame.EnchantmentScreenMixin",
+    "gui.screen.ingame.HandledScreenMixin",
+    "render.BackgroundRendererMixin",
+    "render.block.entity.EnchantingTableBlockEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}
