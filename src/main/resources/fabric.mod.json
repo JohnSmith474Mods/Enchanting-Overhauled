@@ -3,9 +3,9 @@
 	"id": "enchanting_overhauled",
 	"version": "${version}",
 	"name": "Enchanting Overhauled",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Enchanting Overhauled updates Minecraft's enchanting system with new structures, items and mechanics! Most notably, the Enchanting table has been completely revamped!",
 	"authors": [
-		"Me!"
+		"JohnSmith474"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
