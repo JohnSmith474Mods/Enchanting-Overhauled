@@ -1,0 +1,38 @@
+{
+  "name": {
+    "text": "default"
+  },
+  "power_providers": [
+    {
+      "blocks": "minecraft:bookshelf",
+      "power": 1
+    },
+    {
+      "blocks": "minecraft:chiseled_bookshelf",
+      "power": 1,
+      "bonuses": [
+        {
+          "type": "count_items_in_inventory",
+          "items": "minecraft:enchanted_book",
+          "bonus_per_item": 2
+        }
+      ]
+    },
+    {
+      "blocks": "#minecraft:candles",
+      "power": 1,
+      "bonuses": [
+        {
+          "type": "multiply_by_block_state",
+          "property": "candles"
+        },
+        {
+          "type": "add_if_block_state",
+          "property": "lit",
+          "value": "true",
+          "bonus": 1
+        }
+      ]
+    }
+  ]
+}

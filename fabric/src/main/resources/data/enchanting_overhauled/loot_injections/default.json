@@ -1,0 +1,11 @@
+{
+  "minecraft:chests/ancient_city": "rare",
+  "minecraft:chests/bastion_treasure": "rare",
+  "minecraft:chests/buried_treasure": "rare",
+  "minecraft:chests/end_city_treasure": "rare",
+  "minecraft:chests/jungle_temple": "rare",
+  "minecraft:chests/stronghold_library": "rare",
+  "minecraft:chests/woodland_mansion": "rare",
+  "minecraft:chests/desert_pyramid": "uncommon",
+  "minecraft:chests/simple_dungeon": "uncommon"
+}

@@ -1,0 +1,46 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "johnsmith.enchantingoverhauled.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_21",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
+  "mixins": [
+    "accessor.AbstractBlockSettingsAccessor",
+    "block.EnchantingTableBlockMixin",
+    "block.PowderSnowBlockMixin",
+    "block.entity.EnchantingTableBlockEntityMixin",
+    "client.enchantment.EnchantmentMixin",
+    "component.type.ItemEnchantmentsMixin",
+    "enchantment.DamageEnchantmentMixin",
+    "enchantment.DepthStriderEnchantmentMixin",
+    "enchantment.EnchantmentMixin",
+    "enchantment.FrostWalkerEnchantmentMixin",
+    "enchantment.InfinityEnchantmentMixin",
+    "enchantment.MultishotEnchantmentMixin",
+    "enchantment.PiercingEnchantmentMixin",
+    "enchantment.ProtectionEnchantmentMixin",
+    "enchantment.UnbreakingEnchantmentMixin",
+    "entity.CombatRulesMixin",
+    "item.ItemStackMixin",
+    "loot.ApplyBonusCountMixin",
+    "loot.EnchantRandomlyFunctionMixin",
+    "loot.LootingEnchantFunctionMixin",
+    "menu.AnvilMenuMixin",
+    "menu.EnchantmentMenuMixin",
+    "menu.ItemCombinerMenuMixin"
+  ],
+  "client": [
+    "client.gui.screen.AbstractContainerScreenMixin",
+    "client.gui.screen.EnchantmentScreenMixin",
+    "client.render.FogRendererMixin",
+    "client.render.block.entity.EnchantTableRendererMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+

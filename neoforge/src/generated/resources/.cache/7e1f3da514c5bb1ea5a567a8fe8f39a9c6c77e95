@@ -1,0 +1,4 @@
+// 1.20.6	2025-11-20T21:00:24.6487662	Global Loot Modifiers : enchanting_overhauled
+2c71026af0db85ee406ab2c326e7fc8d0b74e33e data/enchanting_overhauled/loot_modifiers/inject_tome_rare.json
+a77db630348c9b2cb9a78a40fb6d7a1e14da3d1e data/enchanting_overhauled/loot_modifiers/inject_tome_uncommon.json
+722fe493ecef7ae71ab6ca3373bc28c34f0781b7 data/neoforge/loot_modifiers/global_loot_modifiers.json

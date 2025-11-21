@@ -1,0 +1,41 @@
+[
+  {
+    "processor_type": "minecraft:rule",
+    "rules": [
+      {
+        "input_predicate": {
+          "block": "minecraft:lectern",
+          "probability": 0.6,
+          "predicate_type": "minecraft:random_block_match"
+        },
+        "location_predicate": {
+          "predicate_type": "minecraft:always_true"
+        },
+        "output_state": {
+          "Name": "minecraft:air"
+        }
+      },
+      {
+        "input_predicate": {
+          "block": "minecraft:enchanting_table",
+          "probability": 0.95,
+          "predicate_type": "minecraft:random_block_match"
+        },
+        "location_predicate": { "predicate_type": "minecraft:always_true" },
+        "output_state": { "Name": "enchanting_overhauled:deactivated_enchanting_table" }
+      }
+    ]
+  },
+  {
+    "processor_type": "enchanting_overhauled:block_age",
+    "mossiness": 0.8
+  },
+  {
+    "processor_type": "enchanting_overhauled:overgrowth",
+    "probability": 0.5
+  },
+  {
+    "processor_type": "enchanting_overhauled:add_vines",
+    "probability": 0.8
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cactus",
+    "minecraft:cramming",
+    "minecraft:in_wall",
+    "minecraft:falling_block",
+    "minecraft:falling_anvil",
+    "minecraft:falling_stalactite",
+    "minecraft:fly_into_wall",
+    "minecraft:mob_attack",
+    "minecraft:mob_attack_no_aggro",
+    "minecraft:player_attack",
+    "minecraft:stalagmite",
+    "minecraft:sting",
+    "minecraft:spit",
+    "minecraft:sonic_boom",
+    "minecraft:sweet_berry_bush",
+    "minecraft:thorns",
+    "minecraft:trident"
+  ]
+}

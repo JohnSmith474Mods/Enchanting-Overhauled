@@ -1,0 +1,51 @@
+{
+    "name": "enchanting_overhauled:magic",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_magic_1",
+                "processors": "enchanting_overhauled:library_ruins/forest_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_magic_2",
+                "processors": "enchanting_overhauled:library_ruins/forest_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_magic_3",
+                "processors": "enchanting_overhauled:library_ruins/forest_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_magic_4",
+                "processors": "enchanting_overhauled:library_ruins/forest_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_magic_5",
+                "processors": "enchanting_overhauled:library_ruins/forest_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }
+    ]
+}
