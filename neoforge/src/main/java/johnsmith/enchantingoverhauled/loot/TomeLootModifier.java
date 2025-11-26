@@ -37,8 +37,8 @@ public class TomeLootModifier extends LootModifier {
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(@NotNull ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         double chance = "rare".equalsIgnoreCase(this.rarity)
-                ? Config.RARE_LOOT_CHANCE
-                : Config.UNCOMMON_LOOT_CHANCE;
+                ? Config.BOUNDED_LOOT_CHANCE_RARE.get()
+                : Config.BOUNDED_LOOT_CHANCE_UNCOMMON.get();
 
         if (context.getRandom().nextFloat() < chance) {
             ItemStack tome = new ItemStack(Items.ENCHANTED_TOME.get());

@@ -42,7 +42,7 @@ public class Blocks {
      * Registers the blocks. Called during mod initialization.
      */
     public static void initialize() {
-        Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(Constants.MOD_ID, "deactivated_enchanting_table"), DEACTIVATED_ENCHANTING_TABLE);
-        Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(Constants.MOD_ID, "disturbed_enchanting_table"), DISTURBED_ENCHANTING_TABLE);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "deactivated_enchanting_table"), DEACTIVATED_ENCHANTING_TABLE);
+        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "disturbed_enchanting_table"), DISTURBED_ENCHANTING_TABLE);
     }
 }

@@ -3,9 +3,8 @@ package johnsmith.enchantingoverhauled.mixin.client.gui.screen;
 
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.accessor.EnchantmentMenuAccessor;
+import johnsmith.enchantingoverhauled.api.enchantment.EnchantmentSource;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.accessor.EnchantmentThemeAccessor;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
 import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.lib.EnchantmentLib;
 
@@ -13,11 +12,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import johnsmith.enchantingoverhauled.platform.Services;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
+import net.minecraft.core.Holder;
+import net.minecraft.core.IdMap;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -54,7 +57,7 @@ import java.util.Optional;
  * <li>Completely overrides the background drawing logic
  * ({@link #drawCustomBackground}) to
  * render the new enchantment/upgrade/transfer slots and the reroll button.</li>
- * <li>Implements a custom experience bar ({@link #drawExperienceBar}).</li>
+ * <li>Implements a custom experience bar ({@link #enchanting_Overhauled$drawExperienceBar}).</li>
  * <li>Overrides the mouse click handler ({@link #mouseClicked}) to correctly
  * process clicks on the new button layout.</li>
  * <li>Overrides the render method ({@link #overrideRender}) to provide custom
@@ -66,84 +69,101 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
     // region Font Identifiers
     @Unique
-    private static final ResourceLocation GALACTIC_FONT_ID = new ResourceLocation("minecraft", "alt");
+    private static final ResourceLocation GALACTIC_FONT_ID = ResourceLocation.fromNamespaceAndPath("minecraft", "alt");
     // endregion
 
     // region Texture Identifiers
     /** The main background texture for the new 176x186 GUI. */
     @Unique
-    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/background.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/background.png");
     /** Texture for the "Turn Page" reroll button in its normal state. */
     @Unique
-    private static final ResourceLocation REROLL_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/enabled/reroll.png");
+    private static final ResourceLocation REROLL_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/enabled/reroll.png");
     /** Texture for the "Turn Page" reroll button when hovered. */
     @Unique
-    private static final ResourceLocation REROLL_HIGHLIGHTED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/highlighted/reroll.png");
+    private static final ResourceLocation REROLL_HIGHLIGHTED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/highlighted/reroll.png");
     /** Texture for the "Turn Page" reroll button when disabled. */
     @Unique
-    private static final ResourceLocation REROLL_DISABLED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/disabled/reroll.png");
+    private static final ResourceLocation REROLL_DISABLED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/disabled/reroll.png");
 
     /**
      * Texture for an enchantment slot when the enchantment is at its maximum level.
      */
     @Unique
-    private static final ResourceLocation ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/maxed_out.png");
+    private static final ResourceLocation ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/maxed_out.png");
 
     /**
      * Texture for an enchantment slot when the enchantment is above its maximum
      * level.
      */
     @Unique
-    private static final ResourceLocation ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/over_enchanted.png");
+    private static final ResourceLocation ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/over_enchanted.png");
 
     /** Texture for the filled (active) part of the player's experience bar. */
     @Unique
-    private static final ResourceLocation EXPERIENCE_BAR_ACTIVE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/experience_bar/full.png");
+    private static final ResourceLocation EXPERIENCE_BAR_ACTIVE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/experience_bar/full.png");
     /**
      * Texture for the empty (inactive) background of the player's experience bar.
      */
 
     @Unique
-    private static final ResourceLocation EXPERIENCE_BAR_INACTIVE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/experience_bar/empty.png");
+    private static final ResourceLocation EXPERIENCE_BAR_INACTIVE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/experience_bar/empty.png");
 
     // ADDED FOR ACCESSIBILITY
     @Unique
-    private static final ResourceLocation PLAIN_TARGET_ENABLED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/enabled/target_plain.png");
+    private static final ResourceLocation PLAIN_TARGET_ENABLED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/enabled/target_plain.png");
     @Unique
-    private static final ResourceLocation PLAIN_TARGET_HIGHLIGHTED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/highlighted/target_plain.png");
+    private static final ResourceLocation PLAIN_TARGET_HIGHLIGHTED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/highlighted/target_plain.png");
     @Unique
-    private static final ResourceLocation PLAIN_TARGET_DISABLED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/disabled/target_plain.png");
+    private static final ResourceLocation PLAIN_TARGET_DISABLED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/disabled/target_plain.png");
 
     @Unique
-    private static final ResourceLocation PLAIN_SOURCE_ENABLED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/enabled/source_plain.png");
+    private static final ResourceLocation PLAIN_SOURCE_ENABLED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/enabled/source_plain.png");
     @Unique
-    private static final ResourceLocation PLAIN_SOURCE_HIGHLIGHTED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/highlighted/source_plain.png");
+    private static final ResourceLocation PLAIN_SOURCE_HIGHLIGHTED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/highlighted/source_plain.png");
     @Unique
-    private static final ResourceLocation PLAIN_SOURCE_DISABLED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/disabled/source_plain.png");
+    private static final ResourceLocation PLAIN_SOURCE_DISABLED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/disabled/source_plain.png");
 
     @Unique
-    private static final ResourceLocation PLAIN_TABLE_ENABLED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/enabled/table_plain.png");
+    private static final ResourceLocation PLAIN_TABLE_ENABLED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/enabled/table_plain.png");
     @Unique
-    private static final ResourceLocation PLAIN_TABLE_HIGHLIGHTED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/highlighted/table_plain.png");
+    private static final ResourceLocation PLAIN_TABLE_HIGHLIGHTED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/highlighted/table_plain.png");
     @Unique
-    private static final ResourceLocation PLAIN_TABLE_DISABLED_TEXTURE = new ResourceLocation(Constants.MOD_ID,
-            "textures/gui/container/enchanting_table/button/disabled/table_plain.png");
+    private static final ResourceLocation PLAIN_TABLE_DISABLED_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
+                    "textures/gui/container/enchanting_table/button/disabled/table_plain.png");
     // endregion
 
     // region Screen Constants
@@ -302,21 +322,6 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
     private static final int ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR = 0x408000;
     // endregion
 
-    // region Source Encoding
-    /** Represents an empty or invalid enchantment source. */
-    @Unique
-    private static final int NONE = -1;
-    /** Represents an enchantment originating from the target item (an upgrade). */
-    @Unique
-    private static final int TARGET = 0;
-    /** Represents an enchantment originating from the source item (a transfer). */
-    @Unique
-    private static final int SOURCE = 1;
-    /** Represents an enchantment newly generated by the table. */
-    @Unique
-    private static final int TABLE = 2;
-    // endregion
-
     // region Shadow Fields
     /** Shadowed field for the vanilla cost icon textures (e.g., "1 XP"). */
     @Shadow
@@ -348,7 +353,10 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * Modifies the arguments passed to the HandledScreen super() constructor call
      * to obfuscate the screen's title.
      */
-    @ModifyArgs(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;<init>(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/network/chat/Component;)V"))
+    @ModifyArgs(method = "<init>",
+                    at = @At(value = "INVOKE",
+                            target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;<init>(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/network/chat/Component;)V")
+    )
     private static void modifySuperConstructorArgs(Args args) {
         // The title is at index 2
         Component originalTitle = args.get(2);
@@ -379,7 +387,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         context.blit(BACKGROUND_TEXTURE, alignX, alignY, 0, 0, this.imageWidth, this.imageHeight);
 
         // 1b. Get Config Flag
-        boolean usePlain = Config.USE_PLAIN_BACKGROUND;
+        boolean usePlain = Config.BINARY_ACCESSIBILITY_USE_PLAIN_BACKGROUND.get();
 
         // 2. Seed & Lapis
         EnchantmentNames.getInstance().initSeed((long) ((EnchantmentMenu) this.menu).getEnchantmentSeed());
@@ -388,11 +396,11 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
         // 3. Get Data from Accessor
         EnchantmentMenuAccessor accessor = (EnchantmentMenuAccessor) this.menu;
-        int[] enchantmentSources = accessor.getEnchantmentSourceArray();
+        int[] enchantmentSources = accessor.enchanting_overhauled$getEnchantmentSourceArray();
         // Get texture indices from handler
-        int[] targetTextureIndices = accessor.getTargetTextureIndices();
-        int[] sourceTextureIndices = accessor.getSourceTextureIndices();
-        int[] tableTextureIndices = accessor.getTableTextureIndices();
+        int[] targetTextureIndices = accessor.enchanting_overhauled$getTargetTextureIndices();
+        int[] sourceTextureIndices = accessor.enchanting_overhauled$getSourceTextureIndices();
+        int[] tableTextureIndices = accessor.enchanting_overhauled$getTableTextureIndices();
 
         // 4. Loop and Dispatch Slots 0-2
         for (int buttonIndex = 0; buttonIndex < REROLL_BUTTON_INDEX; ++buttonIndex) {
@@ -401,65 +409,107 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             int enchantingPower = ((EnchantmentMenu) this.menu).costs[buttonIndex];
             int source = enchantmentSources[buttonIndex];
 
-            // Enchantment ID lookup logic adjusted for Mojang
-            // Note: This logic assumes the mixin handles the raw ID conversion properly.
-            // In vanilla, it uses Registry.ENCHANTMENT.byId(id).
-            // Here we access the array directly.
             int id = ((EnchantmentMenu) this.menu).enchantClue[buttonIndex];
-            // Assuming raw ID lookup is handled elsewhere or consistent with vanilla
-            // Typically we need the registry to lookup by raw ID if not direct reference
-            // Vanilla uses BuiltInRegistries.ENCHANTMENT.byId(id)
-            // This part might need adjustment based on how IDs are stored in common
-            // But assuming 'enchantmentId' stores raw IDs compatible with registry lookup:
-            // Note: Vanilla uses Registry<Enchantment> for lookup.
-            // Using a safe lookup here.
-            Enchantment enchantment = null;
-            if (id >= 0) {
-                // Assuming Registry access is available or using standard registry
-                // This line requires adaptation to how IDs are stored.
-                // If IDs are raw ints, we use the registry.
-                // In Mojang mappings: BuiltInRegistries.ENCHANTMENT.byId(id)
-                // But here we are in common/mixin, so access might be limited.
-                // Let's assume we can access the registry via the world or similar.
-                // For now, using a placeholder lookup mechanism consistent with vanilla menu logic.
-                // Vanilla Menu uses: this.access.evaluate((world, pos) -> return BuiltInRegistries.ENCHANTMENT.byId(id)).orElse(null)
-                // But client side we might not have direct registry access in the same way.
-                // However, typically menus sync IDs.
-                // Let's try using the client world's registry manager if available.
-                // Or standard static registry if IDs are stable.
-                // Vanilla uses: BuiltInRegistries.ENCHANTMENT.byId(id) in EnchantmentMenu.
-                // We will use the standard approach assuming standard registry.
-                enchantment = net.minecraft.core.registries.BuiltInRegistries.ENCHANTMENT.byId(id);
+
+            Holder<Enchantment> enchantment = null;
+            if (id >= 0 && this.minecraft.level != null) {
+                IdMap<Holder<Enchantment>> idMap =
+                        this.minecraft.level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+                enchantment = idMap.byId(id);
             }
 
             int level = ((EnchantmentMenu) this.menu).levelClue[buttonIndex];
 
             if (enchantingPower <= 0 || enchantment == null) {
                 // Case 1: Empty Slot
-                this.drawEmptySlot(context, buttonX, buttonY, tableTextureIndices[buttonIndex], usePlain);
-            } else if (source == TARGET) {
+                this.enchanting_Overhauled$drawEmptySlot(
+                        context,
+                        buttonX,
+                        buttonY,
+                        tableTextureIndices[buttonIndex],
+                        usePlain
+                );
+            } else if (source == EnchantmentSource.TARGET.getId()) {
                 // Case 2: Upgrade Slot
-                this.drawUpgradeSlot(context, accessor, buttonIndex, buttonX, buttonY, mouseX, mouseY, lapisCount,
-                        enchantingPower, enchantment, level, targetTextureIndices[buttonIndex], usePlain);
-            } else if (source == SOURCE) {
+                this.enchanting_Overhauled$drawUpgradeSlot(
+                        context,
+                        accessor,
+                        buttonIndex,
+                        buttonX,
+                        buttonY,
+                        mouseX,
+                        mouseY,
+                        lapisCount,
+                        enchantingPower,
+                        enchantment,
+                        level,
+                        targetTextureIndices[buttonIndex],
+                        usePlain
+                );
+            } else if (source == EnchantmentSource.SOURCE.getId()) {
                 // Case 3: Transfer Slot
-                this.drawTransferSlot(context, accessor, buttonIndex, buttonX, buttonY, mouseX, mouseY, lapisCount,
-                        enchantingPower, enchantment, level, sourceTextureIndices[buttonIndex], usePlain);
-            } else if (source == TABLE) {
+                this.enchanting_Overhauled$drawTransferSlot(
+                        context,
+                        accessor,
+                        buttonIndex,
+                        buttonX,
+                        buttonY,
+                        mouseX,
+                        mouseY,
+                        lapisCount,
+                        enchantingPower,
+                        enchantment,
+                        level,
+                        sourceTextureIndices[buttonIndex],
+                        usePlain
+                );
+            } else if (source == EnchantmentSource.TABLE.getId()) {
                 // Case 4: Apply Slot
-                this.drawApplySlot(context, accessor, buttonIndex, buttonX, buttonY, mouseX, mouseY, lapisCount,
-                        enchantingPower, enchantment, level, tableTextureIndices[buttonIndex], usePlain);
+                this.enchanting_Overhauled$drawApplySlot(
+                        context,
+                        accessor,
+                        buttonIndex,
+                        buttonX,
+                        buttonY,
+                        mouseX,
+                        mouseY,
+                        lapisCount,
+                        enchantingPower,
+                        enchantment,
+                        level,
+                        tableTextureIndices[buttonIndex],
+                        usePlain
+                );
             } else {
                 // Fallback: Empty Slot
-                this.drawEmptySlot(context, buttonX, buttonY, tableTextureIndices[buttonIndex], usePlain);
+                this.enchanting_Overhauled$drawEmptySlot(
+                        context,
+                        buttonX,
+                        buttonY,
+                        tableTextureIndices[buttonIndex],
+                        usePlain
+                );
             }
         }
 
         // 5. Draw Reroll Button
-        this.drawRerollButton(context, accessor, alignX, alignY, mouseX, mouseY, lapisCount, enchantmentSources);
+        this.enchanting_Overhauled$drawRerollButton(
+                context,
+                accessor,
+                alignX,
+                alignY,
+                mouseX,
+                mouseY,
+                lapisCount,
+                enchantmentSources
+        );
 
         // 6. Draw Experience Bar
-        this.drawExperienceBar(context, alignX, alignY);
+        this.enchanting_Overhauled$drawExperienceBar(
+                context,
+                alignX,
+                alignY
+        );
 
         // 7. Cancel Vanilla Method
         ci.cancel();
@@ -470,10 +520,16 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * Called when {@code enchantingPower <= 0}.
      */
     @Unique
-    private void drawEmptySlot(GuiGraphics context, int buttonX, int buttonY, int texIndex, boolean usePlain) {
+    private void enchanting_Overhauled$drawEmptySlot(
+            GuiGraphics context,
+            int buttonX,
+            int buttonY,
+            int texIndex,
+            boolean usePlain
+    ) {
         RenderSystem.enableBlend();
         ResourceLocation disabledTex = usePlain ? PLAIN_TABLE_DISABLED_TEXTURE
-                : new ResourceLocation(Constants.MOD_ID,
+                : ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/disabled/table_" + texIndex + ".png");
         context.blit(disabledTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT,
                 ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT);
@@ -485,26 +541,39 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * This slot can be in an enabled, highlighted, disabled, or maxed-out state.
      */
     @Unique
-    private void drawUpgradeSlot(GuiGraphics context, EnchantmentMenuAccessor accessor, int buttonIndex,
-                                 int buttonX, int buttonY, int mouseX, int mouseY, int lapisCount, int enchantingPower,
-                                 Enchantment enchantment, int level, int texIndex, boolean usePlain) {
-        boolean isMaxed = (level >= enchantment.getMaxLevel());
+    private void enchanting_Overhauled$drawUpgradeSlot(
+            GuiGraphics context,
+            EnchantmentMenuAccessor accessor,
+            int buttonIndex,
+            int buttonX,
+            int buttonY,
+            int mouseX,
+            int mouseY,
+            int lapisCount,
+            int enchantingPower,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel,
+            int texIndex,
+            boolean usePlain
+    ) {
+        boolean isMaxed = (enchantmentLevel >= enchantment.value().getMaxLevel());
 
         if (isMaxed) {
             // This slot is for an enchantment that is already max level
-            this.drawMaxedSlot(
+            this.enchanting_Overhauled$drawMaxedSlot(
                     context,
                     enchantment,
-                    level,
+                    enchantmentLevel,
                     buttonX,
-                    buttonY);
+                    buttonY
+            );
         } else {
             // This is a standard, non-maxed upgrade slot
-            int cost = accessor.calculateEnchantmentCost(enchantment);
+            int cost = accessor.enchanting_overhauled$calculateEnchantmentCost(enchantment.value());
             // Affordability check for upgrades (uses buttonIndex + 1 for lapis)
             // Using 'minecraft.player' to access client player
             boolean affordable = (lapisCount >= cost && this.minecraft.player.experienceLevel >= enchantingPower
-                    && this.minecraft.player.experienceLevel >= cost) || this.minecraft.player.getAbilities().instabuild;
+                    && this.minecraft.player.experienceLevel >= cost) || this.minecraft.player.isCreative();
 
             // Generate textures dynamically
             ResourceLocation enabledTex;
@@ -516,21 +585,21 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                 highlightedTex = PLAIN_TARGET_HIGHLIGHTED_TEXTURE;
                 disabledTex = PLAIN_TARGET_DISABLED_TEXTURE;
             } else {
-                enabledTex = new ResourceLocation(Constants.MOD_ID,
+                enabledTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                         "textures/gui/container/enchanting_table/button/enabled/target_" + texIndex + ".png");
-                highlightedTex = new ResourceLocation(Constants.MOD_ID,
+                highlightedTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                         "textures/gui/container/enchanting_table/button/highlighted/target_" + texIndex + ".png");
-                disabledTex = new ResourceLocation(Constants.MOD_ID,
+                disabledTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                         "textures/gui/container/enchanting_table/button/disabled/target_" + texIndex + ".png");
             }
 
-            this.drawEnchantmentSlot(
+            this.enchanting_Overhauled$drawEnchantmentSlot(
                     context, buttonX, buttonY, mouseX, mouseY,
                     enchantingPower, cost, affordable, false,
                     enabledTex,
                     highlightedTex,
                     disabledTex,
-                    enchantment.getFullname(level), // Pass the formatted name
+                    Enchantment.getFullname(enchantment, enchantmentLevel),
                     ENCHANTING_FROM_TARGET_TEXT_ENABLED_COLOR,
                     ENCHANTING_FROM_TARGET_TEXT_HIGHLIGHTED_COLOR,
                     ENCHANTING_FROM_TARGET_TEXT_DISABLED_COLOR);
@@ -542,13 +611,25 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * This slot can be in an enabled, highlighted, or disabled state.
      */
     @Unique
-    private void drawTransferSlot(GuiGraphics context, EnchantmentMenuAccessor accessor, int buttonIndex,
-                                  int buttonX, int buttonY, int mouseX, int mouseY, int lapisCount, int enchantingPower,
-                                  Enchantment enchantment, int level, int texIndex, boolean usePlain) {
-        int cost = accessor.calculateEnchantmentCost(enchantment);
+    private void enchanting_Overhauled$drawTransferSlot(
+            GuiGraphics context,
+            EnchantmentMenuAccessor accessor,
+            int buttonIndex,
+            int buttonX,
+            int buttonY,
+            int mouseX,
+            int mouseY,
+            int lapisCount,
+            int enchantingPower,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel,
+            int texIndex,
+            boolean usePlain
+    ) {
+        int cost = accessor.enchanting_overhauled$calculateEnchantmentCost(enchantment.value());
         // Affordability check for transfer/apply (uses enchantingPower for lapis)
         boolean affordable = (lapisCount >= cost && this.minecraft.player.experienceLevel >= enchantingPower
-                && this.minecraft.player.experienceLevel >= cost) || this.minecraft.player.getAbilities().instabuild;
+                && this.minecraft.player.experienceLevel >= cost) || this.minecraft.player.isCreative();
 
         // Generate textures dynamically
         ResourceLocation enabledTex;
@@ -560,24 +641,29 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             highlightedTex = PLAIN_SOURCE_HIGHLIGHTED_TEXTURE;
             disabledTex = PLAIN_SOURCE_DISABLED_TEXTURE;
         } else {
-            enabledTex = new ResourceLocation(Constants.MOD_ID,
+            enabledTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                     "textures/gui/container/enchanting_table/button/enabled/source_" + texIndex + ".png");
-            highlightedTex = new ResourceLocation(Constants.MOD_ID,
+            highlightedTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                     "textures/gui/container/enchanting_table/button/highlighted/source_" + texIndex + ".png");
-            disabledTex = new ResourceLocation(Constants.MOD_ID,
+            disabledTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                     "textures/gui/container/enchanting_table/button/disabled/source_" + texIndex + ".png");
         }
 
-        this.drawEnchantmentSlot(
-                context, buttonX, buttonY, mouseX, mouseY,
+        this.enchanting_Overhauled$drawEnchantmentSlot(
+                context,
+                buttonX,
+                buttonY,
+                mouseX,
+                mouseY,
                 enchantingPower, cost, affordable, false,
                 enabledTex,
                 highlightedTex,
                 disabledTex,
-                enchantment.getFullname(level), // Pass the formatted name
+                Enchantment.getFullname(enchantment, enchantmentLevel),
                 ENCHANTING_FROM_SOURCE_TEXT_ENABLED_COLOR,
                 ENCHANTING_FROM_SOURCE_TEXT_HIGHLIGHTED_COLOR,
-                ENCHANTING_FROM_SOURCE_TEXT_DISABLED_COLOR);
+                ENCHANTING_FROM_SOURCE_TEXT_DISABLED_COLOR
+        );
     }
 
     /**
@@ -585,13 +671,25 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * This slot can be in an enabled, highlighted, or disabled state.
      */
     @Unique
-    private void drawApplySlot(GuiGraphics context, EnchantmentMenuAccessor accessor, int buttonIndex,
-                               int buttonX, int buttonY, int mouseX, int mouseY, int lapisCount, int enchantingPower,
-                               Enchantment enchantment, int level, int texIndex, boolean usePlain) {
-        int cost = accessor.calculateEnchantmentCost(enchantment);
+    private void enchanting_Overhauled$drawApplySlot(
+            GuiGraphics context,
+            EnchantmentMenuAccessor accessor,
+            int buttonIndex,
+            int buttonX,
+            int buttonY,
+            int mouseX,
+            int mouseY,
+            int lapisCount,
+            int enchantingPower,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel,
+            int texIndex,
+            boolean usePlain
+    ) {
+        int cost = accessor.enchanting_overhauled$calculateEnchantmentCost(enchantment.value());
         // Affordability check for transfer/apply (uses enchantingPower for lapis)
         boolean affordable = (lapisCount >= cost && this.minecraft.player.experienceLevel >= enchantingPower
-                && this.minecraft.player.experienceLevel >= cost) || this.minecraft.player.getAbilities().instabuild;
+                && this.minecraft.player.experienceLevel >= cost) || this.minecraft.player.isCreative();
 
         // Generate textures dynamically
         ResourceLocation enabledTex;
@@ -603,26 +701,26 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             highlightedTex = PLAIN_TABLE_HIGHLIGHTED_TEXTURE;
             disabledTex = PLAIN_TABLE_DISABLED_TEXTURE;
         } else {
-            enabledTex = new ResourceLocation(Constants.MOD_ID,
+            enabledTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                     "textures/gui/container/enchanting_table/button/enabled/table_" + texIndex + ".png");
-            highlightedTex = new ResourceLocation(Constants.MOD_ID,
+            highlightedTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                     "textures/gui/container/enchanting_table/button/highlighted/table_" + texIndex + ".png");
-            disabledTex = new ResourceLocation(Constants.MOD_ID,
+            disabledTex = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                     "textures/gui/container/enchanting_table/button/disabled/table_" + texIndex + ".png");
         }
 
         // Get the original enchantment name
-        Component originalName = enchantment.getFullname(level);
+        Component originalName = Enchantment.getFullname(enchantment, enchantmentLevel);
         // Get the original style and add the 'minecraft:alt' font
         Style galacticStyle = originalName.getStyle().withFont(GALACTIC_FONT_ID);
         // Create the new text component with the applied style
         Component galacticName = originalName.copy().setStyle(galacticStyle);
 
-        Component name = Config.OBFUSCATE_NEW_ENCHANTMENTS
+        Component name = Config.BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS.get()
                 ? galacticName
                 : originalName;
 
-        this.drawEnchantmentSlot(
+        this.enchanting_Overhauled$drawEnchantmentSlot(
                 context, buttonX, buttonY, mouseX, mouseY,
                 enchantingPower, cost, affordable, false,
                 enabledTex,
@@ -640,14 +738,25 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * texture selection, text rendering, and cost icon display based on state.
      */
     @Unique
-    private void drawEnchantmentSlot(GuiGraphics context, int buttonX, int buttonY, int mouseX, int mouseY,
-                                     int enchantingPower, int cost, boolean affordable, boolean isMaxed,
-                                     ResourceLocation enabledTex, ResourceLocation highlightedTex, ResourceLocation disabledTex,
-                                     Component enchantmentName,
-                                     // ADDED PARAMETERS
-                                     int enabledColor, int highlightedColor, int disabledColor) {
-
-        int costIndex = Math.max(0, cost - 1); // Cost is 1-3, index is 0-2
+    private void enchanting_Overhauled$drawEnchantmentSlot(
+            GuiGraphics context,
+            int buttonX,
+            int buttonY,
+            int mouseX,
+            int mouseY,
+            int enchantingPower,
+            int cost,
+            boolean affordable,
+            boolean isMaxed,
+            ResourceLocation enabledTex,
+            ResourceLocation highlightedTex,
+            ResourceLocation disabledTex,
+            Component enchantmentName,
+            int enabledColor,
+            int highlightedColor,
+            int disabledColor
+    ) {
+        int costIndex = Math.max(0, cost - 1);
         int textX = buttonX + ENCHANTING_TEXT_X_OFFSET;
         int textY = buttonY + ENCHANTING_TEXT_Y_OFFSET;
 
@@ -740,9 +849,15 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * centered within the button.
      */
     @Unique
-    private void drawMaxedSlot(GuiGraphics context, Enchantment enchantment, int level, int buttonX, int buttonY) {
+    private void enchanting_Overhauled$drawMaxedSlot(
+            GuiGraphics context,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel,
+            int buttonX,
+            int buttonY
+    ) {
         // 1. Get the fully formatted name
-        Component enchantmentName = enchantment.getFullname(level);
+        Component enchantmentName = Enchantment.getFullname(enchantment, enchantmentLevel);
 
         // 2. Calculate coordinates
         int textY = buttonY + ENCHANTING_TEXT_Y_OFFSET;
@@ -750,7 +865,8 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         int textX = buttonX + 8;
 
         // 3. Draw the background texture
-        ResourceLocation backgroundTexture = (level > enchantment.getMaxLevel()) ? ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE
+        ResourceLocation backgroundTexture = (enchantmentLevel > enchantment.value().getMaxLevel())
+                ? ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE
                 : ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE;
         context.blit(
                 backgroundTexture,
@@ -764,7 +880,8 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                 ENCHANTING_BUTTON_HEIGHT);
 
         // 4. Draw the text, centered, with no shadow.
-        int color = (level > enchantment.getMaxLevel()) ? ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR
+        int color = (enchantmentLevel > enchantment.value().getMaxLevel())
+                ? ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR
                 : ENCHANTMENT_MAXED_OUT_TEXT_COLOR;
         context.drawString(
                 this.font,
@@ -782,20 +899,30 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * mouse position and whether the reroll action is valid and affordable.
      */
     @Unique
-    private void drawRerollButton(GuiGraphics context, EnchantmentMenuAccessor accessor, int alignX,
-                                  int alignY, int mouseX, int mouseY, int lapisCount, int[] enchantmentSources) {
+    private void enchanting_Overhauled$drawRerollButton(
+            GuiGraphics context,
+            EnchantmentMenuAccessor accessor,
+            int alignX,
+            int alignY,
+            int mouseX,
+            int mouseY,
+            int lapisCount,
+            int[] enchantmentSources
+    ) {
         // Get Reroll Button Logic
-        ItemStack target = accessor.getEnchantmentTarget();
+        ItemStack target = accessor.enchanting_overhauled$getEnchantmentTarget();
         boolean targetIsEmpty = target.isEmpty();
         boolean targetIsEnchantable = !targetIsEmpty && (target.is(Items.BOOK) || target.isEnchantable());
-        boolean targetIsSourceEnchantable = Arrays.stream(enchantmentSources).anyMatch(element -> element == SOURCE);
+        boolean targetIsSourceEnchantable = Arrays.stream(enchantmentSources)
+                                                  .anyMatch(element -> element == EnchantmentSource.SOURCE.getId());
 
         ItemStack curseFreeTarget = EnchantmentLib.removeCursesFrom(target);
         int occupiedSlots = EnchantmentLib.getEnchantments(curseFreeTarget).size();
 
         int rerollCost = occupiedSlots + 1;
         int costIndex = Math.max(0, rerollCost - 1); // Clamp index
-        boolean hasTableSource = Arrays.stream(enchantmentSources).anyMatch(source -> source == TABLE);
+        boolean hasTableSource = Arrays.stream(enchantmentSources)
+                                       .anyMatch(source -> source == EnchantmentSource.TABLE.getId());
         boolean canReroll = occupiedSlots < 3 && !targetIsSourceEnchantable && targetIsEnchantable && hasTableSource;
 
         int x = alignX + REROLL_BUTTON_X_OFFSET;
@@ -804,7 +931,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         RenderSystem.enableBlend();
 
         boolean cannotAfford = (lapisCount < rerollCost || this.minecraft.player.experienceLevel < rerollCost)
-                && !this.minecraft.player.getAbilities().instabuild;
+                && !this.minecraft.player.isCreative();
 
         boolean rerollEnabled = !targetIsEmpty && targetIsEnchantable && canReroll && !cannotAfford;
 
@@ -832,7 +959,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                     REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT);
 
             // Show disabled cost only if the *only* reason it's disabled is cost
-            boolean showDisabledCost = !targetIsEmpty && targetIsEnchantable && canReroll && cannotAfford;
+            boolean showDisabledCost = !targetIsEmpty && targetIsEnchantable && canReroll;
             if (showDisabledCost && costIndex < DISABLED_LEVEL_SPRITES.length) {
                 // costIndex is safe because showDisabledCost -> canReroll -> occupiedSlots < 3
                 context.blitSprite(DISABLED_LEVEL_SPRITES[costIndex], x + REROLL_COST_X_OFFSET,
@@ -849,7 +976,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * This replaces the logic previously handled by {@code drawExperienceBar}.
      */
     @Unique
-    private void drawExperienceBar(GuiGraphics context, int alignX, int alignY) {
+    private void enchanting_Overhauled$drawExperienceBar(GuiGraphics context, int alignX, int alignY) {
         // 1. Define Bar Geometry
         int barX = alignX + EXPERIENCE_BAR_X_OFFSET;
         int barY = alignY + EXPERIENCE_BAR_Y_OFFSET;
@@ -949,7 +1076,13 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * @param ci      Callback info to cancel the original method.
      */
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void overrideRender(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void overrideRender(
+            GuiGraphics context,
+            int mouseX,
+            int mouseY,
+            float delta,
+            CallbackInfo ci
+    ) {
         ci.cancel(); // Cancel the vanilla render method entirely
 
         // 1. This is the body of super.render()
@@ -960,20 +1093,44 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         this.renderTooltip(context, mouseX, mouseY);
 
         // 3. Get common data for helpers
-        boolean isCreative = this.minecraft.player.getAbilities().instabuild;
+        boolean isCreative = this.minecraft.player.isCreative();
         // Direct slot access as 'getLapisCount' is replaced
         int lapisCount = ((EnchantmentMenu) this.menu).getSlot(1).getItem().getCount();
         EnchantmentMenuAccessor accessor = (EnchantmentMenuAccessor) this.menu;
 
         // 4. Try drawing enchantment slot tooltips
         // This helper returns true if it drew a tooltip, so we can stop.
-        boolean tooltipDrawn = this.drawEnchantmentSlotTooltips(context, mouseX, mouseY, accessor, lapisCount,
-                isCreative);
+        boolean tooltipDrawn = this.enchanting_Overhauled$drawEnchantmentSlotTooltips(
+                context,
+                mouseX,
+                mouseY,
+                accessor,
+                lapisCount,
+                isCreative
+        );
 
         // 5. If no enchantment tooltip was drawn, try drawing the reroll tooltip
         if (!tooltipDrawn) {
-            this.drawRerollButtonTooltip(context, mouseX, mouseY, accessor, lapisCount, isCreative);
+            this.enchanting_Overhauled$drawRerollButtonTooltip(
+                    context,
+                    mouseX,
+                    mouseY,
+                    accessor,
+                    lapisCount,
+                    isCreative
+            );
         }
+    }
+
+    /**
+     * Helper to safely get the description translation key.
+     * Returns null if the holder is not bound or has no key.
+     */
+    @Unique
+    private String enchanting_Overhauled$getSafeDescriptionKey(Holder<Enchantment> enchantment) {
+        return enchantment.unwrapKey()
+                .map(key -> Util.makeDescriptionId("enchantment", key.location()) + ".desc")
+                .orElse(null);
     }
 
     /**
@@ -981,53 +1138,91 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * to the correct helper method based on the enchantment's source.
      */
     @Unique
-    private boolean drawEnchantmentSlotTooltips(GuiGraphics context, int mouseX, int mouseY,
-                                                EnchantmentMenuAccessor accessor, int lapisCount, boolean isCreative) {
-        int[] enchantmentSources = accessor.getEnchantmentSourceArray();
+    private boolean enchanting_Overhauled$drawEnchantmentSlotTooltips(
+            GuiGraphics context,
+            int mouseX,
+            int mouseY,
+            EnchantmentMenuAccessor accessor,
+            int lapisCount,
+            boolean isCreative
+    ) {
+        int[] enchantmentSources = accessor.enchanting_overhauled$getEnchantmentSourceArray();
 
         for (int buttonIndex = 0; buttonIndex < REROLL_BUTTON_INDEX; ++buttonIndex) {
             int powerRequirement = ((EnchantmentMenu) this.menu).costs[buttonIndex];
             int id = ((EnchantmentMenu) this.menu).enchantClue[buttonIndex];
-            // Safe enchantment lookup (see drawCustomBackground notes)
-            Enchantment enchantment = (id >= 0) ? net.minecraft.core.registries.BuiltInRegistries.ENCHANTMENT.byId(id) : null;
+
+            // Updated Lookup
+            Holder<Enchantment> enchantment = null;
+            if (id >= 0 && this.minecraft.level != null) {
+                IdMap<Holder<Enchantment>> idMap =
+                        this.minecraft.level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+                enchantment = idMap.byId(id);
+            }
 
             int enchantmentLevel = ((EnchantmentMenu) this.menu).levelClue[buttonIndex];
             int source = enchantmentSources[buttonIndex];
-
-            // Use the CORRECT coordinates from our constants
             int buttonY = ENCHANTING_BUTTON_Y_OFFSET + (ENCHANTING_BUTTON_HEIGHT * buttonIndex);
 
-            // Check if hovered and the slot is valid
             if (this.isHovering(ENCHANTING_BUTTON_X_OFFSET, buttonY, ENCHANTING_BUTTON_WIDTH,
                     ENCHANTING_BUTTON_HEIGHT, (double) mouseX, (double) mouseY) && powerRequirement > 0
-                    && enchantmentLevel >= 0 && enchantment != null) {
+                    && enchantmentLevel >= 0 && enchantment != null) { // Check holder != null
 
-                // Check if this is an upgrade slot that is already maxed
-                boolean isMaxed = (source == TARGET && enchantmentLevel >= enchantment.getMaxLevel());
+                boolean isMaxed = (source == EnchantmentSource.TARGET.getId()
+                                          && enchantmentLevel >= enchantment.value().getMaxLevel());
 
                 if (isMaxed) {
-                    // Case 1: Maxed/Over-leveled Upgrade (No Title, No Cost)
-                    this.drawMaxedTooltip(context, mouseX, mouseY, enchantment, enchantmentLevel);
+                    this.enchanting_Overhauled$drawMaxedTooltip(
+                            context,
+                            mouseX,
+                            mouseY,
+                            enchantment,
+                            enchantmentLevel
+                    );
                     return true;
-                } else if (source == TARGET) {
-                    // Case 2: Standard Upgrade (Title + Cost)
-                    this.drawUpgradeTooltip(context, mouseX, mouseY, accessor, lapisCount, isCreative, enchantment,
-                            enchantmentLevel, powerRequirement);
+                } else if (source == EnchantmentSource.TARGET.getId()) {
+                    this.enchanting_Overhauled$drawUpgradeTooltip(
+                            context,
+                            mouseX,
+                            mouseY,
+                            accessor,
+                            lapisCount,
+                            isCreative,
+                            enchantment,
+                            enchantmentLevel,
+                            powerRequirement
+                    );
                     return true;
-                } else if (source == SOURCE) {
-                    // Case 3: Transfer (Title + Cost)
-                    this.drawTransferTooltip(context, mouseX, mouseY, accessor, lapisCount, isCreative, enchantment,
-                            enchantmentLevel, powerRequirement);
+                } else if (source == EnchantmentSource.SOURCE.getId()) {
+                    this.enchanting_Overhauled$drawTransferTooltip(
+                            context,
+                            mouseX,
+                            mouseY,
+                            accessor,
+                            lapisCount,
+                            isCreative,
+                            enchantment,
+                            enchantmentLevel,
+                            powerRequirement
+                    );
                     return true;
-                } else if (source == TABLE) {
-                    // Case 4: Apply (Title + Cost + Obfuscation)
-                    this.drawApplyTooltip(context, mouseX, mouseY, accessor, lapisCount, isCreative, enchantment,
-                            enchantmentLevel, powerRequirement);
+                } else if (source == EnchantmentSource.TABLE.getId()) {
+                    this.enchanting_Overhauled$drawApplyTooltip(
+                            context,
+                            mouseX,
+                            mouseY,
+                            accessor,
+                            lapisCount,
+                            isCreative,
+                            enchantment,
+                            enchantmentLevel,
+                            powerRequirement
+                    );
                     return true;
                 }
             }
         }
-        return false; // No tooltip was drawn
+        return false;
     }
 
     /**
@@ -1035,17 +1230,24 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * This version has no title and no cost information.
      */
     @Unique
-    private void drawMaxedTooltip(GuiGraphics context, int mouseX, int mouseY, Enchantment enchantment,
-                                  int enchantmentLevel) {
+    private void enchanting_Overhauled$drawMaxedTooltip(
+            GuiGraphics context,
+            int mouseX,
+            int mouseY,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel
+    ) {
         java.util.List<FormattedCharSequence> list = new ArrayList<>();
 
         // Add the enchantment name
-        list.add(enchantment.getFullname(enchantmentLevel).copy().getVisualOrderText());
+        list.add(Enchantment.getFullname(enchantment, enchantmentLevel).copy().getVisualOrderText());
 
         // Add enchantment description
-        String descKey = enchantment.getDescriptionId() + ".desc";
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        String descKey = enchanting_Overhauled$getSafeDescriptionKey(enchantment);
+        if (descKey != null) {
+            Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
         context.renderTooltip(this.font, list, mouseX, mouseY);
     }
@@ -1054,25 +1256,35 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * Draws the tooltip for a standard, non-maxed "Upgrade" (TARGET) slot.
      */
     @Unique
-    private void drawUpgradeTooltip(GuiGraphics context, int mouseX, int mouseY,
-                                    EnchantmentMenuAccessor accessor, int lapisCount, boolean isCreative, Enchantment enchantment,
-                                    int enchantmentLevel, int powerRequirement) {
-        int cost = accessor.calculateEnchantmentCost(enchantment);
+    private void enchanting_Overhauled$drawUpgradeTooltip(
+            GuiGraphics context,
+            int mouseX,
+            int mouseY,
+            EnchantmentMenuAccessor accessor,
+            int lapisCount,
+            boolean isCreative,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel,
+            int powerRequirement
+    ) {
+        int cost = accessor.enchanting_overhauled$calculateEnchantmentCost(enchantment.value());
         java.util.List<FormattedCharSequence> list = new ArrayList<>();
 
         // Add "Upgrade:" title
         list.add(Component.translatable("gui.enchanting_overhauled.upgrade").withStyle(ChatFormatting.WHITE).getVisualOrderText());
 
         // Add the enchantment name
-        list.add(enchantment.getFullname(enchantmentLevel).copy().getVisualOrderText());
+        list.add(Enchantment.getFullname(enchantment, enchantmentLevel).copy().getVisualOrderText());
 
         // Add enchantment description (indented via lib method)
-        String descKey = enchantment.getDescriptionId() + ".desc";
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        String descKey = enchanting_Overhauled$getSafeDescriptionKey(enchantment);
+        if (descKey != null) {
+            Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
         // Add cost information
-        this.drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
+        this.enchanting_Overhauled$drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
 
         context.renderTooltip(this.font, list, mouseX, mouseY);
     }
@@ -1081,25 +1293,38 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * Draws the tooltip for a "Transfer" (SOURCE) slot.
      */
     @Unique
-    private void drawTransferTooltip(GuiGraphics context, int mouseX, int mouseY,
-                                     EnchantmentMenuAccessor accessor, int lapisCount, boolean isCreative, Enchantment enchantment,
-                                     int enchantmentLevel, int powerRequirement) {
-        int cost = accessor.calculateEnchantmentCost(enchantment);
+    private void enchanting_Overhauled$drawTransferTooltip(
+            GuiGraphics context,
+            int mouseX,
+            int mouseY,
+            EnchantmentMenuAccessor accessor,
+            int lapisCount,
+            boolean isCreative,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel,
+            int powerRequirement
+    ) {
+        int cost = accessor.enchanting_overhauled$calculateEnchantmentCost(enchantment.value());
         java.util.List<FormattedCharSequence> list = new ArrayList<>();
 
         // Add "Transfer:" title
-        list.add(Component.translatable("gui.enchanting_overhauled.transfer").withStyle(ChatFormatting.WHITE).getVisualOrderText());
+        list.add(Component.translatable("gui.enchanting_overhauled.transfer")
+                          .withStyle(ChatFormatting.WHITE)
+                          .getVisualOrderText()
+        );
 
         // Add the enchantment name
-        list.add(enchantment.getFullname(enchantmentLevel).copy().getVisualOrderText());
+        list.add(Enchantment.getFullname(enchantment, enchantmentLevel).copy().getVisualOrderText());
 
         // Add enchantment description (indented via lib method)
-        String descKey = enchantment.getDescriptionId() + ".desc";
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        String descKey = enchanting_Overhauled$getSafeDescriptionKey(enchantment);
+        if (descKey != null) {
+            Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
         // Add cost information
-        this.drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
+        this.enchanting_Overhauled$drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
 
         context.renderTooltip(this.font, list, mouseX, mouseY);
     }
@@ -1110,18 +1335,22 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * Applies the enchantment's theme color to its name.
      */
     @Unique
-    private void drawApplyTooltip(GuiGraphics context, int mouseX, int mouseY,
-                                  EnchantmentMenuAccessor accessor, int lapisCount, boolean isCreative, Enchantment enchantment,
-                                  int enchantmentLevel, int powerRequirement) {
-        int cost = accessor.calculateEnchantmentCost(enchantment);
+    private void enchanting_Overhauled$drawApplyTooltip(
+            GuiGraphics context,
+            int mouseX,
+            int mouseY,
+            EnchantmentMenuAccessor accessor,
+            int lapisCount,
+            boolean isCreative,
+            Holder<Enchantment> enchantment,
+            int enchantmentLevel,
+            int powerRequirement
+    ) {
+        int cost = accessor.enchanting_overhauled$calculateEnchantmentCost(enchantment.value());
         java.util.List<FormattedCharSequence> list = new ArrayList<>();
 
         // --- Get Theme Color ---
-        EnchantmentThemeAccessor themeAccessor = (EnchantmentThemeAccessor) enchantment;
-        ResourceKey<EnchantmentTheme> themeKey = themeAccessor.enchanting_overhauled$getTheme();
-
-        // Access dynamic registry safely using platform helper logic
-        // For client rendering, we typically assume the client world has the registry synced.
+        ResourceKey<EnchantmentTheme> themeKey = EnchantmentLib.getThemeKey(this.minecraft.level.registryAccess(), enchantment);
         Optional<Registry<EnchantmentTheme>> registryOpt = Services.PLATFORM.getThemeRegistry(this.minecraft.level.registryAccess());
 
         int color = 0xFFFFFF;
@@ -1130,40 +1359,41 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             if (theme != null) {
                 color = theme.colorCode().orElse(0xFFFFFF);
             }
-        } final int immutableColor = color;
-        // --- End Get Theme Color ---
+        }
+        final int immutableColor = color;
 
         // --- Text Obfuscation Logic ---
-        Component enchantmentName = enchantment.getFullname(enchantmentLevel);
-        String descKey = enchantment.getDescriptionId() + ".desc";
+        MutableComponent enchantmentName = (MutableComponent) Enchantment.getFullname(enchantment, enchantmentLevel);
 
-        // Create the base description (formatted)
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
-        // Create the base title (formatted)
+        // SAFE KEY LOOKUP
+        String descKey = enchanting_Overhauled$getSafeDescriptionKey(enchantment);
+
+        // Use a placeholder if descKey is null to prevent null pointer later, though logic implies we just skip description wrapping
+        MutableComponent description = (descKey != null)
+                ? Component.translatable(descKey).withStyle(ChatFormatting.GRAY)
+                : Component.empty();
+
         Component title = Component.translatable("gui.enchanting_overhauled.apply").withStyle(ChatFormatting.WHITE);
 
-        if (Config.OBFUSCATE_NEW_ENCHANTMENTS) {
+        if (Config.BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS.get()) {
             Style galacticStyle = Style.EMPTY.withFont(GALACTIC_FONT_ID);
-            enchantmentName = ((MutableComponent)enchantmentName).setStyle(enchantmentName.getStyle().withFont(GALACTIC_FONT_ID))
-                    .withStyle(style -> style.withColor(immutableColor)); // Using lambda for color due to variable scope
-            // Re-setting description style
-            description = ((MutableComponent)description).setStyle(description.getStyle().withFont(GALACTIC_FONT_ID))
-                    .withStyle(ChatFormatting.GRAY);
+            enchantmentName = enchantmentName.setStyle(enchantmentName.getStyle().withFont(GALACTIC_FONT_ID))
+                    .withStyle(style -> style.withColor(immutableColor));
+
+            if (descKey != null) {
+                description = description.setStyle(description.getStyle().withFont(GALACTIC_FONT_ID))
+                        .withStyle(ChatFormatting.GRAY);
+            }
         }
-        // --- End of Text Obfuscation Logic ---
 
-        // Add the (potentially obfuscated) title
         list.add(title.getVisualOrderText());
-
-        // Add the (potentially obfuscated) enchantment name
         list.add(enchantmentName.getVisualOrderText());
 
-        // Add the (potentially obfuscated) enchantment description
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        if (descKey != null) {
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
-        // Add cost information
-        this.drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
-
+        this.enchanting_Overhauled$drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
         context.renderTooltip(this.font, list, mouseX, mouseY);
     }
 
@@ -1171,15 +1401,20 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * Appends the standardized cost information (level, lapis) to a tooltip list.
      */
     @Unique
-    private void drawTooltipCost(java.util.List<FormattedCharSequence> list, boolean isCreative, int powerRequirement, int cost,
-                                 int lapisCount) {
+    private void enchanting_Overhauled$drawTooltipCost(
+            java.util.List<FormattedCharSequence> list,
+            boolean isCreative,
+            int powerRequirement,
+            int cost,
+            int lapisCount
+    ) {
         // A 'TABLE' enchantment can't be 'isMaxed', so we only check 'isCreative'
         if (!isCreative) {
             list.add(FormattedCharSequence.EMPTY);
             if (this.minecraft.player.experienceLevel < powerRequirement) {
                 // Level requirement
-                list.add(Component.translatable("container.enchant.level.requirement", new Object[] { powerRequirement })
-                        .withStyle(ChatFormatting.RED).getVisualOrderText());
+                list.add(Component.translatable("container.enchant.level.requirement",
+                                new Object[] { powerRequirement }).withStyle(ChatFormatting.RED).getVisualOrderText());
             } else {
                 // Lapis requirement
                 MutableComponent mutableText;
@@ -1208,17 +1443,23 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * Draws the tooltip for the reroll button (3).
      */
     @Unique
-    private void drawRerollButtonTooltip(GuiGraphics context, int mouseX, int mouseY,
-                                         EnchantmentMenuAccessor accessor, int lapisCount, boolean isCreative) {
+    private void enchanting_Overhauled$drawRerollButtonTooltip(
+            GuiGraphics context,
+            int mouseX,
+            int mouseY,
+            EnchantmentMenuAccessor accessor,
+            int lapisCount,
+            boolean isCreative
+    ) {
         if (this.isHovering(REROLL_BUTTON_X_OFFSET, REROLL_BUTTON_Y_OFFSET, REROLL_BUTTON_WIDTH,
                 REROLL_BUTTON_HEIGHT, (double) mouseX, (double) mouseY)) {
             // Check reroll validity
-            int[] enchantmentSources = accessor.getEnchantmentSourceArray();
-            ItemStack target = accessor.getEnchantmentTarget();
+            int[] enchantmentSources = accessor.enchanting_overhauled$getEnchantmentSourceArray();
+            ItemStack target = accessor.enchanting_overhauled$getEnchantmentTarget();
             boolean targetIsEmpty = target.isEmpty();
             boolean targetIsEnchantable = !targetIsEmpty && (target.is(Items.BOOK) || target.isEnchantable());
             boolean targetIsSourceEnchantable = Arrays.stream(enchantmentSources)
-                    .anyMatch(element -> element == SOURCE);
+                    .anyMatch(element -> element == EnchantmentSource.SOURCE.getId());
             ItemStack curseFreeTarget = EnchantmentLib.removeCursesFrom(target);
             int occupiedSlots = EnchantmentLib.getEnchantments(curseFreeTarget).size();
             int rerollCost = occupiedSlots + 1;
@@ -1233,7 +1474,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             // Delegate cost drawing to the generic helper.
             // For a reroll, the 'powerRequirement' and the 'cost' are the same.
             if (!targetIsEmpty && canReroll) {
-                this.drawTooltipCost(list, isCreative, rerollCost, rerollCost, lapisCount);
+                this.enchanting_Overhauled$drawTooltipCost(list, isCreative, rerollCost, rerollCost, lapisCount);
             }
 
             context.renderTooltip(this.font, list, mouseX, mouseY);

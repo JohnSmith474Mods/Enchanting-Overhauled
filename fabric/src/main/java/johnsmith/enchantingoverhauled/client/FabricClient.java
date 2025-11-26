@@ -1,16 +1,14 @@
 package johnsmith.enchantingoverhauled.client;
 
 import johnsmith.enchantingoverhauled.client.render.entity.model.TomeModel;
+import johnsmith.enchantingoverhauled.config.Config;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 
-/**
- * Client-side initializer for the Fabric platform.
- * <p>
- * This class is responsible for registering client-only resources such as entity model layers.
- * It implements {@link ClientModInitializer} to run during the client startup phase.
- */
 public class FabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {

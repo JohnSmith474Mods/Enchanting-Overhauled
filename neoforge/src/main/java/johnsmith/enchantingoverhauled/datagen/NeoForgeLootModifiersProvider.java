@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.datagen;
 
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.loot.TomeLootModifier;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +69,7 @@ public class NeoForgeLootModifiersProvider extends GlobalLootModifierProvider {
         AnyOfCondition.Builder builder = AnyOfCondition.anyOf();
 
         for (String table : tables) {
-            builder.or(LootTableIdCondition.builder(new ResourceLocation(table)));
+            builder.or(LootTableIdCondition.builder(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, table)));
         }
 
         return builder.build();

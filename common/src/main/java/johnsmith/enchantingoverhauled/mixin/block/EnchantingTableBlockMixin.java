@@ -73,24 +73,24 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull BlockState playerWillDestroy(Level world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
-        world.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
-        world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
-        return state;
+    public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
+        level.playSound(null, blockPos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
+        level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
+        return blockState;
     }
 
     @Override
     public void playerDestroy(
-            Level world,
+            Level level,
             @NotNull Player player,
-            @NotNull BlockPos pos,
-            @NotNull BlockState state,
+            @NotNull BlockPos blockPos,
+            @NotNull BlockState blockState,
             BlockEntity blockEntity,
             @NotNull ItemStack tool
     ) {
-        world.setBlock(pos, Services.PLATFORM.getDisturbedEnchantingTable().defaultBlockState(), 3);
+        level.setBlock(blockPos, Services.PLATFORM.getDisturbedEnchantingTable().defaultBlockState(), 3);
 
-        if (!world.isClientSide) {
+        if (!level.isClientSide) {
             ItemStack stackToDrop = ItemStack.EMPTY;
 
             if (blockEntity instanceof TomeStorageAccessor accessor) {
@@ -103,17 +103,17 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
 
             ItemEnchantments enchants = stackToDrop.get(DataComponents.STORED_ENCHANTMENTS);
             if (enchants == null || enchants.isEmpty()) {
-                stackToDrop = EnchantmentLib.enchantTomeRandomly(stackToDrop, world, world.getRandom());
+                stackToDrop = EnchantmentLib.enchantTomeRandomly(stackToDrop, level, level.getRandom());
             }
 
-            double x = (double)pos.getX() + 0.5;
-            double y = (double)pos.getY() + 1.0;
-            double z = (double)pos.getZ() + 0.5;
+            double x = (double)blockPos.getX() + 0.5;
+            double y = (double)blockPos.getY() + 1.0;
+            double z = (double)blockPos.getZ() + 0.5;
 
-            ItemEntity itemEntity = new ItemEntity(world, x, y, z, stackToDrop);
+            ItemEntity itemEntity = new ItemEntity(level, x, y, z, stackToDrop);
             itemEntity.setDeltaMovement(0.0, 0.1, 0.0);
             itemEntity.setDefaultPickUpDelay();
-            world.addFreshEntity(itemEntity);
+            level.addFreshEntity(itemEntity);
         }
     }
 
@@ -122,15 +122,15 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
      * Now ALWAYS spawns vanilla glyphs, then optionally overlays theme effects.
      */
     @Inject(method = "animateTick", at = @At("HEAD"), cancellable = true)
-    private void onRandomDisplayTick(BlockState state, Level world, BlockPos pos, RandomSource random, CallbackInfo ci) {
+    private void onRandomDisplayTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
         // Cancel the original vanilla particle logic
         ci.cancel();
 
         // Check if a player is close enough to see effects
-        Player playerEntity = world.getNearestPlayer(
-                (double)pos.getX() + 0.5D,
-                (double)pos.getY() + 0.5D,
-                (double)pos.getZ() + 0.5D,
+        Player playerEntity = level.getNearestPlayer(
+                (double)blockPos.getX() + 0.5D,
+                (double)blockPos.getY() + 0.5D,
+                (double)blockPos.getZ() + 0.5D,
                 3.0D, // Vanilla book-opening distance
                 false
         );
@@ -139,10 +139,10 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
         }
 
         // 1. Always spawn vanilla particles (Glyphs) for any valid provider
-        this.enchantingOverhauled$spawnAlwaysVanillaParticles(world, pos, random);
+        this.enchantingOverhauled$spawnAlwaysVanillaParticles(level, blockPos, randomSource);
 
         // 2. Find the dominant theme based on nearby power
-        Optional<EnchantmentTheme> dominantThemeOpt = this.enchantingOverhauled$getDominantTheme(world, pos);
+        Optional<EnchantmentTheme> dominantThemeOpt = this.enchantingOverhauled$getDominantTheme(level, blockPos);
 
         // 3. If a dominant theme is found (and it has effects), spawn them
         if (dominantThemeOpt.isPresent()) {
@@ -151,18 +151,18 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             EffectData effects = theme.effects().get();
 
             // Spawn particles/sound at the enchanting table itself
-            this.enchantingOverhauled$spawnThemedEffects(world, pos, random, effects, false);
+            this.enchantingOverhauled$spawnThemedEffects(level, blockPos, randomSource, effects, false);
 
             // Spawn particles/sound at the power providers
             for(BlockPos providerOffset : BOOKSHELF_OFFSETS) {
-                BlockPos providerPos = pos.offset(providerOffset);
+                BlockPos providerPos = blockPos.offset(providerOffset);
 
                 // Check if this provider block matches the dominant theme
-                if (EnchantmentLib.getEnchantingPower(world, providerPos, theme) > 0) {
+                if (EnchantmentLib.getEnchantingPower(level, providerPos, theme) > 0) {
                     // Check if the transmitter block is clear
-                    BlockPos transmitterPos = pos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
-                    if (world.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
-                        this.enchantingOverhauled$spawnThemedEffects(world, providerPos, random, effects, true);
+                    BlockPos transmitterPos = blockPos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
+                    if (level.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
+                        this.enchantingOverhauled$spawnThemedEffects(level, providerPos, randomSource, effects, true);
                     }
                 }
             }
@@ -173,35 +173,35 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
      * Spawns the vanilla 'enchant' particles for ANY block that provides power of ANY theme.
      */
     @Unique
-    private void enchantingOverhauled$spawnAlwaysVanillaParticles(Level world, BlockPos pos, RandomSource random) {
-        RegistryAccess registryAccess = world.registryAccess();
+    private void enchantingOverhauled$spawnAlwaysVanillaParticles(Level level, BlockPos blockPos, RandomSource randomSource) {
+        RegistryAccess registryAccess = level.registryAccess();
         Optional<Registry<EnchantmentTheme>> themeRegistryOpt = Services.PLATFORM.getThemeRegistry(registryAccess);
 
         if (themeRegistryOpt.isEmpty()) return;
         Registry<EnchantmentTheme> themeRegistry = themeRegistryOpt.get();
 
         for(BlockPos providerOffset : BOOKSHELF_OFFSETS) {
-            BlockPos providerPos = pos.offset(providerOffset);
+            BlockPos providerPos = blockPos.offset(providerOffset);
             boolean providesPower = false;
 
             // Inefficient but reliable: Check if this block provides power
             for (EnchantmentTheme theme : themeRegistry) {
-                if (EnchantmentLib.getEnchantingPower(world, providerPos, theme) > 0) {
+                if (EnchantmentLib.getEnchantingPower(level, providerPos, theme) > 0) {
                     providesPower = true;
                     break;
                 }
             }
 
             if (providesPower) {
-                BlockPos transmitterPos = pos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
-                if (world.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
-                    world.addParticle(ParticleTypes.ENCHANT,
-                            (double)pos.getX() + 0.5D,
-                            (double)pos.getY() + 2.0D,
-                            (double)pos.getZ() + 0.5D,
-                            (double)((float)providerOffset.getX() + random.nextFloat()) - 0.5D,
-                            (double)((float)providerOffset.getY() - random.nextFloat() - 1.0F),
-                            (double)((float)providerOffset.getZ() + random.nextFloat()) - 0.5D
+                BlockPos transmitterPos = blockPos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
+                if (level.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
+                    level.addParticle(ParticleTypes.ENCHANT,
+                            (double)blockPos.getX() + 0.5D,
+                            (double)blockPos.getY() + 2.0D,
+                            (double)blockPos.getZ() + 0.5D,
+                            (double)((float)providerOffset.getX() + randomSource.nextFloat()) - 0.5D,
+                            (double)((float)providerOffset.getY() - randomSource.nextFloat() - 1.0F),
+                            (double)((float)providerOffset.getZ() + randomSource.nextFloat()) - 0.5D
                     );
                 }
             }
@@ -212,15 +212,15 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
      * Finds the theme that is providing the most power to the table.
      * Skips themes that do not have any effects defined.
      *
-     * @param world The world.
-     * @param pos The BlockPos of the enchanting table.
+     * @param level The world.
+     * @param blockPos The BlockPos of the enchanting table.
      * @return An Optional containing the dominant EnchantmentTheme.
      */
     @Unique
-    private Optional<EnchantmentTheme> enchantingOverhauled$getDominantTheme(Level world, BlockPos pos) {
+    private Optional<EnchantmentTheme> enchantingOverhauled$getDominantTheme(Level level, BlockPos blockPos) {
         Map<EnchantmentTheme, Integer> themePower = new HashMap<>();
 
-        RegistryAccess registryAccess = world.registryAccess();
+        RegistryAccess registryAccess = level.registryAccess();
         Optional<Registry<EnchantmentTheme>> themeRegistryOpt = Services.PLATFORM.getThemeRegistry(registryAccess);
 
         if (themeRegistryOpt.isEmpty()) return Optional.empty();
@@ -228,13 +228,13 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
         Registry<EnchantmentTheme> themeRegistry = themeRegistryOpt.get();
 
         for (BlockPos providerOffset : BOOKSHELF_OFFSETS) {
-            BlockPos transmitterPos = pos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
-            if (!world.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
+            BlockPos transmitterPos = blockPos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
+            if (!level.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
                 continue;
             }
 
-            BlockPos providerPos = pos.offset(providerOffset);
-            BlockState providerState = world.getBlockState(providerPos);
+            BlockPos providerPos = blockPos.offset(providerOffset);
+            BlockState providerState = level.getBlockState(providerPos);
             Holder<Block> blockEntry = providerState.getBlockHolder();
 
             for (EnchantmentTheme theme : themeRegistry) {
@@ -258,23 +258,23 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     }
 
     @Unique
-    private void enchantingOverhauled$spawnThemedEffects(Level world, BlockPos pos, RandomSource random, EffectData effects, boolean atProvider) {
-        if (effects.particle().isEmpty() && effects.sound().isEmpty()) {
+    private void enchantingOverhauled$spawnThemedEffects(Level level, BlockPos blockPos, RandomSource randomSource, EffectData effectData, boolean atProvider) {
+        if (effectData.particle().isEmpty() && effectData.sound().isEmpty()) {
             return;
         }
 
-        int chance = Math.max(1, effects.chance());
-        Optional<ParticleEffectData> particleOpt = effects.particle();
-        Optional<SoundEffectData> soundOpt = effects.sound();
+        int chance = Math.max(1, effectData.chance());
+        Optional<ParticleEffectData> particleOpt = effectData.particle();
+        Optional<SoundEffectData> soundOpt = effectData.sound();
 
-        for (int i = 0; i < effects.iterations(); i++) {
-            if (random.nextInt(chance) != 0) {
+        for (int i = 0; i < effectData.iterations(); i++) {
+            if (randomSource.nextInt(chance) != 0) {
                 continue;
             }
 
-            double baseX = (double)pos.getX() + 0.5D;
-            double baseY = (double)pos.getY() + (atProvider ? 0.5D : 0.75D);
-            double baseZ = (double)pos.getZ() + 0.5D;
+            double baseX = (double)blockPos.getX() + 0.5D;
+            double baseY = (double)blockPos.getY() + (atProvider ? 0.5D : 0.75D);
+            double baseZ = (double)blockPos.getZ() + 0.5D;
 
             double spawnX = baseX;
             double spawnY = baseY;
@@ -283,35 +283,35 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             if (particleOpt.isPresent()) {
                 ParticleEffectData p = particleOpt.get();
 
-                double offsetX = p.offset().x + (random.nextDouble() * 2.0 - 1.0) * p.offsetVariance().x;
-                double offsetY = p.offset().y + (random.nextDouble() * 2.0 - 1.0) * p.offsetVariance().y;
-                double offsetZ = p.offset().z + (random.nextDouble() * 2.0 - 1.0) * p.offsetVariance().z;
+                double offsetX = p.offset().x + (randomSource.nextDouble() * 2.0 - 1.0) * p.offsetVariance().x;
+                double offsetY = p.offset().y + (randomSource.nextDouble() * 2.0 - 1.0) * p.offsetVariance().y;
+                double offsetZ = p.offset().z + (randomSource.nextDouble() * 2.0 - 1.0) * p.offsetVariance().z;
 
                 spawnX += offsetX;
                 spawnY += offsetY;
                 spawnZ += offsetZ;
 
-                double velX = p.velocity().x + (random.nextDouble() * 2.0 - 1.0) * p.velocityVariance().x;
-                double velY = p.velocity().y + (random.nextDouble() * 2.0 - 1.0) * p.velocityVariance().y;
-                double velZ = p.velocity().z + (random.nextDouble() * 2.0 - 1.0) * p.velocityVariance().z;
+                double velX = p.velocity().x + (randomSource.nextDouble() * 2.0 - 1.0) * p.velocityVariance().x;
+                double velY = p.velocity().y + (randomSource.nextDouble() * 2.0 - 1.0) * p.velocityVariance().y;
+                double velZ = p.velocity().z + (randomSource.nextDouble() * 2.0 - 1.0) * p.velocityVariance().z;
 
-                world.addParticle((ParticleOptions) p.effect(), spawnX, spawnY, spawnZ, velX, velY, velZ);
+                level.addParticle((ParticleOptions) p.effect(), spawnX, spawnY, spawnZ, velX, velY, velZ);
             }
 
             if (soundOpt.isPresent()) {
                 SoundEffectData s = soundOpt.get();
 
-                float pitch = s.pitch() + (random.nextFloat() * 2.0f - 1.0f) * s.pitchVariance();
-                float volume = s.volume() + (random.nextFloat() * 2.0f - 1.0f) * s.volumeVariance();
+                float pitch = s.pitch() + (randomSource.nextFloat() * 2.0f - 1.0f) * s.pitchVariance();
+                float volume = s.volume() + (randomSource.nextFloat() * 2.0f - 1.0f) * s.volumeVariance();
 
-                world.playLocalSound(spawnX, spawnY, spawnZ, s.effect().value(), SoundSource.BLOCKS, volume, pitch, false);
+                level.playLocalSound(spawnX, spawnY, spawnZ, s.effect().value(), SoundSource.BLOCKS, volume, pitch, false);
             }
         }
     }
 
     @Override
-    public @NotNull ItemStack getCloneItemStack(LevelReader world, @NotNull BlockPos pos, @NotNull BlockState state) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+    public @NotNull ItemStack getCloneItemStack(LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+        BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);
 
         if (blockEntity instanceof TomeStorageAccessor accessor) {
             ItemStack tome = accessor.enchanting_overhauled$getTomeStack();
@@ -319,6 +319,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
                 return tome.copy();
             }
         }
-        return EnchantmentLib.getTomeWithDefaultEnchantment();
+        RegistryAccess registryAccess = levelReader.registryAccess();
+        return EnchantmentLib.getTomeWithDefaultEnchantment(registryAccess);
     }
 }

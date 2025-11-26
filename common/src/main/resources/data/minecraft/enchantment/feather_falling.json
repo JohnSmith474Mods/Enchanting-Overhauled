@@ -1,0 +1,73 @@
+{
+  "anvil_cost": 0,
+  "description": {
+    "translate": "enchantment.minecraft.feather_falling"
+  },
+  "effects": {
+    "minecraft:damage_protection": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "enchantment_max_level"
+            },
+            "cases": {
+              "1": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 18.0,
+                "decrement": 6.0,
+                "minimum": 0.0
+              },
+              "2": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 15.0,
+                "decrement": 7.5,
+                "minimum": 0.0
+              }
+            },
+            "fallback": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 12.0,
+              "decrement": 3.0,
+              "minimum": 0.0
+            }
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:damage_source_properties",
+          "predicate": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "minecraft:is_fall"
+              },
+              {
+                "expected": false,
+                "id": "minecraft:bypasses_invulnerability"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 11,
+    "per_level_above_first": 6
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 6
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/foot_armor",
+  "weight": 5
+}

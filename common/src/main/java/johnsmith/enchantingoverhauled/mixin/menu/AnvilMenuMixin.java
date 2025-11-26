@@ -46,14 +46,14 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin {
     // Default is 4.
     @ModifyConstant(method = "createResult", constant = @Constant(intValue = 4))
     private int maxItemCost(int value) {
-        return Config.ANVIL_MAX_ITEM_COST;
+        return Config.BOUNDED_ANVIL_MAX_ITEM_COST.get();
     }
 
     // Modify the repair bonus applied when repairing items.
     // Default is 12.
     @ModifyConstant(method = "createResult", constant = @Constant(intValue = 12))
     private int repairBonus(int value) {
-        return Config.ANVIL_REPAIR_BONUS;
+        return Config.BOUNDED_ANVIL_REPAIR_BONUS.get();
     }
 
     // Modify anvil break chance when taking output.
@@ -68,7 +68,7 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin {
             // Check anvil break chance
             if (!player.getAbilities().instabuild &&
                     blockState.is(BlockTags.ANVIL) &&
-                    player.getRandom().nextFloat() < Config.ANVIL_BREAK_CHANCE.floatValue()) {
+                    player.getRandom().nextFloat() < Config.BOUNDED_ANVIL_BREAK_CHANCE.get().floatValue()) {
 
                 // Anvil breaks (damage returns the next state, e.g. chipped -> damaged)
                 BlockState blockState2 = AnvilBlock.damage(blockState);

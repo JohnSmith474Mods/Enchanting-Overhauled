@@ -1,0 +1,58 @@
+{
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.minecraft.sharpness"
+  },
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "enchantment_max_level"
+            },
+            "cases": {
+              "1": {
+                "type": "minecraft:linear",
+                "base": 3.0,
+                "per_level_above_first": 0.5
+              },
+              "2": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 2.0,
+                "decrement": 1.0,
+                "minimum": 0.5
+              }
+            },
+            "fallback": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 1.5,
+              "decrement": 0.5,
+              "minimum": 0.5
+            }
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 21,
+    "per_level_above_first": 11
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 11
+  },
+  "primary_items": "#enchanting_overhauled:enchantable/all_melee",
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#enchanting_overhauled:enchantable/all_melee",
+  "weight": 10
+}

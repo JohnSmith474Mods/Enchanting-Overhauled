@@ -1,0 +1,103 @@
+{
+  "anvil_cost": 0,
+  "description": {
+    "translate": "enchantment.minecraft.blast_protection"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:fraction",
+          "numerator": {
+            "type": "minecraft:linear",
+            "base": 1,
+            "per_level_above_first": 1
+          },
+          "denominator": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "enchantment_max_level"
+            },
+            "cases": {
+              "1": 2,
+              "2": 3
+            },
+            "fallback": 4
+          }
+        },
+        "attribute": "minecraft:generic.explosion_knockback_resistance",
+        "id": "minecraft:enchantment.blast_protection",
+        "operation": "add_value"
+      }
+    ],
+    "minecraft:damage_protection": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "enchantment_max_level"
+            },
+            "cases": {
+              "1": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 12.0,
+                "decrement": 4.0,
+                "minimum": 0.0
+              },
+              "2": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 10.0,
+                "decrement": 5.0,
+                "minimum": 0.0
+              }
+            },
+            "fallback": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 8.0,
+              "decrement": 2.0,
+              "minimum": 0.0
+            }
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:damage_source_properties",
+          "predicate": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "minecraft:is_explosion"
+              },
+              {
+                "expected": false,
+                "id": "minecraft:bypasses_invulnerability"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 13,
+    "per_level_above_first": 8
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/chest_armor",
+  "primary_items": "#minecraft:enchantable/chest_armor",
+  "weight": 4
+}

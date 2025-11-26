@@ -43,9 +43,9 @@ public class BlockAgeProcessor extends StructureProcessor {
             .fieldOf("mossiness")
             .xmap(BlockAgeProcessor::new, blockAgeProcessors -> blockAgeProcessors.mossiness);
 
-    private static final float PROBABILITY_STONE = 0.75F;
-    private static final float PROBABILITY_BRICKS = 0.5F;
-    private static final float PROBABILITY_OBSIDIAN = 0.15F;
+    private static final float PROBABILITY_STONE = .75F;
+    private static final float PROBABILITY_BRICKS = .5F;
+    private static final float PROBABILITY_OBSIDIAN = .15F;
 
     private static final BlockState[] STONE_REPLACEMENTS = {
             Blocks.ANDESITE.defaultBlockState(), Blocks.ANDESITE.defaultBlockState(),

@@ -2,13 +2,15 @@ package johnsmith.enchantingoverhauled.item;
 
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.platform.Services;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 /**
@@ -24,17 +26,11 @@ public class ItemGroups {
      */
     public static final ResourceKey<CreativeModeTab> ENCHANTING_GROUP_KEY = ResourceKey.create(
             Registries.CREATIVE_MODE_TAB,
-            new ResourceLocation(Constants.MOD_ID, "enchanting_group")
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanting_group")
     );
 
     /**
      * Populates the custom "Enchanting Overhauled" creative tab.
-     * <p>
-     * Adds the custom tables and a comprehensive list of Enchanted Tomes,
-     * covering all enabled enchantments at levels higher than their vanilla maximums.
-     *
-     * @param parameters Display parameters (enabled features, permissions).
-     * @param output     The output acceptor to add items to.
      */
     public static void displayItems(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         // 1. Add the tables
@@ -42,56 +38,54 @@ public class ItemGroups {
         output.accept(Services.PLATFORM.getDisturbedEnchantingTable());
 
         // 2. Add all enchantments with custom levels
-        BuiltInRegistries.ENCHANTMENT.stream().forEach(enchantment -> {
-            // Check if valid for current features
-            if (enchantment.isEnabled(parameters.enabledFeatures())) {
-                int maxLevel = enchantment.getMaxLevel();
-                int level = (maxLevel == 1) ? 1 : maxLevel + 1;
-
-                ItemStack stack = new ItemStack(Services.PLATFORM.getEnchantedTome());
-
-                // Set the stored enchantments component
-                ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-                builder.set(enchantment, level);
-
-                stack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
-
-                output.accept(stack);
-            }
-        });
+        generateTomes(parameters, output);
     }
 
     /**
      * Populates the vanilla "Ingredients" tab with Enchanted Tomes.
-     *
-     * @param params Display parameters.
-     * @param output The output acceptor.
      */
     public static void populateIngredients(CreativeModeTab.ItemDisplayParameters params, CreativeModeTab.Output output) {
-        BuiltInRegistries.ENCHANTMENT.stream().forEach(enchantment -> {
-            if (enchantment.isEnabled(params.enabledFeatures())) {
-                int maxLevel = enchantment.getMaxLevel();
-                int level = (maxLevel == 1) ? 1 : maxLevel + 1;
-
-                ItemStack stack = new ItemStack(Services.PLATFORM.getEnchantedTome());
-
-                ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-                builder.set(enchantment, level);
-
-                stack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
-                output.accept(stack);
-            }
-        });
+        generateTomes(params, output);
     }
 
     /**
      * Populates the vanilla "Functional Blocks" tab with the mod's tables.
-     *
-     * @param params Display parameters.
-     * @param output The output acceptor.
      */
     public static void populateFunctional(CreativeModeTab.ItemDisplayParameters params, CreativeModeTab.Output output) {
         output.accept(Services.PLATFORM.getDeactivatedEnchantingTableItem());
         output.accept(Services.PLATFORM.getDisturbedEnchantingTableItem());
+    }
+
+    /**
+     * Helper method to iterate all enchantments and generate "Over-Leveled" Tomes.
+     * <p>
+     * In 1.21, we iterate the dynamic registry from the display parameters.
+     * We do not need to check feature flags explicitly; the registry provided
+     * by the parameters only contains enabled enchantments.
+     */
+    private static void generateTomes(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        // 1. Retrieve the dynamic registry
+        HolderLookup.RegistryLookup<Enchantment> registry = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
+
+        // 2. Iterate through all registered enchantments (Holders)
+        // The registry.listElements() stream is already filtered for enabled features by the game.
+        registry.listElements().forEach(holder -> {
+            Enchantment enchantment = holder.value();
+
+            // 3. Apply your "Over-Level" logic
+            int maxLevel = enchantment.getMaxLevel();
+            // Force single-level enchants (like Mending) to stay at 1, otherwise boost by 1.
+            int level = (maxLevel == 1) ? 1 : maxLevel + 1;
+
+            ItemStack stack = new ItemStack(Services.PLATFORM.getEnchantedTome());
+
+            // 4. Set the stored enchantments component using the Holder
+            ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+            builder.set(holder, level);
+
+            stack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
+
+            output.accept(stack);
+        });
     }
 }

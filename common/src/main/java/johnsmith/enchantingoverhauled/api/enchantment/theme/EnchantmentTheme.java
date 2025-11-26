@@ -1,9 +1,11 @@
 package johnsmith.enchantingoverhauled.api.enchantment.theme;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.EffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.power.PowerProvider;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 

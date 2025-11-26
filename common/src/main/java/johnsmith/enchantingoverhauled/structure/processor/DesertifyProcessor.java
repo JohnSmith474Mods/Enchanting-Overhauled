@@ -40,8 +40,8 @@ public class DesertifyProcessor extends StructureProcessor {
             .fieldOf("desertify")
             .xmap(DesertifyProcessor::new, desertifier -> desertifier.desertify);
 
-    private static final float RUINED = 0.33F;
-    private static final float PROBABILITY_OBSIDIAN = 0.15F;
+    private static final float RUINED = .33F;
+    private static final float PROBABILITY_OBSIDIAN = .15F;
     private static final BlockState[] SANDSTONE = {
             Blocks.SANDSTONE.defaultBlockState(),
             Blocks.SAND.defaultBlockState()

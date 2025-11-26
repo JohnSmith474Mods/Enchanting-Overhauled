@@ -1,6 +1,10 @@
 package johnsmith.enchantingoverhauled.advancement;
 
 import johnsmith.enchantingoverhauled.Constants;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Registry handler for custom advancement criteria triggers.
@@ -13,6 +17,7 @@ public class CriteriaRegistry {
      * The singleton instance of the Activate Altar trigger.
      */
     public static final ActivateAltarTrigger ACTIVATE_ALTAR = new ActivateAltarTrigger();
+
 
     /**
      * Initializes the registry class.

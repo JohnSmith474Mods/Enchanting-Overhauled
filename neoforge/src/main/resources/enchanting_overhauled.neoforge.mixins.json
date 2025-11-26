@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixinextras": {"minVersion": "0.5.0"},
   "mixins": [
-    "entity.player.PlayerMixin"
+    "entity.player.CommonPlayerMixin"
   ],
   "client": [],
   "server": [],

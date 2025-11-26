@@ -17,14 +17,14 @@ public interface EnchantmentMenuAccessor {
      *
      * @return The target item stack.
      */
-    public abstract ItemStack getEnchantmentTarget();
+    public abstract ItemStack enchanting_overhauled$getEnchantmentTarget();
 
     /**
      * Gets the item stack currently residing in the source (modifier/book) slot.
      *
      * @return The source item stack.
      */
-    public abstract ItemStack getEnchantmentSource();
+    public abstract ItemStack enchanting_overhauled$getEnchantmentSources();
 
     /**
      * Gets the array tracking the origin source for each of the three enchantment options.
@@ -38,7 +38,7 @@ public interface EnchantmentMenuAccessor {
      *
      * @return An integer array of size 3 containing source IDs.
      */
-    public abstract int[] getEnchantmentSourceArray();
+    public abstract int[] enchanting_overhauled$getEnchantmentSourceArray();
 
     /**
      * Calculates the resource cost (Experience Levels and Lapis Lazuli) required
@@ -47,7 +47,7 @@ public interface EnchantmentMenuAccessor {
      * @param enchantment The enchantment to calculate the cost for.
      * @return The cost amount.
      */
-    public abstract int calculateEnchantmentCost(Enchantment enchantment);
+    public abstract int enchanting_overhauled$calculateEnchantmentCost(Enchantment enchantment);
 
     /**
      * Gets the array of random texture indices used to render the background of
@@ -55,7 +55,7 @@ public interface EnchantmentMenuAccessor {
      *
      * @return An integer array of size 3 containing texture IDs (0-9).
      */
-    public int[] getTargetTextureIndices();
+    public int[] enchanting_overhauled$getTargetTextureIndices();
 
     /**
      * Gets the array of random texture indices used to render the background of
@@ -63,7 +63,7 @@ public interface EnchantmentMenuAccessor {
      *
      * @return An integer array of size 3 containing texture IDs (0-9).
      */
-    public int[] getSourceTextureIndices();
+    public int[] enchanting_overhauled$getSourceTextureIndices();
 
     /**
      * Gets the array of random texture indices used to render the background of
@@ -71,5 +71,5 @@ public interface EnchantmentMenuAccessor {
      *
      * @return An integer array of size 3 containing texture IDs (0-9).
      */
-    public int[] getTableTextureIndices();
+    public int[] enchanting_overhauled$getTableTextureIndices();
 }

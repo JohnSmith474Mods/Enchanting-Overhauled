@@ -1,0 +1,30 @@
+{
+  "name": {
+    "text": "alpine"
+  },
+  "color_code": 8091250,
+  "effects": {
+    "iterations": 32,
+    "chance": 32,
+    "particle": {
+      "effect": "minecraft:small_gust",
+      "velocity": [0.0, 0.05, 0.0],
+      "velocity_variance": [0.0, 0.05, 0.0],
+      "offset": [0.0, 0.0, 0.0],
+      "offset_variance": [0.5, 0.5, 0.5]
+    },
+    "sound": {
+      "effect": "minecraft:entity.breeze.idle_air",
+      "volume": 0.1,
+      "volume_variance": 0.2,
+      "pitch": 1.0,
+      "pitch_variance": 0.2
+    }
+  },
+  "power_providers": [
+    {
+      "blocks": "minecraft:heavy_core",
+      "power": 20
+    }
+  ]
+}

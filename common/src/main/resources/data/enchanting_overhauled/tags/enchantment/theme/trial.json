@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:breach",
+    "minecraft:wind_burst",
+    "minecraft:density",
+    "minecraft:quick_charge",
+    "minecraft:multishot",
+    "minecraft:sweeping_edge",
+    "enchanting_overhauled:physical_protection"
+  ]
+}

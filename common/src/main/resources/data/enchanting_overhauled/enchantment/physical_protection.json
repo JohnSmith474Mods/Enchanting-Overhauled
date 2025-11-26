@@ -1,0 +1,74 @@
+{
+  "anvil_cost": 0,
+  "description": {
+    "translate": "enchantment.enchanting_overhauled.physical_protection"
+  },
+  "effects": {
+    "minecraft:damage_protection": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "enchantment_max_level"
+            },
+            "cases": {
+              "1": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 12.0,
+                "decrement": 4.0,
+                "minimum": 0.0
+              },
+              "2": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 10.0,
+                "decrement": 5.0,
+                "minimum": 0.0
+              }
+            },
+            "fallback": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 8.0,
+              "decrement": 2.0,
+              "minimum": 0.0
+            }
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:damage_source_properties",
+          "predicate": {
+            "tags": [
+              {
+                "id": "enchanting_overhauled:is_physical_damage",
+                "expected": true
+              },
+              {
+                "id": "minecraft:bypasses_invulnerability",
+                "expected": false
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 12,
+    "per_level_above_first": 11
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 11
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/chest_armor",
+  "primary_items": "#minecraft:enchantable/chest_armor",
+  "weight": 9
+}

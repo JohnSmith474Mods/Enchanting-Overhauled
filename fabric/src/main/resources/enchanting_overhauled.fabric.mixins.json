@@ -9,8 +9,8 @@
   },
   "mixins": [
     "accessor.LootTableAccessor",
-    "entity.player.PlayerMixin",
-    "loot.FabricLootInjector"
+    "entity.player.CommonPlayerMixin",
+    "loot.LootInjectionMixin"
   ],
   "client": [],
   "server": [],

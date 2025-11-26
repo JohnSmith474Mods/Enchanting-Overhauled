@@ -8,8 +8,6 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ItemCombinerMenu.class)
 public class ItemCombinerMenuMixin {
-    // Allow extending classes to access input inventory.
-    // Mapped: input -> inputSlots
     @Shadow
     @Final
     protected Container inputSlots;

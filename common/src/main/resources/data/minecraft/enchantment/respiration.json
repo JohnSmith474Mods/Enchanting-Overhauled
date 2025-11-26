@@ -1,0 +1,57 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.minecraft.respiration"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "enchanting_overhauled:config_aware",
+          "config": {
+            "mod_id": "enchanting_overhauled",
+            "tab_id": "enchantment",
+            "group_id": "general",
+            "resource_name": "enchantment_max_level"
+          },
+          "cases": {
+            "1": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 3.0,
+              "decrement": 1.0,
+              "minimum": 0.0
+            },
+            "2": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 2.0,
+              "decrement": 1.0,
+              "minimum": 1.0
+            }
+          },
+          "fallback": {
+            "type": "minecraft:linear",
+            "base": 1.0,
+            "per_level_above_first": 1.0
+          }
+        },
+        "attribute": "minecraft:generic.oxygen_bonus",
+        "id": "minecraft:enchantment.respiration",
+        "operation": "add_value"
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 40,
+    "per_level_above_first": 10
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "head"
+  ],
+  "supported_items": "#minecraft:enchantable/head_armor",
+  "weight": 2
+}

@@ -1,0 +1,79 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.minecraft.unbreaking"
+  },
+  "effects": {
+    "minecraft:item_damage": [
+      {
+        "effect": {
+          "type": "minecraft:remove_binomial",
+          "chance": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "enchantment_max_level"
+            },
+            "cases": {
+              "1": {
+                "type": "minecraft:fraction",
+                "numerator": {
+                  "type": "minecraft:linear",
+                  "base": 3.0,
+                  "per_level_above_first": 1.0
+                },
+                "denominator": {
+                  "type": "minecraft:linear",
+                  "base": 4.0,
+                  "per_level_above_first": 1.0
+                }
+              },
+              "2": {
+                "type": "minecraft:fraction",
+                "numerator": {
+                  "type": "minecraft:linear",
+                  "base": 2.0,
+                  "per_level_above_first": 1.0
+                },
+                "denominator": {
+                  "type": "minecraft:linear",
+                  "base": 3.0,
+                  "per_level_above_first": 1.0
+                }
+              }
+            },
+            "fallback": {
+              "type": "minecraft:fraction",
+              "numerator": {
+                "type": "minecraft:linear",
+                "base": 1.0,
+                "per_level_above_first": 1.0
+              },
+              "denominator": {
+                "type": "minecraft:linear",
+                "base": 2.0,
+                "per_level_above_first": 1.0
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 55,
+    "per_level_above_first": 8
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "slots": [
+    "any"
+  ],
+  "supported_items": "#minecraft:enchantable/durability",
+  "weight": 5
+}

@@ -1,8 +1,10 @@
 package johnsmith.enchantingoverhauled.api.enchantment.theme.power;
 
+import johnsmith.enchantingoverhauled.api.enchantment.theme.power.bonus.PowerBonus;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.power.bonus.PowerBonus;
+
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.world.level.block.Block;

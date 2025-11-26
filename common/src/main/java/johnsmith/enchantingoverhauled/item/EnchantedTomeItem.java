@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.item;
 
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A custom item representing an Enchanted Tome.
@@ -32,7 +33,7 @@ public class EnchantedTomeItem extends EnchantedBookItem {
      * @return Always true.
      */
     @Override
-    public boolean isFoil(ItemStack stack) {
+    public boolean isFoil(@NotNull ItemStack stack) {
         return true;
     }
 }

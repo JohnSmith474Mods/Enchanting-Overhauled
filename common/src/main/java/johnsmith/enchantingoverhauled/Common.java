@@ -2,11 +2,8 @@ package johnsmith.enchantingoverhauled;
 
 import johnsmith.enchantingoverhauled.advancement.CriteriaRegistry;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
+import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.damagesource.DamageTypeRegistry;
-import johnsmith.enchantingoverhauled.damagesource.DamageTypeTagRegistry;
-import johnsmith.enchantingoverhauled.platform.Services;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.Items;
 
 /**
  * The common entry point for Enchanting Overhauled.
@@ -24,9 +21,12 @@ public class Common {
      * entry points during their initialization phase.
      */
     public static void initialize() {
+        Config.initialize();
+
         EnchantmentThemeRegistry.initialize();
-        CriteriaRegistry.initialize();
+
         DamageTypeRegistry.initialize();
-        DamageTypeTagRegistry.initialize();
+
+        CriteriaRegistry.initialize();
     }
 }

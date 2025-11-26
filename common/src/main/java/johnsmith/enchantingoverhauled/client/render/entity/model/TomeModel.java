@@ -25,7 +25,7 @@ public class TomeModel extends BookModel {
      * The unique layer location for this model, registered under the mod's namespace.
      */
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
-            new ResourceLocation(Constants.MOD_ID, "enchanting_book"), "main");
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanting_book"), "main");
 
     private final ModelPart root;
 
@@ -91,22 +91,23 @@ public class TomeModel extends BookModel {
      * @param buffer        The vertex consumer to draw to.
      * @param packedLight   The packed lightmap coordinates.
      * @param packedOverlay The packed overlay coordinates.
-     * @param red           The red color component (0.0-1.0).
-     * @param green         The green color component (0.0-1.0).
-     * @param blue          The blue color component (0.0-1.0).
-     * @param alpha         The alpha transparency component (0.0-1.0).
+     * @param color         The color component (0x00000000 - 0xFFFFFFFF).
      */
     @Override
     public void renderToBuffer(
             @NotNull PoseStack poseStack,
             @NotNull VertexConsumer buffer,
-            int packedLight, int packedOverlay,
-            float red,
-            float green,
-            float blue,
-            float alpha
+            int packedLight,
+            int packedOverlay,
+            int color
     ) {
-        this.root.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.root.render(
+                poseStack,
+                buffer,
+                packedLight,
+                packedOverlay,
+                color
+        );
     }
 
     /**

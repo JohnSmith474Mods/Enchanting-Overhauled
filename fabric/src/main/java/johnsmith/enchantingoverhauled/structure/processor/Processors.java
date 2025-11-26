@@ -45,7 +45,7 @@ public class Processors {
      * @return The registered processor type.
      */
     private static <P extends StructureProcessor> StructureProcessorType<P> registerProcessor(String id, StructureProcessorType<P> type) {
-        return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, new ResourceLocation(Constants.MOD_ID, id), type);
+        return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, id), type);
     }
 
     /**

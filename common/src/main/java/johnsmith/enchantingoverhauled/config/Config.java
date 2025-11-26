@@ -1,427 +1,142 @@
 package johnsmith.enchantingoverhauled.config;
 
-/**
- * The central holder for all configuration values in the mod.
- * <p>
- * This class contains static fields that represent the current state of the game's configuration.
- * These values are loaded from the platform-specific configuration implementations (Fabric/NeoForge)
- * at startup and synchronized to clients when joining a server.
- */
+import johnsmith.enchantingoverhauled.Constants;
+
+import com.mojang.serialization.Codec;
+import johnsmith.enchantingoverhauled.api.config.data.PropertyGroup;
+import johnsmith.enchantingoverhauled.api.config.data.PropertyTab;
+import johnsmith.enchantingoverhauled.api.config.data.Property;
+import johnsmith.enchantingoverhauled.api.config.ConfigManager;
+
 public class Config {
 
-    // region Anvil Settings
-    /**
-     * The maximum number of items (e.g., diamonds, ingots) required to fully repair an item in an anvil.
-     */
-    public static Integer ANVIL_MAX_ITEM_COST;
-    /**
-     * The percentage of extra durability restored when combining two damaged items in an anvil.
-     */
-    public static Integer ANVIL_REPAIR_BONUS;
-    /**
-     * The chance (0.0 - 1.0) that an anvil will take damage after being used.
-     */
-    public static Double ANVIL_BREAK_CHANCE;
+    // The central manager instance for this mod
+    public static final ConfigManager MANAGER = new ConfigManager(Constants.MOD_ID, Constants.MOD_NAME, Constants.LOG);
 
-    /** Default value for {@link #ANVIL_MAX_ITEM_COST}. */
-    public static final int ANVIL_MAX_ITEM_COST_DEFAULT = 4;
-    /** Default value for {@link #ANVIL_REPAIR_BONUS}. */
-    public static final int ANVIL_REPAIR_BONUS_DEFAULT = 12;
-    /** Default value for {@link #ANVIL_BREAK_CHANCE}. */
-    public static final double ANVIL_BREAK_CHANCE_DEFAULT = 0.12;
-
-    /** Minimum value for {@link #ANVIL_MAX_ITEM_COST}. */
-    public static final int ANVIL_MAX_ITEM_COST_FLOOR = 1;
-    /** Minimum value for {@link #ANVIL_REPAIR_BONUS}. */
-    public static final int ANVIL_REPAIR_BONUS_FLOOR = 0;
-    /** Minimum value for {@link #ANVIL_BREAK_CHANCE}. */
-    public static final double ANVIL_BREAK_CHANCE_FLOOR = 0.0;
-
-    /** Maximum value for {@link #ANVIL_MAX_ITEM_COST}. */
-    public static final int ANVIL_MAX_ITEM_COST_CEILING = 25;
-    /** Maximum value for {@link #ANVIL_REPAIR_BONUS}. */
-    public static final int ANVIL_REPAIR_BONUS_CEILING = 100;
-    /** Maximum value for {@link #ANVIL_BREAK_CHANCE}. */
-    public static final double ANVIL_BREAK_CHANCE_CEILING = 1.0;
-
-    /** Translation key value for {@link #ANVIL_MAX_ITEM_COST}. */
-    public static final String ANVIL_MAX_ITEM_COST_KEY = "anvil.max.item.repair.cost";
-    /** Translation key value for {@link #ANVIL_REPAIR_BONUS}. */
-    public static final String ANVIL_REPAIR_BONUS_KEY = "anvil.item.repair.bonus";
-    /** Translation key value for {@link #ANVIL_BREAK_CHANCE}. */
-    public static final String ANVIL_BREAK_CHANCE_KEY = "anvil.break.chance";
+    // region Tabs
+    public static final PropertyTab TAB_GENERAL = MANAGER.registerTab("general", "config." + Constants.MOD_ID);
+    public static final PropertyTab TAB_ENCHANTMENTS = MANAGER.registerTab("enchantment", "config." + Constants.MOD_ID);
+    public static final PropertyTab TAB_XP = MANAGER.registerTab("xp", "config." + Constants.MOD_ID);
+    public static final PropertyTab TAB_LOOT = MANAGER.registerTab("loot", "config." + Constants.MOD_ID);
+    public static final PropertyTab TAB_ACCESSIBILITY = MANAGER.registerTab("accessibility", "config." + Constants.MOD_ID);
     // endregion
 
-    // region Enchantment Level Settings
-    /**
-     * The maximum level at which an enchantment can be obtained via natural means (Enchanting Table).
-     */
-    public static Integer ENCHANTMENT_MAX_LEVEL;
-    /**
-     * Whether Enchanted Tomes found in chests or created via the Altar can contain enchantments
-     * one level higher than the natural maximum (e.g., Sharpness VI if max is V).
-     */
-    public static Boolean TOMES_HAVE_GREATER_ENCHANTMENTS;
-
-    /** Default value for {@link #ENCHANTMENT_MAX_LEVEL}. */
-    public static final int ENCHANTMENT_MAX_LEVEL_DEFAULT = 3;
-    /** Default value for {@link #TOMES_HAVE_GREATER_ENCHANTMENTS}. */
-    public static final boolean TOMES_HAVE_GREATER_ENCHANTMENTS_DEFAULT = true;
-
-    /** Minimum value for {@link #ENCHANTMENT_MAX_LEVEL}. */
-    public static final int ENCHANTMENT_MAX_LEVEL_FLOOR = 1;
-    /** Maximum value for {@link #ENCHANTMENT_MAX_LEVEL}. */
-    public static final int ENCHANTMENT_MAX_LEVEL_CEILING = 254;
-
-    /** Translation key value for {@link #ENCHANTMENT_MAX_LEVEL}. */
-    public static final String ENCHANTMENT_MAX_LEVEL_KEY = "enchantments.max.level";
-    /** Translation key value for {@link #TOMES_HAVE_GREATER_ENCHANTMENTS}. */
-    public static final String TOMES_HAVE_GREATER_ENCHANTMENTS_KEY = "enchantments.tomes.greater_enchantments";
+    // region Groups
+    public static final PropertyGroup GROUP_GENERAL_ENCHANTING_TABLE = TAB_GENERAL.registerGroup("enchanting_table");
+    public static final PropertyGroup GROUP_GENERAL_ANVIL = TAB_GENERAL.registerGroup("anvil");
+    public static final PropertyGroup GROUP_ENCHANTMENT_GENERAL = TAB_ENCHANTMENTS.registerGroup("general");
+    public static final PropertyGroup GROUP_ENCHANTMENT_PROTECTION_CALCULATION = TAB_ENCHANTMENTS.registerGroup("protection_calculation");
+    public static final PropertyGroup GROUP_XP_GENERAL = TAB_XP.registerGroup("general");
+    public static final PropertyGroup GROUP_LOOT_GENERAL = TAB_LOOT.registerGroup("general");
+    public static final PropertyGroup GROUP_ACCESSIBILITY_ENCHANTING_TABLE = TAB_ACCESSIBILITY.registerGroup("enchanting_table");
+    public static final PropertyGroup GROUP_ACCESSIBILITY_ENCHANTMENT_NAME = TAB_ACCESSIBILITY.registerGroup("enchantment_name");
+    public static final PropertyGroup GROUP_ACCESSIBILITY_ENCHANTMENT_LEVEL = TAB_ACCESSIBILITY.registerGroup("enchantment_level");
+    public static final PropertyGroup GROUP_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION = TAB_ACCESSIBILITY.registerGroup("enchantment_description");
     // endregion
 
-    // region Protection Enchantment Settings
-    /**
-     * The maximum total protection points a player can accumulate from armor enchantments.
-     */
-    public static Double PROTECTION_CAP;
-    /**
-     * The divisor used in the damage reduction formula.
-     * <p>
-     * Formula: {@code Damage * (1.0 - (TotalProtectionPoints / PROTECTION_DIVISOR))}
-     */
-    public static Double PROTECTION_DIVISOR;
+    // region Enchanting Table Values
+    public static final Property.Binary BINARY_ARCANE_RETRIBUTION = GROUP_GENERAL_ENCHANTING_TABLE.register(
+            new Property.Binary("arcane_retribution", "Whether or not trying to activate the altar with a book causes a violent explosion.", GROUP_GENERAL_ENCHANTING_TABLE, true)
+    );
 
-    /** Protection point multiplier for the generic Protection enchantment (now Physical). */
-    public static Integer PHYSICAL_PROTECTION_STRENGTH;
-    /** Protection point multiplier for Fire Protection. */
-    public static Integer FIRE_PROTECTION_STRENGTH;
-    /** Protection point multiplier for Blast Protection. */
-    public static Integer BLAST_PROTECTION_STRENGTH;
-    /** Protection point multiplier for Projectile Protection. */
-    public static Integer PROJECTILE_PROTECTION_STRENGTH;
-    /** Protection point multiplier for Magic Protection. */
-    public static Integer MAGIC_PROTECTION_STRENGTH;
-    /** Protection point multiplier for Feather Falling. */
-    public static Integer FEATHER_FALLING_STRENGTH;
-
-    /** Default value for {@link #PROTECTION_CAP}. */
-    public static final double PROTECTION_CAP_DEFAULT = 8.0;
-    /** Default value for {@link #PROTECTION_DIVISOR}. */
-    public static final double PROTECTION_DIVISOR_DEFAULT = 16.0;
-
-    /** Default value for {@link #PHYSICAL_PROTECTION_STRENGTH}. */
-    public static final int PHYSICAL_PROTECTION_STRENGTH_DEFAULT = 2;
-    /** Default value for {@link #FIRE_PROTECTION_STRENGTH}. */
-    public static final int FIRE_PROTECTION_STRENGTH_DEFAULT = 2;
-    /** Default value for {@link #BLAST_PROTECTION_STRENGTH}. */
-    public static final int BLAST_PROTECTION_STRENGTH_DEFAULT = 2;
-    /** Default value for {@link #PROJECTILE_PROTECTION_STRENGTH}. */
-    public static final int PROJECTILE_PROTECTION_STRENGTH_DEFAULT = 2;
-    /** Default value for {@link #MAGIC_PROTECTION_STRENGTH}. */
-    public static final int MAGIC_PROTECTION_STRENGTH_DEFAULT = 2;
-    /** Default value for {@link #FEATHER_FALLING_STRENGTH}. */
-    public static final int FEATHER_FALLING_STRENGTH_DEFAULT = 3;
-
-    /** Minimum value for {@link #PROTECTION_CAP}. */
-    public static final double PROTECTION_CAP_FLOOR = 1.0D;
-    /** Minimum value for {@link #PROTECTION_DIVISOR}. */
-    public static final double PROTECTION_DIVISOR_FLOOR = PROTECTION_CAP_FLOOR + 0.5D;
-
-    /** Minimum value for
-     * {@link #PHYSICAL_PROTECTION_STRENGTH},
-     * {@link #FIRE_PROTECTION_STRENGTH},
-     * {@link #BLAST_PROTECTION_STRENGTH},
-     * {@link #PROJECTILE_PROTECTION_STRENGTH},
-     * {@link #MAGIC_PROTECTION_STRENGTH} and
-     * {@link #FEATHER_FALLING_STRENGTH}. */
-    public static final int PROTECTION_STRENGTH_FLOOR = 1;
-
-    /** Maximum value for {@link #PROTECTION_CAP}. */
-    public static final double PROTECTION_CAP_CEILING = 32768.0D;
-    /** Maximum value for {@link #PROTECTION_DIVISOR}. */
-    public static final double PROTECTION_DIVISOR_CEILING = PROTECTION_CAP_CEILING + 1.0D;
-
-    /** Maximum value for
-     * {@link #PHYSICAL_PROTECTION_STRENGTH},
-     * {@link #FIRE_PROTECTION_STRENGTH},
-     * {@link #BLAST_PROTECTION_STRENGTH},
-     * {@link #PROJECTILE_PROTECTION_STRENGTH},
-     * {@link #MAGIC_PROTECTION_STRENGTH} and
-     * {@link #FEATHER_FALLING_STRENGTH}. */
-    public static final int PROTECTION_STRENGTH_CEILING = 32768;
-
-    /** Translation key value for {@link #PROTECTION_CAP}. */
-    public static final String PROTECTION_CAP_KEY = "protection.cap";
-    /** Translation key value for {@link #PROTECTION_DIVISOR}. */
-    public static final String PROTECTION_DIVISOR_KEY = "protection.divisor";
-    /** Translation key value for {@link #PHYSICAL_PROTECTION_STRENGTH}. */
-    public static final String PHYSICAL_PROTECTION_STRENGTH_KEY = "physical.protection.strength";
-    /** Translation key value for {@link #FIRE_PROTECTION_STRENGTH}. */
-    public static final String FIRE_PROTECTION_STRENGTH_KEY = "fire.protection.strength";
-    /** Translation key value for {@link #BLAST_PROTECTION_STRENGTH}. */
-    public static final String BLAST_PROTECTION_STRENGTH_KEY = "blast.protection.strength";
-    /** Translation key value for {@link #PROJECTILE_PROTECTION_STRENGTH}. */
-    public static final String PROJECTILE_PROTECTION_STRENGTH_KEY = "projectile.protection.strength";
-    /** Translation key value for {@link #MAGIC_PROTECTION_STRENGTH}. */
-    public static final String MAGIC_PROTECTION_STRENGTH_KEY = "magic.protection.strength";
-    /** Translation key value for {@link #FEATHER_FALLING_STRENGTH}. */
-    public static final String FEATHER_FALLING_STRENGTH_KEY = "feather.falling.strength";
+    public static final Property.Binary BINARY_ACTIVATION_EFFECTS = GROUP_GENERAL_ENCHANTING_TABLE.register(
+            new Property.Binary("activation_effects", "Whether activating the enchanting altar should be spectacular or mundane.", GROUP_GENERAL_ENCHANTING_TABLE, true)
+    );
     // endregion
 
-    // region Damage Enchantment Settings
-    /** The base damage added by Sharpness at Level 1. */
-    public static Float SHARPNESS_INITIAL_DAMAGE;
-    /** The amount the damage bonus decreases per subsequent level of Sharpness. */
-    public static Float SHARPNESS_DIMINISHING_RETURNS;
-    /** The minimum amount of damage added per level of Sharpness (prevents 0 or negative gain). */
-    public static Float SHARPNESS_MINIMUM_DAMAGE_INCREMENT;
-    /** The damage multiplier applied by Smite against undead targets. */
-    public static Float SMITE_MULTIPLIER;
-    /** The damage multiplier applied by Bane of Arthropods against arthropod targets. */
-    public static Float EXTERMINATION_MULTIPLIER;
+    // region Anvil Values
+    public static final Property.Bounded<Integer> BOUNDED_ANVIL_MAX_ITEM_COST = GROUP_GENERAL_ANVIL.register(
+            new Property.Bounded<>("max_item_repair_cost", "The maximum repair item cost for an item.", GROUP_GENERAL_ANVIL, 4, 1, 25, Codec.INT));
 
-    /** Default value for {@link #SHARPNESS_INITIAL_DAMAGE}. */
-    public static final double SHARPNESS_INITIAL_DAMAGE_DEFAULT = 1.5D;
-    /** Default value for {@link #SHARPNESS_DIMINISHING_RETURNS}. */
-    public static final double SHARPNESS_DIMINISHING_RETURNS_DEFAULT = 0.5D;
-    /** Default value for {@link #SHARPNESS_MINIMUM_DAMAGE_INCREMENT}. */
-    public static final double SHARPNESS_MINIMUM_DAMAGE_INCREMENT_DEFAULT = 0.5D;
-    /** Default value for {@link #SMITE_MULTIPLIER} and {@link #EXTERMINATION_MULTIPLIER}. */
-    public static final double DAMAGE_MULTIPLIER_DEFAULT = 4.0D;
+    public static final Property.Bounded<Integer> BOUNDED_ANVIL_REPAIR_BONUS = GROUP_GENERAL_ANVIL.register(
+            new Property.Bounded<>("item_repair_bonus", "Durability bonus (as percentage) added when combining damaged items.", GROUP_GENERAL_ANVIL, 12, 0, 100, Codec.INT));
 
-    /** Minimum value for {@link #SHARPNESS_INITIAL_DAMAGE}. */
-    public static final double SHARPNESS_INITIAL_DAMAGE_FLOOR = 0.5D;
-    /** Minimum value for {@link #SHARPNESS_DIMINISHING_RETURNS}. */
-    public static final double SHARPNESS_DIMINISHING_RETURNS_FLOOR = 0.5D;
-    /** Minimum value for {@link #SHARPNESS_MINIMUM_DAMAGE_INCREMENT}. */
-    public static final double SHARPNESS_MINIMUM_DAMAGE_INCREMENT_FLOOR = 0.5D;
-    /** Minimum value for {@link #SMITE_MULTIPLIER} and {@link #EXTERMINATION_MULTIPLIER}. */
-    public static final double DAMAGE_MULTIPLIER_FLOOR = 1.0D;
-
-    /** Maximum value for {@link #SHARPNESS_INITIAL_DAMAGE}. */
-    public static final double SHARPNESS_INITIAL_DAMAGE_CEILING = 32768.0D;
-    /** Maximum value for {@link #SHARPNESS_DIMINISHING_RETURNS}. */
-    public static final double SHARPNESS_DIMINISHING_RETURNS_CEILING = 32768.0D;
-    /** Maximum value for {@link #SHARPNESS_MINIMUM_DAMAGE_INCREMENT}. */
-    public static final double SHARPNESS_MINIMUM_DAMAGE_INCREMENT_CEILING = 32768.0D;
-    /** Maximum value for {@link #SMITE_MULTIPLIER} and {@link #EXTERMINATION_MULTIPLIER}. */
-    public static final double DAMAGE_MULTIPLIER_CEILING = 32768.0D;
-
-    /** Translation key value for {@link #SHARPNESS_INITIAL_DAMAGE}. */
-    public static final String SHARPNESS_INITIAL_DAMAGE_KEY = "damage.sharpness.initial";
-    /** Translation key value for {@link #SHARPNESS_DIMINISHING_RETURNS}. */
-    public static final String SHARPNESS_DIMINISHING_RETURNS_KEY = "damage.sharpness.diminishing";
-    /** Translation key value for {@link #SHARPNESS_MINIMUM_DAMAGE_INCREMENT}. */
-    public static final String SHARPNESS_MINIMUM_DAMAGE_INCREMENT_KEY = "damage.sharpness.minimum";
-    /** Translation key value for {@link #SMITE_MULTIPLIER}. */
-    public static final String SMITE_MULTIPLIER_KEY = "damage.smite.multiplier";
-    /** Translation key value for {@link #EXTERMINATION_MULTIPLIER}. */
-    public static final String EXTERMINATION_MULTIPLIER_KEY = "damage.extermination.multiplier";
+    public static final Property.Bounded<Float> BOUNDED_ANVIL_BREAK_CHANCE = GROUP_GENERAL_ANVIL.register(
+            new Property.Bounded<>("anvil_break_chance", "Chance for the anvil to take damage on use.", GROUP_GENERAL_ANVIL, .12F, 0.F, 1.F, Codec.FLOAT));
     // endregion
 
-    // region Loot Enchantment Settings
-    /** The initial drop bonus/chance cap provided by Fortune at Level 1. */
-    public static Float FORTUNE_INITIAL_LIMIT;
-    /** The amount the drop limit decreases per subsequent level of Fortune. */
-    public static Float FORTUNE_DIMINISHING_RETURNS;
-    /** The minimum increase to the drop limit per level of Fortune. */
-    public static Float FORTUNE_MINIMUM_INCREMENT;
+    // region Enchantment Values
+    public static final Property.Bounded<Integer> BOUNDED_ENCHANTMENT_MAX_LEVEL = GROUP_ENCHANTMENT_GENERAL.register(
+            new Property.Bounded<>("enchantment_max_level", "The maximum level an enchantment can be *naturally* obtained at.", GROUP_ENCHANTMENT_GENERAL, 3, 1, 254, Codec.INT));
 
-    /** The initial drop bonus/chance cap provided by Looting at Level 1. */
-    public static Float LOOTING_INITIAL_LIMIT;
-    /** The amount the drop limit decreases per subsequent level of Looting. */
-    public static Float LOOTING_DIMINISHING_RETURNS;
-    /** The minimum increase to the drop limit per level of Looting. */
-    public static Float LOOTING_MINIMUM_INCREMENT;
+    public static final Property<Boolean> BINARY_TOMES_HAVE_GREATER_ENCHANTMENTS = GROUP_ENCHANTMENT_GENERAL.register(
+            new Property.Binary("tomes_have_greater_enchantments", "Whether enchanted tomes can contain enchantments of a higher level than naturally possible.", GROUP_ENCHANTMENT_GENERAL, true));
 
-    /** Default value for {@link #FORTUNE_INITIAL_LIMIT}. */
-    public static final double FORTUNE_INITIAL_LIMIT_DEFAULT = 1.0D;
-    /** Default value for {@link #FORTUNE_DIMINISHING_RETURNS}. */
-    public static final double FORTUNE_DIMINISHING_RETURNS_DEFAULT = 0.0D;
-    /** Default value for {@link #FORTUNE_MINIMUM_INCREMENT}. */
-    public static final double FORTUNE_MINIMUM_INCREMENT_DEFAULT = 1.0D;
-    /** Default value for {@link #LOOTING_INITIAL_LIMIT}. */
-    public static final double LOOTING_INITIAL_LIMIT_DEFAULT = 1.0D;
-    /** Default value for {@link #LOOTING_DIMINISHING_RETURNS}. */
-    public static final double LOOTING_DIMINISHING_RETURNS_DEFAULT = 0.0D;
-    /** Default value for {@link #LOOTING_MINIMUM_INCREMENT}. */
-    public static final double LOOTING_MINIMUM_INCREMENT_DEFAULT = 1.0D;
+    public static final Property.Bounded<Float> BOUNDED_PROTECTION_NUMERATOR = GROUP_ENCHANTMENT_PROTECTION_CALCULATION.register(
+            new Property.Bounded<>("protection_numerator", "The maximum effective points you can get from enchantments.", GROUP_ENCHANTMENT_PROTECTION_CALCULATION, 30.F, 1.F, 32_768.F, Codec.FLOAT));
 
-    /** Minimum value for
-     * {@link #FORTUNE_INITIAL_LIMIT},
-     * {@link #FORTUNE_DIMINISHING_RETURNS},
-     * {@link #FORTUNE_MINIMUM_INCREMENT},
-     * {@link #LOOTING_INITIAL_LIMIT},
-     * {@link #LOOTING_DIMINISHING_RETURNS}and
-     * {@link #LOOTING_MINIMUM_INCREMENT}. */
-    public static final double LOOT_LIMIT_FLOOR = 0.0D;
-
-    /** Maximum value for
-     * {@link #FORTUNE_INITIAL_LIMIT},
-     * {@link #FORTUNE_DIMINISHING_RETURNS},
-     * {@link #FORTUNE_MINIMUM_INCREMENT},
-     * {@link #LOOTING_INITIAL_LIMIT},
-     * {@link #LOOTING_DIMINISHING_RETURNS}and
-     * {@link #LOOTING_MINIMUM_INCREMENT}. */
-    public static final double LOOT_LIMIT_CEILING = 32768.0D;
-
-    /** Translation key value for {@link #FORTUNE_INITIAL_LIMIT}. */
-    public static final String FORTUNE_INITIAL_LIMIT_KEY = "loot.fortune.initial";
-    /** Translation key value for {@link #FORTUNE_DIMINISHING_RETURNS}. */
-    public static final String FORTUNE_DIMINISHING_RETURNS_KEY = "loot.fortune.diminishing";
-    /** Translation key value for {@link #FORTUNE_MINIMUM_INCREMENT}. */
-    public static final String FORTUNE_MINIMUM_INCREMENT_KEY = "loot.fortune.minimum";
-    /** Translation key value for {@link #LOOTING_INITIAL_LIMIT}. */
-    public static final String LOOTING_INITIAL_LIMIT_KEY = "loot.looting.initial";
-    /** Translation key value for {@link #LOOTING_DIMINISHING_RETURNS}. */
-    public static final String LOOTING_DIMINISHING_RETURNS_KEY = "loot.looting.diminishing";
-    /** Translation key value for {@link #LOOTING_MINIMUM_INCREMENT}. */
-    public static final String LOOTING_MINIMUM_INCREMENT_KEY = "loot.looting.minimum";
+    public static final Property.Bounded<Float> BOUNDED_PROTECTION_DENOMINATOR = GROUP_ENCHANTMENT_PROTECTION_CALCULATION.register(
+            new Property.Bounded<>("protection_denominator", "The value used to calculate damage reduction.", GROUP_ENCHANTMENT_PROTECTION_CALCULATION,
+                    BOUNDED_PROTECTION_NUMERATOR.defaultValue + 10.F, // Default
+                    BOUNDED_PROTECTION_NUMERATOR.lowerBound + .5F,    // Min
+                    BOUNDED_PROTECTION_NUMERATOR.upperBound / .75F,   // Max
+                    Codec.FLOAT
+            ) {
+                @Override
+                public Float get() {
+                    float configuredVal = super.get();
+                    float cap = BOUNDED_PROTECTION_NUMERATOR.get();
+                    float minSafeDivisor = cap / .75F;
+                    return Math.max(configuredVal, minSafeDivisor);
+                }
+            });
     // endregion
 
-    // region Unbreaking Enchantment Settings
-    /**
-     * A multiplier for the effectiveness of the Unbreaking enchantment.
-     * Higher values effectively increase the "virtual" durability.
-     */
-    public static Integer UNBREAKING_STRENGTH;
-    /**
-     * The chance (0.0 - 1.0) that Unbreaking will simply fail to apply on Armor.
-     * Used to balance armor durability vs tool durability.
-     */
-    public static Double UNBREAKING_ARMOR_PENALTY_FACTOR;
+    // region XP Values
+    public static final Property.Bounded<Integer> BOUNDED_XP_GROWTH_FACTOR = GROUP_XP_GENERAL.register(
+            new Property.Bounded<>("xp_growth_factor", "XP requirement growth factor.", GROUP_XP_GENERAL, 1, 0, Integer.MAX_VALUE, Codec.INT));
 
-    /** Default value for {@link #UNBREAKING_STRENGTH}. */
-    public static final int UNBREAKING_STRENGTH_DEFAULT = 1;
-    /** Default value for {@link #UNBREAKING_ARMOR_PENALTY_FACTOR}. */
-    public static final double UNBREAKING_ARMOR_PENALTY_FACTOR_DEFAULT = 0.6D;
+    public static final Property.Bounded<Integer> BOUNDED_XP_LEVEL_BRACKET_SIZE = GROUP_XP_GENERAL.register(
+            new Property.Bounded<>("xp_level_bracket_size", "Size of XP level brackets for growth calculation.", GROUP_XP_GENERAL, 2, 1, Integer.MAX_VALUE, Codec.INT));
 
-    /** Minimum value for {@link #UNBREAKING_STRENGTH}. */
-    public static final int UNBREAKING_STRENGTH_FLOOR = 1;
-    /** Minimum value for {@link #UNBREAKING_ARMOR_PENALTY_FACTOR}. */
-    public static final double UNBREAKING_ARMOR_PENALTY_FACTOR_FLOOR = 0.0D;
+    public static final Property.Bounded<Integer> BOUNDED_XP_GROWTH_Y_OFFSET = GROUP_XP_GENERAL.register(
+            new Property.Bounded<>("xp_growth_initial_value", "Initial XP requirement value (Y-offset).", GROUP_XP_GENERAL, 2, 1, Integer.MAX_VALUE, Codec.INT));
 
-    /** Maximum value for {@link #UNBREAKING_STRENGTH}. */
-    public static final int UNBREAKING_STRENGTH_CEILING = Integer.MAX_VALUE;
-    /** Maximum value for {@link #UNBREAKING_ARMOR_PENALTY_FACTOR}. */
-    public static final double UNBREAKING_ARMOR_PENALTY_FACTOR_CEILING = 1.0D;
-
-    /** Translation key value for {@link #UNBREAKING_STRENGTH}. */
-    public static final String UNBREAKING_STRENGTH_KEY = "unbreaking.strength";
-    /** Translation key value for {@link #UNBREAKING_ARMOR_PENALTY_FACTOR}. */
-    public static final String UNBREAKING_ARMOR_PENALTY_FACTOR_KEY = "unbreaking.armor.penalty.factor";
+    public static final Property.Bounded<Integer> BOUNDED_XP_MAX_LEVEL = GROUP_XP_GENERAL.register(
+            new Property.Bounded<>("xp_max_level", "Maximum player level.", GROUP_XP_GENERAL, 100, 3, Integer.MAX_VALUE, Codec.INT));
     // endregion
 
-    // region XP Growth Settings
-    /** The slope of the XP requirement curve. */
-    public static Integer XP_GROWTH_FACTOR;
-    /** The size of level brackets where the XP cost remains static. */
-    public static Integer XP_LEVEL_BRACKET_SIZE;
-    /** The initial XP requirement (Y-offset). */
-    public static Integer XP_GROWTH_Y_OFFSET;
-    /** The maximum level a player can reach. */
-    public static Integer XP_MAX_LEVEL;
+    // region Loot Injection Values
+    public static final Property.Bounded<Float> BOUNDED_LOOT_CHANCE_EPIC = GROUP_LOOT_GENERAL.register(
+            new Property.Bounded<>("epic_loot_chance", "Chance for an Enchanted Tome to appear in epic loot chests.", GROUP_LOOT_GENERAL, .8F, 0.F, 1.F, Codec.FLOAT));
 
-    /** Default value for {@link #XP_GROWTH_FACTOR}. */
-    public static final int XP_GROWTH_FACTOR_DEFAULT = 1;
-    /** Default value for {@link #XP_LEVEL_BRACKET_SIZE}. */
-    public static final int XP_LEVEL_BRACKET_SIZE_DEFAULT = 2;
-    /** Default value for {@link #XP_GROWTH_Y_OFFSET}. */
-    public static final int XP_GROWTH_Y_OFFSET_DEFAULT = 2;
-    /** Default value for {@link #XP_MAX_LEVEL}. */
-    public static final int XP_MAX_LEVEL_DEFAULT = 100;
+    public static final Property.Bounded<Float> BOUNDED_LOOT_CHANCE_RARE = GROUP_LOOT_GENERAL.register(
+            new Property.Bounded<>("rare_loot_chance", "Chance for an Enchanted Tome to appear in rare loot chests.", GROUP_LOOT_GENERAL, .45F, 0.F, 1.F, Codec.FLOAT));
 
-    /** Minimum value for {@link #XP_GROWTH_FACTOR}. */
-    public static final int XP_GROWTH_FACTOR_FLOOR = 0;
-    /** Minimum value for {@link #XP_LEVEL_BRACKET_SIZE}. */
-    public static final int XP_LEVEL_BRACKET_SIZE_FLOOR = 1;
-    /** Minimum value for {@link #XP_GROWTH_Y_OFFSET}. */
-    public static final int XP_GROWTH_Y_OFFSET_FLOOR = 1;
-    /** Minimum value for {@link #XP_MAX_LEVEL}. */
-    public static final int XP_MAX_LEVEL_FLOOR = 3;
+    public static final Property.Bounded<Float> BOUNDED_LOOT_CHANCE_UNCOMMON = GROUP_LOOT_GENERAL.register(
+            new Property.Bounded<>("uncommon_loot_chance", "Chance for an Enchanted Tome to appear in uncommon loot chests.", GROUP_LOOT_GENERAL, .2F, 0.F, 1.F, Codec.FLOAT));
 
-    /** Maximum value for {@link #XP_GROWTH_FACTOR}. */
-    public static final int XP_GROWTH_FACTOR_CEILING = Integer.MAX_VALUE;
-    /** Maximum value for {@link #XP_LEVEL_BRACKET_SIZE}. */
-    public static final int XP_LEVEL_BRACKET_SIZE_CEILING = Integer.MAX_VALUE;
-    /** Maximum value for {@link #XP_GROWTH_Y_OFFSET}. */
-    public static final int XP_GROWTH_Y_OFFSET_CEILING = Integer.MAX_VALUE;
-    /** Maximum value for {@link #XP_MAX_LEVEL}. */
-    public static final int XP_MAX_LEVEL_CEILING = Integer.MAX_VALUE;
-
-    /** Translation key value for {@link #XP_GROWTH_FACTOR}. */
-    public static final String XP_GROWTH_FACTOR_KEY = "xp.requirement.growth.factor";
-    /** Translation key value for {@link #XP_LEVEL_BRACKET_SIZE}. */
-    public static final String XP_LEVEL_BRACKET_SIZE_KEY = "xp.requirement.growth.bracket.size";
-    /** Translation key value for {@link #XP_GROWTH_Y_OFFSET}. */
-    public static final String XP_GROWTH_Y_OFFSET_KEY = "xp.requirement.growth.initial.value";
-    /** Translation key value for {@link #XP_MAX_LEVEL}. */
-    public static final String XP_MAX_LEVEL_KEY = "xp.max.level";
+    public static final Property.Bounded<Float> BOUNDED_LOOT_CHANCE_COMMON = GROUP_LOOT_GENERAL.register(
+            new Property.Bounded<>("common_loot_chance", "Chance for an Enchanted Tome to appear in common loot chests.", GROUP_LOOT_GENERAL, .05F, 0.F, 1.F, Codec.FLOAT));
     // endregion
 
-    // region Loot Injection Settings
-    /**
-     * The probability (0.0 - 1.0) of finding an Enchanted Tome in "Epic" loot chests.
-     */
-    public static Float EPIC_LOOT_CHANCE;
-    /**
-     * The probability (0.0 - 1.0) of finding an Enchanted Tome in "Rare" loot chests.
-     */
-    public static Float RARE_LOOT_CHANCE;
-    /**
-     * The probability (0.0 - 1.0) of finding an Enchanted Tome in "Uncommon" loot chests.
-     */
-    public static Float UNCOMMON_LOOT_CHANCE;
-    /**
-     * The probability (0.0 - 1.0) of finding an Enchanted Tome in "Common" loot chests.
-     */
-    public static Float COMMON_LOOT_CHANCE;
+    // region Accessibility Values
+    public static final Property<Boolean> BINARY_ACCESSIBILITY_USE_PLAIN_BACKGROUND = GROUP_ACCESSIBILITY_ENCHANTING_TABLE.register(
+            new Property.Binary("use_plain_background", "Whether the enchanting table buttons should be plain or textured.", GROUP_ACCESSIBILITY_ENCHANTING_TABLE, false));
 
-    /** Default value for {@link #EPIC_LOOT_CHANCE}. */
-    public static final double EPIC_LOOT_CHANCE_DEFAULT = 0.8;
-    /** Default value for {@link #RARE_LOOT_CHANCE}. */
-    public static final double RARE_LOOT_CHANCE_DEFAULT = 0.45;
-    /** Default value for {@link #UNCOMMON_LOOT_CHANCE}. */
-    public static final double UNCOMMON_LOOT_CHANCE_DEFAULT = 0.2;
-    /** Default value for {@link #COMMON_LOOT_CHANCE}. */
-    public static final double COMMON_LOOT_CHANCE_DEFAULT = 0.05;
+    public static final Property<Boolean> BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS = GROUP_ACCESSIBILITY_ENCHANTING_TABLE.register(
+            new Property.Binary("obfuscate_new_enchantments", "Whether the enchanting table should show new enchantments in the standard galactic alphabet.", GROUP_ACCESSIBILITY_ENCHANTING_TABLE, true));
 
-    /** Maximum value for {@link #RARE_LOOT_CHANCE}. */
-    public static final double LOOT_CHANCE_FLOOR = 0.00;
+    public static final Property<Boolean> BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR = GROUP_ACCESSIBILITY_ENCHANTMENT_NAME.register(
+            new Property.Binary("override_enchantment_name_color", "Whether enchantment names should not be colored according to their assigned theme.", GROUP_ACCESSIBILITY_ENCHANTMENT_NAME, false));
 
-    /** Maximum value for {@link #UNCOMMON_LOOT_CHANCE}. */
-    public static final double LOOT_CHANCE_CEILING = 1.00;
+    public static final Property.Bounded<Integer> BOUNDED_ACCESSIBILITY_ENCHANTMENT_NAME_COLOR_VALUE = GROUP_ACCESSIBILITY_ENCHANTMENT_NAME.register(
+            new Property.Bounded<>("enchantment_name_color_override_value", "The color value enchantment names should be override with", GROUP_ACCESSIBILITY_ENCHANTMENT_NAME, 0xFFFFFF, 0x000000, 0xFFFFFF, Codec.INT));
 
-    /** Translation key value for {@link #EPIC_LOOT_CHANCE}. */
-    public static final String EPIC_LOOT_CHANCE_KEY = "loot.chance.epic";
-    /** Translation key value for {@link #RARE_LOOT_CHANCE}. */
-    public static final String RARE_LOOT_CHANCE_KEY = "loot.chance.rare";
-    /** Translation key value for {@link #UNCOMMON_LOOT_CHANCE}. */
-    public static final String UNCOMMON_LOOT_CHANCE_KEY = "loot.chance.uncommon";
-    /** Translation key value for {@link #COMMON_LOOT_CHANCE}. */
-    public static final String COMMON_LOOT_CHANCE_KEY = "loot.chance.common";
+    public static final Property<Boolean> BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_LEVEL_COLOR = GROUP_ACCESSIBILITY_ENCHANTMENT_LEVEL.register(
+            new Property.Binary("override_enchantment_level_color", "Whether enchantment levels should not be colored depending on their value.", GROUP_ACCESSIBILITY_ENCHANTMENT_LEVEL, false));
+
+    public static final Property.Bounded<Integer> BOUNDED_ACCESSIBILITY_ENCHANTMENT_LEVEL_COLOR_VALUE = GROUP_ACCESSIBILITY_ENCHANTMENT_LEVEL.register(
+            new Property.Bounded<>("enchantment_level_color_override_value", "The color value enchantment levels should be override with", GROUP_ACCESSIBILITY_ENCHANTMENT_LEVEL, 0xFFFFFF, 0x000000, 0xFFFFFF, Codec.INT));
+
+    public static final Property<Boolean> BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS = GROUP_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION.register(
+            new Property.Binary("show_enchantment_descriptions", "Whether enchantments descriptions should be removed or displayed.", GROUP_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION, true));
+
+    public static final Property.Bounded<Integer> BOUNDED_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION_COLOR = GROUP_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION.register(
+            new Property.Bounded<>("enchantment_description_color_value", "The color value enchantment descriptions should be override with", GROUP_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION, 0xA7A7A7, 0x000000, 0xFFFFFF, Codec.INT));
     // endregion
 
-    // region Accessibility Settings
-    /**
-     * If true, the enchanting table UI will use simplified, plain textures for slots
-     * instead of the standard stylized ones.
-     */
-    public static Boolean USE_PLAIN_BACKGROUND;
-    /**
-     * If true, new enchantments in the table (Apply slot) will be rendered in the
-     * Standard Galactic Alphabet (obfuscated). If false, they are readable.
-     */
-    public static Boolean OBFUSCATE_NEW_ENCHANTMENTS;
+    public static void initialize() {
 
-    /** Default value for {@link #USE_PLAIN_BACKGROUND}. */
-    public static final boolean USE_PLAIN_BACKGROUND_DEFAULT = false;
-    /** Default value for {@link #OBFUSCATE_NEW_ENCHANTMENTS}. */
-    public static final boolean OBFUSCATE_NEW_ENCHANTMENTS_DEFAULT = true;
-
-    /** Translation key value for {@link #USE_PLAIN_BACKGROUND}. */
-    public static final String USE_PLAIN_BACKGROUND_KEY = "accessibility.use.accessible.button.textures";
-    /** Translation key value for {@link #OBFUSCATE_NEW_ENCHANTMENTS}. */
-    public static final String OBFUSCATE_NEW_ENCHANTMENTS_KEY = "accessibility.obfuscate.new.enchantments";
-    // endregion
+    }
 }

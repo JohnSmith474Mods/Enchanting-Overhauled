@@ -1,64 +1,34 @@
 package johnsmith.enchantingoverhauled.mixin.enchantment;
 
-import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.accessor.EnchantmentThemeAccessor;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
-
 import johnsmith.enchantingoverhauled.config.Config;
 
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
-
 @Mixin(Enchantment.class)
-public class EnchantmentMixin implements EnchantmentThemeAccessor {
-
-    /**
-     * Adds the theme field to all Enchantments.
-     * We initialize it to DEFAULT to ensure no enchantment is ever missing a theme.
-     */
-    @Unique
-    private ResourceKey<EnchantmentTheme> enchanting_overhauled$theme = EnchantmentThemeRegistry.DEFAULT;
-
-    /**
-     * Implements the getter from our accessor.
-     */
-    @Override
-    @Unique
-    public ResourceKey<EnchantmentTheme> enchanting_overhauled$getTheme() {
-        return Objects.requireNonNullElse(enchanting_overhauled$theme, EnchantmentThemeRegistry.DEFAULT);
-    }
-
-    /**
-     * Implements the setter from our accessor.
-     */
-    @Override
-    @Unique
-    public void enchanting_overhauled$setTheme(ResourceKey<EnchantmentTheme> theme) {
-        this.enchanting_overhauled$theme = theme;
-    }
+public class EnchantmentMixin {
 
     @Shadow
     @Final
     private Enchantment.EnchantmentDefinition definition;
 
-    @Inject(method = "getMaxLevel()I",
-                at = @At("HEAD"),
-       cancellable = true)
-    public void getMaxLevel( CallbackInfoReturnable<Integer> cir) {
-        if (this.definition.maxLevel() == 1) {
-            cir.setReturnValue(this.definition.maxLevel());
-        } else {
-            cir.setReturnValue(Config.ENCHANTMENT_MAX_LEVEL);
-        } return;
+    /**
+     * Overrides the maximum level for all scalable enchantments based on the global configuration.
+     * <p>
+     * Logic:
+     * 1. If the enchantment is naturally single-level (e.g. Mending, Silk Touch), preserve it.
+     * 2. Otherwise, force it to the configured global max level (e.g., 3).
+     */
+    @Inject(method = "getMaxLevel", at = @At("HEAD"), cancellable = true)
+    public void getMaxLevel(CallbackInfoReturnable<Integer> cir) {
+        int originalMax = this.definition.maxLevel();
+        if (originalMax == 1) { return; }
+        cir.setReturnValue(Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get());
     }
 }

@@ -22,11 +22,11 @@ public class CombatRulesMixin {
     private static void onGetInflictedDamage(float damage, float protection, CallbackInfoReturnable<Float> cir) {
 
         // Get the divisor from config. Default to 25.0F (vanilla) if 0 or less.
-        float divisor = (Config.PROTECTION_DIVISOR <= 0) ? 25.0F : Config.PROTECTION_DIVISOR.floatValue();
+        float divisor = Config.BOUNDED_PROTECTION_DENOMINATOR.get();
 
         // Clamp protection value (vanilla cap is 20)
         // Mapped: MathHelper.clamp -> Mth.clamp
-        float f = Mth.clamp(protection, 0.0F, Config.PROTECTION_CAP.floatValue());
+        float f = Mth.clamp(protection, 0.0F, Config.BOUNDED_PROTECTION_NUMERATOR.get());
 
         // Calculate new damage using the configurable divisor
         float newDamage = damage * (1.0F - f / divisor);

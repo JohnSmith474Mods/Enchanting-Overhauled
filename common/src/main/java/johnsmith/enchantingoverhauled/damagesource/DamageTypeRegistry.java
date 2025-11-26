@@ -30,7 +30,7 @@ public class DamageTypeRegistry {
      */
     public static final ResourceKey<DamageType> ARCANE_RETRIBUTION = ResourceKey.create(
             Registries.DAMAGE_TYPE,
-            new ResourceLocation(Constants.MOD_ID, "arcane_retribution")
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "arcane_retribution")
     );
 
     /**

@@ -8,7 +8,6 @@ import johnsmith.enchantingoverhauled.structure.processor.VinesProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
@@ -80,11 +79,6 @@ public interface IPlatformHelper {
     Item getDisturbedEnchantingTableItem();
 
     /**
-     * Gets the custom Magic Protection enchantment.
-     */
-    Enchantment getMagicProtectionEnchantment();
-
-    /**
      * Retrieves the {@link EnchantmentTheme} registry from the provided access object.
      * <p>
      * This abstracts the difference in how dynamic/synced registries are accessed or wrapped
@@ -114,11 +108,4 @@ public interface IPlatformHelper {
      * Gets the registered type for the Vines structure processor.
      */
     StructureProcessorType<VinesProcessor> getVinesProcessor();
-
-    /**
-     * Triggers the saving of the mod configuration file.
-     * <p>
-     * Used by the in-game configuration screen to persist changes to disk.
-     */
-    void saveConfig();
 }

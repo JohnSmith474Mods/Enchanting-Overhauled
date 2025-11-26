@@ -1,6 +1,7 @@
 package johnsmith.enchantingoverhauled.structure.processor;
 
 import johnsmith.enchantingoverhauled.platform.Services;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

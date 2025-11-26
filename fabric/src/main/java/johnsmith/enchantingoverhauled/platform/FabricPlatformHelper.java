@@ -3,8 +3,6 @@ package johnsmith.enchantingoverhauled.platform;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
 import johnsmith.enchantingoverhauled.block.Blocks;
-import johnsmith.enchantingoverhauled.config.FabricConfig;
-import johnsmith.enchantingoverhauled.enchantment.Enchantments;
 import johnsmith.enchantingoverhauled.item.Items;
 import johnsmith.enchantingoverhauled.platform.services.IPlatformHelper;
 
@@ -17,7 +15,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
@@ -69,11 +66,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public Enchantment getMagicProtectionEnchantment() {
-        return Enchantments.MAGIC_PROTECTION;
-    }
-
-    @Override
     public Optional<Registry<EnchantmentTheme>> getThemeRegistry(RegistryAccess registryAccess) {
         return registryAccess.registry(EnchantmentThemeRegistry.THEME_REGISTRY_KEY);
     }
@@ -96,10 +88,5 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public StructureProcessorType<VinesProcessor> getVinesProcessor() {
         return Processors.VINES_PROCESSOR;
-    }
-
-    @Override
-    public void saveConfig() {
-        FabricConfig.save();
     }
 }

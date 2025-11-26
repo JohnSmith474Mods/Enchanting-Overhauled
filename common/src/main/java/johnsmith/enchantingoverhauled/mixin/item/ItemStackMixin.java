@@ -10,7 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -76,7 +78,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         if (enchantments != null) {
             int count = enchantments.size(); // Mapped: getSize() -> size()
             if (count > 0) {
-                ChatFormatting color = getColor(count);
+                ChatFormatting color = enchanting_Overhauled$getColor(count);
                 // Add the header with the new color
                 // Mapped: formatted() -> withStyle()
                 textConsumer.accept(baseHeader.copy().withStyle(color));
@@ -85,7 +87,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
     }
 
     @Unique
-    private static @NotNull ChatFormatting getColor(int count) {
+    private static @NotNull ChatFormatting enchanting_Overhauled$getColor(int count) {
         ChatFormatting color;
         if (count == 1) {
             color = ChatFormatting.YELLOW;

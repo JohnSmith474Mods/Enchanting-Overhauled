@@ -1,0 +1,102 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.minecraft.binding_curse"
+  },
+  "effects": {
+    "minecraft:prevent_armor_change": {},
+    "enchanting_overhauled:binding_chance": {
+      "chance": {
+        "type": "enchanting_overhauled:config_aware",
+        "config": {
+          "mod_id": "enchanting_overhauled",
+          "tab_id": "enchantment",
+          "group_id": "general",
+          "resource_name": "enchantment_max_level"
+        },
+        "cases": {
+          "1": {
+            "type": "minecraft:fraction",
+            "numerator": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 3.0,
+              "decrement": 2.0,
+              "minimum": 0.0
+            },
+            "denominator": {
+              "type": "enchanting_overhauled:config_aware",
+              "config": {
+                "mod_id": "enchanting_overhauled",
+                "tab_id": "enchantment",
+                "group_id": "general",
+                "resource_name": "tomes_have_greater_enchantments"
+              },
+              "cases": {
+                "false": 3
+              },
+              "fallback": 4
+            }
+          },
+          "2": {
+            "type": "minecraft:fraction",
+            "numerator": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 3.0,
+              "decrement": 1.0,
+              "minimum": 0.0
+            },
+            "denominator": {
+              "type": "enchanting_overhauled:config_aware",
+              "config": {
+                "mod_id": "enchanting_overhauled",
+                "tab_id": "enchantment",
+                "group_id": "general",
+                "resource_name": "tomes_have_greater_enchantments"
+              },
+              "cases": {
+                "false": 5
+              },
+              "fallback": 6
+            }
+          }
+        },
+        "fallback": {
+          "type": "minecraft:fraction",
+          "numerator": {
+            "type": "enchanting_overhauled:diminishing_returns",
+            "base": 4.0,
+            "decrement": 1.0,
+            "minimum": 0.0
+          },
+          "denominator": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "tomes_have_greater_enchantments"
+            },
+            "cases": {
+              "false": 9
+            },
+            "fallback": 10
+          }
+        }
+      }
+    }
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:enchantable/equippable",
+  "weight": 1
+}

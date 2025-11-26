@@ -1,7 +1,8 @@
 package johnsmith.enchantingoverhauled.api.enchantment.theme.registry;
 
-import johnsmith.enchantingoverhauled.Constants; // Import common Constants
+import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
+
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -17,26 +18,26 @@ public class EnchantmentThemeRegistry {
      * The registry key for our new custom registry.
      */
     public static final ResourceKey<Registry<EnchantmentTheme>> THEME_REGISTRY_KEY =
-            ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "enchantment_theme"));
+            ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("minecraft", "enchantment_theme"));
 
     /**
      * RegistryKey for the default theme, which can be loaded from JSON.
      */
     public static final ResourceKey<EnchantmentTheme> DEFAULT =
-            ResourceKey.create(THEME_REGISTRY_KEY, new ResourceLocation(Constants.MOD_ID, "default"));
+            ResourceKey.create(THEME_REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "default"));
 
     /**
      * RegistryKey for the marine theme, which can be loaded from JSON.
      */
     public static final ResourceKey<EnchantmentTheme> MARINE =
-            ResourceKey.create(THEME_REGISTRY_KEY, new ResourceLocation(Constants.MOD_ID, "marine"));
+            ResourceKey.create(THEME_REGISTRY_KEY,ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "marine"));
 
     /**
      * RegistryKey for the nether theme, which can be loaded from JSON.
      * The ID does not include the file extension.
      */
     public static final ResourceKey<EnchantmentTheme> NETHER =
-            ResourceKey.create(THEME_REGISTRY_KEY, new ResourceLocation(Constants.MOD_ID, "nether"));
+            ResourceKey.create(THEME_REGISTRY_KEY,ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "nether"));
 
     /**
      * Called by the main mod initializer to load this class and ensure keys are initialized.

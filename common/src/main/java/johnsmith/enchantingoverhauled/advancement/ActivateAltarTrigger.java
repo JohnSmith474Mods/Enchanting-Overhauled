@@ -21,11 +21,6 @@ import java.util.Optional;
 public class ActivateAltarTrigger extends SimpleCriterionTrigger<ActivateAltarTrigger.Conditions> {
 
     /**
-     * The unique resource location identifier for this trigger.
-     */
-    public static final ResourceLocation ID = new ResourceLocation(Constants.MOD_ID, "activate_altar");
-
-    /**
      * Triggers the advancement criterion for the specified player.
      *
      * @param player The player who activated the altar.

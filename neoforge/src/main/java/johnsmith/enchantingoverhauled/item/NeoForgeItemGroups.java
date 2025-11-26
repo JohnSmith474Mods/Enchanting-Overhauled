@@ -12,8 +12,8 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.minecraft.world.item.Items.ENCHANTING_TABLE;
 
@@ -51,15 +51,19 @@ public class NeoForgeItemGroups {
 
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             ItemGroups.populateFunctional(event.getParameters(), event);
-        }
 
-        // Remove vanilla enchanting table
-        Iterator<Map.Entry<ItemStack, CreativeModeTab.TabVisibility>> iterator = event.getEntries().iterator();
-        while (iterator.hasNext()) {
-            ItemStack stack = iterator.next().getKey();
-            if (stack.is(ENCHANTING_TABLE)) {
-                iterator.remove();
-                break;
+            // Fix: Safely remove the vanilla enchanting table from this tab.
+            // 1. Iterate the search entries (view-only) to find the specific ItemStack instance.
+            List<ItemStack> toRemove = new ArrayList<>();
+            for (ItemStack stack : event.getSearchEntries()) {
+                if (stack.is(ENCHANTING_TABLE)) {
+                    toRemove.add(stack);
+                }
+            }
+
+            // 2. Use the event's remove method to modify the underlying collection.
+            for (ItemStack stack : toRemove) {
+                event.remove(stack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             }
         }
     }

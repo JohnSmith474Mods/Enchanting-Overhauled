@@ -3,12 +3,14 @@ package johnsmith.enchantingoverhauled.block;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.accessor.TomeStorageAccessor;
 import johnsmith.enchantingoverhauled.advancement.CriteriaRegistry;
+import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.damagesource.DamageTypeRegistry;
 import johnsmith.enchantingoverhauled.platform.Services;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -114,31 +116,34 @@ public class DeactivatedEnchantingTableBlock extends Block {
                     itemStack.shrink(1);
                 }
 
-                // Spawn activation effects (Sound, Lightning, Particles, Glowing Effect)
-                serverLevel.playSound(null, pos, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1.0F, 1.0F);
-                LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(serverLevel);
-                if (lightningBolt != null) {
-                    lightningBolt.moveTo(Vec3.atBottomCenterOf(pos));
-                    serverLevel.addFreshEntity(lightningBolt);
-                }
+                boolean shouldCreateActivationEffects = Config.BINARY_ACTIVATION_EFFECTS.get();
+                if (shouldCreateActivationEffects) {
+                    // Spawn activation effects (Sound, Lightning, Particles, Glowing Effect)
+                    serverLevel.playSound(null, pos, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(serverLevel);
+                    if (lightningBolt != null) {
+                        lightningBolt.moveTo(Vec3.atBottomCenterOf(pos));
+                        serverLevel.addFreshEntity(lightningBolt);
+                    }
 
-                AABB areaOfEffect = new AABB(pos).inflate(3.0F);
-                List<LivingEntity> nearbyEntities = serverLevel.getEntitiesOfClass(LivingEntity.class, areaOfEffect);
-                for (LivingEntity entity : nearbyEntities) {
-                    entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 30 * 20));
-                }
+                    AABB areaOfEffect = new AABB(pos).inflate(3.0F);
+                    List<LivingEntity> nearbyEntities = serverLevel.getEntitiesOfClass(LivingEntity.class, areaOfEffect);
+                    for (LivingEntity entity : nearbyEntities) {
+                        entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 30 * 20));
+                    }
 
-                serverLevel.sendParticles(
-                        ParticleTypes.SOUL,
-                        pos.getX() + 0.5,
-                        pos.getY() + 1.0,
-                        pos.getZ() + 0.5,
-                        30,
-                        0.5,
-                        0.3,
-                        0.5,
-                        0.0
-                );
+                    serverLevel.sendParticles(
+                            ParticleTypes.SOUL,
+                            pos.getX() + 0.5,
+                            pos.getY() + 1.0,
+                            pos.getZ() + 0.5,
+                            30,
+                            0.5,
+                            0.3,
+                            0.5,
+                            0.0
+                    );
+                }
             }
 
             // Trigger the activation advancement
@@ -150,57 +155,64 @@ public class DeactivatedEnchantingTableBlock extends Block {
             return InteractionResult.SUCCESS;
         }
 
+
         // 2. Check for incorrect book types (Punishment Logic)
         boolean isWrongBook = itemStack.is(Items.BOOK)
                 || itemStack.is(Items.WRITABLE_BOOK)
                 || itemStack.is(Items.WRITTEN_BOOK)
                 || itemStack.is(Items.ENCHANTED_BOOK);
         if (isWrongBook) {
-            if (!level.isClientSide) {
-                ServerLevel serverLevel = (ServerLevel) level;
+            boolean isArcaneRetributionActivate = Config.BINARY_ARCANE_RETRIBUTION.get();
+            if (isArcaneRetributionActivate) {
+                if (!level.isClientSide) {
+                    ServerLevel serverLevel = (ServerLevel) level;
 
-                // Consume the item
-                if (!player.isCreative()) {
-                    itemStack.shrink(1);
-                }
+                    // Consume the item
+                    if (!player.isCreative()) {
+                        itemStack.shrink(1);
+                    }
 
-                // Special effects for Enchanted Books (Vex sounds + Soul particles)
-                if (itemStack.is(Items.ENCHANTED_BOOK)) {
-                    serverLevel.playSound(null, pos, SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 2.0F, 0.0F);
-                    serverLevel.sendParticles(
-                            ParticleTypes.SOUL,
-                            pos.getX() + 0.5,
-                            pos.getY() + 1.0,
-                            pos.getZ() + 0.5,
-                            1500,
-                            4.0F,
-                            4.0F,
-                            4.0F,
-                            0.0
+                    // Special effects for Enchanted Books (Vex sounds + Soul particles)
+                    if (itemStack.is(Items.ENCHANTED_BOOK)) {
+                        serverLevel.playSound(null, pos, SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 2.0F, 0.0F);
+                        serverLevel.sendParticles(
+                                ParticleTypes.SOUL,
+                                pos.getX() + 0.5,
+                                pos.getY() + 1.0,
+                                pos.getZ() + 0.5,
+                                1500,
+                                4.0F,
+                                4.0F,
+                                4.0F,
+                                0.0
+                        );
+                    }
+
+                    // Destroy the table immediately
+                    serverLevel.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+
+                    // Retrieve the custom damage type
+                    DamageSource arcaneRetribution = new DamageSource(
+                            level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypeRegistry.ARCANE_RETRIBUTION)
+                    );
+
+                    // Create an explosion at the block's location
+                    serverLevel.explode(
+                            (Entity) null,
+                            arcaneRetribution,
+                            null,
+                            pos.getCenter(),
+                            5.0F,
+                            true,
+                            Level.ExplosionInteraction.BLOCK
                     );
                 }
 
-                // Destroy the table immediately
-                serverLevel.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                return InteractionResult.CONSUME;
 
-                // Retrieve the custom damage type
-                DamageSource arcaneRetribution = new DamageSource(
-                        level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypeRegistry.ARCANE_RETRIBUTION)
-                );
-
-                // Create an explosion at the block's location
-                serverLevel.explode(
-                        (Entity) null,
-                        arcaneRetribution,
-                        null,
-                        pos.getCenter(),
-                        5.0F,
-                        true,
-                        Level.ExplosionInteraction.BLOCK
-                );
+            } else {
+                player.displayClientMessage(Component.translatable("block.enchanting_overhauled.deactivated_enchanting_table.wrong_catalyst"), true);
             }
-
-            return InteractionResult.CONSUME;
         }
 
         return InteractionResult.PASS;

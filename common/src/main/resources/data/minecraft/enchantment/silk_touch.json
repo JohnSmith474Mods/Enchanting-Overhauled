@@ -1,0 +1,123 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.minecraft.silk_touch"
+  },
+  "effects": {
+    "enchanting_overhauled:silk_touch": {
+      "chance": {
+        "type": "enchanting_overhauled:config_aware",
+        "config": {
+          "mod_id": "enchanting_overhauled",
+          "tab_id": "enchantment",
+          "group_id": "general",
+          "resource_name": "enchantment_max_level"
+        },
+        "cases": {
+          "1": {
+            "type": "minecraft:fraction",
+            "numerator": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 3.0,
+              "decrement": 2.0,
+              "minimum": 0.0
+            },
+            "denominator": {
+              "type": "enchanting_overhauled:config_aware",
+              "config": {
+                "mod_id": "enchanting_overhauled",
+                "tab_id": "enchantment",
+                "group_id": "general",
+                "resource_name": "tomes_have_greater_enchantments"
+              },
+              "cases": {
+                "false": 3
+              },
+              "fallback": 4
+            }
+          },
+          "2": {
+            "type": "minecraft:fraction",
+            "numerator": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 3.0,
+              "decrement": 1.0,
+              "minimum": 0.0
+            },
+            "denominator": {
+              "type": "enchanting_overhauled:config_aware",
+              "config": {
+                "mod_id": "enchanting_overhauled",
+                "tab_id": "enchantment",
+                "group_id": "general",
+                "resource_name": "tomes_have_greater_enchantments"
+              },
+              "cases": {
+                "false": 5
+              },
+              "fallback": 6
+            }
+          }
+        },
+        "fallback": {
+          "type": "minecraft:fraction",
+          "numerator": {
+            "type": "enchanting_overhauled:diminishing_returns",
+            "base": 4.0,
+            "decrement": 1.0,
+            "minimum": 0.0
+          },
+          "denominator": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "tomes_have_greater_enchantments"
+            },
+            "cases": {
+              "false": 9
+            },
+            "fallback": 10
+          }
+        }
+      }
+    },
+    "minecraft:block_experience": [
+      {
+        "effect": {
+          "type": "minecraft:set",
+          "value": 0.0
+        },
+        "requirements": {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "enchantments": [
+              {
+                "enchantment": "minecraft:silk_touch",
+                "levels": {
+                  "min": 1
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "exclusive_set": "#minecraft:exclusive_set/mining",
+  "max_cost": {
+    "base": 60,
+    "per_level_above_first": 20
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 20
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/mining",
+  "weight": 1
+}
