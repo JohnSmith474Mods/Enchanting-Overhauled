@@ -13,6 +13,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -73,17 +74,21 @@ public abstract class EnchantmentMixin {
         EnchantmentThemeAccessor accessor = (EnchantmentThemeAccessor) (Object) this;
         ResourceKey<EnchantmentTheme> themeKey = accessor.enchanting_overhauled$getTheme();
         Optional<Integer> colorCode = Optional.empty();
-        Minecraft client = Minecraft.getInstance();
 
-        if (client.level != null) {
-            RegistryAccess registryAccess = client.level.registryAccess();
-            // Use platform helper to get the registry safely
-            Optional<Registry<EnchantmentTheme>> themeRegistry = Services.PLATFORM.getThemeRegistry(registryAccess);
+        if (Config.OVERRIDE_ENCHANTMENT_NAME_COLORING) {
+            colorCode = Optional.of(Config.OVERRIDE_ENCHANTMENT_NAME_COLOR);
+        } else {
+            Minecraft client = Minecraft.getInstance();
+            if (client.level != null) {
+                RegistryAccess registryAccess = client.level.registryAccess();
+                // Use platform helper to get the registry safely
+                Optional<Registry<EnchantmentTheme>> themeRegistry = Services.PLATFORM.getThemeRegistry(registryAccess);
 
-            if (themeRegistry.isPresent()) {
-                EnchantmentTheme theme = themeRegistry.get().get(themeKey);
-                if (theme != null) {
-                    colorCode = theme.colorCode();
+                if (themeRegistry.isPresent()) {
+                    EnchantmentTheme theme = themeRegistry.get().get(themeKey);
+                    if (theme != null) {
+                        colorCode = theme.colorCode();
+                    }
                 }
             }
         }
@@ -121,8 +126,13 @@ public abstract class EnchantmentMixin {
             // Create the level text (e.g., "IV")
             MutableComponent levelText = Component.literal(EnchantmentLib.toRoman(level));
 
-            // Style the level text based on rarity
-            levelText.withStyle(getFormattingForLevel(level));
+            if (Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING) {
+                levelText.withStyle(Style.EMPTY.withColor(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR));
+            } else {
+                // Style the level text based on rarity
+                levelText.withStyle(getFormattingForLevel(level));
+            }
+
 
             // Combine the two styled components
             finalName = baseName.append(CommonComponents.SPACE).append(levelText);

@@ -9,6 +9,29 @@ package johnsmith.enchantingoverhauled.config;
  */
 public class Config {
 
+    // region Enchanting Table Settings
+    /**
+     * Whether the enchanting table should violently reject books.
+     */
+    public static Boolean ARCANE_RETRIBUTION;
+    /**
+     * Whether the enchanting table should have a spectacular activation.
+     */
+    public static Boolean ACTIVATION_EFFECTS;
+
+    /** Default value for {@link #ARCANE_RETRIBUTION}. */
+    public static final boolean ARCANE_RETRIBUTION_DEFAULT = true;
+
+    /** Default value for {@link #ACTIVATION_EFFECTS}. */
+    public static final boolean ACTIVATION_EFFECTS_DEFAULT = true;
+
+    /** Translation key value for {@link #ARCANE_RETRIBUTION}. */
+    public static final String ARCANE_RETRIBUTION_KEY = "enchanting_table.arcane_retribution";
+
+    /** Translation key value for {@link #ACTIVATION_EFFECTS}. */
+    public static final String ACTIVATION_EFFECTS_KEY = "enchanting_table.activation_effects";
+    // endregion
+
     // region Anvil Settings
     /**
      * The maximum number of items (e.g., diamonds, ingots) required to fully repair an item in an anvil.
@@ -413,15 +436,77 @@ public class Config {
      * Standard Galactic Alphabet (obfuscated). If false, they are readable.
      */
     public static Boolean OBFUSCATE_NEW_ENCHANTMENTS;
+    /**
+     * If true, enchantment names are no longer colored according to their theme.
+     */
+    public static Boolean OVERRIDE_ENCHANTMENT_NAME_COLORING;
+    /**
+     * The override color of enchantment names.
+     */
+    public static Integer OVERRIDE_ENCHANTMENT_NAME_COLOR;
+    /**
+     * If true, enchantment levels are no longer colored according to their level.
+     */
+    public static Boolean OVERRIDE_ENCHANTMENT_LEVEL_COLORING;
+    /**
+     * The override color of enchantment levels
+     */
+    public static Integer OVERRIDE_ENCHANTMENT_LEVEL_COLOR;
+    /**
+     * If false, enchantment descriptions are no longer being displayed.
+     */
+    public static Boolean SHOW_ENCHANTMENT_DESCRIPTIONS;
+    /**
+     * The color of enchantment description texts.
+     */
+    public static Integer ENCHANTMENT_DESCRIPTION_COLOR;
 
     /** Default value for {@link #USE_PLAIN_BACKGROUND}. */
     public static final boolean USE_PLAIN_BACKGROUND_DEFAULT = false;
     /** Default value for {@link #OBFUSCATE_NEW_ENCHANTMENTS}. */
     public static final boolean OBFUSCATE_NEW_ENCHANTMENTS_DEFAULT = true;
+    /** Default value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLORING}. */
+    public static final boolean OVERRIDE_ENCHANTMENT_NAME_COLORING_DEFAULT = false;
+    /** Default value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_NAME_COLOR_DEFAULT = 0xFFFFFF;
+    /** Default value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLORING}. */
+    public static final boolean OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT = false;
+    /** Default value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT = 0xFFFFFF;
+    /** Default value for {@link #SHOW_ENCHANTMENT_DESCRIPTIONS}. */
+    public static final boolean SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT = true;
+    /** Default value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
+    public static final int ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT = 0xA7A7A7;
+
+    /** Max value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_NAME_COLOR_CEILING = 0xFFFFFF;
+    /** Max value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING = 0xFFFFFF;
+    /** Max value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
+    public static final int ENCHANTMENT_DESCRIPTION_COLOR_CEILING = 0xFFFFFF;
+
+    /** Min value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_NAME_COLOR_FLOOR = 0x000000;
+    /** Min value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR = 0x000000;
+    /** Min value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
+    public static final int ENCHANTMENT_DESCRIPTION_COLOR_FLOOR = 0x000000;
 
     /** Translation key value for {@link #USE_PLAIN_BACKGROUND}. */
     public static final String USE_PLAIN_BACKGROUND_KEY = "accessibility.use.accessible.button.textures";
     /** Translation key value for {@link #OBFUSCATE_NEW_ENCHANTMENTS}. */
     public static final String OBFUSCATE_NEW_ENCHANTMENTS_KEY = "accessibility.obfuscate.new.enchantments";
+    /** Translation key value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLORING}. */
+    public static final String OVERRIDE_ENCHANTMENT_NAME_COLORING_KEY = "accessibility.enchantment_name.override_enchantment_name_color";
+    /** Translation key value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLOR}. */
+    public static final String OVERRIDE_ENCHANTMENT_NAME_COLOR_KEY = "accessibility.enchantment_name.enchantment_name_color_override_value";
+    /** Translation key value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLORING}. */
+    public static final String OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY = "accessibility.enchantment_level.override_enchantment_level_color";
+    /** Translation key value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLOR}. */
+    public static final String OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY = "accessibility.enchantment_level.enchantment_level_color_override_value";
+    /** Translation key value for {@link #SHOW_ENCHANTMENT_DESCRIPTIONS}. */
+    public static final String SHOW_ENCHANTMENT_DESCRIPTIONS_KEY = "accessibility.enchantment_description.show_enchantment_descriptions";
+    /** Translation key value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
+    public static final String ENCHANTMENT_DESCRIPTION_COLOR_KEY = "accessibility.enchantment_description.enchantment_description_color_value";
     // endregion
 }

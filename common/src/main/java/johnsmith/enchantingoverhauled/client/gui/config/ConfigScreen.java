@@ -37,6 +37,7 @@ import java.util.function.Supplier;
  */
 public class ConfigScreen extends Screen {
     private static final String PREFIX = "config.enchanting_overhauled.";
+    private static final String ENCHANTING_TABLE_SETTINGS = "section.enchanting_table";
     private static final String ANVIL_SETTINGS = "section.anvil";
     private static final String ENCHANTMENT_SETTINGS = "section.enchantments";
     private static final String PROTECTION_SETTINGS = "section.protection";
@@ -205,6 +206,15 @@ public class ConfigScreen extends Screen {
         public ConfigList(ConfigScreen screen, Minecraft minecraft) {
             super(minecraft, screen.width, screen.layout.getContentHeight(), screen.layout.getHeaderHeight(), 20);
 
+            // --- Enchanting Table Settings ---
+            addEntry(new CategoryEntry(PREFIX + ENCHANTING_TABLE_SETTINGS));
+            addEntry(new BooleanEntry(Config.ARCANE_RETRIBUTION_KEY,
+                    () -> Config.ARCANE_RETRIBUTION, v -> Config.ARCANE_RETRIBUTION = v,
+                    Config.ARCANE_RETRIBUTION_DEFAULT));
+            addEntry(new BooleanEntry(Config.ACTIVATION_EFFECTS_KEY,
+                    () -> Config.ACTIVATION_EFFECTS, v -> Config.ACTIVATION_EFFECTS = v,
+                    Config.ACTIVATION_EFFECTS_DEFAULT));
+
             // --- Anvil Settings ---
             addEntry(new CategoryEntry(PREFIX + ANVIL_SETTINGS));
             addEntry(new IntEntry(Config.ANVIL_MAX_ITEM_COST_KEY,
@@ -339,6 +349,24 @@ public class ConfigScreen extends Screen {
             addEntry(new BooleanEntry(Config.OBFUSCATE_NEW_ENCHANTMENTS_KEY,
                     () -> Config.OBFUSCATE_NEW_ENCHANTMENTS, v -> Config.OBFUSCATE_NEW_ENCHANTMENTS = v,
                     Config.OBFUSCATE_NEW_ENCHANTMENTS_DEFAULT));
+            addEntry(new BooleanEntry(Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_KEY,
+                    () -> Config.OVERRIDE_ENCHANTMENT_NAME_COLORING, v -> Config.OVERRIDE_ENCHANTMENT_NAME_COLORING = v,
+                    Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_DEFAULT));
+            addEntry(new IntEntry(Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_KEY,
+                    () -> Config.OVERRIDE_ENCHANTMENT_NAME_COLOR, v -> Config.OVERRIDE_ENCHANTMENT_NAME_COLOR = v,
+                    Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_CEILING));
+            addEntry(new BooleanEntry(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY,
+                    () -> Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING, v -> Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING = v,
+                    Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT));
+            addEntry(new IntEntry(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY,
+                    () -> Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR, v -> Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR = v,
+                    Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING));
+            addEntry(new BooleanEntry(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY,
+                    () -> Config.SHOW_ENCHANTMENT_DESCRIPTIONS, v -> Config.SHOW_ENCHANTMENT_DESCRIPTIONS = v,
+                    Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT));
+            addEntry(new IntEntry(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY,
+                    () -> Config.ENCHANTMENT_DESCRIPTION_COLOR, v -> Config.ENCHANTMENT_DESCRIPTION_COLOR = v,
+                    Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT, Config.ENCHANTMENT_DESCRIPTION_COLOR_FLOOR, Config.ENCHANTMENT_DESCRIPTION_COLOR_CEILING));
         }
 
         @Override

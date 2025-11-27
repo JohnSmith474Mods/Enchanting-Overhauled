@@ -37,6 +37,13 @@ public class FabricConfig {
      * This schema is used to generate the config file if it doesn't exist and to format it when saving.
      */
     public static void createConfigs() {
+        // Enchanting Table
+        configs.addSection("Enchanting Table Settings");
+        configs.addEntry(new Pair<>(Config.ARCANE_RETRIBUTION_KEY, Config.ARCANE_RETRIBUTION_DEFAULT),
+                new String[]{"Whether the enchanting table should violently reject books."}, "");
+        configs.addEntry(new Pair<>(Config.ACTIVATION_EFFECTS_KEY, Config.ACTIVATION_EFFECTS_DEFAULT),
+                new String[]{"Whether the enchanting table should have a spectacular activation."}, "");
+
         // Anvil
         configs.addSection("Anvil Settings");
         configs.addEntry(new Pair<>(Config.ANVIL_MAX_ITEM_COST_KEY, Config.ANVIL_MAX_ITEM_COST_DEFAULT),
@@ -157,6 +164,24 @@ public class FabricConfig {
                 new String[]{"Whether the enchanting table buttons should be plain or textured."}, "");
         configs.addEntry(new Pair<>(Config.OBFUSCATE_NEW_ENCHANTMENTS_KEY, Config.OBFUSCATE_NEW_ENCHANTMENTS_DEFAULT),
                 new String[]{"Whether the enchanting table should show new enchantments in the standard galactic alphabet."}, "");
+
+        configs.addEntry(new Pair<>(Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_DEFAULT),
+                new String[]{"Whether enchantment names should be colored uniformly or according to their theme."}, "");
+        configs.addEntry(new Pair<>(Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_DEFAULT),
+                new String[]{"The override color of enchantment names. Only applies if override is true."},
+                "Min: " + Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_FLOOR + ", Max: " + Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_CEILING);
+
+        configs.addEntry(new Pair<>(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT),
+                new String[]{"Whether enchantment levels should be colored uniformly or according to their level."}, "");
+        configs.addEntry(new Pair<>(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT),
+                new String[]{"The override color of enchantment levels. Only applies if override is true."},
+                "Min: " + Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR + ", Max: " + Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING);
+
+        configs.addEntry(new Pair<>(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT),
+                new String[]{"Whether enchantment descriptions should be shown."}, "");
+        configs.addEntry(new Pair<>(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY, Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT),
+                new String[]{"The color of enchantment description texts. Only applicable if show enchantment descriptions is true."},
+                "Min: " + Config.ENCHANTMENT_DESCRIPTION_COLOR_FLOOR + ", Max: " + Config.ENCHANTMENT_DESCRIPTION_COLOR_CEILING);
     }
 
     /**
@@ -167,6 +192,10 @@ public class FabricConfig {
      * min/max ranges as defined in {@link Config}.
      */
     public static void assignConfigs() {
+        // Enchanting Table
+        Config.ARCANE_RETRIBUTION = CONFIG.getOrDefault(Config.ARCANE_RETRIBUTION_KEY, Config.ARCANE_RETRIBUTION_DEFAULT);
+        Config.ACTIVATION_EFFECTS = CONFIG.getOrDefault(Config.ACTIVATION_EFFECTS_KEY, Config.ACTIVATION_EFFECTS_DEFAULT);
+
         // Anvil
         Config.ANVIL_MAX_ITEM_COST = Math.clamp(CONFIG.getOrDefault(Config.ANVIL_MAX_ITEM_COST_KEY, Config.ANVIL_MAX_ITEM_COST_DEFAULT), Config.ANVIL_MAX_ITEM_COST_FLOOR, Config.ANVIL_MAX_ITEM_COST_CEILING);
         Config.ANVIL_REPAIR_BONUS = Math.clamp(CONFIG.getOrDefault(Config.ANVIL_REPAIR_BONUS_KEY, Config.ANVIL_REPAIR_BONUS_DEFAULT), Config.ANVIL_REPAIR_BONUS_FLOOR, Config.ANVIL_REPAIR_BONUS_CEILING);
@@ -221,6 +250,15 @@ public class FabricConfig {
         // Accessibility
         Config.USE_PLAIN_BACKGROUND = CONFIG.getOrDefault(Config.USE_PLAIN_BACKGROUND_KEY, Config.USE_PLAIN_BACKGROUND_DEFAULT);
         Config.OBFUSCATE_NEW_ENCHANTMENTS = CONFIG.getOrDefault(Config.OBFUSCATE_NEW_ENCHANTMENTS_KEY, Config.OBFUSCATE_NEW_ENCHANTMENTS_DEFAULT);
+
+        Config.OVERRIDE_ENCHANTMENT_NAME_COLORING = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_DEFAULT);
+        Config.OVERRIDE_ENCHANTMENT_NAME_COLOR = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_DEFAULT);
+
+        Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT);
+        Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT);
+
+        Config.SHOW_ENCHANTMENT_DESCRIPTIONS = CONFIG.getOrDefault(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT);
+        Config.ENCHANTMENT_DESCRIPTION_COLOR = CONFIG.getOrDefault(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY, Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT);
     }
 
     /**
@@ -232,6 +270,10 @@ public class FabricConfig {
     public static void save() {
         // 1. Create a map of the current runtime values
         Map<String, Object> currentValues = new HashMap<>();
+
+        // Enchanting Table
+        currentValues.put(Config.ARCANE_RETRIBUTION_KEY, Config.ARCANE_RETRIBUTION);
+        currentValues.put(Config.ACTIVATION_EFFECTS_KEY, Config.ACTIVATION_EFFECTS);
 
         // Anvil
         currentValues.put(Config.ANVIL_MAX_ITEM_COST_KEY, Config.ANVIL_MAX_ITEM_COST);
@@ -278,6 +320,15 @@ public class FabricConfig {
         // Accessibility
         currentValues.put(Config.USE_PLAIN_BACKGROUND_KEY, Config.USE_PLAIN_BACKGROUND);
         currentValues.put(Config.OBFUSCATE_NEW_ENCHANTMENTS_KEY, Config.OBFUSCATE_NEW_ENCHANTMENTS);
+
+        currentValues.put(Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_NAME_COLORING);
+        currentValues.put(Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR);
+
+        currentValues.put(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING);
+        currentValues.put(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR);
+
+        currentValues.put(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS);
+        currentValues.put(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY, Config.ENCHANTMENT_DESCRIPTION_COLOR);
 
 
         // 2. Ask the provider to generate the file content using these values

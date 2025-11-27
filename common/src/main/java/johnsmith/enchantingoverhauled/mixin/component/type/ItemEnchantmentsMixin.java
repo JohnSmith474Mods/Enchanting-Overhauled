@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 
+import johnsmith.enchantingoverhauled.config.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -51,6 +52,8 @@ public abstract class ItemEnchantmentsMixin {
      */
     @Unique
     private void addEnchantmentDescription(Enchantment enchantment, Consumer<Component> tooltip) {
+        if (!Config.SHOW_ENCHANTMENT_DESCRIPTIONS) return;
+
         String descriptionKey = enchantment.getDescriptionId() + ".desc";
         // Get the translated string
         String descriptionString = Component.translatable(descriptionKey).getString();
@@ -79,12 +82,12 @@ public abstract class ItemEnchantmentsMixin {
                 remainingString = remainingString.substring(wrapAt + 1);
             }
 
-            tooltip.accept(INDENT.copy().append(Component.literal(line)).withStyle(ChatFormatting.GRAY));
+            tooltip.accept(INDENT.copy().append(Component.literal(line)).withColor(Config.ENCHANTMENT_DESCRIPTION_COLOR));
         }
 
         // Add the final remaining part of the string
         if (!remainingString.isEmpty()) {
-            tooltip.accept(INDENT.copy().append(Component.literal(remainingString)).withStyle(ChatFormatting.GRAY));
+            tooltip.accept(INDENT.copy().append(Component.literal(remainingString)).withColor(Config.ENCHANTMENT_DESCRIPTION_COLOR));
         }
     }
 

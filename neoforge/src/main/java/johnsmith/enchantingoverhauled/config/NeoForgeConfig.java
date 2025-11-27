@@ -38,6 +38,14 @@ public class NeoForgeConfig {
      */
     public static class Common {
 
+        // --- Enchanting Table Settings ---
+
+        /** Config value for arcane retribution. */
+        public final ModConfigSpec.BooleanValue ARCANE_RETRIBUTION;
+
+        /** Config value for activation effects. */
+        public final ModConfigSpec.BooleanValue ACTIVATION_EFFECTS;
+
         // --- Anvil Settings ---
 
         /** Config value for the maximum repair cost. */
@@ -136,6 +144,18 @@ public class NeoForgeConfig {
         public final ModConfigSpec.BooleanValue USE_PLAIN_BACKGROUND;
         /** Config value for obfuscating new enchantments. */
         public final ModConfigSpec.BooleanValue OBFUSCATE_NEW_ENCHANTMENTS;
+        /** Config value for enchantment name coloring. */
+        public final ModConfigSpec.BooleanValue OVERRIDE_ENCHANTMENT_NAME_COLORING;
+        /** Config value for enchantment name color. */
+        public final ModConfigSpec.IntValue OVERRIDE_ENCHANTMENT_NAME_COLOR;
+        /** Config value for enchantment level coloring. */
+        public final ModConfigSpec.BooleanValue OVERRIDE_ENCHANTMENT_LEVEL_COLORING;
+        /** Config value for enchantment level color. */
+        public final ModConfigSpec.IntValue OVERRIDE_ENCHANTMENT_LEVEL_COLOR;
+        /** Config value for enchantment descriptions. */
+        public final ModConfigSpec.BooleanValue SHOW_ENCHANTMENT_DESCRIPTIONS;
+        /** Config value for enchantment descriptions color. */
+        public final ModConfigSpec.IntValue ENCHANTMENT_DESCRIPTION_COLOR;
 
         /**
          * Constructs the configuration structure.
@@ -143,6 +163,16 @@ public class NeoForgeConfig {
          * @param builder The builder used to define the config nodes.
          */
         Common(ModConfigSpec.Builder builder) {
+            // Anvil
+            builder.comment("Enchanting Table Settings").push("Enchanting Table Settings");
+            ARCANE_RETRIBUTION = builder
+                    .comment("Whether the enchanting table should violently reject books.")
+                    .define("ARCANE_RETRIBUTION", Config.ARCANE_RETRIBUTION_DEFAULT);
+            ACTIVATION_EFFECTS = builder
+                    .comment("Whether the enchanting table should have a spectacular activation.")
+                    .define("ACTIVATION_EFFECTS", Config.ACTIVATION_EFFECTS_DEFAULT);
+            builder.pop();
+
             // Anvil
             builder.comment("Anvil Settings").push("Anvil Settings");
             ANVIL_MAX_ITEM_COST = builder
@@ -267,6 +297,24 @@ public class NeoForgeConfig {
             OBFUSCATE_NEW_ENCHANTMENTS = builder
                     .comment("Whether the enchanting table should show new enchantments in the standard galactic alphabet.")
                     .define("OBFUSCATE_NEW_ENCHANTMENTS", Config.OBFUSCATE_NEW_ENCHANTMENTS_DEFAULT);
+            OVERRIDE_ENCHANTMENT_NAME_COLORING = builder
+                    .comment("Whether enchantment names should be colored uniformly or according to their theme.")
+                    .define("USE_PLAIN_BACKGROUND", Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_DEFAULT);
+            OVERRIDE_ENCHANTMENT_NAME_COLOR = builder
+                    .comment("The override color of enchantment names", "Only applies if override is true.")
+                    .defineInRange("OVERRIDE_ENCHANTMENT_NAME_COLOR", Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_CEILING);
+            OVERRIDE_ENCHANTMENT_LEVEL_COLORING = builder
+                    .comment("Whether enchantment levels should be colored uniformly or according to their level.")
+                    .define("USE_PLAIN_BACKGROUND", Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT);
+            OVERRIDE_ENCHANTMENT_LEVEL_COLOR = builder
+                    .comment("The override color of enchantment levels", "Only applies if override is true.")
+                    .defineInRange("OVERRIDE_ENCHANTMENT_LEVEL_COLOR", Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING);
+            SHOW_ENCHANTMENT_DESCRIPTIONS = builder
+                    .comment("Whether enchantment descriptions should be shown.")
+                    .define("USE_PLAIN_BACKGROUND", Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT);
+            ENCHANTMENT_DESCRIPTION_COLOR = builder
+                    .comment("The color of enchantment description texts", "Only applicable if show enchantment descriptions is true.")
+                    .defineInRange("ENCHANTMENT_DESCRIPTION_COLOR", Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT, Config.ENCHANTMENT_DESCRIPTION_COLOR_FLOOR, Config.ENCHANTMENT_DESCRIPTION_COLOR_CEILING);
             builder.pop();
         }
     }
@@ -279,6 +327,10 @@ public class NeoForgeConfig {
      * or {@link net.neoforged.fml.event.config.ModConfigEvent.Reloading} events.
      */
     public static void loadConfig() {
+        // Enchanting Table
+        Config.ARCANE_RETRIBUTION = COMMON.ARCANE_RETRIBUTION.get();
+        Config.ACTIVATION_EFFECTS = COMMON.ACTIVATION_EFFECTS.get();
+
         // Anvil
         Config.ANVIL_MAX_ITEM_COST = COMMON.ANVIL_MAX_ITEM_COST.get();
         Config.ANVIL_REPAIR_BONUS = COMMON.ANVIL_REPAIR_BONUS.get();
@@ -336,6 +388,15 @@ public class NeoForgeConfig {
         // Accessibility
         Config.USE_PLAIN_BACKGROUND = COMMON.USE_PLAIN_BACKGROUND.get();
         Config.OBFUSCATE_NEW_ENCHANTMENTS = COMMON.OBFUSCATE_NEW_ENCHANTMENTS.get();
+
+        Config.OVERRIDE_ENCHANTMENT_NAME_COLORING = COMMON.OVERRIDE_ENCHANTMENT_NAME_COLORING.get();
+        Config.OVERRIDE_ENCHANTMENT_NAME_COLOR = COMMON.OVERRIDE_ENCHANTMENT_NAME_COLOR.get();
+
+        Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING = COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLORING.get();
+        Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR = COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLOR.get();
+
+        Config.SHOW_ENCHANTMENT_DESCRIPTIONS = COMMON.SHOW_ENCHANTMENT_DESCRIPTIONS.get();
+        Config.ENCHANTMENT_DESCRIPTION_COLOR = COMMON.ENCHANTMENT_DESCRIPTION_COLOR.get();
     }
 
     /**
@@ -345,6 +406,10 @@ public class NeoForgeConfig {
      * This is typically called when settings are changed via the in-game configuration GUI.
      */
     public static void saveConfig() {
+        // Enchanting Table
+        COMMON.ARCANE_RETRIBUTION.set(Config.ARCANE_RETRIBUTION);
+        COMMON.ACTIVATION_EFFECTS.set(Config.ACTIVATION_EFFECTS);
+
         // Anvil
         COMMON.ANVIL_MAX_ITEM_COST.set(Config.ANVIL_MAX_ITEM_COST);
         COMMON.ANVIL_REPAIR_BONUS.set(Config.ANVIL_REPAIR_BONUS);
@@ -398,6 +463,15 @@ public class NeoForgeConfig {
         // Accessibility
         COMMON.USE_PLAIN_BACKGROUND.set(Config.USE_PLAIN_BACKGROUND);
         COMMON.OBFUSCATE_NEW_ENCHANTMENTS.set(Config.OBFUSCATE_NEW_ENCHANTMENTS);
+
+        COMMON.OVERRIDE_ENCHANTMENT_NAME_COLORING.set(Config.OVERRIDE_ENCHANTMENT_NAME_COLORING);
+        COMMON.OVERRIDE_ENCHANTMENT_NAME_COLOR.set(Config.OVERRIDE_ENCHANTMENT_NAME_COLOR);
+
+        COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLORING.set(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING);
+        COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLOR.set(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR);
+
+        COMMON.SHOW_ENCHANTMENT_DESCRIPTIONS.set(Config.SHOW_ENCHANTMENT_DESCRIPTIONS);
+        COMMON.ENCHANTMENT_DESCRIPTION_COLOR.set(Config.ENCHANTMENT_DESCRIPTION_COLOR);
 
         // Force the spec to write the changes to the .toml file
         COMMON_SPEC.save();

@@ -1043,9 +1043,11 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         list.add(enchantment.getFullname(enchantmentLevel).copy().getVisualOrderText());
 
         // Add enchantment description
-        String descKey = enchantment.getDescriptionId() + ".desc";
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        if (Config.SHOW_ENCHANTMENT_DESCRIPTIONS) {
+            String descKey = enchantment.getDescriptionId() + ".desc";
+            Component description = Component.translatable(descKey).withColor(Config.ENCHANTMENT_DESCRIPTION_COLOR);
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
         context.renderTooltip(this.font, list, mouseX, mouseY);
     }
@@ -1067,9 +1069,11 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         list.add(enchantment.getFullname(enchantmentLevel).copy().getVisualOrderText());
 
         // Add enchantment description (indented via lib method)
-        String descKey = enchantment.getDescriptionId() + ".desc";
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        if (Config.SHOW_ENCHANTMENT_DESCRIPTIONS) {
+            String descKey = enchantment.getDescriptionId() + ".desc";
+            Component description = Component.translatable(descKey).withColor(Config.ENCHANTMENT_DESCRIPTION_COLOR);
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
         // Add cost information
         this.drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
@@ -1094,9 +1098,11 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         list.add(enchantment.getFullname(enchantmentLevel).copy().getVisualOrderText());
 
         // Add enchantment description (indented via lib method)
-        String descKey = enchantment.getDescriptionId() + ".desc";
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        if (Config.SHOW_ENCHANTMENT_DESCRIPTIONS) {
+            String descKey = enchantment.getDescriptionId() + ".desc";
+            Component description = Component.translatable(descKey).withColor(Config.ENCHANTMENT_DESCRIPTION_COLOR);
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
         // Add cost information
         this.drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
@@ -1137,8 +1143,9 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         Component enchantmentName = enchantment.getFullname(enchantmentLevel);
         String descKey = enchantment.getDescriptionId() + ".desc";
 
+
         // Create the base description (formatted)
-        Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
+        Component description = Component.translatable(descKey).withColor(Config.ENCHANTMENT_DESCRIPTION_COLOR);
         // Create the base title (formatted)
         Component title = Component.translatable("gui.enchanting_overhauled.apply").withStyle(ChatFormatting.WHITE);
 
@@ -1148,7 +1155,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                     .withStyle(style -> style.withColor(immutableColor)); // Using lambda for color due to variable scope
             // Re-setting description style
             description = ((MutableComponent)description).setStyle(description.getStyle().withFont(GALACTIC_FONT_ID))
-                    .withStyle(ChatFormatting.GRAY);
+                    .withColor(Config.ENCHANTMENT_DESCRIPTION_COLOR);
         }
         // --- End of Text Obfuscation Logic ---
 
@@ -1159,7 +1166,9 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         list.add(enchantmentName.getVisualOrderText());
 
         // Add the (potentially obfuscated) enchantment description
-        list.addAll(EnchantmentLib.wrapDescription(description));
+        if (Config.SHOW_ENCHANTMENT_DESCRIPTIONS) {
+            list.addAll(EnchantmentLib.wrapDescription(description));
+        }
 
         // Add cost information
         this.drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
