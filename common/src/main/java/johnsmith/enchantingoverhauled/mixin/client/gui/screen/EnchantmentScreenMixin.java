@@ -64,7 +64,7 @@ import java.util.Optional;
  * tooltips for all buttons and fix enchantment name rendering.</li>
  * </ul>
  */
-@Mixin(EnchantmentScreen.class)
+@Mixin(value = EnchantmentScreen.class, priority = 900)
 public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<EnchantmentMenu> {
 
     // region Font Identifiers
@@ -1028,34 +1028,40 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
     // region Interaction handler
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        // Use the new imageHeight (186) to calculate 'alignY'
+        // We use a single loop and ONE call to handleInventoryButtonClick to ensure
+        // other mods injecting into that call (like Immersive UI) find a valid target.
         int alignX = this.leftPos;
         int alignY = this.topPos;
 
-        // Check enchantment buttons (0-2)
-        for (int buttonIndex = 0; buttonIndex < REROLL_BUTTON_INDEX; ++buttonIndex) {
-            double mouseDiffX = mouseX - (double) (alignX + ENCHANTING_BUTTON_X_OFFSET);
-            double mouseDiffY = mouseY
-                    - (double) (alignY + ENCHANTING_BUTTON_Y_OFFSET + ENCHANTING_BUTTON_HEIGHT * buttonIndex);
+        int clickedButtonIndex = -1;
 
-            if (mouseDiffX >= 0.0F && mouseDiffY >= 0.0F && mouseDiffX < ENCHANTING_BUTTON_WIDTH
-                    && mouseDiffY < ENCHANTING_BUTTON_HEIGHT
-                    && ((EnchantmentMenu) this.menu).clickMenuButton(this.minecraft.player, buttonIndex)) {
-                this.minecraft.gameMode.handleInventoryButtonClick(((EnchantmentMenu) this.menu).containerId,
-                        buttonIndex);
-                return true;
+        // Check enchantment buttons (0-2)
+        for (int i = 0; i < REROLL_BUTTON_INDEX; ++i) {
+            double mouseDiffX = mouseX - (double) (alignX + ENCHANTING_BUTTON_X_OFFSET);
+            double mouseDiffY = mouseY - (double) (alignY + ENCHANTING_BUTTON_Y_OFFSET + ENCHANTING_BUTTON_HEIGHT * i);
+
+            if (mouseDiffX >= 0.0F && mouseDiffY >= 0.0F && mouseDiffX < ENCHANTING_BUTTON_WIDTH && mouseDiffY < ENCHANTING_BUTTON_HEIGHT) {
+                clickedButtonIndex = i;
+                break;
             }
         }
 
         // Check reroll button (3)
-        double mouseXdiff = mouseX - (double) (alignX + REROLL_BUTTON_X_OFFSET);
-        double mouseYdiff = mouseY - (double) (alignY + REROLL_BUTTON_Y_OFFSET);
+        if (clickedButtonIndex == -1) {
+            double mouseXdiff = mouseX - (double) (alignX + REROLL_BUTTON_X_OFFSET);
+            double mouseYdiff = mouseY - (double) (alignY + REROLL_BUTTON_Y_OFFSET);
 
-        if (mouseXdiff >= 0.0F && mouseYdiff >= 0.0F && mouseXdiff < (double) REROLL_BUTTON_WIDTH
-                && mouseYdiff < (double) REROLL_BUTTON_HEIGHT
-                && this.menu.clickMenuButton(this.minecraft.player, REROLL_BUTTON_INDEX)) {
-            this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, REROLL_BUTTON_INDEX);
-            return true;
+            if (mouseXdiff >= 0.0F && mouseYdiff >= 0.0F && mouseXdiff < (double) REROLL_BUTTON_WIDTH && mouseYdiff < (double) REROLL_BUTTON_HEIGHT) {
+                clickedButtonIndex = REROLL_BUTTON_INDEX;
+            }
+        }
+
+        // Single execution point for the click action
+        if (clickedButtonIndex != -1) {
+            if (((EnchantmentMenu) this.menu).clickMenuButton(this.minecraft.player, clickedButtonIndex)) {
+                this.minecraft.gameMode.handleInventoryButtonClick(((EnchantmentMenu) this.menu).containerId, clickedButtonIndex);
+                return true;
+            }
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
