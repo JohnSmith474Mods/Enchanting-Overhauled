@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@Mixin(value = ReloadableServerRegistries.class, priority = 999, remap = false)
+@Mixin(value = ReloadableServerRegistries.class, priority = 999)
 public abstract class LootInjectionMixin {
 
     @Inject(method = "reload", at = @At("RETURN"), cancellable = true)
