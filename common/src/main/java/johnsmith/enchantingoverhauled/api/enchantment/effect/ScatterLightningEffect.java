@@ -14,14 +14,43 @@ import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * An {@link EnchantmentEntityEffect} that summons multiple lightning bolts on and around a target entity.
+ * <p>
+ * This effect supports temporal scattering of bolts using a configurable {@code interval}
+ * and physical scattering using a configurable {@code radius}. It relies on a custom
+ * {@link WorldScheduler} mixin on {@link ServerLevel} for delayed execution.
+ *
+ * @param count    A {@link LevelBasedValue} calculating the number of lightning bolts to summon.
+ * @param radius   The maximum horizontal distance (in blocks) from the target's center position
+ * where scattered bolts will strike.
+ * @param interval The delay (in ticks) between the summoning of successive lightning bolts.
+ */
 public record ScatterLightningEffect(LevelBasedValue count, float radius, int interval) implements EnchantmentEntityEffect {
 
+    /**
+     * The codec responsible for serializing and deserializing instances of this record from data files (e.g., JSON).
+     * It maps the {@code "count"} (required), {@code "radius"} (required), and {@code "interval"} (optional, defaults to 0) fields.
+     */
     public static final MapCodec<ScatterLightningEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             LevelBasedValue.CODEC.fieldOf("count").forGetter(ScatterLightningEffect::count),
             Codec.FLOAT.fieldOf("radius").forGetter(ScatterLightningEffect::radius),
             Codec.INT.optionalFieldOf("interval", 0).forGetter(ScatterLightningEffect::interval)
     ).apply(instance, ScatterLightningEffect::new));
 
+    /**
+     * Applies the lightning scattering effect to the target entity.
+     * <p>
+     * Summons the calculated number of lightning bolts. The first bolt strikes the target's center.
+     * Subsequent bolts are randomly scattered within the defined radius and scheduled to strike
+     * at intervals if {@code interval > 0}.
+     *
+     * @param level            The server level where the effect is applied.
+     * @param enchantmentLevel The level of the enchantment causing the effect.
+     * @param context          The context of the enchantment use (e.g., the item owner).
+     * @param target           The entity being hit/affected by the enchantment.
+     * @param origin           The position where the enchantment event originated (unused in this logic).
+     */
     @Override
     public void apply(ServerLevel level, int enchantmentLevel, EnchantedItemInUse context, Entity target, Vec3 origin) {
         int boltCount = (int) this.count.calculate(enchantmentLevel);
@@ -32,7 +61,6 @@ public record ScatterLightningEffect(LevelBasedValue count, float radius, int in
         for (int i = 0; i < boltCount; i++) {
             final int index = i;
             Runnable spawnTask = () -> {
-                // Re-verify entity validity if needed, or just strike at the position
                 LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level);
                 if (bolt != null) {
                     if (index == 0) {
@@ -49,7 +77,6 @@ public record ScatterLightningEffect(LevelBasedValue count, float radius, int in
                 }
             };
 
-            // Schedule: First bolt (i=0) is instant. Others are delayed by i * interval.
             if (i == 0 || this.interval <= 0) {
                 spawnTask.run();
             } else {
@@ -58,6 +85,11 @@ public record ScatterLightningEffect(LevelBasedValue count, float radius, int in
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return The {@link MapCodec} for this effect type.
+     */
     @Override
     public MapCodec<? extends EnchantmentEntityEffect> codec() {
         return CODEC;

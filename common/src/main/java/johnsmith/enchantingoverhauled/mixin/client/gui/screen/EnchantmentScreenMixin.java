@@ -1244,8 +1244,8 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
         // Add enchantment description
         String descKey = enchanting_Overhauled$getSafeDescriptionKey(enchantment);
-        if (descKey != null) {
-            Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
+        if (descKey != null && Config.BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS.get()) {
+            Component description = Component.translatable(descKey).withColor(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION_COLOR.get());;
             list.addAll(EnchantmentLib.wrapDescription(description));
         }
 
@@ -1278,8 +1278,8 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
         // Add enchantment description (indented via lib method)
         String descKey = enchanting_Overhauled$getSafeDescriptionKey(enchantment);
-        if (descKey != null) {
-            Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
+        if (descKey != null && Config.BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS.get()) {
+            Component description = Component.translatable(descKey).withColor(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION_COLOR.get());;
             list.addAll(EnchantmentLib.wrapDescription(description));
         }
 
@@ -1318,8 +1318,8 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
         // Add enchantment description (indented via lib method)
         String descKey = enchanting_Overhauled$getSafeDescriptionKey(enchantment);
-        if (descKey != null) {
-            Component description = Component.translatable(descKey).withStyle(ChatFormatting.GRAY);
+        if (descKey != null && Config.BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS.get()) {
+            Component description = Component.translatable(descKey).withColor(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION_COLOR.get());
             list.addAll(EnchantmentLib.wrapDescription(description));
         }
 
@@ -1382,14 +1382,14 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
             if (descKey != null) {
                 description = description.setStyle(description.getStyle().withFont(GALACTIC_FONT_ID))
-                        .withStyle(ChatFormatting.GRAY);
+                        .withColor(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION_COLOR.get());
             }
         }
 
         list.add(title.getVisualOrderText());
         list.add(enchantmentName.getVisualOrderText());
 
-        if (descKey != null) {
+        if (descKey != null && Config.BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS.get()) {
             list.addAll(EnchantmentLib.wrapDescription(description));
         }
 

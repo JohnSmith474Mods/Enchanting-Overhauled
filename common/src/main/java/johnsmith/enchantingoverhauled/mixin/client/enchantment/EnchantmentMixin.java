@@ -47,7 +47,7 @@ public abstract class EnchantmentMixin {
         if (Config.BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR.get()) {
             nameColor = Optional.of(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_NAME_COLOR_VALUE.get());
         } else {
-            // NEW LOGIC: Use EnchantmentLib helper
+            // Use EnchantmentLib helper
             Minecraft client = Minecraft.getInstance();
             if (client.level != null) {
                 ResourceKey<EnchantmentTheme> themeKey = EnchantmentLib.getThemeKey(client.level.registryAccess(), holder);

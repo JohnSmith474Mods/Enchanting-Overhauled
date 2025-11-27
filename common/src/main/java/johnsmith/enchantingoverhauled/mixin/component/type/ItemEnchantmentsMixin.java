@@ -120,7 +120,6 @@ public abstract class ItemEnchantmentsMixin {
             for(Holder<Enchantment> registryEntry : registryEntryList) {
                 int i = this.enchantments.getInt(registryEntry);
                 if (i > 0) {
-                    // Removed unwrapping .value(), passing Holder directly
                     tooltip.accept(Enchantment.getFullname(registryEntry, i));
                     this.enchanting_Overhauled$addEnchantmentDescription(registryEntry, tooltip);
                 }
@@ -130,7 +129,6 @@ public abstract class ItemEnchantmentsMixin {
                 Holder<Enchantment> registryEntry2 = entry.getKey();
 
                 if (!registryEntryList.contains(registryEntry2)) {
-                    // Removed unwrapping .value(), passing Holder directly
                     tooltip.accept(Enchantment.getFullname(registryEntry2, entry.getIntValue()));
                     this.enchanting_Overhauled$addEnchantmentDescription(registryEntry2, tooltip);
                 }

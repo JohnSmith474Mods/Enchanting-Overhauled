@@ -10,21 +10,30 @@ import net.minecraft.core.RegistryCodecs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.core.registries.Registries;
 
-import java.util.List; // Import this
+import java.util.List;
 
 /**
- * A record that associates a Block (or tag of blocks) with the
- * enchanting power it provides for a specific theme.
+ * A data-driven record that defines a rule for how a specific block or group of blocks
+ * contributes enchanting power toward a theme (e.g., a Bookshelf contributes 1 power to the Default theme).
+ * <p>
+ * This is the core data unit used by the enchanting table logic to determine available thematic power.
  *
- * @param blocks The block or tag of blocks that provide power.
- * @param power The base amount of power this provider gives.
- * @param bonuses A list of optional, additional power calculations.
+ * @param blocks  A {@link HolderSet} representing the block(s) or block tag that provide power for the theme.
+ * @param power   The base integer amount of enchanting power this provider grants.
+ * @param bonuses A list of optional {@link PowerBonus} rules that apply conditional or dynamic modifications
+ * to the base power value.
  */
 public record PowerProvider(
         HolderSet<Block> blocks,
         int power,
         List<PowerBonus> bonuses
 ) {
+    /**
+     * The codec responsible for serializing and deserializing instances of this record from data files (e.g., JSON).
+     * <p>
+     * It uses {@link RegistryCodecs#homogeneousList} to correctly handle the required {@link HolderSet} of blocks.
+     * The {@code bonuses} field defaults to an empty list if omitted.
+     */
     public static final Codec<PowerProvider> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(PowerProvider::blocks),

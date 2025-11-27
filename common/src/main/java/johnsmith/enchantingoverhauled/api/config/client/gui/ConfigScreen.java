@@ -14,16 +14,53 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
+/**
+ * The main configuration GUI screen.
+ * <p>
+ * This screen utilizes a {@link TabNavigationBar} to organize configuration settings into
+ * distinct categories (tabs). It manages the overall layout, including the header,
+ * footer buttons (Reset, Done), and the lifecycle of the configuration data (saving on close).
+ */
 public class ConfigScreen extends Screen {
 
+    /**
+     * The parent screen to return to when this configuration screen is closed.
+     */
     private final Screen parent;
+
+    /**
+     * The configuration manager instance that provides the properties and handles I/O operations.
+     */
     private final ConfigManager manager;
 
+    /**
+     * The manager responsible for handling tab switching and widget visibility.
+     * It interacts directly with the screen's widget list to add/remove elements based on the selected tab.
+     */
     private final TabManager tabManager = new TabManager(this::addRenderableWidget, this::removeWidget);
+
+    /**
+     * The navigation bar UI component that displays the tab buttons at the top of the screen.
+     */
     private TabNavigationBar tabNavigationBar;
+
+    /**
+     * A standardized layout manager that positions the header and footer elements.
+     */
     public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
+
+    /**
+     * The "Reset to Defaults" button located in the footer.
+     * Its active state is toggled based on whether the current tab has modified values.
+     */
     private Button resetButton;
 
+    /**
+     * Constructs a new configuration screen.
+     *
+     * @param parent  The screen to return to when this configuration screen is closed.
+     * @param manager The {@link ConfigManager} instance holding the configuration state and structure.
+     */
     public ConfigScreen(Screen parent, ConfigManager manager) {
         super(createStyledTitle(manager.modId));
         this.parent = parent;
@@ -31,6 +68,15 @@ public class ConfigScreen extends Screen {
         this.layout.setHeaderHeight(24);
     }
 
+    /**
+     * Generates a stylized title component for the screen.
+     * <p>
+     * This method splits the translated title string into two parts (if possible)
+     * and applies different formatting colors to create a distinct visual style.
+     *
+     * @param modId The mod ID used to resolve the translation key {@code config.<modId>.title}.
+     * @return A formatted {@link Component} representing the screen title.
+     */
     private static Component createStyledTitle(String modId) {
         String key = "config." + modId + ".title";
         String fullText = Component.translatable(key).getString();
@@ -46,26 +92,24 @@ public class ConfigScreen extends Screen {
         return Component.literal(fullText).withStyle(ChatFormatting.BLUE, ChatFormatting.BOLD);
     }
 
+    /**
+     * Initializes the screen's components, including the tab navigation bar and footer buttons.
+     * <p>
+     * This method iterates through the registered configuration tabs from the manager,
+     * builds the UI structure, and sets the initial layout state.
+     */
     @Override
     protected void init() {
-        // We do NOT add a title header because the tabs occupy the top of the screen.
-
-        // 1. Build the Tabs
         TabNavigationBar.Builder tabBuilder = TabNavigationBar.builder(this.tabManager, this.width);
 
-        // Iterate Tabs from the Manager Instance instead of static Registry
         for (PropertyTab categoryTab : this.manager.getTabs()) {
-            // Pass the manager to the Tab so it can build the ConfigList
             tabBuilder.addTabs(new johnsmith.enchantingoverhauled.api.config.client.gui.ConfigTab(this, categoryTab, this.manager));
         }
 
         this.tabNavigationBar = tabBuilder.build();
 
-        // Add directly as widget (TabNavigationBar sits at Y=0)
         this.addRenderableWidget(this.tabNavigationBar);
 
-        // 2. Footer Buttons
-        // Dynamic translation key based on mod ID
         String resetKey = "config." + this.manager.modId + ".reset";
 
         net.minecraft.client.gui.layouts.LinearLayout footerRow = net.minecraft.client.gui.layouts.LinearLayout.horizontal().spacing(8);
@@ -73,16 +117,21 @@ public class ConfigScreen extends Screen {
         footerRow.addChild(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose()).width(150).build());
         this.layout.addToFooter(footerRow);
 
-        // 3. Finalize Layout
         this.layout.visitWidgets(this::addRenderableWidget);
 
-        // Select the first tab by default
         this.tabNavigationBar.selectTab(0, false);
 
         this.repositionElements();
         this.updateMasterResetButton();
     }
 
+    /**
+     * Recalculates the position and size of the screen elements.
+     * <p>
+     * This ensures the tab navigation bar spans the full width and the content area
+     * is strictly bounded within the central column of the screen, preventing
+     * widget overlap with the header or footer.
+     */
     @Override
     protected void repositionElements() {
         if (this.tabNavigationBar != null) {
@@ -92,22 +141,21 @@ public class ConfigScreen extends Screen {
 
         this.layout.arrangeElements();
 
-        // 1. Determine the content width (Match Tab Bar ~400px)
         int contentWidth = Math.min(400, this.width);
 
-        // 2. Calculate centered X position
         int contentLeft = (this.width - contentWidth) / 2;
 
-        // 3. Define Vertical bounds (Header to Footer)
         int tabTop = this.layout.getHeaderHeight();
         int tabHeight = this.layout.getContentHeight();
 
-        // 4. Create the constrained rectangle
         ScreenRectangle tabArea = new ScreenRectangle(contentLeft, tabTop, contentWidth, tabHeight);
 
         this.tabManager.setTabArea(tabArea);
     }
 
+    /**
+     * Resets all configuration entries in the currently selected tab to their default values.
+     */
     private void resetCurrentTab() {
         if (this.tabManager.getCurrentTab() instanceof johnsmith.enchantingoverhauled.api.config.client.gui.ConfigTab configTab) {
             for (ContainerObjectSelectionList.Entry<?> entry : configTab.list.children()) {
@@ -119,6 +167,12 @@ public class ConfigScreen extends Screen {
         this.updateMasterResetButton();
     }
 
+    /**
+     * Updates the active state of the master "Reset" button in the footer.
+     * <p>
+     * The button is enabled only if at least one option in the current tab differs
+     * from its default value.
+     */
     public void updateMasterResetButton() {
         boolean canReset = false;
         if (this.tabManager.getCurrentTab() instanceof johnsmith.enchantingoverhauled.api.config.client.gui.ConfigTab configTab) {
@@ -134,20 +188,17 @@ public class ConfigScreen extends Screen {
         }
     }
 
+    /**
+     * Closes the screen, triggers an asynchronous save of the configuration,
+     * and returns to the parent screen.
+     */
     @Override
     public void onClose() {
-        // NON-BLOCKING SAVE:
-        // We trigger the save process on a background thread.
-        // If the user immediately closes the game, the JVM shutdown hooks (if any)
-        // or the OS usually allow small file writes to finish, but strictly speaking,
-        // this is "fire and forget".
-
         this.manager.save().exceptionally(e -> {
             manager.logger.error("Failed to auto-save config on screen close", e);
             return null;
         });
 
-        // Return to parent screen immediately without waiting for disk I/O
         if (this.minecraft != null) {
             this.minecraft.setScreen(this.parent);
         }

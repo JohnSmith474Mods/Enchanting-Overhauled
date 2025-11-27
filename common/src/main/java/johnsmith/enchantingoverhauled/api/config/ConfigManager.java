@@ -18,32 +18,75 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 /**
- * The central hub for the mod's configuration system.
+ * The central manager for the mod's configuration system.
  * <p>
- * This manager acts as a registry for configuration structure (Tabs, Groups, Properties)
- * and handles the direct loading and saving of the single configuration file.
+ * This class acts as both the registry for the configuration structure (Tabs -> Groups -> Properties)
+ * and the handler for file I/O. It maintains a single flat properties file located at
+ * {@code config/[mod_id].properties}.
  * <p>
- * Network synchronization and multi-file scopes have been removed.
- * All properties are stored in 'config/[mod_id].properties'.
+ * It supports asynchronous saving to prevent game thread stalling and maintains a runtime
+ * map of registered properties to their current values.
  */
 public class ConfigManager {
 
-    // region Fields
+    /**
+     * The unique identifier for the mod (e.g., "enchanting_overhauled").
+     */
     public final String modId;
+
+    /**
+     * The display name of the mod, used in file headers and logging.
+     */
     public final String modName;
+
+    /**
+     * The logger instance for reporting configuration events and errors.
+     */
     public final Logger logger;
 
+    /**
+     * A lookup map for all registered properties, keyed by their unique ID (tab.group.name).
+     */
     private final Map<String, Property<?>> registeredConfigs = new HashMap<>();
+
+    /**
+     * A map of registered configuration tabs, keyed by their ID (e.g., "general", "client").
+     * Used to ensure unique tab IDs and quick retrieval.
+     */
     private final Map<String, PropertyTab> tabs = new LinkedHashMap<>();
+
+    /**
+     * A mapping of Tabs to their child PropertyGroups.
+     * Maintains the order in which groups were registered for UI display.
+     */
     private final Map<PropertyTab, List<PropertyGroup>> tabsToGroups = new LinkedHashMap<>();
+
+    /**
+     * A mapping of PropertyGroups to their child Properties.
+     * Maintains the order in which properties were registered for UI display.
+     */
     private final Map<PropertyGroup, List<Property<?>>> groupsToConfigs = new LinkedHashMap<>();
 
-    // I/O State
+    /**
+     * The file path to the configuration file on the disk.
+     * Initialized during {@link #initialize(Path)}.
+     */
     private Path configPath;
-    private ConfigWriter activeConfig = new ConfigWriter(); // Default empty to avoid null checks
-    // endregion
 
-    // region Constructor
+    /**
+     * An in-memory representation of the raw configuration file content.
+     * Used to persist values that exist in the file but are not currently registered in the code (orphans).
+     */
+    private ConfigWriter activeConfig = new ConfigWriter();
+
+    /**
+     * Constructs a new configuration manager and registers it with the global {@link ConfigRegistry}.
+     *
+     * @param modId   The mod's unique identifier. Cannot be null or empty.
+     * @param modName The mod's display name. If null, defaults to {@code modId}.
+     * @param logger  The logger to use for all configuration-related messages.
+     * @throws IllegalArgumentException if {@code modId} is null/empty or {@code logger} is null.
+     */
     public ConfigManager(String modId, String modName, Logger logger) {
         if (logger == null) throw new IllegalArgumentException("Logger cannot be null");
         this.logger = logger;
@@ -52,7 +95,7 @@ public class ConfigManager {
             logError("Mod ID cannot be null or empty.");
             throw new IllegalArgumentException("Mod ID cannot be null or empty");
         }
-        // Fallback for modName if null
+
         this.modName = (modName == null || modName.isEmpty()) ? modId : modName;
         this.modId = modId;
 
@@ -60,14 +103,14 @@ public class ConfigManager {
 
         logInfo("Initialized ConfigManager for mod '{}'.", this.modName);
     }
-    // endregion
-
-    // region Lifecycle API
 
     /**
-     * Initializes the configuration system by loading the main properties file.
+     * Initializes the configuration system by determining the file path and loading existing values.
+     * <p>
+     * If the configuration file exists, it is parsed and values are applied to any currently
+     * registered properties. If it does not exist, a new file will be created upon the first save.
      *
-     * @param configDir The game's main config directory (e.g., .minecraft/config)
+     * @param configDir The game's main configuration directory path.
      */
     public void initialize(Path configDir) {
         if (configDir == null) {
@@ -85,17 +128,19 @@ public class ConfigManager {
             this.activeConfig = new ConfigWriter();
         }
 
-        // Apply loaded values to any properties already registered
         for (Property<?> property : registeredConfigs.values()) {
             applySavedValue(property);
         }
     }
-    // endregion
-
-    // region I/O Operations
 
     /**
-     * Saves the current configuration to disk asynchronously.
+     * Asynchronously saves the current configuration state to disk.
+     * <p>
+     * This method generates the file content using {@link ConfigProvider}, preserving any
+     * orphan keys found in the file that are not currently registered in the code.
+     * The write operation happens on a separate thread to avoid blocking the main game loop.
+     *
+     * @return A {@link CompletableFuture} representing the completion of the save operation.
      */
     public CompletableFuture<Void> save() {
         if (configPath == null) {
@@ -105,18 +150,14 @@ public class ConfigManager {
 
         logInfo("Saving configuration to: {}", configPath);
 
-        // 1. Create the Provider.
         ConfigProvider provider = ConfigProvider.create(this);
 
-        // 2. Build content on the main thread to ensure data consistency
         provider.build();
 
-        // Preserve orphan values (keys in file but not in registry)
         appendOrphans(provider);
 
         String content = provider.generate(modName);
 
-        // 3. Write to disk asynchronously
         return CompletableFuture.runAsync(() -> {
             try {
                 Path parent = configPath.getParent();
@@ -133,12 +174,22 @@ public class ConfigManager {
         });
     }
 
+    /**
+     * Retrieves a raw map of the currently loaded configuration key-value pairs.
+     *
+     * @return A map of string keys to string values.
+     */
     public Map<String, String> getConfigMap() {
         return activeConfig.getRawMap();
     }
-    // endregion
 
-    // region Registry API
+    /**
+     * Registers or retrieves a configuration tab.
+     *
+     * @param id             The unique identifier for the tab.
+     * @param translationKey The base translation key for the tab.
+     * @return The registered {@link PropertyTab}.
+     */
     public PropertyTab registerTab(String id, String translationKey) {
         if (id == null || translationKey == null) throw new IllegalArgumentException("Tab ID/Key cannot be null");
         return tabs.computeIfAbsent(id, k -> {
@@ -148,6 +199,14 @@ public class ConfigManager {
         });
     }
 
+    /**
+     * Registers or retrieves a property group within a specific tab.
+     *
+     * @param tab The parent tab.
+     * @param id  The unique identifier for the group.
+     * @return The registered {@link PropertyGroup}.
+     * @throws IllegalArgumentException if the tab is not registered with this manager.
+     */
     public PropertyGroup registerGroup(PropertyTab tab, String id) {
         if (tab == null || id == null) throw new IllegalArgumentException("Tab/Group ID cannot be null");
         if (!tabsToGroups.containsKey(tab)) throw new IllegalArgumentException("Tab not registered: " + tab.id());
@@ -163,6 +222,14 @@ public class ConfigManager {
                 });
     }
 
+    /**
+     * Registers a configuration property.
+     * <p>
+     * If a value for this property exists in the loaded file, it is applied immediately.
+     *
+     * @param config The property to register.
+     * @param <T>    The type of the property value.
+     */
     public <T extends Comparable<T>> void registerConfig(Property<T> config) {
         if (config == null) return;
         PropertyGroup group = config.parentGroup;
@@ -174,12 +241,14 @@ public class ConfigManager {
         groupsToConfigs.get(group).add(config);
         registeredConfigs.put(config.getUniqueId(), config);
 
-        // Apply value if the config file was loaded before registration
         applySavedValue(config);
     }
-    // endregion
 
-    // region Internal Helpers
+    /**
+     * Applies the value from the currently loaded {@link ConfigWriter} to the given property, if it exists.
+     *
+     * @param type The property to update.
+     */
     private <T extends Comparable<T>> void applySavedValue(Property<T> type) {
         String key = type.getUniqueId();
         if (activeConfig != null && activeConfig.has(key)) {
@@ -187,6 +256,12 @@ public class ConfigManager {
         }
     }
 
+    /**
+     * Parses a string value and sets it on the property, handling type conversion.
+     *
+     * @param type  The property to set.
+     * @param value The string representation of the value.
+     */
     @SuppressWarnings("unchecked")
     private <T extends Comparable<T>> void parseAndSet(Property<T> type, String value) {
         if (type == null || value == null) return;
@@ -207,9 +282,14 @@ public class ConfigManager {
         }
     }
 
+    /**
+     * Appends configuration entries found in the file but not in the code to the output provider.
+     * This ensures that removing a config option from the mod code doesn't silently delete user data
+     * from the file, effectively "commenting it out" as preserved data.
+     *
+     * @param provider The config provider being built.
+     */
     private void appendOrphans(ConfigProvider provider) {
-        // If the active config has keys that are NOT in our registry,
-        // we write them back to the file to prevent data loss (e.g. removed features or typos)
         for (String key : activeConfig.getKeys()) {
             if (!registeredConfigs.containsKey(key)) {
                 provider.addRawLine("\n# [PRESERVED] " + key);
@@ -217,23 +297,86 @@ public class ConfigManager {
             }
         }
     }
-    // endregion
 
-    // region Accessors & Logging
+    /**
+     * Logs an informational message prefixed with the mod ID.
+     *
+     * @param message The message string (can contain {} placeholders).
+     * @param params  Arguments to substitute into the placeholders.
+     */
     public void logInfo(String message, Object... params) { logger.info(message, params); }
+
+    /**
+     * Logs a warning message prefixed with the mod ID.
+     *
+     * @param message The message string (can contain {} placeholders).
+     * @param params  Arguments to substitute into the placeholders.
+     */
     public void logWarn(String message, Object... params) { logger.warn(message, params); }
+
+    /**
+     * Logs an error message prefixed with the mod ID.
+     *
+     * @param message The message string (can contain {} placeholders).
+     * @param params  Arguments to substitute into the placeholders.
+     */
     public void logError(String message, Object... params) { logger.error(message, params); }
+
+    /**
+     * Logs a debug message prefixed with the mod ID.
+     *
+     * @param message The message string (can contain {} placeholders).
+     * @param params  Arguments to substitute into the placeholders.
+     */
     public void logDebug(String message, Object... params) { logger.debug(message, params); }
 
+    /**
+     * Retrieves an unmodifiable set of all registered property tabs.
+     *
+     * @return A set of {@link PropertyTab} instances.
+     */
     public Set<PropertyTab> getTabs() { return Collections.unmodifiableSet(tabsToGroups.keySet()); }
+
+    /**
+     * Retrieves the list of groups registered under a specific tab.
+     *
+     * @param tab The tab to query.
+     * @return A list of property groups in registration order.
+     */
     public List<PropertyGroup> getGroups(PropertyTab tab) { return tabsToGroups.getOrDefault(tab, Collections.emptyList()); }
+
+    /**
+     * Retrieves the list of configuration properties registered under a specific group.
+     *
+     * @param group The group to query.
+     * @return A list of properties in registration order.
+     */
     public List<Property<?>> getConfigs(PropertyGroup group) { return groupsToConfigs.getOrDefault(group, Collections.emptyList()); }
+
+    /**
+     * Retrieves a registered property by its unique fully-qualified ID string.
+     *
+     * @param key The unique ID (format: tab.group.name).
+     * @return The property instance, or {@code null} if not found.
+     */
     public Property<?> getConfig(String key) { return registeredConfigs.get(key); }
+
+    /**
+     * Retrieves a collection of all registered configuration properties.
+     *
+     * @return A collection of all properties managed by this instance.
+     */
     public Collection<Property<?>> getConfigs() { return registeredConfigs.values(); }
 
+    /**
+     * Creates a new instance of the configuration GUI screen.
+     *
+     * @param parent The parent screen to return to when the config screen is closed.
+     * @param <S>    The return type, typically castable to the platform-specific screen type.
+     * @return A new {@link ConfigScreen} instance.
+     */
     @SuppressWarnings("unchecked")
     public <S> S createScreen(S parent) {
         return (S) new ConfigScreen((Screen) parent, this);
     }
-    // endregion
 }

@@ -4,17 +4,19 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 
 /**
- * A data-driven record defining how sounds should play for a theme.
+ * A data-driven record defining the audio properties for a sound event associated with an enchantment theme.
+ * <p>
+ * This record specifies the sound to play and how its volume and pitch should be randomized upon emission.
+ * The sound is played locally by the client upon receiving the particle effect command from the server.
  *
- * @param effect The sound event (e.g., "minecraft:particle.soul_escape").
- * @param volume The base volume.
- * @param volumeVariance The random offset to add to the volume.
- * @param pitch The base pitch.
- * @param pitchVariance The random offset to add to the pitch.
+ * @param effect          A {@link Holder} referencing the {@link SoundEvent} to play (e.g., "minecraft:particle.soul_escape").
+ * @param volume          The base volume (0.0 to 1.0) for the sound.
+ * @param volumeVariance  A random offset added to the base volume.
+ * @param pitch           The base pitch (0.0 to 2.0) for the sound.
+ * @param pitchVariance   A random offset added to the base pitch.
  */
 public record SoundEffectData(
         Holder<SoundEvent> effect,
@@ -23,6 +25,10 @@ public record SoundEffectData(
         float pitch,
         float pitchVariance
 ) {
+    /**
+     * The codec responsible for serializing and deserializing instances of this record from JSON.
+     * It uses {@link SoundEvent#CODEC} to correctly handle the sound event holder.
+     */
     public static final Codec<SoundEffectData> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     SoundEvent.CODEC.fieldOf("effect").forGetter(SoundEffectData::effect),
