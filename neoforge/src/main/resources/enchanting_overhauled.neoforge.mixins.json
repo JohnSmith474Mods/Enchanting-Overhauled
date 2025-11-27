@@ -3,9 +3,12 @@
   "minVersion": "0.8",
   "package": "johnsmith.enchantingoverhauled.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixinextras": {"minVersion": "0.5.0"},
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
   "mixins": [
-    "entity.player.CommonPlayerMixin"
+    "entity.player.CommonPlayerMixin",
+    "entity.player.PlayerMixin"
   ],
   "client": [],
   "server": [],
