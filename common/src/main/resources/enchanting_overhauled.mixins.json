@@ -12,7 +12,6 @@
     "block.EnchantingTableBlockMixin",
     "block.PowderSnowBlockMixin",
     "block.entity.EnchantingTableBlockEntityMixin",
-    "client.enchantment.EnchantmentMixin",
     "component.type.ItemEnchantmentsMixin",
     "enchantment.EnchantmentMixin",
     "entity.CombatRulesMixin",
@@ -31,9 +30,9 @@
   "client": [
     "client.gui.screen.AbstractContainerScreenMixin",
     "client.gui.screen.EnchantmentScreenMixin",
+    "client.enchantment.EnchantmentMixin",
     "client.render.FogRendererMixin",
-    "client.render.block.entity.EnchantTableRendererMixin",
-    "client.render.item.RangeSelectItemModelPropertiesMixin"
+    "client.render.block.entity.EnchantTableRendererMixin"
   ],
   "server": [],
   "injectors": {
