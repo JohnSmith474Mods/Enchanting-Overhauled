@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -23,28 +24,33 @@ public abstract class LootInjectionMixin {
 
     @Inject(method = "reload", at = @At("RETURN"), cancellable = true)
     private static void enchanting_overhauled$injectLoot(
-            LayeredRegistryAccess<RegistryLayer> registries,
+            LayeredRegistryAccess<RegistryLayer> registryAccess,
+            List<Registry.PendingTags<?>> postponedTags,
             ResourceManager resourceManager,
             Executor backgroundExecutor,
-            CallbackInfoReturnable<CompletableFuture<LayeredRegistryAccess<RegistryLayer>>> cir
+            // Fix 1: Correct Generic Type <ReloadableServerRegistries.LoadResult>
+            CallbackInfoReturnable<CompletableFuture<ReloadableServerRegistries.LoadResult>> cir
     ) {
-        CompletableFuture<LayeredRegistryAccess<RegistryLayer>> originalFuture = cir.getReturnValue();
+        CompletableFuture<ReloadableServerRegistries.LoadResult> originalFuture = cir.getReturnValue();
 
-        CompletableFuture<LayeredRegistryAccess<RegistryLayer>> modifiedFuture = originalFuture.thenApply(layeredAccess -> {
-            RegistryAccess registryAccess = layeredAccess.compositeAccess();
+        // Fix 2: The future now yields a LoadResult, not LayeredRegistryAccess
+        CompletableFuture<ReloadableServerRegistries.LoadResult> modifiedFuture = originalFuture.thenApply(loadResult -> {
+            // Fix 3: Extract the registry access from the LoadResult record
+            LayeredRegistryAccess<RegistryLayer> layers = loadResult.layers();
+            RegistryAccess compositeAccess = layers.compositeAccess();
 
             // 1. Reload Injection Map
             FabricLootManager.reload(resourceManager);
 
             // 2. Iterate and Inject into Loot Tables
-            Registry<LootTable> lootRegistry = registryAccess.registryOrThrow(Registries.LOOT_TABLE);
+            Registry<LootTable> lootRegistry = compositeAccess.lookupOrThrow(Registries.LOOT_TABLE);
 
-            for (Holder.Reference<LootTable> holder : lootRegistry.holders().toList()) {
-                // FabricLootManager.tryInject now accepts registryAccess to find tags for EnchantRandomlyFunction
-                FabricLootManager.tryInject(holder.value(), holder.key().location(), registryAccess);
+            for (Holder.Reference<LootTable> holder : lootRegistry.listElements().toList()) {
+                FabricLootManager.tryInject(holder.value(), holder.key().location(), compositeAccess);
             }
 
-            return layeredAccess;
+            // Fix 4: Return the original 'loadResult' object to satisfy the Future signature
+            return loadResult;
         });
 
         cir.setReturnValue(modifiedFuture);

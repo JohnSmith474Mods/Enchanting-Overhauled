@@ -202,4 +202,28 @@ public abstract sealed class Property<T extends Comparable<T>> permits Property.
             super(resourceName, description, category, defaultValue, Codec.BOOL);
         }
     }
+
+    public static final class Hexadecimal extends Property.Bounded<Integer> {
+
+        /**
+         * Constructs a new bounded numeric property.
+         *
+         * @param resourceName
+         * @param description
+         * @param category
+         * @param defaultValue
+         * @param lowerBound
+         * @param upperBound
+         */
+        public Hexadecimal(
+                String resourceName,
+                String description,
+                PropertyGroup category,
+                Integer defaultValue,
+                Integer lowerBound,
+                Integer upperBound
+        ) {
+            super(resourceName, description, category, defaultValue, lowerBound, upperBound, Codec.INT);
+        }
+    }
 }

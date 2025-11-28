@@ -1,23 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "minecraft:red_carpet",
+    "A": "minecraft:amethyst_shard",
+    "#": "minecraft:obsidian"
+  },
   "pattern": [
     " C ",
     "A#A",
     "###"
   ],
-  "key": {
-    "C": {
-      "item": "minecraft:red_carpet"
-    },
-    "A": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "#": {
-      "item": "minecraft:obsidian"
-    }
-  },
   "result": {
-    "id": "enchanting_overhauled:deactivated_enchanting_table",
-    "count": 1
+    "count": 1,
+    "id": "enchanting_overhauled:deactivated_enchanting_table"
   }
 }

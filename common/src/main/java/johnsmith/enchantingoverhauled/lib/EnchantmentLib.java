@@ -159,7 +159,10 @@ public class EnchantmentLib {
      * {@link DataComponents#ENCHANTMENTS} otherwise.
      */
     private static DataComponentType<ItemEnchantments> getEnchantmentsComponentType(ItemStack stack) {
-        return stack.getItem() instanceof EnchantedBookItem ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS;
+        if (stack.has(DataComponents.STORED_ENCHANTMENTS)) {
+            return DataComponents.STORED_ENCHANTMENTS;
+        }
+        return DataComponents.ENCHANTMENTS;
     }
 
     /**
@@ -430,9 +433,13 @@ public class EnchantmentLib {
      */
     public static List<EnchantmentInstance> generateEnchantments(FeatureFlagSet enabledFeatures, RandomSource random, ItemStack target, boolean treasureAllowed, Level level, BlockPos pos) {
         List<EnchantmentInstance> enchantments = Lists.newArrayList();
-        Item item = target.getItem();
 
-        int enchantability = item.getEnchantmentValue();
+        int enchantability = 0;
+        var enchantableComponent = target.get(DataComponents.ENCHANTABLE);
+        if (enchantableComponent != null) {
+            enchantability = enchantableComponent.value();
+        }
+
         if (enchantability <= 0) {
             return enchantments;
         }
@@ -440,7 +447,12 @@ public class EnchantmentLib {
         List<EnchantmentInstance> possibleEntries = EnchantmentLib.getPossibleEntries(enabledFeatures, target, treasureAllowed, level, pos);
 
         enchantments.addAll(possibleEntries);
-        enchantments = EnchantmentLib.weightedSkewedShuffle(enchantments, entry -> entry.getWeight().asInt(), random);
+
+        enchantments = EnchantmentLib.weightedSkewedShuffle(
+                enchantments,
+                entry -> entry.enchantment().value().getWeight(),
+                random
+        );
 
         return enchantments;
     }
@@ -454,7 +466,8 @@ public class EnchantmentLib {
         if (themeRegistryOpt.isEmpty()) return EnchantmentThemeRegistry.DEFAULT;
 
         // Iterate all registered Themes
-        for (var themeRef : themeRegistryOpt.get().holders().toList()) {
+        // FIX: .holders() -> .listElements()
+        for (var themeRef : themeRegistryOpt.get().listElements().toList()) {
             ResourceLocation id = themeRef.key().location();
             // Construct the expected Tag: e.g., #enchanting_overhauled:theme/marine
             TagKey<Enchantment> tag = TagKey.create(
@@ -479,9 +492,9 @@ public class EnchantmentLib {
         boolean isTargetBook = target.is(Items.BOOK);
 
         // Use the registry from the level to iterate holders
-        Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
-        for (Holder<Enchantment> enchantmentHolder : registry.holders().toList()) {
+        for (Holder<Enchantment> enchantmentHolder : registry.listElements().toList()) {
             Enchantment enchantment = enchantmentHolder.value();
 
             // UPDATED: Use the new helper instead of the accessor
@@ -566,8 +579,8 @@ public class EnchantmentLib {
         }
 
         // Retrieve holders from the world registry
-        List<Holder<Enchantment>> enchantmentList = world.registryAccess().registryOrThrow(Registries.ENCHANTMENT)
-                .holders()
+        List<Holder<Enchantment>> enchantmentList = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+                .listElements()
                 .map(h -> (Holder<Enchantment>) h)
                 .collect(Collectors.toList());
 
@@ -640,8 +653,8 @@ public class EnchantmentLib {
             ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 
             // Resolve the Protection enchantment holder from the registry
-            Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
-            Holder<Enchantment> protection = registry.getHolderOrThrow(Enchantments.PROTECTION);
+            Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
+            Holder<Enchantment> protection = registry.getOrThrow(Enchantments.PROTECTION);
 
             builder.set(protection, Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get() + 1);
             tomeStack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
@@ -659,8 +672,8 @@ public class EnchantmentLib {
         ItemStack tome = new ItemStack(Services.PLATFORM.getEnchantedTome());
         ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 
-        Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
-        Holder<Enchantment> protection = registry.getHolderOrThrow(Enchantments.PROTECTION);
+        Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
+        Holder<Enchantment> protection = registry.getOrThrow(Enchantments.PROTECTION);
 
         builder.set(protection, Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get() + 1);
         tome.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
@@ -696,7 +709,7 @@ public class EnchantmentLib {
         ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         if (enchantments.isEmpty()) return Optional.empty();
 
-        Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
 
         for (var entry : enchantments.entrySet()) {
             Holder<Enchantment> holder = entry.getKey();

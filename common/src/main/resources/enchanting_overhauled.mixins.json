@@ -23,7 +23,6 @@
     "item.ItemStackMixin",
     "loot.EnchantRandomlyFunctionMixin",
     "loot.MatchToolMixin",
-    "menu.AnvilMenuMixin",
     "menu.EnchantmentMenuMixin",
     "menu.ItemCombinerMenuMixin",
     "server.level.ServerLevelMixin",
@@ -32,9 +31,9 @@
   "client": [
     "client.gui.screen.AbstractContainerScreenMixin",
     "client.gui.screen.EnchantmentScreenMixin",
-    "client.item.ItemPropertiesMixin",
     "client.render.FogRendererMixin",
-    "client.render.block.entity.EnchantTableRendererMixin"
+    "client.render.block.entity.EnchantTableRendererMixin",
+    "client.render.item.RangeSelectItemModelPropertiesMixin"
   ],
   "server": [],
   "injectors": {

@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
@@ -38,7 +39,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
     private void modifyIsEnchantable(CallbackInfoReturnable<Boolean> cir) {
         ItemStack self = (ItemStack) (Object) this;
 
-        if (!this.getItem().isEnchantable(self)) {
+        if (!self.has(DataComponents.ENCHANTABLE)) {
             cir.setReturnValue(false);
             return;
         }
@@ -54,11 +55,12 @@ public abstract class ItemStackMixin implements DataComponentHolder {
      * with color based on enchantment count.
      * Mapped: appendTooltip -> addToTooltip
      */
-    @Inject(method = "addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
+    @Inject(method = "addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/item/component/TooltipDisplay;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
             at = @At("HEAD"))
     private <T extends TooltipProvider> void injectEnchantmentHeaders(
             DataComponentType<T> componentType,
             Item.TooltipContext context,
+            TooltipDisplay tooltipDisplay,
             Consumer<Component> textConsumer,
             TooltipFlag tooltipFlag,
             CallbackInfo ci

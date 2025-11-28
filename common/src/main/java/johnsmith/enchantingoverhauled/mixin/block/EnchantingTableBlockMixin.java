@@ -90,7 +90,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     ) {
         level.setBlock(blockPos, Services.PLATFORM.getDisturbedEnchantingTable().defaultBlockState(), 3);
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             ItemStack stackToDrop = ItemStack.EMPTY;
 
             if (blockEntity instanceof TomeStorageAccessor accessor) {
@@ -310,7 +310,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull ItemStack getCloneItemStack(LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+    public @NotNull ItemStack getCloneItemStack(LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState, boolean includeData) {
         BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);
 
         if (blockEntity instanceof TomeStorageAccessor accessor) {

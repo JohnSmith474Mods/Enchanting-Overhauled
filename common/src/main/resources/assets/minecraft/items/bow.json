@@ -1,0 +1,20 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:using_item",
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "property": "enchanting_overhauled:bow_pull",
+      "entries": [
+        { "threshold": 0.33334, "model": { "type": "minecraft:model", "model": "minecraft:item/bow_pulling_0" } },
+        { "threshold": 0.66667,  "model": { "type": "minecraft:model", "model": "minecraft:item/bow_pulling_1" } },
+        { "threshold": 1.0,  "model": { "type": "minecraft:model", "model": "minecraft:item/bow_pulling_2" } }
+      ],
+      "fallback": { "type": "minecraft:model", "model": "minecraft:item/bow_pulling_0" }
+    },
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/bow"
+    }
+  }
+}

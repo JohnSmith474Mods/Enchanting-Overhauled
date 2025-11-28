@@ -24,9 +24,6 @@
         ],
         "modmenu": [
           "johnsmith.enchantingoverhauled.client.gui.ModMenuIntegration"
-        ],
-        "fabric-datagen": [
-          "johnsmith.enchantingoverhauled.datagen.FabricLootTableInjectionGenerator"
         ]
     },
     "mixins": [

@@ -1,15 +1,12 @@
 package johnsmith.enchantingoverhauled.mixin.entity.projectile;
 
 import johnsmith.enchantingoverhauled.api.enchantment.accessor.FireDurationAccessor;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.storage.ValueInput; // [New Import]
+import net.minecraft.world.level.storage.ValueOutput; // [New Import]
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,18 +38,20 @@ public abstract class AbstractArrowMixin extends Entity implements FireDurationA
         return this.enchanting_overhauled$fireDuration;
     }
 
+    // [Fix 1] Updated to use ValueOutput instead of CompoundTag
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void saveFireDuration(CompoundTag compound, CallbackInfo ci) {
+    private void saveFireDuration(ValueOutput output, CallbackInfo ci) {
         if (this.enchanting_overhauled$fireDuration > -1) {
-            compound.putFloat("EnchantingOverhauledFireDuration", this.enchanting_overhauled$fireDuration);
+            output.putFloat("EnchantingOverhauledFireDuration", this.enchanting_overhauled$fireDuration);
         }
     }
 
+    // [Fix 2] Updated to use ValueInput instead of CompoundTag
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void loadFireDuration(CompoundTag compound, CallbackInfo ci) {
-        if (compound.contains("EnchantingOverhauledFireDuration")) {
-            this.enchanting_overhauled$fireDuration = compound.getInt("EnchantingOverhauledFireDuration");
-        }
+    private void loadFireDuration(ValueInput input, CallbackInfo ci) {
+        // 'getFloatOr' is the standard pattern for ValueInput based on other methods like getDoubleOr
+        // We use -1.0F as the default to indicate "not set"
+        this.enchanting_overhauled$fireDuration = input.getFloatOr("EnchantingOverhauledFireDuration", -1.0F);
     }
 
     /**

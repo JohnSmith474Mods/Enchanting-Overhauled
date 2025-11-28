@@ -67,7 +67,7 @@ public class ConfigList extends ContainerObjectSelectionList<Entry> {
      * @return The x-coordinate of the scrollbar position.
      */
     public int getScrollbarX() {
-        return this.getScrollbarPosition();
+        return this.scrollBarX();
     }
 
     /**
@@ -87,8 +87,7 @@ public class ConfigList extends ContainerObjectSelectionList<Entry> {
     private void addConfigEntry(Property<?> config) {
         if (config instanceof Property.Binary binary) {
             addEntry(new BooleanEntry(binary, minecraft, this, screen::updateMasterResetButton));
-        }
-        else if (config instanceof Property.Bounded<?> bounded) {
+        } else if (config instanceof Property.Bounded<?> bounded) {
             Object def = bounded.defaultValue;
             if (def instanceof Integer) {
                 addEntry(new IntEntry((Property.Bounded<Integer>) bounded, minecraft, this, screen::updateMasterResetButton));
@@ -114,5 +113,5 @@ public class ConfigList extends ContainerObjectSelectionList<Entry> {
      * @return The adjusted scrollbar x-coordinate.
      */
     @Override
-    protected int getScrollbarPosition() { return super.getScrollbarPosition() - 3; }
+    protected int scrollBarX() { return super.scrollBarX() - 3; }
 }

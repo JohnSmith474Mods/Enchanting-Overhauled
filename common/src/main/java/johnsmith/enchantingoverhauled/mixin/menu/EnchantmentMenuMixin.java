@@ -22,7 +22,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -212,7 +211,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
         // Add source/book slot at the custom coordinates
         this.addSlot(new Slot(this.enchantSlots, 2, SOURCE_X_POSITION, SOURCE_Y_POSITION) {
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return stack.getItem() instanceof EnchantedBookItem;
+                return stack.has(DataComponents.STORED_ENCHANTMENTS);
             }
         });
 
@@ -277,13 +276,6 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
                   constant = @Constant(intValue = 84, ordinal = 0))
     private int modifyInventoryYPosition(int originalY) {
         return INVENTORY_Y_POSITION;
-    }
-
-    /** Modifies the Y-coordinate for the player's hotbar. */
-    @ModifyConstant(method = "<init>(ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/inventory/ContainerLevelAccess;)V",
-                  constant = @Constant(intValue = 142, ordinal = 0))
-    private int modifyHotbarYPosition(int originalY) {
-        return HOTBAR_Y_POSITION;
     }
 
     /**
@@ -378,10 +370,10 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
             int slot = 0;
             for (EnchantmentInstance entry : enchantments) {
                 // 1. Get the ID Map from the world's registry
-                var idMap = world.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+                var idMap = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
                 // 2. Get the ID from the Holder (EnchantmentInstance now holds a Holder<Enchantment>)
-                this.enchantClue[slot] = idMap.getId(entry.enchantment);
-                this.levelClue[slot] = entry.level;
+                this.enchantClue[slot] = idMap.getId(entry.enchantment());
+                this.levelClue[slot] = entry.level();
                 ++slot;
             }
 
@@ -511,8 +503,8 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
                 EnchantmentLib.getEnchantmentsAsList(EnchantmentLib.getEnchantments(source));
 
         for (EnchantmentInstance sourceEntry : sourceEnchantments) {
-            Enchantment sourceEnchant = sourceEntry.enchantment.value();
-            int sourceLevel = sourceEntry.level;
+            Enchantment sourceEnchant = sourceEntry.enchantment().value();
+            int sourceLevel = sourceEntry.level();
 
             // Only check enchantments that are already on the target
             if (addedEnchantments.contains(sourceEnchant) && sourceEnchant.canEnchant(target)) {
@@ -520,8 +512,8 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
                 // Find the matching enchantment in the list
                 for (int i = 0; i < list.size(); i++) {
                     EnchantmentInstance targetEntry = list.get(i);
-                    if (targetEntry.enchantment.value().equals(sourceEnchant)) {
-                        int targetLevel = targetEntry.level;
+                    if (targetEntry.enchantment().value().equals(sourceEnchant)) {
+                        int targetLevel = targetEntry.level();
 
                         // If source is strictly higher, replace it in the list
                         if (sourceLevel > targetLevel) {
@@ -543,7 +535,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
     @Unique
     private boolean enchanting_overhauled$isCompatibleWith(List<EnchantmentInstance> currentList, Holder<Enchantment> candidate) {
         for (EnchantmentInstance instance : currentList) {
-            Holder<Enchantment> existing = instance.enchantment;
+            Holder<Enchantment> existing = instance.enchantment();
             // Skip if it's the same enchantment (handled by duplication checks)
             if (existing.equals(candidate)) continue;
 
@@ -588,12 +580,12 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
         for (EnchantmentInstance entry : sourceEnchantments) {
             if (list.size() >= arraySize) break; // Stop if slots are full
 
-            Enchantment sourceEnchant = entry.enchantment.value();
+            Enchantment sourceEnchant = entry.enchantment().value();
 
             // Check if acceptable AND not already in the list (using the Set)
             // .add() returns true if the item was successfully added (i.e., not a duplicate)
             if (addedEnchantments.add(sourceEnchant)) {
-                if (sourceEnchant.canEnchant(target) && this.enchanting_overhauled$isCompatibleWith(list, entry.enchantment)) {
+                if (sourceEnchant.canEnchant(target) && this.enchanting_overhauled$isCompatibleWith(list, entry.enchantment())) {
                     list.add(entry);
                     this.enchanting_overhauled$enchantmentSources[list.size() - 1] = EnchantmentSource.SOURCE.getId();
                 }
@@ -628,11 +620,11 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
             // Filter out enchantments that are already in our list
             generated.removeIf(generatedEntry -> {
                 for (EnchantmentInstance existingEntry : list) {
-                    if (existingEntry.enchantment.equals(generatedEntry.enchantment)) {
+                    if (existingEntry.enchantment().equals(generatedEntry.enchantment())) {
                         return true;
                     }
                 }
-                return !this.enchanting_overhauled$isCompatibleWith(list, generatedEntry.enchantment);
+                return !this.enchanting_overhauled$isCompatibleWith(list, generatedEntry.enchantment());
             });
 
             int generatedIndex = 0;
@@ -673,7 +665,12 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
     @Unique
     public int enchanting_overhauled$rollLevel(ItemStack target, Enchantment enchantment, int currentLevel) {
         // 1. Clamp enchantability between 1 and 50.
-        int enchantability = Math.clamp(target.getItem().getEnchantmentValue(), 1, 50);
+        int rawEnchantability = 0;
+        var enchantable = target.get(DataComponents.ENCHANTABLE);
+        if (enchantable != null) {
+            rawEnchantability = enchantable.value();
+        }
+        int enchantability = Math.clamp(rawEnchantability, 1, 50);
 
         // 2. Calculate success probability.
         // This scales enchantability (1-50) to a 0.0-1.0 range, then doubles its square
@@ -728,7 +725,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
 
         // 1. Get the ID Map from the player's level
         RegistryAccess registryAccess = player.level().registryAccess();
-        var idMap = registryAccess.registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+        var idMap = registryAccess.lookupOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
 
         // 2. Resolve the Holder from the ID safely
         Optional<Enchantment> enchantment = Optional.empty();
@@ -834,7 +831,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
 
         if (isUpgradeButton) {
             // 1. Get the ID Map (you are inside access.execute, so you have 'world')
-            var idMap = registryAccess.registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+            var idMap = registryAccess.lookupOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
 
             // 2. Resolve
             Holder<Enchantment> enchantment = idMap.byId(this.enchantClue[buttonId]);
@@ -920,7 +917,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
                 ItemStack targetCopy = target;
 
                 // 1. Get the ID Map (you are inside access.execute, so you have 'world')
-                var idMap = registryAccess.registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+                var idMap = registryAccess.lookupOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
 
                 // 2. Resolve
                 Holder<Enchantment> enchantment = idMap.byId(this.enchantClue[buttonId]);
@@ -1008,7 +1005,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
                 ItemStack targetCopy = target;
 
                 // 1. Get the ID Map (you are inside access.execute, so you have 'world')
-                var idMap = registryAccess.registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+                var idMap = registryAccess.lookupOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
 
                 // 2. Resolve
                 Holder<Enchantment> enchantment = idMap.byId(this.enchantClue[buttonId]);

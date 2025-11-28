@@ -70,7 +70,7 @@ public class OvergrowthProcessor extends StructureProcessor {
         boolean flag = floor.is(Blocks.OAK_PLANKS) || floor.is(Blocks.BOOKSHELF) || floor.is(Blocks.OBSIDIAN);
         if (random.nextFloat() < probability && flag) {
             chunk.setBlockState(top,
-                    Blocks.JUNGLE_LEAVES.defaultBlockState().trySetValue(LeavesBlock.PERSISTENT, Boolean.TRUE), false);
+                    Blocks.JUNGLE_LEAVES.defaultBlockState().trySetValue(LeavesBlock.PERSISTENT, Boolean.TRUE));
         }
     }
 

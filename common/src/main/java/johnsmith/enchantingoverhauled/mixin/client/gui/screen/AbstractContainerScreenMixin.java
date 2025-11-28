@@ -13,7 +13,7 @@ public class AbstractContainerScreenMixin {
 
     @ModifyArgs(method = "renderLabels",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)V",
                     ordinal = 1)) // Move the inventory title text down.
     private void modifyForegroundDrawHeight(Args args) {
         if ((Object) this instanceof EnchantmentScreen) {

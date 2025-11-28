@@ -38,7 +38,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean isDevelopmentEnvironment() {
-        return !FMLLoader.isProduction();
+        return !FMLLoader.getCurrent().isProduction();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public Optional<Registry<EnchantmentTheme>> getThemeRegistry(RegistryAccess registryAccess) {
-        return registryAccess.registry(EnchantmentThemeRegistry.THEME_REGISTRY_KEY);
+        return registryAccess.lookup(EnchantmentThemeRegistry.THEME_REGISTRY_KEY);
     }
 
     @Override

@@ -50,14 +50,14 @@ public class FloatEntry extends OptionEntry<Float, EditBox> {
 
                 if (val >= bounds.lowerBound && val <= bounds.upperBound) {
                     configType.set(val);
-                    box.setTextColor(0xFFFFFF);
+                    box.setTextColor(0xFFFFFFFF);
                 } else {
-                    box.setTextColor(0xFF0000);
+                    box.setTextColor(0xFFFF0000);
                 }
                 updateResetButton();
                 this.onValueChanged.run();
             } catch (NumberFormatException ignored) {
-                box.setTextColor(0xFF0000);
+                box.setTextColor(0xFFFF0000);
             }
         });
         return box;
@@ -71,7 +71,7 @@ public class FloatEntry extends OptionEntry<Float, EditBox> {
     @Override
     protected void updateWidgetValue() {
         this.widget.setValue(String.format("%.2f", configType.get()));
-        this.widget.setTextColor(0xFFFFFF);
+        this.widget.setTextColor(0xFFFFFFFF);
     }
 
     /**

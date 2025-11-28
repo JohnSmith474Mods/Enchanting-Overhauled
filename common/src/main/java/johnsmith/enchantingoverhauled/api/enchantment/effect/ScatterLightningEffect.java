@@ -7,6 +7,7 @@ import johnsmith.enchantingoverhauled.util.WorldScheduler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
@@ -61,16 +62,16 @@ public record ScatterLightningEffect(LevelBasedValue count, float radius, int in
         for (int i = 0; i < boltCount; i++) {
             final int index = i;
             Runnable spawnTask = () -> {
-                LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level);
+                LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level, EntitySpawnReason.EVENT);
                 if (bolt != null) {
                     if (index == 0) {
                         // Primary bolt hits target directly
-                        bolt.moveTo(center);
+                        bolt.setPos(center);
                     } else {
                         // Scattered bolts
                         double offsetX = (level.random.nextDouble() - 0.5D) * 2.0D * this.radius;
                         double offsetZ = (level.random.nextDouble() - 0.5D) * 2.0D * this.radius;
-                        bolt.moveTo(center.x + offsetX, center.y, center.z + offsetZ);
+                        bolt.setPos(center.x + offsetX, center.y, center.z + offsetZ);
                     }
                     bolt.setCause(playerCause);
                     level.addFreshEntity(bolt);

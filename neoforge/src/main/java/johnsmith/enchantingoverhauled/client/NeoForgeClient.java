@@ -1,10 +1,8 @@
 package johnsmith.enchantingoverhauled.client;
 
 import johnsmith.enchantingoverhauled.client.render.entity.model.TomeModel;
-import johnsmith.enchantingoverhauled.config.Config;
 
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 /**

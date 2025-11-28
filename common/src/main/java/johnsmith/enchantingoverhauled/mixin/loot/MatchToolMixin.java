@@ -28,7 +28,7 @@ public class MatchToolMixin {
         // 1. If vanilla check failed, or we have no predicate, do nothing.
         if (!cir.getReturnValue() || this.predicate.isEmpty()) return;
 
-        ItemStack tool = context.getParamOrNull(LootContextParams.TOOL);
+        ItemStack tool = context.getOptionalParameter(LootContextParams.TOOL);
         if (tool == null || tool.isEmpty()) return;
 
         // 2. Check for Silk Touch Effect
@@ -52,7 +52,7 @@ public class MatchToolMixin {
 
     private boolean doesPredicateRequireSilkTouch(ItemPredicate predicate, LootContext context) {
         // Create a dummy tool with NO enchantments
-        ItemStack dummy = context.getParamOrNull(LootContextParams.TOOL).copy();
+        ItemStack dummy = context.getOptionalParameter(LootContextParams.TOOL).copy();
         EnchantmentHelper.setEnchantments(dummy, ItemEnchantments.EMPTY);
 
         // If the predicate fails on the dummy tool, it implies the predicate REQUIRED the enchantments to pass.

@@ -77,7 +77,7 @@ public class VinesProcessor extends StructureProcessor {
                 if (random.nextFloat() < this.probability && blockState2.isAir()) {
                     if (blockState.isFaceSturdy(levelReader, blockPos, direction)) {
                         BooleanProperty booleanProperty = VineBlock.getPropertyForFace(direction.getOpposite());
-                        chunk.setBlockState(blockPos2, Blocks.VINE.defaultBlockState().trySetValue(booleanProperty, true), false);
+                        chunk.setBlockState(blockPos2, Blocks.VINE.defaultBlockState().trySetValue(booleanProperty, true));
                     }
                 }
             }

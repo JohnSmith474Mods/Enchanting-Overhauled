@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -39,9 +40,6 @@ public abstract class ItemEnchantmentsMixin {
 
     @Shadow @Final
     Object2IntOpenHashMap<Holder<Enchantment>> enchantments;
-
-    @Shadow @Final
-    boolean showInTooltip;
 
     @Unique
     private static final Component INDENT = Component.literal("  ");
@@ -111,27 +109,26 @@ public abstract class ItemEnchantmentsMixin {
             Item.TooltipContext context,
             Consumer<Component> tooltip,
             TooltipFlag flag,
+            DataComponentGetter componentGetter,
             CallbackInfo ci
     ) {
-        if (this.showInTooltip) {
-            HolderLookup.Provider wrapperLookup = context.registries();
-            HolderSet<Enchantment> registryEntryList = enchanting_Overhauled$getTooltipOrderList(wrapperLookup, Registries.ENCHANTMENT, EnchantmentTags.TOOLTIP_ORDER);
+        HolderLookup.Provider wrapperLookup = context.registries();
+        HolderSet<Enchantment> registryEntryList = enchanting_Overhauled$getTooltipOrderList(wrapperLookup, Registries.ENCHANTMENT, EnchantmentTags.TOOLTIP_ORDER);
 
-            for(Holder<Enchantment> registryEntry : registryEntryList) {
-                int i = this.enchantments.getInt(registryEntry);
-                if (i > 0) {
-                    tooltip.accept(Enchantment.getFullname(registryEntry, i));
-                    this.enchanting_Overhauled$addEnchantmentDescription(registryEntry, tooltip);
-                }
+        for(Holder<Enchantment> registryEntry : registryEntryList) {
+            int i = this.enchantments.getInt(registryEntry);
+            if (i > 0) {
+                tooltip.accept(Enchantment.getFullname(registryEntry, i));
+                this.enchanting_Overhauled$addEnchantmentDescription(registryEntry, tooltip);
             }
+        }
 
-            for (Object2IntMap.Entry<Holder<Enchantment>> entry : this.enchantments.object2IntEntrySet()) {
-                Holder<Enchantment> registryEntry2 = entry.getKey();
+        for (Object2IntMap.Entry<Holder<Enchantment>> entry : this.enchantments.object2IntEntrySet()) {
+            Holder<Enchantment> registryEntry2 = entry.getKey();
 
-                if (!registryEntryList.contains(registryEntry2)) {
-                    tooltip.accept(Enchantment.getFullname(registryEntry2, entry.getIntValue()));
-                    this.enchanting_Overhauled$addEnchantmentDescription(registryEntry2, tooltip);
-                }
+            if (!registryEntryList.contains(registryEntry2)) {
+                tooltip.accept(Enchantment.getFullname(registryEntry2, entry.getIntValue()));
+                this.enchanting_Overhauled$addEnchantmentDescription(registryEntry2, tooltip);
             }
         }
 

@@ -20,13 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Mixin(EnchantRandomlyFunction.class)
 public class EnchantRandomlyFunctionMixin {
 
-    // 1. Rename shadowed field to match vanilla 1.21 'options'
+    // Verify this field name in your mappings (Mojmap usually uses 'options' or 'enchantments')
     @Shadow @Final
     private Optional<HolderSet<Enchantment>> options;
 
@@ -40,13 +39,12 @@ public class EnchantRandomlyFunctionMixin {
         cir.cancel();
 
         // 2. Update Candidate Selection
-        // Use the 'options' field if present, otherwise fetch all enchantments from the level's registry access.
-        // In 1.21, enchantments are dynamic, so avoid BuiltInRegistries.
         List<Holder<Enchantment>> candidates = this.options
                 .map(HolderSet::stream)
                 .orElseGet(() -> context.getLevel().registryAccess()
-                        .registryOrThrow(Registries.ENCHANTMENT)
-                        .holders()
+                        // FIX: Use lookupOrThrow and listElements() for 1.21.4 registry access
+                        .lookupOrThrow(Registries.ENCHANTMENT)
+                        .listElements()
                         .map(h -> (Holder<Enchantment>) h))
                 .collect(Collectors.toList());
 

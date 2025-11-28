@@ -1,9 +1,11 @@
 {
   "enchantment.enchanting_overhauled.magic_protection": "Magic Protection",
   "enchantment.enchanting_overhauled.physical_protection": "Physical Protection",
-  "block.enchanting_overhauled.deactivated_enchanting_table": "Enchanting Altar",
   "block.enchanting_overhauled.deactivated_enchanting_table.wrong_catalyst": "The Enchanting Altar rejects your Catalyst.",
+  "block.enchanting_overhauled.deactivated_enchanting_table": "Enchanting Altar",
   "block.enchanting_overhauled.disturbed_enchanting_table": "Disturbed Enchanting Altar",
+  "item.enchanting_overhauled.deactivated_enchanting_table": "Enchanting Altar",
+  "item.enchanting_overhauled.disturbed_enchanting_table": "Disturbed Enchanting Altar",
   "item.enchanting_overhauled.applied_enchantments": "Applied Enchantments:",
   "item.enchanting_overhauled.stored_enchantments": "Stored Enchantments:",
   "item.enchanting_overhauled.enchanted_tome": "Enchanted Tome",

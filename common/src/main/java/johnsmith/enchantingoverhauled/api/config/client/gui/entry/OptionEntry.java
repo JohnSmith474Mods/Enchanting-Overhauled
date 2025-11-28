@@ -1,5 +1,6 @@
 package johnsmith.enchantingoverhauled.api.config.client.gui.entry;
 
+import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.config.data.Property;
 import johnsmith.enchantingoverhauled.api.config.client.gui.ConfigList;
 
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import org.jetbrains.annotations.NotNull;
@@ -106,34 +108,40 @@ public abstract class OptionEntry<T extends Comparable<T>, W extends AbstractWid
      * Renders the entry, including the localized label, the input widget, and the reset button.
      *
      * @param guiGraphics The graphics context for rendering.
-     * @param index       The index of this entry in the list.
-     * @param top         The y-coordinate of the top of the entry.
-     * @param left        The x-coordinate of the left of the entry.
-     * @param width       The width of the entry.
-     * @param height      The height of the entry.
      * @param mouseX      The current mouse x-coordinate.
      * @param mouseY      The current mouse y-coordinate.
-     * @param hovering    Whether the mouse is hovering over this entry.
+     * @param isHovering  Whether the mouse is hovering over this entry.
      * @param partialTick The partial tick time.
      */
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovering, float partialTick) {
-        int y = top + (height - 20) / 2;
+    public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+        // 1. Calculate Y position for centering widgets vertically in this row
+        //    'this.getY()' is the top Y coordinate of this entry row.
+        int y = this.getY() + (this.getHeight() - 20) / 2;
 
+        // 2. Calculate X positions relative to the scrollbar
+        //    (You might need to adjust getScrollbarX() in ConfigList to be compatible with 1.21.10 layout if it changed,
+        //     but standard logic is often getRowRight() or similar)
         int resetX = this.parentList.getScrollbarX() - 50 - 10;
 
-        this.resetButton.setPosition(resetX, y);
+        // 3. Position and Render Reset Button
+        this.resetButton.setX(resetX);
+        this.resetButton.setY(y);
         this.resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
+        // 4. Position and Render Main Widget (your 'myButton' equivalent)
         int widgetWidth = 75;
         int widgetX = resetX - 5 - widgetWidth;
+
         this.widget.setX(widgetX);
         this.widget.setY(y);
         this.widget.setWidth(widgetWidth);
         this.widget.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        int textY = top + (height - minecraft.font.lineHeight) / 2;
-        guiGraphics.drawString(minecraft.font, this.labelComponent, left, textY, 0xFFFFFF);
+        // 5. Render Label Text
+        //    'this.getX()' is the left X coordinate of this entry row.
+        int textY = this.getY() + (this.getHeight() - minecraft.font.lineHeight) / 2;
+        guiGraphics.drawString(minecraft.font, this.labelComponent, this.getX(), textY, 0xFFFFFFFF, false);
     }
 
     /**

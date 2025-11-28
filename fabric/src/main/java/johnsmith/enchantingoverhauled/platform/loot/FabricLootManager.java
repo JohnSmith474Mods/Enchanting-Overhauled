@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.config.Config;
+import johnsmith.enchantingoverhauled.item.Items;
 import johnsmith.enchantingoverhauled.mixin.accessor.LootTableAccessor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -63,8 +64,7 @@ public class FabricLootManager {
         LootPool pool = LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1.0F))
                 .when(LootItemRandomChanceCondition.randomChance(chance))
-                .add(LootItem.lootTableItem(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_tome")))
-                        // Update: Pass registries to the builder method
+                .add(LootItem.lootTableItem(Items.ENCHANTED_TOME)
                         .apply(EnchantRandomlyFunction.randomApplicableEnchantment(registries))
                 )
                 .build();

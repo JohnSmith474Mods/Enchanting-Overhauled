@@ -1,5 +1,6 @@
 package johnsmith.enchantingoverhauled.api.config.client.gui;
 
+import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.config.ConfigManager;
 import johnsmith.enchantingoverhauled.api.config.data.PropertyTab;
 
@@ -52,6 +53,11 @@ public class ConfigTab implements Tab {
         return this.title;
     }
 
+    @Override
+    public Component getTabExtraNarration() {
+        return Component.empty();
+    }
+
     /**
      * {@inheritDoc}
      * <p>
@@ -73,7 +79,7 @@ public class ConfigTab implements Tab {
      */
     @Override
     public void doLayout(ScreenRectangle rectangle) {
-        this.list.updateSizeAndPosition(rectangle.width(), rectangle.height(), rectangle.top());
-        this.list.setX(rectangle.left());
+        Constants.LOG.info("Width: {}, Height: {}, Top: {}", rectangle.width(), rectangle.height(), rectangle.top());
+        this.list.updateSizeAndPosition(rectangle.width(), rectangle.height(), rectangle.left(), rectangle.top());
     }
 }

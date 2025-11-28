@@ -10,7 +10,9 @@
   "mixins": [
     "accessor.LootTableAccessor",
     "entity.player.CommonPlayerMixin",
-    "loot.LootInjectionMixin"
+    "entity.player.PlayerMixin",
+    "loot.LootInjectionMixin",
+    "menu.AnvilMenuMixin"
   ],
   "client": [],
   "server": [],

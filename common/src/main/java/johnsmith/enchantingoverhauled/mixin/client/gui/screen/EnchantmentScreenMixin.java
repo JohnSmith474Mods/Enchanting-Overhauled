@@ -17,11 +17,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.IdMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
@@ -64,12 +67,12 @@ import java.util.Optional;
  * tooltips for all buttons and fix enchantment name rendering.</li>
  * </ul>
  */
-@Mixin(EnchantmentScreen.class)
+@Mixin(value = EnchantmentScreen.class, priority = 900)
 public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<EnchantmentMenu> {
 
     // region Font Identifiers
     @Unique
-    private static final ResourceLocation GALACTIC_FONT_ID = ResourceLocation.fromNamespaceAndPath("minecraft", "alt");
+    private static final FontDescription GALACTIC_FONT_ID = new FontDescription.Resource(ResourceLocation.fromNamespaceAndPath("minecraft", "alt"));
     // endregion
 
     // region Texture Identifiers
@@ -279,47 +282,47 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
     // region Text Colors
     /** Text color for an enabled, table-generated enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_TABLE_TEXT_ENABLED_COLOR = 0x000000;
+    private static final int ENCHANTING_FROM_TABLE_TEXT_ENABLED_COLOR = 0xFF000000;
     /** Text color for a hovered, table-generated enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_TABLE_TEXT_HIGHLIGHTED_COLOR = 0x000000;
+    private static final int ENCHANTING_FROM_TABLE_TEXT_HIGHLIGHTED_COLOR = 0xFF000000;
     /** Text color for a disabled, table-generated enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_TABLE_TEXT_DISABLED_COLOR = 0xFFFFFF;
+    private static final int ENCHANTING_FROM_TABLE_TEXT_DISABLED_COLOR = 0xFFFFFFFF;
 
     /** Text color for an enabled, source-transferred enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_SOURCE_TEXT_ENABLED_COLOR = 0x000000;
+    private static final int ENCHANTING_FROM_SOURCE_TEXT_ENABLED_COLOR = 0xFF000000;
     /** Text color for a hovered, source-transferred enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_SOURCE_TEXT_HIGHLIGHTED_COLOR = 0x000000;
+    private static final int ENCHANTING_FROM_SOURCE_TEXT_HIGHLIGHTED_COLOR = 0xFF000000;
     /** Text color for a disabled, source-transferred enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_SOURCE_TEXT_DISABLED_COLOR = 0xFFFFFF;
+    private static final int ENCHANTING_FROM_SOURCE_TEXT_DISABLED_COLOR = 0xFFFFFFFF;
 
     /** Text color for an enabled, target-upgrade enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_TARGET_TEXT_ENABLED_COLOR = 0xFFFF80;
+    private static final int ENCHANTING_FROM_TARGET_TEXT_ENABLED_COLOR = 0xFFFFFF80;
     /** Text color for a hovered, target-upgrade enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_TARGET_TEXT_HIGHLIGHTED_COLOR = 0x000000;
+    private static final int ENCHANTING_FROM_TARGET_TEXT_HIGHLIGHTED_COLOR = 0xFF000000;
     /** Text color for a disabled, target-upgrade enchantment. */
     @Unique
-    private static final int ENCHANTING_FROM_TARGET_TEXT_DISABLED_COLOR = 0xFFFFFF;
+    private static final int ENCHANTING_FROM_TARGET_TEXT_DISABLED_COLOR = 0xFFFFFFFF;
 
     /** Text color for an enchantment that is already at its maximum level. */
     @Unique
-    private static final int ENCHANTMENT_MAXED_OUT_TEXT_COLOR = 0xF2F09D;
+    private static final int ENCHANTMENT_MAXED_OUT_TEXT_COLOR = 0xFFF2F09D;
     /** Text color for an enchantment that is already at its maximum level. */
     @Unique
-    private static final int ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR = 0x4D2299;
+    private static final int ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR = 0xFF4D2299;
 
     /** Text color for the level requirement number when affordable. */
     @Unique
-    private static final int ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR = 0x80FF20;
+    private static final int ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR = 0xFF80FF20;
     /** Text color for the level requirement number when unaffordable. */
     @Unique
-    private static final int ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR = 0x408000;
+    private static final int ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR = 0xFF408000;
     // endregion
 
     // region Shadow Fields
@@ -384,7 +387,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         // 1. Background Calculation & Draw
         int alignX = this.leftPos;
         int alignY = this.topPos;
-        context.blit(BACKGROUND_TEXTURE, alignX, alignY, 0, 0, this.imageWidth, this.imageHeight);
+        context.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, alignX, alignY, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
         // 1b. Get Config Flag
         boolean usePlain = Config.BINARY_ACCESSIBILITY_USE_PLAIN_BACKGROUND.get();
@@ -414,7 +417,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             Holder<Enchantment> enchantment = null;
             if (id >= 0 && this.minecraft.level != null) {
                 IdMap<Holder<Enchantment>> idMap =
-                        this.minecraft.level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+                        this.minecraft.level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
                 enchantment = idMap.byId(id);
             }
 
@@ -527,13 +530,11 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             int texIndex,
             boolean usePlain
     ) {
-        RenderSystem.enableBlend();
         ResourceLocation disabledTex = usePlain ? PLAIN_TABLE_DISABLED_TEXTURE
                 : ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/disabled/table_" + texIndex + ".png");
-        context.blit(disabledTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT,
+        context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT,
                 ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT);
-        RenderSystem.disableBlend();
     }
 
     /**
@@ -765,16 +766,14 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         int colorCode;
 
         if (!affordable) {
-            RenderSystem.enableBlend();
-            context.blit(disabledTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT,
+            context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT,
                     ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT);
-            context.blitSprite(DISABLED_LEVEL_SPRITES[costIndex], buttonX + ENCHANTING_COST_X_OFFSET,
+            context.blitSprite(RenderPipelines.GUI_TEXTURED, DISABLED_LEVEL_SPRITES[costIndex], buttonX + ENCHANTING_COST_X_OFFSET,
                     buttonY + ENCHANTING_COST_Y_OFFSET, ENCHANTING_COST_WIDTH, ENCHANTING_COST_HEIGHT);
-            RenderSystem.disableBlend();
 
             // Draw the enchantment name
             context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
-                    disabledColor);
+                    disabledColor, false);
 
             colorCode = ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR; // disabled num color
         } else {
@@ -782,33 +781,31 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             int mouseDiffY = mouseY - buttonY;
             boolean hovering = mouseDiffX >= 0 && mouseDiffY >= 0 && mouseDiffX < ENCHANTING_BUTTON_WIDTH
                     && mouseDiffY < ENCHANTING_BUTTON_HEIGHT;
-            RenderSystem.enableBlend();
 
             int nameColor; // Color for the enchantment name
 
             if (hovering) {
-                context.blit(highlightedTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH,
+                context.blit(RenderPipelines.GUI_TEXTURED, highlightedTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH,
                         ENCHANTING_BUTTON_HEIGHT, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT);
                 nameColor = highlightedColor;
             } else {
-                context.blit(enabledTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH,
+                context.blit(RenderPipelines.GUI_TEXTURED, enabledTex, buttonX, buttonY, 0, 0, ENCHANTING_BUTTON_WIDTH,
                         ENCHANTING_BUTTON_HEIGHT, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT);
                 nameColor = enabledColor;
             }
 
-            context.blitSprite(ENABLED_LEVEL_SPRITES[costIndex], buttonX + ENCHANTING_COST_X_OFFSET,
+            context.blitSprite(RenderPipelines.GUI_TEXTURED, ENABLED_LEVEL_SPRITES[costIndex], buttonX + ENCHANTING_COST_X_OFFSET,
                     buttonY + ENCHANTING_COST_Y_OFFSET, ENCHANTING_COST_WIDTH, ENCHANTING_COST_HEIGHT);
-            RenderSystem.disableBlend();
 
             // Draw the enchantment name
             context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
-                    nameColor);
+                    nameColor, false);
 
             colorCode = ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR; // default num color
         }
 
         // Hide Level Requirement if Maxed
-        int outlineColor = 0;
+        int outlineColor = 0xFF000000;
         if (!isMaxed) {
             // Draw outline
             context.drawString(this.font, string,
@@ -838,7 +835,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             // Vanilla method: drawString(font, text, x, y, color, dropShadow)
             context.drawString(this.font, string,
                     textX + ENCHANTING_POWER_X_OFFSET - this.font.width(string),
-                    buttonY + ENCHANTING_POWER_Y_OFFSET, colorCode, true);
+                    buttonY + ENCHANTING_POWER_Y_OFFSET, colorCode, false);
         }
     }
 
@@ -869,6 +866,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                 ? ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE
                 : ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE;
         context.blit(
+                RenderPipelines.GUI_TEXTURED,
                 backgroundTexture,
                 buttonX,
                 buttonY,
@@ -928,7 +926,6 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         int x = alignX + REROLL_BUTTON_X_OFFSET;
         int y = alignY + REROLL_BUTTON_Y_OFFSET;
 
-        RenderSystem.enableBlend();
 
         boolean cannotAfford = (lapisCount < rerollCost || this.minecraft.player.experienceLevel < rerollCost)
                 && !this.minecraft.player.isCreative();
@@ -942,31 +939,30 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
             if (mouseXdiff >= 0 && mouseYdiff >= 0 && mouseXdiff < REROLL_BUTTON_WIDTH
                     && mouseYdiff < REROLL_BUTTON_HEIGHT) {
-                context.blit(REROLL_HIGHLIGHTED_TEXTURE, x, y, 0, 0, REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT,
+                context.blit(RenderPipelines.GUI_TEXTURED, REROLL_HIGHLIGHTED_TEXTURE, x, y, 0, 0, REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT,
                         REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT);
             } else {
-                context.blit(REROLL_TEXTURE, x, y, 0, 0, REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT,
+                context.blit(RenderPipelines.GUI_TEXTURED, REROLL_TEXTURE, x, y, 0, 0, REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT,
                         REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT);
             }
             // costIndex is safe because rerollEnabled -> canReroll -> occupiedSlots < 3
             if (costIndex < ENABLED_LEVEL_SPRITES.length) {
-                context.blitSprite(ENABLED_LEVEL_SPRITES[costIndex], x + REROLL_COST_X_OFFSET, y + REROLL_COST_Y_OFFSET,
+                context.blitSprite(RenderPipelines.GUI_TEXTURED, ENABLED_LEVEL_SPRITES[costIndex], x + REROLL_COST_X_OFFSET, y + REROLL_COST_Y_OFFSET,
                         REROLL_COST_WIDTH, REROLL_COST_HEIGHT);
             }
         } else {
             // Draw disabled
-            context.blit(REROLL_DISABLED_TEXTURE, x, y, 0, 0, REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT,
+            context.blit(RenderPipelines.GUI_TEXTURED, REROLL_DISABLED_TEXTURE, x, y, 0, 0, REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT,
                     REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT);
 
             // Show disabled cost only if the *only* reason it's disabled is cost
             boolean showDisabledCost = !targetIsEmpty && targetIsEnchantable && canReroll;
             if (showDisabledCost && costIndex < DISABLED_LEVEL_SPRITES.length) {
                 // costIndex is safe because showDisabledCost -> canReroll -> occupiedSlots < 3
-                context.blitSprite(DISABLED_LEVEL_SPRITES[costIndex], x + REROLL_COST_X_OFFSET,
+                context.blitSprite(RenderPipelines.GUI_TEXTURED, DISABLED_LEVEL_SPRITES[costIndex], x + REROLL_COST_X_OFFSET,
                         y + REROLL_COST_Y_OFFSET, REROLL_COST_WIDTH, REROLL_COST_HEIGHT);
             }
         }
-        RenderSystem.disableBlend();
     }
     // endregion
 
@@ -985,7 +981,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
         // 2. Draw Inactive Bar
         // We draw the full inactive bar first as a background.
-        context.blit(EXPERIENCE_BAR_INACTIVE, barX, barY, 0, 0, barWidth, barHeight, barWidth, barHeight);
+        context.blit(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_INACTIVE, barX, barY, 0, 0, barWidth, barHeight, barWidth, barHeight);
 
         // 3. Draw Active Bar
         float progress = this.minecraft.player.experienceProgress;
@@ -993,7 +989,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
         // Draw the active bar, cropped to the calculated width
         if (activeWidth > 0) {
-            context.blit(EXPERIENCE_BAR_ACTIVE, barX, barY, 0, 0, activeWidth, barHeight, barWidth, barHeight);
+            context.blit(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_ACTIVE, barX, barY, 0, 0, activeWidth, barHeight, barWidth, barHeight);
         }
 
         // 4. Draw Level Number
@@ -1007,7 +1003,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             int textY = alignY + EXPERIENCE_BAR_Y_OFFSET - 6;
 
             // Draw the black outline
-            int outlineColor = 0; // Black
+            int outlineColor = 0xFF000000; // Black
             context.drawString(this.font, levelString, textX + 1, textY, outlineColor, false); // Right
             context.drawString(this.font, levelString, textX - 1, textY, outlineColor, false); // Left
             context.drawString(this.font, levelString, textX, textY + 1, outlineColor, false); // Down
@@ -1019,7 +1015,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                     levelString,
                     textX,
                     textY,
-                    ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR, // 8453920
+                    ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR,
                     false // No shadow
             );
         }
@@ -1027,38 +1023,44 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
     // region Interaction handler
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        // Use the new imageHeight (186) to calculate 'alignY'
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        // We use a single loop and ONE call to handleInventoryButtonClick to ensure
+        // other mods injecting into that call (like Immersive UI) find a valid target.
         int alignX = this.leftPos;
         int alignY = this.topPos;
 
-        // Check enchantment buttons (0-2)
-        for (int buttonIndex = 0; buttonIndex < REROLL_BUTTON_INDEX; ++buttonIndex) {
-            double mouseDiffX = mouseX - (double) (alignX + ENCHANTING_BUTTON_X_OFFSET);
-            double mouseDiffY = mouseY
-                    - (double) (alignY + ENCHANTING_BUTTON_Y_OFFSET + ENCHANTING_BUTTON_HEIGHT * buttonIndex);
+        int clickedButtonIndex = -1;
 
-            if (mouseDiffX >= 0.0F && mouseDiffY >= 0.0F && mouseDiffX < ENCHANTING_BUTTON_WIDTH
-                    && mouseDiffY < ENCHANTING_BUTTON_HEIGHT
-                    && ((EnchantmentMenu) this.menu).clickMenuButton(this.minecraft.player, buttonIndex)) {
-                this.minecraft.gameMode.handleInventoryButtonClick(((EnchantmentMenu) this.menu).containerId,
-                        buttonIndex);
-                return true;
+        // Check enchantment buttons (0-2)
+        for (int i = 0; i < REROLL_BUTTON_INDEX; ++i) {
+            double mouseDiffX = event.x() - (double) (alignX + ENCHANTING_BUTTON_X_OFFSET);
+            double mouseDiffY = event.y() - (double) (alignY + ENCHANTING_BUTTON_Y_OFFSET + ENCHANTING_BUTTON_HEIGHT * i);
+
+            if (mouseDiffX >= 0.0F && mouseDiffY >= 0.0F && mouseDiffX < ENCHANTING_BUTTON_WIDTH && mouseDiffY < ENCHANTING_BUTTON_HEIGHT) {
+                clickedButtonIndex = i;
+                break;
             }
         }
 
         // Check reroll button (3)
-        double mouseXdiff = mouseX - (double) (alignX + REROLL_BUTTON_X_OFFSET);
-        double mouseYdiff = mouseY - (double) (alignY + REROLL_BUTTON_Y_OFFSET);
+        if (clickedButtonIndex == -1) {
+            double mouseXdiff = event.x() - (double) (alignX + REROLL_BUTTON_X_OFFSET);
+            double mouseYdiff = event.y() - (double) (alignY + REROLL_BUTTON_Y_OFFSET);
 
-        if (mouseXdiff >= 0.0F && mouseYdiff >= 0.0F && mouseXdiff < (double) REROLL_BUTTON_WIDTH
-                && mouseYdiff < (double) REROLL_BUTTON_HEIGHT
-                && this.menu.clickMenuButton(this.minecraft.player, REROLL_BUTTON_INDEX)) {
-            this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, REROLL_BUTTON_INDEX);
-            return true;
+            if (mouseXdiff >= 0.0F && mouseYdiff >= 0.0F && mouseXdiff < (double) REROLL_BUTTON_WIDTH && mouseYdiff < (double) REROLL_BUTTON_HEIGHT) {
+                clickedButtonIndex = REROLL_BUTTON_INDEX;
+            }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        // Single execution point for the click action
+        if (clickedButtonIndex != -1) {
+            if (((EnchantmentMenu) this.menu).clickMenuButton(this.minecraft.player, clickedButtonIndex)) {
+                this.minecraft.gameMode.handleInventoryButtonClick(((EnchantmentMenu) this.menu).containerId, clickedButtonIndex);
+                return true;
+            }
+        }
+
+        return super.mouseClicked(event, isDoubleClick);
     } // endregion
 
     // region Render
@@ -1156,7 +1158,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             Holder<Enchantment> enchantment = null;
             if (id >= 0 && this.minecraft.level != null) {
                 IdMap<Holder<Enchantment>> idMap =
-                        this.minecraft.level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
+                        this.minecraft.level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
                 enchantment = idMap.byId(id);
             }
 
@@ -1249,7 +1251,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             list.addAll(EnchantmentLib.wrapDescription(description));
         }
 
-        context.renderTooltip(this.font, list, mouseX, mouseY);
+        context.setTooltipForNextFrame(this.font, list, mouseX, mouseY);
     }
 
     /**
@@ -1286,7 +1288,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         // Add cost information
         this.enchanting_Overhauled$drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
 
-        context.renderTooltip(this.font, list, mouseX, mouseY);
+        context.setTooltipForNextFrame(this.font, list, mouseX, mouseY);
     }
 
     /**
@@ -1326,7 +1328,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         // Add cost information
         this.enchanting_Overhauled$drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
 
-        context.renderTooltip(this.font, list, mouseX, mouseY);
+        context.setTooltipForNextFrame(this.font, list, mouseX, mouseY);
     }
 
     /**
@@ -1353,11 +1355,11 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         ResourceKey<EnchantmentTheme> themeKey = EnchantmentLib.getThemeKey(this.minecraft.level.registryAccess(), enchantment);
         Optional<Registry<EnchantmentTheme>> registryOpt = Services.PLATFORM.getThemeRegistry(this.minecraft.level.registryAccess());
 
-        int color = 0xFFFFFF;
+        int color = Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_NAME_COLOR_VALUE.get();
         if (registryOpt.isPresent()) {
-            EnchantmentTheme theme = registryOpt.get().get(themeKey);
-            if (theme != null) {
-                color = theme.colorCode().orElse(0xFFFFFF);
+            Optional<Holder.Reference<EnchantmentTheme>> theme = registryOpt.get().get(themeKey);
+            if (theme.isPresent()) {
+                color = theme.get().value().colorCode().orElse(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_NAME_COLOR_VALUE.get());
             }
         }
         final int immutableColor = color;
@@ -1394,7 +1396,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         }
 
         this.enchanting_Overhauled$drawTooltipCost(list, isCreative, powerRequirement, cost, lapisCount);
-        context.renderTooltip(this.font, list, mouseX, mouseY);
+        context.setTooltipForNextFrame(this.font, list, mouseX, mouseY);
     }
 
     /**
@@ -1477,7 +1479,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                 this.enchanting_Overhauled$drawTooltipCost(list, isCreative, rerollCost, rerollCost, lapisCount);
             }
 
-            context.renderTooltip(this.font, list, mouseX, mouseY);
+            context.setTooltipForNextFrame(this.font, list, mouseX, mouseY);
         }
     } // endregion
 }

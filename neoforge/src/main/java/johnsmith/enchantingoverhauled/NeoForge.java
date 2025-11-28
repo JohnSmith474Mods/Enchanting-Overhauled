@@ -26,7 +26,6 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -56,7 +55,7 @@ public class NeoForge {
         eventBus.addListener(this::onDataPackRegistry);
         eventBus.addListener(this::gatherData);
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             NeoForgeClient.initialize(eventBus);
             container.registerExtensionPoint(IConfigScreenFactory.class,
                     (client, parent) -> Config.MANAGER.createScreen(parent));
@@ -79,11 +78,7 @@ public class NeoForge {
         event.dataPackRegistry(EnchantmentThemeRegistry.THEME_REGISTRY_KEY, EnchantmentTheme.CODEC, EnchantmentTheme.CODEC);
     }
 
-    public void gatherData(GatherDataEvent event) {
-        event.getGenerator().addProvider(
-            event.includeServer(),
-            (net.minecraft.data.DataProvider.Factory<NeoForgeLootModifiersProvider>) output ->
-                new NeoForgeLootModifiersProvider(output, event.getLookupProvider())
-        );
+    public void gatherData(GatherDataEvent.Server event) {
+        event.createProvider(NeoForgeLootModifiersProvider::new);
     }
 }

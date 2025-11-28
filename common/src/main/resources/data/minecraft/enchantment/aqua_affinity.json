@@ -35,7 +35,7 @@
             "minimum": 1.0
           }
         },
-        "attribute": "minecraft:player.submerged_mining_speed",
+        "attribute": "minecraft:submerged_mining_speed",
         "id": "minecraft:enchantment.aqua_affinity",
         "operation": "add_multiplied_total"
       }

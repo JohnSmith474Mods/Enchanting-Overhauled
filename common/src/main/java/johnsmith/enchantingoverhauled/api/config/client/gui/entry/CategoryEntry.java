@@ -46,22 +46,18 @@ public class CategoryEntry extends Entry {
      * Renders the category label centered horizontally on the screen.
      *
      * @param guiGraphics The graphics context for rendering.
-     * @param index       The index of this entry in the list.
-     * @param top         The y-coordinate of the top of the entry.
-     * @param left        The x-coordinate of the left of the entry.
-     * @param width       The width of the entry.
-     * @param height      The height of the entry.
      * @param mouseX      The current mouse x-coordinate.
      * @param mouseY      The current mouse y-coordinate.
-     * @param hovering    Whether the mouse is hovering over this entry.
+     * @param isHovering  Whether the mouse is hovering over this entry.
      * @param partialTick The partial tick time.
      */
     @Override
-    public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovering, float partialTick) {
-        int textY = top + (height - minecraft.font.lineHeight) / 2;
+    public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+        int textY = this.getY() + (this.getHeight() - minecraft.font.lineHeight) / 2;
 
         int screenWidth = minecraft.getWindow().getGuiScaledWidth();
-        guiGraphics.drawString(minecraft.font, this.label, screenWidth / 2 - this.textWidth / 2, textY, 0xFFFFFF, false);
+
+        guiGraphics.drawString(minecraft.font, this.label, screenWidth / 2 - this.textWidth / 2, textY, 0xFFFFFFFF, false);
     }
 
     /**

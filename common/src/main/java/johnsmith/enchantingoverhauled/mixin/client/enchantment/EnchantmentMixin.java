@@ -8,6 +8,7 @@ import johnsmith.enchantingoverhauled.platform.Services;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -53,11 +54,11 @@ public abstract class EnchantmentMixin {
                 ResourceKey<EnchantmentTheme> themeKey = EnchantmentLib.getThemeKey(client.level.registryAccess(), holder);
 
                 // Look up the theme to get its color
-                var themeRegistry = Services.PLATFORM.getThemeRegistry(client.level.registryAccess());
+                Optional<Registry<EnchantmentTheme>> themeRegistry = Services.PLATFORM.getThemeRegistry(client.level.registryAccess());
                 if (themeRegistry.isPresent()) {
-                    var theme = themeRegistry.get().get(themeKey);
-                    if (theme != null) {
-                        nameColor = theme.colorCode();
+                    Optional<Holder.Reference<EnchantmentTheme>> theme = themeRegistry.get().get(themeKey);
+                    if (theme.isPresent()) {
+                        nameColor = theme.get().value().colorCode();
                     }
                 }
             }

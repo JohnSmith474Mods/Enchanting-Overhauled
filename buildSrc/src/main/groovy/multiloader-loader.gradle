@@ -11,10 +11,17 @@ configurations {
     }
 }
 
+// Define the attribute so we can use it in the dependency block
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+
 dependencies {
     compileOnly(project(':common')) {
         capabilities {
-            requireCapability "$group:$mod_id"
+            requireCapability "$group:$mod_id:$version"
+        }
+        // FIX: Explicitly request the 'common' variant to resolve the attribute mismatch
+        attributes {
+            attribute(loaderAttribute, 'common')
         }
     }
     commonJava project(path: ':common', configuration: 'commonJava')
