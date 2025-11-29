@@ -772,8 +772,13 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                     buttonY + ENCHANTING_COST_Y_OFFSET, ENCHANTING_COST_WIDTH, ENCHANTING_COST_HEIGHT);
 
             // Draw the enchantment name
-            context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
-                    disabledColor, false);
+            if (Config.BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR.get()) {
+                context.drawWordWrap(this.font, enchantmentName.copy().withColor(disabledColor), textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        disabledColor, false);
+            } else {
+                context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        disabledColor, false);
+            }
 
             colorCode = ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR; // disabled num color
         } else {
@@ -798,8 +803,13 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                     buttonY + ENCHANTING_COST_Y_OFFSET, ENCHANTING_COST_WIDTH, ENCHANTING_COST_HEIGHT);
 
             // Draw the enchantment name
-            context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
-                    nameColor, false);
+            if (Config.BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR.get()) {
+                context.drawWordWrap(this.font, enchantmentName.copy().withColor(nameColor), textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        nameColor, false);
+            } else {
+                context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        nameColor, false);
+            }
 
             colorCode = ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR; // default num color
         }

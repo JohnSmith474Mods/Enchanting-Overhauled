@@ -6,7 +6,7 @@ import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.EffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.ParticleEffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.SoundEffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.power.PowerProvider;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
+import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.lib.EnchantmentLib;
 import johnsmith.enchantingoverhauled.mixin.accessor.AbstractBlockSettingsAccessor;
 import johnsmith.enchantingoverhauled.platform.Services;
@@ -18,14 +18,18 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -67,13 +71,22 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
                     target = "Lnet/minecraft/world/level/block/BaseEntityBlock;<init>(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"),
             index = 0)
     private static BlockBehaviour.Properties modifySettings(BlockBehaviour.Properties properties) {
-        properties.strength(0.0F, 1.0F);
+        if (Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) return properties;
         ((AbstractBlockSettingsAccessor) properties).setToolRequired(false);
         return properties;
     }
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Player player) {
+        if (Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) {
+            this.spawnDestroyParticles(level, player, blockPos, blockState);
+            if (blockState.is(BlockTags.GUARDED_BY_PIGLINS) && level instanceof ServerLevel serverlevel) {
+                PiglinAi.angerNearbyPiglins(serverlevel, player, false);
+            }
+
+            level.gameEvent(GameEvent.BLOCK_DESTROY, blockPos, GameEvent.Context.of(player, blockState));
+            return blockState;
+        }
         level.playSound(null, blockPos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
         level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
         return blockState;
@@ -88,6 +101,13 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             BlockEntity blockEntity,
             @NotNull ItemStack tool
     ) {
+        if (Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) {
+            player.awardStat(Stats.BLOCK_MINED.get(this));
+            player.causeFoodExhaustion(0.005F);
+            dropResources(blockState, level, blockPos, blockEntity, player, tool);
+            return;
+        }
+
         level.setBlock(blockPos, Services.PLATFORM.getDisturbedEnchantingTable().defaultBlockState(), 3);
 
         if (!level.isClientSide()) {
@@ -321,5 +341,36 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
         }
         RegistryAccess registryAccess = levelReader.registryAccess();
         return EnchantmentLib.getTomeWithDefaultEnchantment(registryAccess);
+    }
+
+    /**
+     * Dynamic override for Block Strength (Hardness).
+     * Replaces properties.strength(0.0F, ...)
+     */
+    @Override
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        // If Custom Mode is Active (Config is FALSE)
+        if (!Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) {
+            // Return 1.0F to indicate the block breaks instantly (Hardness 0 behavior)
+            return 1.0F;
+        }
+
+        // If Vanilla Mode is Active (Config is TRUE)
+        // Delegate to super, which calculates based on the cached 5.0F hardness
+        return super.getDestroyProgress(state, player, level, pos);
+    }
+
+    /**
+     * Dynamic override for Explosion Resistance.
+     * Replaces properties.strength(..., 1.0F)
+     */
+    @Override
+    public float getExplosionResistance() {
+        // If config is enabled (True), use Vanilla Resistance (Obsidian-like: 1200.0f)
+        if (Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) {
+            return 1200.0F;
+        }
+        // If config is disabled (False/Default), use Weak Resistance (1.0f)
+        return 1.0F;
     }
 }

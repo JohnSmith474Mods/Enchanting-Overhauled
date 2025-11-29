@@ -1,5 +1,6 @@
 package johnsmith.enchantingoverhauled.mixin.item;
 
+import johnsmith.enchantingoverhauled.config.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentType;
@@ -65,25 +66,30 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             TooltipFlag tooltipFlag,
             CallbackInfo ci
     ) {
-        ItemEnchantments enchantments = null;
-        Component baseHeader = null;
+        if (Config.BINARY_SHOW_ENCHANTMENT_TOOLTIP_HEADER.get()) {
+            ItemEnchantments enchantments = null;
+            Component baseHeader = null;
 
-        if (componentType == DataComponents.ENCHANTMENTS) {
-            enchantments = this.get(DataComponents.ENCHANTMENTS);
-            baseHeader = APPLIED_HEADER;
-        } else if (componentType == DataComponents.STORED_ENCHANTMENTS) {
-            enchantments = this.get(DataComponents.STORED_ENCHANTMENTS);
-            baseHeader = STORED_HEADER;
-        }
+            if (componentType == DataComponents.ENCHANTMENTS) {
+                enchantments = this.get(DataComponents.ENCHANTMENTS);
+                baseHeader = APPLIED_HEADER;
+            } else if (componentType == DataComponents.STORED_ENCHANTMENTS) {
+                enchantments = this.get(DataComponents.STORED_ENCHANTMENTS);
+                baseHeader = STORED_HEADER;
+            }
 
-        // Check if we found a relevant component
-        if (enchantments != null) {
-            int count = enchantments.size(); // Mapped: getSize() -> size()
-            if (count > 0) {
-                ChatFormatting color = enchanting_Overhauled$getColor(count);
-                // Add the header with the new color
-                // Mapped: formatted() -> withStyle()
-                textConsumer.accept(baseHeader.copy().withStyle(color));
+            // Check if we found a relevant component
+            if (enchantments != null) {
+                int count = enchantments.size();
+                if (count > 0) {
+                    ChatFormatting color = enchanting_Overhauled$getColor(count);
+
+                    if (Config.BINARY_ENCHANTMENT_TOOLTIP_HEADER_COLOR.get()) {
+                        textConsumer.accept(baseHeader.copy().withColor(Config.BINARY_ENCHANTMENT_TOOLTIP_HEADER_COLOR_VALUE.get()));
+                    } else {
+                        textConsumer.accept(baseHeader.copy().withStyle(color));
+                    }
+                }
             }
         }
     }
