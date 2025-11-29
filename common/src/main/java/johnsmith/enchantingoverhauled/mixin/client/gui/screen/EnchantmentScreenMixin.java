@@ -773,8 +773,13 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             RenderSystem.disableBlend();
 
             // Draw the enchantment name
-            context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
-                    disabledColor);
+            if (Config.BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR.get()) {
+                context.drawWordWrap(this.font, enchantmentName.copy().withColor(disabledColor), textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        disabledColor);
+            } else {
+                context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        disabledColor);
+            }
 
             colorCode = ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR; // disabled num color
         } else {
@@ -801,8 +806,13 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             RenderSystem.disableBlend();
 
             // Draw the enchantment name
-            context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
-                    nameColor);
+            if (Config.BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR.get()) {
+                context.drawWordWrap(this.font, enchantmentName.copy().withColor(nameColor), textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        nameColor);
+            } else {
+                context.drawWordWrap(this.font, enchantmentName, textX, textY, ENCHANTING_TEXT_MAX_WIDTH,
+                        nameColor);
+            }
 
             colorCode = ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR; // default num color
         }
@@ -879,18 +889,29 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                 ENCHANTING_BUTTON_WIDTH,
                 ENCHANTING_BUTTON_HEIGHT);
 
-        // 4. Draw the text, centered, with no shadow.
+        // 4. Draw the text
         int color = (enchantmentLevel > enchantment.value().getMaxLevel())
                 ? ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR
                 : ENCHANTMENT_MAXED_OUT_TEXT_COLOR;
-        context.drawString(
-                this.font,
-                enchantmentName,
-                textX,
-                textY,
-                color,
-                false // no shadow
-        );
+        if (Config.BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR.get()) {
+            context.drawString(
+                    this.font,
+                    enchantmentName.copy().withColor(color),
+                    textX,
+                    textY,
+                    color,
+                    false // no shadow
+            );
+        } else {
+            context.drawString(
+                    this.font,
+                    enchantmentName,
+                    textX,
+                    textY,
+                    color,
+                    false // no shadow
+            );
+        }
     }
 
     /**
