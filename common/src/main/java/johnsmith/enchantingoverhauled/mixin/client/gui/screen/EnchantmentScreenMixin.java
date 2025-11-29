@@ -891,14 +891,25 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
         int color = (enchantmentLevel > enchantment.value().getMaxLevel())
                 ? ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR
                 : ENCHANTMENT_MAXED_OUT_TEXT_COLOR;
-        context.drawString(
-                this.font,
-                enchantmentName,
-                textX,
-                textY,
-                color,
-                false // no shadow
-        );
+        if (Config.BINARY_ACCESSIBILITY_OVERRIDE_ENCHANTMENT_NAME_COLOR.get()) {
+            context.drawString(
+                    this.font,
+                    enchantmentName.copy().withColor(color),
+                    textX,
+                    textY,
+                    color,
+                    false // no shadow
+            );
+        } else {
+            context.drawString(
+                    this.font,
+                    enchantmentName,
+                    textX,
+                    textY,
+                    color,
+                    false // no shadow
+            );
+        }
     }
 
     /**
