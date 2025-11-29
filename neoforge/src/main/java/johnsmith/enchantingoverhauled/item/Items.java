@@ -31,6 +31,7 @@ public class Items {
             ITEMS.register("enchanted_tome", () -> new EnchantedTomeItem(
                     new Item.Properties()
                             .stacksTo(1)
+                            .fireResistant()
                             .rarity(Rarity.EPIC)
                             .component(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY)
                             .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
