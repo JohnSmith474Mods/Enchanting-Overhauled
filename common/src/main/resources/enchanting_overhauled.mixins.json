@@ -28,11 +28,12 @@
     "server.level.ServerPlayerMixin"
   ],
   "client": [
+    "client.enchantment.EnchantmentMixin",
     "client.gui.screen.AbstractContainerScreenMixin",
     "client.gui.screen.EnchantmentScreenMixin",
-    "client.enchantment.EnchantmentMixin",
     "client.render.FogRendererMixin",
-    "client.render.block.entity.EnchantTableRendererMixin"
+    "client.render.block.entity.EnchantTableRendererMixin",
+    "client.render.item.RangeSelectItemModelPropertiesMixin"
   ],
   "server": [],
   "injectors": {
