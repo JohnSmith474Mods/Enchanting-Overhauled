@@ -15,6 +15,7 @@
     "component.type.ItemEnchantmentsMixin",
     "enchantment.EnchantmentMixin",
     "entity.CombatRulesMixin",
+    "entity.item.ItemEntityMixin",
     "entity.player.CommonPlayerMixin",
     "entity.player.InventoryMixin",
     "entity.projectile.AbstractArrowMixin",

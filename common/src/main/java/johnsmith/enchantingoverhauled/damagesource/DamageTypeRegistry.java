@@ -5,6 +5,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 
 /**
@@ -31,6 +32,11 @@ public class DamageTypeRegistry {
     public static final ResourceKey<DamageType> ARCANE_RETRIBUTION = ResourceKey.create(
             Registries.DAMAGE_TYPE,
             ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "arcane_retribution")
+    );
+
+    public static final TagKey<DamageType> IGNORES_TOMES = TagKey.create(
+            Registries.DAMAGE_TYPE,
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "ignores_tomes")
     );
 
     /**

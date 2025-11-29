@@ -3,15 +3,18 @@ package johnsmith.enchantingoverhauled.item;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.block.Blocks;
 
+import johnsmith.enchantingoverhauled.damagesource.DamageTypeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.DamageResistant;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.Block;
 
@@ -41,6 +44,8 @@ public class Items {
     public static final Item ENCHANTED_TOME = new Item(new Item.Properties()
             .setId(ENCHANTED_TOME_KEY)
             .stacksTo(1)
+            .component(DataComponents.DAMAGE_RESISTANT, new DamageResistant(DamageTypeRegistry.IGNORES_TOMES))
+            .fireResistant()
             .rarity(Rarity.EPIC)
             .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
             .component(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY)
