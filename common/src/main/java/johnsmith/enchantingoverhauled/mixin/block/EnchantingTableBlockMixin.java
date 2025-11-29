@@ -7,6 +7,7 @@ import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.ParticleEffec
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.SoundEffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.power.PowerProvider;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
+import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.lib.EnchantmentLib;
 import johnsmith.enchantingoverhauled.mixin.accessor.AbstractBlockSettingsAccessor;
 import johnsmith.enchantingoverhauled.platform.Services;
@@ -20,12 +21,15 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -67,13 +71,21 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
                     target = "Lnet/minecraft/world/level/block/BaseEntityBlock;<init>(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"),
             index = 0)
     private static BlockBehaviour.Properties modifySettings(BlockBehaviour.Properties properties) {
-        properties.strength(0.0F, 1.0F);
         ((AbstractBlockSettingsAccessor) properties).setToolRequired(false);
         return properties;
     }
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        if (Config.MINEABLE_ENCHANTING_TABLE) {
+            this.spawnDestroyParticles(world, player, pos, state);
+            if (state.is(BlockTags.GUARDED_BY_PIGLINS)) {
+                PiglinAi.angerNearbyPiglins(player, false);
+            }
+
+            world.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
+            return state;
+        }
         world.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
         world.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
         return state;
@@ -81,13 +93,19 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
 
     @Override
     public void playerDestroy(
-            Level world,
+            @NotNull Level world,
             @NotNull Player player,
             @NotNull BlockPos pos,
             @NotNull BlockState state,
             BlockEntity blockEntity,
             @NotNull ItemStack tool
     ) {
+        if (Config.MINEABLE_ENCHANTING_TABLE) {
+            player.awardStat(Stats.BLOCK_MINED.get(this));
+            player.causeFoodExhaustion(0.005F);
+            dropResources(state, world, pos, blockEntity, player, tool);
+            return;
+        }
         world.setBlock(pos, Services.PLATFORM.getDisturbedEnchantingTable().defaultBlockState(), 3);
 
         if (!world.isClientSide) {
@@ -320,5 +338,22 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             }
         }
         return EnchantmentLib.getTomeWithDefaultEnchantment();
+    }
+
+    /**
+     * Dynamic override for Block Strength (Hardness).
+     * Replaces properties.strength(0.0F, ...)
+     */
+    @Override
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        // If Custom Mode is Active (Config is FALSE)
+        if (!Config.MINEABLE_ENCHANTING_TABLE) {
+            // Return 1.0F to indicate the block breaks instantly (Hardness 0 behavior)
+            return 1.0F;
+        }
+
+        // If Vanilla Mode is Active (Config is TRUE)
+        // Delegate to super, which calculates based on the cached 5.0F hardness
+        return super.getDestroyProgress(state, player, level, pos);
     }
 }

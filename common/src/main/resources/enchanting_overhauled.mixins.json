@@ -24,6 +24,7 @@
     "enchantment.ProtectionEnchantmentMixin",
     "enchantment.UnbreakingEnchantmentMixin",
     "entity.CombatRulesMixin",
+    "entity.ItemEntityMixin",
     "item.ItemStackMixin",
     "loot.ApplyBonusCountMixin",
     "loot.EnchantRandomlyFunctionMixin",

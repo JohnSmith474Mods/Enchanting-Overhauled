@@ -1,5 +1,7 @@
 package johnsmith.enchantingoverhauled.mixin.item;
 
+import johnsmith.enchantingoverhauled.config.Config;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentType;
@@ -10,7 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+
 import org.jetbrains.annotations.NotNull;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,7 +45,6 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             return;
         }
 
-        // Mapped: DataComponentTypes.ENCHANTMENTS -> DataComponents.ENCHANTMENTS
         Object itemEnchantmentsComponent = this.get(DataComponents.ENCHANTMENTS);
 
         cir.setReturnValue(itemEnchantmentsComponent != null);
@@ -61,25 +64,30 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             TooltipFlag tooltipFlag,
             CallbackInfo ci
     ) {
-        ItemEnchantments enchantments = null;
-        Component baseHeader = null;
+        if (Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER) {
+            ItemEnchantments enchantments = null;
+            Component baseHeader = null;
 
-        if (componentType == DataComponents.ENCHANTMENTS) {
-            enchantments = this.get(DataComponents.ENCHANTMENTS);
-            baseHeader = APPLIED_HEADER;
-        } else if (componentType == DataComponents.STORED_ENCHANTMENTS) {
-            enchantments = this.get(DataComponents.STORED_ENCHANTMENTS);
-            baseHeader = STORED_HEADER;
-        }
+            if (componentType == DataComponents.ENCHANTMENTS) {
+                enchantments = this.get(DataComponents.ENCHANTMENTS);
+                baseHeader = APPLIED_HEADER;
+            } else if (componentType == DataComponents.STORED_ENCHANTMENTS) {
+                enchantments = this.get(DataComponents.STORED_ENCHANTMENTS);
+                baseHeader = STORED_HEADER;
+            }
 
-        // Check if we found a relevant component
-        if (enchantments != null) {
-            int count = enchantments.size(); // Mapped: getSize() -> size()
-            if (count > 0) {
-                ChatFormatting color = getColor(count);
-                // Add the header with the new color
-                // Mapped: formatted() -> withStyle()
-                textConsumer.accept(baseHeader.copy().withStyle(color));
+            // Check if we found a relevant component
+            if (enchantments != null) {
+                int count = enchantments.size();
+                if (count > 0) {
+                    ChatFormatting color = getColor(count);
+
+                    if (Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING) {
+                        textConsumer.accept(baseHeader.copy().withColor(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR));
+                    } else {
+                        textConsumer.accept(baseHeader.copy().withStyle(color));
+                    }
+                }
             }
         }
     }
@@ -91,7 +99,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             color = ChatFormatting.YELLOW;
         } else if (count == 2) {
             color = ChatFormatting.AQUA;
-        } else { // 3 or more
+        } else {
             color = ChatFormatting.LIGHT_PURPLE;
         }
         return color;

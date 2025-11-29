@@ -40,6 +40,7 @@ public class ConfigScreen extends Screen {
     private static final String ENCHANTING_TABLE_SETTINGS = "section.enchanting_table";
     private static final String ANVIL_SETTINGS = "section.anvil";
     private static final String ENCHANTMENT_SETTINGS = "section.enchantments";
+    private static final String ENCHANTMENT_TOOLTIP_SETTINGS = "section.enchantment_tooltip";
     private static final String PROTECTION_SETTINGS = "section.protection";
     private static final String DAMAGE_SETTINGS = "section.damage";
     private static final String FORTUNE_SETTINGS = "section.fortune";
@@ -214,6 +215,9 @@ public class ConfigScreen extends Screen {
             addEntry(new BooleanEntry(Config.ACTIVATION_EFFECTS_KEY,
                     () -> Config.ACTIVATION_EFFECTS, v -> Config.ACTIVATION_EFFECTS = v,
                     Config.ACTIVATION_EFFECTS_DEFAULT));
+            addEntry(new BooleanEntry(Config.MINEABLE_ENCHANTING_TABLE_KEY,
+                    () -> Config.MINEABLE_ENCHANTING_TABLE, v -> Config.MINEABLE_ENCHANTING_TABLE = v,
+                    Config.MINEABLE_ENCHANTING_TABLE_DEFAULT));
 
             // --- Anvil Settings ---
             addEntry(new CategoryEntry(PREFIX + ANVIL_SETTINGS));
@@ -235,6 +239,15 @@ public class ConfigScreen extends Screen {
             addEntry(new BooleanEntry(Config.TOMES_HAVE_GREATER_ENCHANTMENTS_KEY,
                     () -> Config.TOMES_HAVE_GREATER_ENCHANTMENTS, v -> Config.TOMES_HAVE_GREATER_ENCHANTMENTS = v,
                     Config.TOMES_HAVE_GREATER_ENCHANTMENTS_DEFAULT));
+
+            // --- Enchantment Tooltip Settings ---
+            addEntry(new CategoryEntry(PREFIX + ENCHANTMENT_TOOLTIP_SETTINGS));
+            addEntry(new BooleanEntry(Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER_KEY,
+                    () -> Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER, v -> Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER = v,
+                    Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER_DEFAULT));
+            addEntry(new BooleanEntry(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY,
+                    () -> Config.SHOW_ENCHANTMENT_DESCRIPTIONS, v -> Config.SHOW_ENCHANTMENT_DESCRIPTIONS = v,
+                    Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT));
 
             // --- Protection Settings ---
             addEntry(new CategoryEntry(PREFIX + PROTECTION_SETTINGS));
@@ -361,9 +374,12 @@ public class ConfigScreen extends Screen {
             addEntry(new IntEntry(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY,
                     () -> Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR, v -> Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR = v,
                     Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING));
-            addEntry(new BooleanEntry(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY,
-                    () -> Config.SHOW_ENCHANTMENT_DESCRIPTIONS, v -> Config.SHOW_ENCHANTMENT_DESCRIPTIONS = v,
-                    Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT));
+            addEntry(new BooleanEntry(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_KEY,
+                    () -> Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING, v -> Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING = v,
+                    Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_DEFAULT));
+            addEntry(new IntEntry(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_KEY,
+                    () -> Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR, v -> Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR = v,
+                    Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_CEILING));
             addEntry(new IntEntry(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY,
                     () -> Config.ENCHANTMENT_DESCRIPTION_COLOR, v -> Config.ENCHANTMENT_DESCRIPTION_COLOR = v,
                     Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT, Config.ENCHANTMENT_DESCRIPTION_COLOR_FLOOR, Config.ENCHANTMENT_DESCRIPTION_COLOR_CEILING));

@@ -43,6 +43,8 @@ public class FabricConfig {
                 new String[]{"Whether the enchanting table should violently reject books."}, "");
         configs.addEntry(new Pair<>(Config.ACTIVATION_EFFECTS_KEY, Config.ACTIVATION_EFFECTS_DEFAULT),
                 new String[]{"Whether the enchanting table should have a spectacular activation."}, "");
+        configs.addEntry(new Pair<>(Config.MINEABLE_ENCHANTING_TABLE_KEY, Config.MINEABLE_ENCHANTING_TABLE_DEFAULT),
+                new String[]{"Whether the enchanting table should be mineable."}, "");
 
         // Anvil
         configs.addSection("Anvil Settings");
@@ -64,6 +66,13 @@ public class FabricConfig {
                 "Min: " + Config.ENCHANTMENT_MAX_LEVEL_FLOOR + ", Max: " + Config.ENCHANTMENT_MAX_LEVEL_CEILING);
         configs.addEntry(new Pair<>(Config.TOMES_HAVE_GREATER_ENCHANTMENTS_KEY, Config.TOMES_HAVE_GREATER_ENCHANTMENTS_DEFAULT),
                 new String[]{"Whether enchanted tomes can contain enchantments of a higher level than naturally possible."}, "");
+
+        // Enchantment Tooltip
+        configs.addSection("Enchantment Level Settings");
+        configs.addEntry(new Pair<>(Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER_KEY, Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER_DEFAULT),
+                new String[]{"Whether the Enchantment Tooltip block should be captioned with either \"Applied Enchantments\" or \"Stored Enchantments\"."}, "");
+        configs.addEntry(new Pair<>(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT),
+                new String[]{"Whether enchantment descriptions should be shown."}, "");
 
         // Protection Enchantment
         configs.addSection("Protection Enchantment Settings");
@@ -177,8 +186,12 @@ public class FabricConfig {
                 new String[]{"The override color of enchantment levels. Only applies if override is true."},
                 "Min: " + Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR + ", Max: " + Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING);
 
-        configs.addEntry(new Pair<>(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT),
-                new String[]{"Whether enchantment descriptions should be shown."}, "");
+        configs.addEntry(new Pair<>(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_DEFAULT),
+                new String[]{"Whether enchantment tooltip block headers should be colored uniformly or according to the amount of enchantments."}, "");
+        configs.addEntry(new Pair<>(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_DEFAULT),
+                new String[]{"The override color of enchantment tooltip block headers. Only applies if override is true."},
+                "Min: " + Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_FLOOR + ", Max: " + Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_CEILING);
+
         configs.addEntry(new Pair<>(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY, Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT),
                 new String[]{"The color of enchantment description texts. Only applicable if show enchantment descriptions is true."},
                 "Min: " + Config.ENCHANTMENT_DESCRIPTION_COLOR_FLOOR + ", Max: " + Config.ENCHANTMENT_DESCRIPTION_COLOR_CEILING);
@@ -195,6 +208,7 @@ public class FabricConfig {
         // Enchanting Table
         Config.ARCANE_RETRIBUTION = CONFIG.getOrDefault(Config.ARCANE_RETRIBUTION_KEY, Config.ARCANE_RETRIBUTION_DEFAULT);
         Config.ACTIVATION_EFFECTS = CONFIG.getOrDefault(Config.ACTIVATION_EFFECTS_KEY, Config.ACTIVATION_EFFECTS_DEFAULT);
+        Config.MINEABLE_ENCHANTING_TABLE = CONFIG.getOrDefault(Config.MINEABLE_ENCHANTING_TABLE_KEY, Config.MINEABLE_ENCHANTING_TABLE_DEFAULT);
 
         // Anvil
         Config.ANVIL_MAX_ITEM_COST = Math.clamp(CONFIG.getOrDefault(Config.ANVIL_MAX_ITEM_COST_KEY, Config.ANVIL_MAX_ITEM_COST_DEFAULT), Config.ANVIL_MAX_ITEM_COST_FLOOR, Config.ANVIL_MAX_ITEM_COST_CEILING);
@@ -204,6 +218,10 @@ public class FabricConfig {
         // Enchantment Levels
         Config.ENCHANTMENT_MAX_LEVEL = Math.clamp(CONFIG.getOrDefault(Config.ENCHANTMENT_MAX_LEVEL_KEY, Config.ENCHANTMENT_MAX_LEVEL_DEFAULT), Config.ENCHANTMENT_MAX_LEVEL_FLOOR, Config.ENCHANTMENT_MAX_LEVEL_CEILING);
         Config.TOMES_HAVE_GREATER_ENCHANTMENTS = CONFIG.getOrDefault(Config.TOMES_HAVE_GREATER_ENCHANTMENTS_KEY, Config.TOMES_HAVE_GREATER_ENCHANTMENTS_DEFAULT);
+
+        // Enchantment Tooltip
+        Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER = CONFIG.getOrDefault(Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER_KEY, Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER_DEFAULT);
+        Config.SHOW_ENCHANTMENT_DESCRIPTIONS = CONFIG.getOrDefault(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT);
 
         // Protection Enchantment
         Config.PROTECTION_CAP = Math.clamp(CONFIG.getOrDefault(Config.PROTECTION_CAP_KEY, Config.PROTECTION_CAP_DEFAULT), Config.PROTECTION_CAP_FLOOR, Config.PROTECTION_CAP_CEILING);
@@ -257,7 +275,9 @@ public class FabricConfig {
         Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT);
         Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT);
 
-        Config.SHOW_ENCHANTMENT_DESCRIPTIONS = CONFIG.getOrDefault(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT);
+        Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_DEFAULT);
+        Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR = CONFIG.getOrDefault(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_DEFAULT);
+
         Config.ENCHANTMENT_DESCRIPTION_COLOR = CONFIG.getOrDefault(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY, Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT);
     }
 
@@ -282,6 +302,7 @@ public class FabricConfig {
 
         // Enchantment Levels
         currentValues.put(Config.ENCHANTMENT_MAX_LEVEL_KEY, Config.ENCHANTMENT_MAX_LEVEL);
+        currentValues.put(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS);
 
         // Protection
         currentValues.put(Config.PROTECTION_CAP_KEY, Config.PROTECTION_CAP);
@@ -327,7 +348,9 @@ public class FabricConfig {
         currentValues.put(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING);
         currentValues.put(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR);
 
-        currentValues.put(Config.SHOW_ENCHANTMENT_DESCRIPTIONS_KEY, Config.SHOW_ENCHANTMENT_DESCRIPTIONS);
+        currentValues.put(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_KEY, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING);
+        currentValues.put(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_KEY, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR);
+
         currentValues.put(Config.ENCHANTMENT_DESCRIPTION_COLOR_KEY, Config.ENCHANTMENT_DESCRIPTION_COLOR);
 
 

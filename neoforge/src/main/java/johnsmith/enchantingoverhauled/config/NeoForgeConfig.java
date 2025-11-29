@@ -46,6 +46,8 @@ public class NeoForgeConfig {
         /** Config value for activation effects. */
         public final ModConfigSpec.BooleanValue ACTIVATION_EFFECTS;
 
+        /** Config value for making the enchanting table mineable. */
+        public final ModConfigSpec.BooleanValue MINEABLE_ENCHANTING_TABLE;
         // --- Anvil Settings ---
 
         /** Config value for the maximum repair cost. */
@@ -61,6 +63,11 @@ public class NeoForgeConfig {
         public final ModConfigSpec.IntValue ENCHANTMENT_MAX_LEVEL;
         /** Config value for whether tomes can exceed natural limits. */
         public final ModConfigSpec.BooleanValue TOMES_HAVE_GREATER_ENCHANTMENTS;
+
+        // --- Enchantment Level Settings ---
+
+        /** Config value for showing enchantment tooltip headers. */
+        public final ModConfigSpec.BooleanValue SHOW_ENCHANTMENT_TOOLTIP_HEADER;
 
         // --- Protection Enchantment Settings ---
 
@@ -156,6 +163,10 @@ public class NeoForgeConfig {
         public final ModConfigSpec.BooleanValue SHOW_ENCHANTMENT_DESCRIPTIONS;
         /** Config value for enchantment descriptions color. */
         public final ModConfigSpec.IntValue ENCHANTMENT_DESCRIPTION_COLOR;
+        /** Config value for enchantment level coloring. */
+        public final ModConfigSpec.BooleanValue OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING;
+        /** Config value for enchantment level color. */
+        public final ModConfigSpec.IntValue OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR;
 
         /**
          * Constructs the configuration structure.
@@ -171,6 +182,9 @@ public class NeoForgeConfig {
             ACTIVATION_EFFECTS = builder
                     .comment("Whether the enchanting table should have a spectacular activation.")
                     .define("ACTIVATION_EFFECTS", Config.ACTIVATION_EFFECTS_DEFAULT);
+            MINEABLE_ENCHANTING_TABLE = builder
+                    .comment("Whether the enchanting table should be mineable.")
+                    .define("MINEABLE_ENCHANTING_TABLE", Config.MINEABLE_ENCHANTING_TABLE_DEFAULT);
             builder.pop();
 
             // Anvil
@@ -194,6 +208,16 @@ public class NeoForgeConfig {
             TOMES_HAVE_GREATER_ENCHANTMENTS = builder
                     .comment("Whether enchanted tomes can contain enchantments of a higher level than naturally possible.")
                     .define("TOMES_HAVE_GREATER_ENCHANTMENTS", Config.TOMES_HAVE_GREATER_ENCHANTMENTS_DEFAULT);
+            builder.pop();
+
+            // Enchantment Tooltips
+            builder.comment("Enchantment Tooltip Settings").push("Enchantment Tooltip Settings");
+            SHOW_ENCHANTMENT_TOOLTIP_HEADER = builder
+                    .comment("Whether the Enchantment Tooltip block should be captioned with either \"Applied Enchantments\" or \"Stored Enchantments\".")
+                    .define("SHOW_ENCHANTMENT_TOOLTIP_HEADER", Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER_DEFAULT);
+            SHOW_ENCHANTMENT_DESCRIPTIONS = builder
+                    .comment("Whether enchantment descriptions should be shown.")
+                    .define("SHOW_ENCHANTMENT_DESCRIPTIONS", Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT);
             builder.pop();
 
             // Protection Enchantment
@@ -299,22 +323,25 @@ public class NeoForgeConfig {
                     .define("OBFUSCATE_NEW_ENCHANTMENTS", Config.OBFUSCATE_NEW_ENCHANTMENTS_DEFAULT);
             OVERRIDE_ENCHANTMENT_NAME_COLORING = builder
                     .comment("Whether enchantment names should be colored uniformly or according to their theme.")
-                    .define("USE_PLAIN_BACKGROUND", Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_DEFAULT);
+                    .define("OVERRIDE_ENCHANTMENT_NAME_COLORING", Config.OVERRIDE_ENCHANTMENT_NAME_COLORING_DEFAULT);
             OVERRIDE_ENCHANTMENT_NAME_COLOR = builder
-                    .comment("The override color of enchantment names", "Only applies if override is true.")
+                    .comment("The override color of enchantment names.", "Only applies if override is true.")
                     .defineInRange("OVERRIDE_ENCHANTMENT_NAME_COLOR", Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_NAME_COLOR_CEILING);
             OVERRIDE_ENCHANTMENT_LEVEL_COLORING = builder
                     .comment("Whether enchantment levels should be colored uniformly or according to their level.")
-                    .define("USE_PLAIN_BACKGROUND", Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT);
+                    .define("OVERRIDE_ENCHANTMENT_LEVEL_COLORING", Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT);
             OVERRIDE_ENCHANTMENT_LEVEL_COLOR = builder
-                    .comment("The override color of enchantment levels", "Only applies if override is true.")
+                    .comment("The override color of enchantment levels.", "Only applies if override is true.")
                     .defineInRange("OVERRIDE_ENCHANTMENT_LEVEL_COLOR", Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING);
-            SHOW_ENCHANTMENT_DESCRIPTIONS = builder
-                    .comment("Whether enchantment descriptions should be shown.")
-                    .define("USE_PLAIN_BACKGROUND", Config.SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT);
             ENCHANTMENT_DESCRIPTION_COLOR = builder
-                    .comment("The color of enchantment description texts", "Only applicable if show enchantment descriptions is true.")
+                    .comment("The color of enchantment description texts.", "Only applicable if show enchantment descriptions is true.")
                     .defineInRange("ENCHANTMENT_DESCRIPTION_COLOR", Config.ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT, Config.ENCHANTMENT_DESCRIPTION_COLOR_FLOOR, Config.ENCHANTMENT_DESCRIPTION_COLOR_CEILING);
+            OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING = builder
+                    .comment("Whether enchantment tooltip block headers should be colored uniformly or according to the amount of enchantments.")
+                    .define("OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING", Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_DEFAULT);
+            OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR = builder
+                    .comment("The override color of enchantment tooltip block headers.", "Only applies if override is true.")
+                    .defineInRange("OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR", Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_DEFAULT, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_FLOOR, Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_CEILING);
             builder.pop();
         }
     }
@@ -330,6 +357,7 @@ public class NeoForgeConfig {
         // Enchanting Table
         Config.ARCANE_RETRIBUTION = COMMON.ARCANE_RETRIBUTION.get();
         Config.ACTIVATION_EFFECTS = COMMON.ACTIVATION_EFFECTS.get();
+        Config.MINEABLE_ENCHANTING_TABLE = COMMON.MINEABLE_ENCHANTING_TABLE.get();
 
         // Anvil
         Config.ANVIL_MAX_ITEM_COST = COMMON.ANVIL_MAX_ITEM_COST.get();
@@ -339,6 +367,10 @@ public class NeoForgeConfig {
         // Enchantment Levels
         Config.ENCHANTMENT_MAX_LEVEL = COMMON.ENCHANTMENT_MAX_LEVEL.get();
         Config.TOMES_HAVE_GREATER_ENCHANTMENTS = COMMON.TOMES_HAVE_GREATER_ENCHANTMENTS.get();
+
+        // Enchantment Tooltip
+        Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER = COMMON.SHOW_ENCHANTMENT_TOOLTIP_HEADER.get();
+        Config.SHOW_ENCHANTMENT_DESCRIPTIONS = COMMON.SHOW_ENCHANTMENT_DESCRIPTIONS.get();
 
         // Protection Enchantments
         Config.PROTECTION_CAP = COMMON.PROTECTION_CAP.get();
@@ -395,7 +427,9 @@ public class NeoForgeConfig {
         Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING = COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLORING.get();
         Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR = COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLOR.get();
 
-        Config.SHOW_ENCHANTMENT_DESCRIPTIONS = COMMON.SHOW_ENCHANTMENT_DESCRIPTIONS.get();
+        Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING = COMMON.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING.get();
+        Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR = COMMON.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR.get();
+
         Config.ENCHANTMENT_DESCRIPTION_COLOR = COMMON.ENCHANTMENT_DESCRIPTION_COLOR.get();
     }
 
@@ -409,6 +443,7 @@ public class NeoForgeConfig {
         // Enchanting Table
         COMMON.ARCANE_RETRIBUTION.set(Config.ARCANE_RETRIBUTION);
         COMMON.ACTIVATION_EFFECTS.set(Config.ACTIVATION_EFFECTS);
+        COMMON.MINEABLE_ENCHANTING_TABLE.set(Config.MINEABLE_ENCHANTING_TABLE);
 
         // Anvil
         COMMON.ANVIL_MAX_ITEM_COST.set(Config.ANVIL_MAX_ITEM_COST);
@@ -418,6 +453,10 @@ public class NeoForgeConfig {
         // Enchantment Levels
         COMMON.ENCHANTMENT_MAX_LEVEL.set(Config.ENCHANTMENT_MAX_LEVEL);
         COMMON.TOMES_HAVE_GREATER_ENCHANTMENTS.set(Config.TOMES_HAVE_GREATER_ENCHANTMENTS);
+
+        // Enchantment Tooltip
+        COMMON.SHOW_ENCHANTMENT_TOOLTIP_HEADER.set(Config.SHOW_ENCHANTMENT_TOOLTIP_HEADER);
+        COMMON.SHOW_ENCHANTMENT_DESCRIPTIONS.set(Config.SHOW_ENCHANTMENT_DESCRIPTIONS);
 
         // Protection Enchantments
         COMMON.PROTECTION_CAP.set(Config.PROTECTION_CAP);
@@ -470,7 +509,9 @@ public class NeoForgeConfig {
         COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLORING.set(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLORING);
         COMMON.OVERRIDE_ENCHANTMENT_LEVEL_COLOR.set(Config.OVERRIDE_ENCHANTMENT_LEVEL_COLOR);
 
-        COMMON.SHOW_ENCHANTMENT_DESCRIPTIONS.set(Config.SHOW_ENCHANTMENT_DESCRIPTIONS);
+        COMMON.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING.set(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING);
+        COMMON.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR.set(Config.OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR);
+
         COMMON.ENCHANTMENT_DESCRIPTION_COLOR.set(Config.ENCHANTMENT_DESCRIPTION_COLOR);
 
         // Force the spec to write the changes to the .toml file

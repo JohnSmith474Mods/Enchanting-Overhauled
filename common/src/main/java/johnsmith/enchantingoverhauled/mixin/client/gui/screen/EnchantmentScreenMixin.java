@@ -401,34 +401,9 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
             int enchantingPower = ((EnchantmentMenu) this.menu).costs[buttonIndex];
             int source = enchantmentSources[buttonIndex];
 
-            // Enchantment ID lookup logic adjusted for Mojang
-            // Note: This logic assumes the mixin handles the raw ID conversion properly.
-            // In vanilla, it uses Registry.ENCHANTMENT.byId(id).
-            // Here we access the array directly.
             int id = ((EnchantmentMenu) this.menu).enchantClue[buttonIndex];
-            // Assuming raw ID lookup is handled elsewhere or consistent with vanilla
-            // Typically we need the registry to lookup by raw ID if not direct reference
-            // Vanilla uses BuiltInRegistries.ENCHANTMENT.byId(id)
-            // This part might need adjustment based on how IDs are stored in common
-            // But assuming 'enchantmentId' stores raw IDs compatible with registry lookup:
-            // Note: Vanilla uses Registry<Enchantment> for lookup.
-            // Using a safe lookup here.
             Enchantment enchantment = null;
             if (id >= 0) {
-                // Assuming Registry access is available or using standard registry
-                // This line requires adaptation to how IDs are stored.
-                // If IDs are raw ints, we use the registry.
-                // In Mojang mappings: BuiltInRegistries.ENCHANTMENT.byId(id)
-                // But here we are in common/mixin, so access might be limited.
-                // Let's assume we can access the registry via the world or similar.
-                // For now, using a placeholder lookup mechanism consistent with vanilla menu logic.
-                // Vanilla Menu uses: this.access.evaluate((world, pos) -> return BuiltInRegistries.ENCHANTMENT.byId(id)).orElse(null)
-                // But client side we might not have direct registry access in the same way.
-                // However, typically menus sync IDs.
-                // Let's try using the client world's registry manager if available.
-                // Or standard static registry if IDs are stable.
-                // Vanilla uses: BuiltInRegistries.ENCHANTMENT.byId(id) in EnchantmentMenu.
-                // We will use the standard approach assuming standard registry.
                 enchantment = net.minecraft.core.registries.BuiltInRegistries.ENCHANTMENT.byId(id);
             }
 
@@ -640,14 +615,26 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
      * texture selection, text rendering, and cost icon display based on state.
      */
     @Unique
-    private void drawEnchantmentSlot(GuiGraphics context, int buttonX, int buttonY, int mouseX, int mouseY,
-                                     int enchantingPower, int cost, boolean affordable, boolean isMaxed,
-                                     ResourceLocation enabledTex, ResourceLocation highlightedTex, ResourceLocation disabledTex,
-                                     Component enchantmentName,
-                                     // ADDED PARAMETERS
-                                     int enabledColor, int highlightedColor, int disabledColor) {
-
-        int costIndex = Math.max(0, cost - 1); // Cost is 1-3, index is 0-2
+    private void drawEnchantmentSlot(
+            GuiGraphics context,
+            int buttonX,
+            int buttonY,
+            int mouseX,
+            int mouseY,
+            int enchantingPower,
+            int cost,
+            boolean affordable,
+            boolean isMaxed,
+            ResourceLocation enabledTex,
+            ResourceLocation highlightedTex,
+            ResourceLocation disabledTex,
+            Component enchantmentName,
+            int enabledColor,
+            int highlightedColor,
+            int disabledColor
+    ) {
+        if (Config.OVERRIDE_ENCHANTMENT_NAME_COLORING) enchantmentName = Component.literal(enchantmentName.getString());
+        int costIndex = Math.max(0, cost - 1);
         int textX = buttonX + ENCHANTING_TEXT_X_OFFSET;
         int textY = buttonY + ENCHANTING_TEXT_Y_OFFSET;
 
@@ -743,6 +730,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
     private void drawMaxedSlot(GuiGraphics context, Enchantment enchantment, int level, int buttonX, int buttonY) {
         // 1. Get the fully formatted name
         Component enchantmentName = enchantment.getFullname(level);
+        if (Config.OVERRIDE_ENCHANTMENT_NAME_COLORING) enchantmentName = Component.literal(enchantmentName.getString());
 
         // 2. Calculate coordinates
         int textY = buttonY + ENCHANTING_TEXT_Y_OFFSET;
@@ -764,7 +752,8 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
                 ENCHANTING_BUTTON_HEIGHT);
 
         // 4. Draw the text, centered, with no shadow.
-        int color = (level > enchantment.getMaxLevel()) ? ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR
+        int color = (level > enchantment.getMaxLevel())
+                ? ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR
                 : ENCHANTMENT_MAXED_OUT_TEXT_COLOR;
         context.drawString(
                 this.font,

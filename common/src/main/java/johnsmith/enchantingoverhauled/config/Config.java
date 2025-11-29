@@ -18,6 +18,10 @@ public class Config {
      * Whether the enchanting table should have a spectacular activation.
      */
     public static Boolean ACTIVATION_EFFECTS;
+    /**
+     * Whether the enchanting table should be mineable.
+     */
+    public static Boolean MINEABLE_ENCHANTING_TABLE;
 
     /** Default value for {@link #ARCANE_RETRIBUTION}. */
     public static final boolean ARCANE_RETRIBUTION_DEFAULT = true;
@@ -25,11 +29,17 @@ public class Config {
     /** Default value for {@link #ACTIVATION_EFFECTS}. */
     public static final boolean ACTIVATION_EFFECTS_DEFAULT = true;
 
+    /** Default value for {@link #MINEABLE_ENCHANTING_TABLE}. */
+    public static final boolean MINEABLE_ENCHANTING_TABLE_DEFAULT = false;
+
     /** Translation key value for {@link #ARCANE_RETRIBUTION}. */
     public static final String ARCANE_RETRIBUTION_KEY = "enchanting_table.arcane_retribution";
 
     /** Translation key value for {@link #ACTIVATION_EFFECTS}. */
     public static final String ACTIVATION_EFFECTS_KEY = "enchanting_table.activation_effects";
+
+    /** Translation key value for {@link #MINEABLE_ENCHANTING_TABLE}. */
+    public static final String MINEABLE_ENCHANTING_TABLE_KEY = "enchanting_table.mineable_enchanting_table";
     // endregion
 
     // region Anvil Settings
@@ -100,6 +110,28 @@ public class Config {
     public static final String ENCHANTMENT_MAX_LEVEL_KEY = "enchantments.max.level";
     /** Translation key value for {@link #TOMES_HAVE_GREATER_ENCHANTMENTS}. */
     public static final String TOMES_HAVE_GREATER_ENCHANTMENTS_KEY = "enchantments.tomes.greater_enchantments";
+    // endregion
+
+    // region Enchantment Tooltip Settings
+    /**
+     * Whether the Enchantment Tooltip block should be captioned with either "Applied Enchantments"
+     * or "Stored Enchantments".
+     */
+    public static Boolean SHOW_ENCHANTMENT_TOOLTIP_HEADER;
+    /**
+     * If false, enchantment descriptions are no longer being displayed.
+     */
+    public static Boolean SHOW_ENCHANTMENT_DESCRIPTIONS;
+
+    /** Default value for {@link #SHOW_ENCHANTMENT_TOOLTIP_HEADER}. */
+    public static final boolean SHOW_ENCHANTMENT_TOOLTIP_HEADER_DEFAULT = true;
+    /** Default value for {@link #SHOW_ENCHANTMENT_DESCRIPTIONS}. */
+    public static final boolean SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT = true;
+
+    /** Translation key value for {@link #SHOW_ENCHANTMENT_TOOLTIP_HEADER}. */
+    public static final String SHOW_ENCHANTMENT_TOOLTIP_HEADER_KEY = "enchantment_tooltip.show_enchantment_tooltip_header";
+    /** Translation key value for {@link #SHOW_ENCHANTMENT_DESCRIPTIONS}. */
+    public static final String SHOW_ENCHANTMENT_DESCRIPTIONS_KEY = "enchantment_tooltip.enchantment_description.show_enchantment_descriptions";
     // endregion
 
     // region Protection Enchantment Settings
@@ -453,13 +485,17 @@ public class Config {
      */
     public static Integer OVERRIDE_ENCHANTMENT_LEVEL_COLOR;
     /**
-     * If false, enchantment descriptions are no longer being displayed.
-     */
-    public static Boolean SHOW_ENCHANTMENT_DESCRIPTIONS;
-    /**
      * The color of enchantment description texts.
      */
     public static Integer ENCHANTMENT_DESCRIPTION_COLOR;
+    /**
+     * If true, enchantment tooltip headers are no longer colored according to the amount of enchantments.
+     */
+    public static Boolean OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING;
+    /**
+     * The override color of enchantment tooltip headers.
+     */
+    public static Integer OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR;
 
     /** Default value for {@link #USE_PLAIN_BACKGROUND}. */
     public static final boolean USE_PLAIN_BACKGROUND_DEFAULT = false;
@@ -473,10 +509,12 @@ public class Config {
     public static final boolean OVERRIDE_ENCHANTMENT_LEVEL_COLORING_DEFAULT = false;
     /** Default value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLOR}. */
     public static final int OVERRIDE_ENCHANTMENT_LEVEL_COLOR_DEFAULT = 0xFFFFFF;
-    /** Default value for {@link #SHOW_ENCHANTMENT_DESCRIPTIONS}. */
-    public static final boolean SHOW_ENCHANTMENT_DESCRIPTIONS_DEFAULT = true;
     /** Default value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
     public static final int ENCHANTMENT_DESCRIPTION_COLOR_DEFAULT = 0xA7A7A7;
+    /** Default value for {@link #OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING}. */
+    public static final boolean OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_DEFAULT = false;
+    /** Default value for {@link #OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_DEFAULT = 0xFFFFFF;
 
     /** Max value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLOR}. */
     public static final int OVERRIDE_ENCHANTMENT_NAME_COLOR_CEILING = 0xFFFFFF;
@@ -484,6 +522,8 @@ public class Config {
     public static final int OVERRIDE_ENCHANTMENT_LEVEL_COLOR_CEILING = 0xFFFFFF;
     /** Max value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
     public static final int ENCHANTMENT_DESCRIPTION_COLOR_CEILING = 0xFFFFFF;
+    /** Max value for {@link #OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_CEILING = 0xFFFFFF;
 
     /** Min value for {@link #OVERRIDE_ENCHANTMENT_NAME_COLOR}. */
     public static final int OVERRIDE_ENCHANTMENT_NAME_COLOR_FLOOR = 0x000000;
@@ -491,6 +531,8 @@ public class Config {
     public static final int OVERRIDE_ENCHANTMENT_LEVEL_COLOR_FLOOR = 0x000000;
     /** Min value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
     public static final int ENCHANTMENT_DESCRIPTION_COLOR_FLOOR = 0x000000;
+    /** Min value for {@link #OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR}. */
+    public static final int OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_FLOOR = 0x000000;
 
     /** Translation key value for {@link #USE_PLAIN_BACKGROUND}. */
     public static final String USE_PLAIN_BACKGROUND_KEY = "accessibility.use.accessible.button.textures";
@@ -504,9 +546,11 @@ public class Config {
     public static final String OVERRIDE_ENCHANTMENT_LEVEL_COLORING_KEY = "accessibility.enchantment_level.override_enchantment_level_color";
     /** Translation key value for {@link #OVERRIDE_ENCHANTMENT_LEVEL_COLOR}. */
     public static final String OVERRIDE_ENCHANTMENT_LEVEL_COLOR_KEY = "accessibility.enchantment_level.enchantment_level_color_override_value";
-    /** Translation key value for {@link #SHOW_ENCHANTMENT_DESCRIPTIONS}. */
-    public static final String SHOW_ENCHANTMENT_DESCRIPTIONS_KEY = "accessibility.enchantment_description.show_enchantment_descriptions";
     /** Translation key value for {@link #ENCHANTMENT_DESCRIPTION_COLOR}. */
     public static final String ENCHANTMENT_DESCRIPTION_COLOR_KEY = "accessibility.enchantment_description.enchantment_description_color_value";
+    /** Translation key value for {@link #OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING}. */
+    public static final String OVERRIDE_ENCHANTMENT_TOOLTIP_COLORING_KEY = "accessibility.enchantment_tooltip.override_enchantment_tooltip_color";
+    /** Translation key value for {@link #OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR}. */
+    public static final String OVERRIDE_ENCHANTMENT_TOOLTIP_COLOR_KEY = "accessibility.enchantment_tooltip.enchantment_tooltip_color_override_value";
     // endregion
 }

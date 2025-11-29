@@ -63,6 +63,8 @@
   "config.enchanting_overhauled.anvil.break.chance": "Anvil Damage Chance",
   "config.enchanting_overhauled.enchantments.max.level": "Max Enchantment Level",
   "config.enchanting_overhauled.enchantments.tomes.greater_enchantments": "Overleveled Enchantments on Tomes",
+  "config.enchanting_overhauled.enchantment_tooltip.show_enchantment_tooltip_header": "Overleveled Enchantments on Tomes",
+  "config.enchanting_overhauled.enchantment_tooltip.enchantment_description.show_enchantment_descriptions": "Enchantment Descriptions",
   "config.enchanting_overhauled.protection.divisor": "Protection Divisor",
   "config.enchanting_overhauled.protection.cap": "Max Protection Value",
   "config.enchanting_overhauled.physical.protection.strength": "Physical Protection Multiplier",
@@ -107,6 +109,8 @@
   "config.enchanting_overhauled.reset": "Restore Defaults",
   "config.enchanting_overhauled.enchanting_table.arcane_retribution": "Arcane Retribution",
   "config.enchanting_overhauled.enchanting_table.activation_effects": "Spectacular Altar Activation",
+  "config.enchanting_overhauled.section.enchantment_tooltip": "Enchantment Tooltip Settings",
+  "config.enchanting_overhauled.enchanting_table.mineable_enchanting_table": "Mineable Enchanting Table",
   "config.enchanting_overhauled.accessibility.enchantment_name": "Enchantment Name",
   "config.enchanting_overhauled.accessibility.enchantment_name.override_enchantment_name_color": "Uniform Enchantment Name Colors",
   "config.enchanting_overhauled.accessibility.enchantment_name.enchantment_name_color_override_value": "Enchantment Name Color",
@@ -114,6 +118,7 @@
   "config.enchanting_overhauled.accessibility.enchantment_level.override_enchantment_level_color": "Uniform Enchantment Level Colors",
   "config.enchanting_overhauled.accessibility.enchantment_level.enchantment_level_color_override_value": "Enchantment Level Color",
   "config.enchanting_overhauled.accessibility.enchantment_description": "Enchantment Description",
-  "config.enchanting_overhauled.accessibility.enchantment_description.show_enchantment_descriptions": "Enchantment Descriptions",
-  "config.enchanting_overhauled.accessibility.enchantment_description.enchantment_description_color_value": "Enchantment Description Color"
+  "config.enchanting_overhauled.accessibility.enchantment_description.enchantment_description_color_value": "Enchantment Description Color",
+  "config.enchanting_overhauled.accessibility.enchantment_tooltip.override_enchantment_tooltip_color": "Enchantment Tooltip Block Header",
+  "config.enchanting_overhauled.accessibility.enchantment_tooltip.enchantment_tooltip_color_override_value": "Enchantment Tooltip Block Header Color"
 }

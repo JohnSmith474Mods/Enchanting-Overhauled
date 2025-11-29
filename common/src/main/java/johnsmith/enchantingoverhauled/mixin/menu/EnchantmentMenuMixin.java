@@ -881,9 +881,9 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
         boolean targetIsSourceEnchantable = Arrays.stream(this.enchantmentSource).anyMatch(element -> element == SOURCE);
         boolean hasTableSource = Arrays.stream(this.enchantmentSource).anyMatch(source -> source == TABLE);
         boolean canReroll = occupiedSlots < REROLL_BUTTON_INDEX && !targetIsSourceEnchantable && targetIsEnchantable && hasTableSource;
-        boolean cannotAfford = (isLapisInsufficient || isLevelInsufficient) && isNotCreativePlayer;
+        boolean canAfford = !((isLapisInsufficient || isLevelInsufficient) && isNotCreativePlayer);
 
-        if (isRerollButton && canReroll && !cannotAfford) {
+        if (isRerollButton && canReroll && canAfford) {
             this.access.execute((world, pos) -> {
                 if (isNotCreativePlayer) {
                     lapis.shrink(rerollCost);
