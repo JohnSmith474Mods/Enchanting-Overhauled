@@ -10,8 +10,8 @@
           "type": "minecraft:fraction",
           "numerator": {
             "type": "minecraft:linear",
-            "base": 1,
-            "per_level_above_first": 1
+            "base": -1,
+            "per_level_above_first": -1
           },
           "denominator": {
             "type": "enchanting_overhauled:config_aware",
