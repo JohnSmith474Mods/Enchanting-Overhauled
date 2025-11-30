@@ -11,7 +11,8 @@
     "accessor.LootTableAccessor",
     "entity.player.CommonPlayerMixin",
     "entity.player.PlayerMixin",
-    "loot.LootInjectionMixin"
+    "loot.LootInjectionMixin",
+    "menu.AnvilMenuMixin"
   ],
   "client": [],
   "server": [],
