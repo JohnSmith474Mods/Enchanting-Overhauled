@@ -45,6 +45,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
+    /** In case the player has items with more than the limited number of enchantments */
+    public static final int AVAILABLE_SLOTS = 30;
     public static final int REROLL_BUTTON = -1;
 
     public static final int ITEM_TO_ENCHANT_SLOT = 0;
@@ -56,8 +58,8 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
     private static final ResourceLocation EMPTY_SLOT_LAPIS_LAZULI = ResourceLocation.withDefaultNamespace("item/empty_slot_lapis_lazuli");
 
-    /** Max. number of slots for new enchantments */
-    private static final int MAX_NEW_SLOTS = 3;
+    /** Max. number of slots of enchantments added by the table */
+    private static final int MAX_ROLLABLE_SLOTS = 3;
 
     private final Container enchantSlots;
     private final ContainerLevelAccess access;
@@ -143,16 +145,16 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             addSlot(new Slot(playerInventory, k, 8 + k * 18, 171));
         }
 
-        enchantmentSources = new int[Config.BOUNDED_MAX_ENCHANTMENTS.get()];
-        targetTextureIndices = new int[Config.BOUNDED_MAX_ENCHANTMENTS.get()];
-        sourceTextureIndices = new int[Config.BOUNDED_MAX_ENCHANTMENTS.get()];
-        tableTextureIndices = new int[Config.BOUNDED_MAX_ENCHANTMENTS.get()];
+        enchantmentSources = new int[AVAILABLE_SLOTS];
+        targetTextureIndices = new int[AVAILABLE_SLOTS];
+        sourceTextureIndices = new int[AVAILABLE_SLOTS];
+        tableTextureIndices = new int[AVAILABLE_SLOTS];
 
-        costs = new int[Config.BOUNDED_MAX_ENCHANTMENTS.get()];
-        enchantClue = new int[Config.BOUNDED_MAX_ENCHANTMENTS.get()];
-        levelClue = new int[Config.BOUNDED_MAX_ENCHANTMENTS.get()];
+        costs = new int[AVAILABLE_SLOTS];
+        enchantClue = new int[AVAILABLE_SLOTS];
+        levelClue = new int[AVAILABLE_SLOTS];
 
-        for (int slot = 0; slot < Config.BOUNDED_MAX_ENCHANTMENTS.get(); slot++) {
+        for (int slot = 0; slot < AVAILABLE_SLOTS; slot++) {
             costs[slot] = 0;
             enchantClue[slot] = -1;
             levelClue[slot] = -1;
@@ -184,7 +186,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         ItemStack source = inventory.getItem(SOURCE_SLOT);
 
         if (stack.isEmpty() || !stack.isEnchantable()) {
-            for (int slot = 0; slot < Config.BOUNDED_MAX_ENCHANTMENTS.get(); slot++) {
+            for (int slot = 0; slot < AVAILABLE_SLOTS; slot++) {
                 costs[slot] = 0;
                 enchantClue[slot] = -1;
                 levelClue[slot] = -1;
@@ -206,7 +208,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
             random.setSeed(enchantmentSeed.get());
 
-            for (int slot = 0; slot < Config.BOUNDED_MAX_ENCHANTMENTS.get(); slot++) {
+            for (int slot = 0; slot < AVAILABLE_SLOTS; slot++) {
                 costs[slot] = (25 - Math.min(power, 24)) * (slot + 1);
                 enchantClue[slot] = -1;
                 levelClue[slot] = -1;
@@ -238,11 +240,18 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         List<EnchantmentInstance> enchantments = new ArrayList<>();
         Set<Enchantment> knownEnchantments = new HashSet<>();
 
-        // Add the enchantments from sources at the top
-        handleSource(stack, source, enchantments, knownEnchantments);
+        // We add the options as long as the number of enchantments does not exceed the config
+        int enchantmentAmount = EnchantmentLib.getEnchantments(EnchantmentLib.removeCursesFrom(stack)).size();
 
-        // If less than MAX_NEW_SLOTS enchantments exist at this point, fill up to max. with enchantments from the table
-        handleTable(stack, level, position, enchantments, knownEnchantments);
+        if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
+            // Add the enchantments from sources at the top
+            handleSource(stack, source, enchantments, knownEnchantments);
+        }
+
+        if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
+            // If less than MAX_ROLLABLE_SLOTS enchantments exist at this point, fill up to max. with enchantments from the table
+            handleTable(stack, level, position, enchantments, knownEnchantments);
+        }
 
         // Add upgradable enchantments from the current item
         handleCurrent(stack, false, enchantments);
@@ -262,7 +271,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
 
         for (var entry : EnchantmentLib.getEnchantments(stack).entrySet()) {
-            if (enchantments.size() == Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
+            if (enchantments.size() == AVAILABLE_SLOTS) {
                 return;
             }
 
@@ -310,7 +319,11 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
     private void handleTable(final ItemStack stack, final Level level, final BlockPos position, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
         for (EnchantmentInstance entry : EnchantmentLib.generateEnchantments(random, stack, false, level, position)) {
-            if (enchantments.size() == MAX_NEW_SLOTS) {
+            if (enchantments.size() == AVAILABLE_SLOTS) {
+                return;
+            }
+
+            if (enchantments.size() == MAX_ROLLABLE_SLOTS) {
                 break;
             }
 
@@ -333,6 +346,10 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
 
         for (EnchantmentInstance entry : EnchantmentLib.getEnchantmentsAsList(EnchantmentLib.getEnchantments(source))) {
+            if (enchantments.size() == AVAILABLE_SLOTS) {
+                return;
+            }
+
             Enchantment enchantment = entry.enchantment.value();
 
             if (!knownEnchantments.add(enchantment)) {

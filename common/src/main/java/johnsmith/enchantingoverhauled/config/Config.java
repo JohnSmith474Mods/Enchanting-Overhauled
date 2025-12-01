@@ -7,6 +7,7 @@ import johnsmith.enchantingoverhauled.api.config.data.PropertyGroup;
 import johnsmith.enchantingoverhauled.api.config.data.PropertyTab;
 import johnsmith.enchantingoverhauled.api.config.data.Property;
 import johnsmith.enchantingoverhauled.api.config.ConfigManager;
+import johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu;
 
 public class Config {
 
@@ -47,7 +48,7 @@ public class Config {
             new Property.Binary("mineable_enchanting_table", "Whether the default enchanting table can be mined or instead drops its tome.", GROUP_ENCHANTING_TABLE, false)
     );
     public static final Property.Bounded<Integer> BOUNDED_MAX_ENCHANTMENTS = GROUP_ENCHANTING_TABLE.register(
-            new Property.Bounded<>("max_enchantments", "The max. amount of enchantments an item can have.", GROUP_ENCHANTING_TABLE, 3, 1, 30, Codec.INT)
+            new Property.Bounded<>("max_enchantments", "The max. amount of enchantments an item can have.", GROUP_ENCHANTING_TABLE, 3, 1, OverhauledEnchantmentMenu.AVAILABLE_SLOTS, Codec.INT)
     );
     // endregion
 

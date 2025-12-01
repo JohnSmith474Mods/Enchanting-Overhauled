@@ -48,7 +48,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
     public boolean mouseClicked(final double mouseX, final double mouseY, final int button) {
         int clickedButton = Integer.MIN_VALUE;
 
-        for (int slot = currentScroll; slot < Config.BOUNDED_MAX_ENCHANTMENTS.get(); slot++) {
+        for (int slot = currentScroll; slot < OverhauledEnchantmentMenu.AVAILABLE_SLOTS; slot++) {
             double mouseDiffX = mouseX - (double) (leftPos + ENCHANTING_BUTTON_X_OFFSET);
             double mouseDiffY = mouseY - (double) (topPos + ENCHANTING_BUTTON_Y_OFFSET + ENCHANTING_BUTTON_HEIGHT * (slot - currentScroll));
 
@@ -94,7 +94,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
             lastFilledSlot = slot;
         }
 
-        int max = Math.min(lastFilledSlot + 1, Config.BOUNDED_MAX_ENCHANTMENTS.get()) - MAX_SCROLL;
+        int max = Math.min(lastFilledSlot + 1, OverhauledEnchantmentMenu.AVAILABLE_SLOTS) - MAX_SCROLL;
         // Negate the scroll so that scrolling down shows further entries
         currentScroll = Math.clamp(currentScroll + (int) -scrollY, 0, Math.max(0, max));
 
@@ -109,7 +109,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
         //noinspection DataFlowIssue -> minecraft and player are present
         var map = minecraft.player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
 
-        for (int slot = currentScroll; slot < Config.BOUNDED_MAX_ENCHANTMENTS.get(); slot++) {
+        for (int slot = currentScroll; slot < OverhauledEnchantmentMenu.AVAILABLE_SLOTS; slot++) {
             Holder<Enchantment> enchantment = map.byId(menu.enchantClue[slot]);
             int powerRequirement = menu.costs[slot];
             int level = menu.levelClue[slot];
@@ -230,7 +230,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
 
         boolean usePlain = Config.BINARY_ACCESSIBILITY_USE_PLAIN_BACKGROUND.get();
 
-        for (int buttonIndex = currentScroll; buttonIndex < Config.BOUNDED_MAX_ENCHANTMENTS.get(); buttonIndex++) {
+        for (int buttonIndex = currentScroll; buttonIndex < OverhauledEnchantmentMenu.AVAILABLE_SLOTS; buttonIndex++) {
             if (buttonIndex - currentScroll == MAX_SCROLL) {
                 break;
             }
