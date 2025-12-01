@@ -62,7 +62,7 @@ public class Config {
 
     // region Enchantment Values
     public static final Property.Bounded<Integer> BOUNDED_ENCHANTMENT_MAX_LEVEL = GROUP_ENCHANTMENT_GENERAL.register(
-            new Property.Bounded<>("enchantment_max_level", "The maximum level an enchantment can be *naturally* obtained at.", GROUP_ENCHANTMENT_GENERAL, 3, 1, 254, Codec.INT)
+            new Property.Bounded<>("enchantment_max_level", "The maximum level an enchantment can be *naturally* obtained at (set it to 0 to disable this override).", GROUP_ENCHANTMENT_GENERAL, 3, 0, 254, Codec.INT)
     );
     public static final Property<Boolean> BINARY_TOMES_HAVE_GREATER_ENCHANTMENTS = GROUP_ENCHANTMENT_GENERAL.register(
             new Property.Binary("tomes_have_greater_enchantments", "Whether enchanted tomes can contain enchantments of a higher level than naturally possible.", GROUP_ENCHANTMENT_GENERAL, true)
