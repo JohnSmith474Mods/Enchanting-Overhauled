@@ -6,11 +6,11 @@ import johnsmith.enchantingoverhauled.block.Blocks;
 import johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu;
 import johnsmith.enchantingoverhauled.item.Items;
 import johnsmith.enchantingoverhauled.platform.services.IPlatformHelper;
-
-import johnsmith.enchantingoverhauled.structure.processor.Processors;
+import johnsmith.enchantingoverhauled.registry.OverhauledMenuTypes;
 import johnsmith.enchantingoverhauled.structure.processor.BlockAgeProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.DesertifyProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.OvergrowthProcessor;
+import johnsmith.enchantingoverhauled.structure.processor.Processors;
 import johnsmith.enchantingoverhauled.structure.processor.VinesProcessor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
@@ -94,6 +94,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public MenuType<OverhauledEnchantmentMenu> getOverhauledEnchantmentMenuType() {
-        return null; // TODO
+        return OverhauledMenuTypes.OVERHAULED_ENCHANTMENT_MENU;
     }
 }

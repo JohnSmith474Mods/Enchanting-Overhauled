@@ -1,8 +1,6 @@
 package johnsmith.enchantingoverhauled;
 
 import johnsmith.enchantingoverhauled.advancement.Advancements;
-import johnsmith.enchantingoverhauled.advancement.CriteriaRegistry;
-import johnsmith.enchantingoverhauled.api.config.io.*;
 import johnsmith.enchantingoverhauled.api.enchantment.effect.EnchantmentEffectComponentRegistry;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
@@ -11,17 +9,11 @@ import johnsmith.enchantingoverhauled.block.Blocks;
 import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.item.FabricItemGroups;
 import johnsmith.enchantingoverhauled.item.Items;
+import johnsmith.enchantingoverhauled.registry.OverhauledMenuTypes;
 import johnsmith.enchantingoverhauled.structure.processor.Processors;
-
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
-
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.storage.LevelResource;
-
-import java.nio.file.Path;
 
 /**
  * The main entry point for the Fabric version of Enchanting Overhauled.
@@ -48,6 +40,7 @@ public class Fabric implements ModInitializer {
         FabricItemGroups.initialize();
         Processors.initialize();
         Advancements.initialize();
+        OverhauledMenuTypes.initialize();
 
         // Register dynamic registry for syncing EnchantmentThemes
         DynamicRegistries.registerSynced(EnchantmentThemeRegistry.THEME_REGISTRY_KEY, EnchantmentTheme.CODEC);

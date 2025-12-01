@@ -245,27 +245,27 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
         if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
             // Add the enchantments from sources at the top
-            handleSource(stack, source, enchantments, knownEnchantments);
+            gatherFromSource(stack, source, enchantments, knownEnchantments);
         }
 
         if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
             // If less than MAX_ROLLABLE_SLOTS enchantments exist at this point, fill up to max. with enchantments from the table
-            handleTable(stack, level, position, enchantments, knownEnchantments);
+            gatherFromTable(stack, level, position, enchantments, knownEnchantments);
         }
 
         // Add upgradable enchantments from the current item
-        handleCurrent(stack, false, enchantments);
+        gatherCurrent(stack, false, enchantments);
 
         // Add fully upgraded enchantments from the current item
-        handleCurrent(stack, true, enchantments);
+        gatherCurrent(stack, true, enchantments);
 
         // Adjust current entries using the source to allow higher-level enchantments
-        handleOverride(stack, source, enchantments, knownEnchantments);
+        applyOverrides(stack, source, enchantments, knownEnchantments);
 
         return enchantments;
     }
 
-    private void handleCurrent(final ItemStack stack, final boolean fullyUpgraded, final List<EnchantmentInstance> enchantments) {
+    private void gatherCurrent(final ItemStack stack, final boolean fullyUpgraded, final List<EnchantmentInstance> enchantments) {
         if (!stack.isEnchanted()) {
             return;
         }
@@ -295,7 +295,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
-    private void handleOverride(final ItemStack stack, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
+    private void applyOverrides(final ItemStack stack, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
         if (source.isEmpty() || stack.is(Items.BOOK)) {
             return;
         }
@@ -317,7 +317,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
-    private void handleTable(final ItemStack stack, final Level level, final BlockPos position, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
+    private void gatherFromTable(final ItemStack stack, final Level level, final BlockPos position, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
         for (EnchantmentInstance entry : EnchantmentLib.generateEnchantments(random, stack, false, level, position)) {
             if (enchantments.size() == AVAILABLE_SLOTS) {
                 return;
@@ -340,7 +340,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
-    private void handleSource(final ItemStack stack, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
+    private void gatherFromSource(final ItemStack stack, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
         if (source.isEmpty() || stack.is(Items.BOOK)) {
             return;
         }
