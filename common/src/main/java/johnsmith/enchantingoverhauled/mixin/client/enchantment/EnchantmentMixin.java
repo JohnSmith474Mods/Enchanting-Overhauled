@@ -28,8 +28,8 @@ import java.util.Optional;
 public abstract class EnchantmentMixin {
 
     @Unique
-    private static ChatFormatting enchanting_Overhauled$getFormattingForLevel(int level) {
-        if (level > Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get()) {
+    private static ChatFormatting enchanting_Overhauled$getFormattingForLevel(final int maxLevel, final int level) {
+        if (level > maxLevel) {
             return ChatFormatting.LIGHT_PURPLE;
         }
         return switch (level) {
@@ -88,7 +88,7 @@ public abstract class EnchantmentMixin {
                 levelText.withStyle(Style.EMPTY.withColor(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_LEVEL_COLOR_VALUE.get()));
             } else {
                 // STANDARD: Use rarity formatting
-                levelText.withStyle(enchanting_Overhauled$getFormattingForLevel(level));
+                levelText.withStyle(enchanting_Overhauled$getFormattingForLevel(enchantment.getMaxLevel(), level));
             }
 
             finalName = baseName.append(CommonComponents.SPACE).append(levelText);

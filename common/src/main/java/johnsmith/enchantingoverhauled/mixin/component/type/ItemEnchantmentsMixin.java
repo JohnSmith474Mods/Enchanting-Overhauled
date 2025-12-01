@@ -1,48 +1,27 @@
 package johnsmith.enchantingoverhauled.mixin.component.type;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import johnsmith.enchantingoverhauled.config.Config;
-
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.EnchantmentTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-
-import org.jetbrains.annotations.Nullable;
-
-import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @Mixin(ItemEnchantments.class)
+@Debug(export = true)
 public abstract class ItemEnchantmentsMixin {
-
-    @Shadow @Final
-    Object2IntOpenHashMap<Holder<Enchantment>> enchantments;
-
-    @Shadow @Final
-    boolean showInTooltip;
-
     @Unique
     private static final Component INDENT = Component.literal("  ");
 
@@ -91,50 +70,8 @@ public abstract class ItemEnchantmentsMixin {
         }
     }
 
-    @Unique
-    private static <T> HolderSet<T> enchanting_Overhauled$getTooltipOrderList(@Nullable HolderLookup.Provider registryLookup, ResourceKey<Registry<T>> registryRef, TagKey<T> tooltipOrderTag) {
-        if (registryLookup != null) {
-            Optional<HolderSet.Named<T>> optional = registryLookup.lookupOrThrow(registryRef).get(tooltipOrderTag);
-            if (optional.isPresent()) {
-                return optional.get();
-            }
-        }
-        return HolderSet.direct();
-    }
-
-    @Inject(
-            method = "addToTooltip",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    private void overwriteAddToTooltip(
-            Item.TooltipContext context,
-            Consumer<Component> tooltip,
-            TooltipFlag flag,
-            CallbackInfo ci
-    ) {
-        if (this.showInTooltip) {
-            HolderLookup.Provider wrapperLookup = context.registries();
-            HolderSet<Enchantment> registryEntryList = enchanting_Overhauled$getTooltipOrderList(wrapperLookup, Registries.ENCHANTMENT, EnchantmentTags.TOOLTIP_ORDER);
-
-            for(Holder<Enchantment> registryEntry : registryEntryList) {
-                int i = this.enchantments.getInt(registryEntry);
-                if (i > 0) {
-                    tooltip.accept(Enchantment.getFullname(registryEntry, i));
-                    this.enchanting_Overhauled$addEnchantmentDescription(registryEntry, tooltip);
-                }
-            }
-
-            for (Object2IntMap.Entry<Holder<Enchantment>> entry : this.enchantments.object2IntEntrySet()) {
-                Holder<Enchantment> registryEntry2 = entry.getKey();
-
-                if (!registryEntryList.contains(registryEntry2)) {
-                    tooltip.accept(Enchantment.getFullname(registryEntry2, entry.getIntValue()));
-                    this.enchanting_Overhauled$addEnchantmentDescription(registryEntry2, tooltip);
-                }
-            }
-        }
-
-        ci.cancel();
+    @Inject(method = "addToTooltip", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", shift = At.Shift.AFTER))
+    private void overwriteAddToTooltip(Item.TooltipContext context, Consumer<Component> tooltip, TooltipFlag flag, CallbackInfo ci, @Local Holder<Enchantment> enchantment) {
+        this.enchanting_Overhauled$addEnchantmentDescription(enchantment, tooltip);
     }
 }
