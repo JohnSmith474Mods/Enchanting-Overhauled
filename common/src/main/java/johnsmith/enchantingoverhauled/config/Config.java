@@ -46,6 +46,9 @@ public class Config {
     public static final Property.Binary BINARY_MINEABLE_ENCHANTING_TABLE = GROUP_ENCHANTING_TABLE.register(
             new Property.Binary("mineable_enchanting_table", "Whether the default enchanting table can be mined or instead drops its tome.", GROUP_ENCHANTING_TABLE, false)
     );
+    public static final Property.Bounded<Integer> BOUNDED_MAX_ENCHANTMENTS = GROUP_ENCHANTING_TABLE.register(
+            new Property.Bounded<>("max_enchantments", "The max. amount of enchantments an item can have.", GROUP_ENCHANTING_TABLE, 3, 1, 30, Codec.INT)
+    );
     // endregion
 
     // region Anvil Values

@@ -24,15 +24,12 @@
     "loot.EnchantRandomlyFunctionMixin",
     "loot.MatchToolMixin",
     "menu.AnvilMenuMixin",
-    "menu.EnchantmentMenuMixin",
     "menu.ItemCombinerMenuMixin",
     "server.level.ServerLevelMixin",
     "server.level.ServerPlayerMixin"
   ],
   "client": [
     "client.enchantment.EnchantmentMixin",
-    "client.gui.screen.AbstractContainerScreenMixin",
-    "client.gui.screen.EnchantmentScreenMixin",
     "client.item.ItemPropertiesMixin",
     "client.render.FogRendererMixin",
     "client.render.block.entity.EnchantTableRendererMixin"

@@ -1,5 +1,7 @@
 package johnsmith.enchantingoverhauled.mixin.block;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import johnsmith.enchantingoverhauled.accessor.TomeStorageAccessor;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.EffectData;
@@ -7,6 +9,7 @@ import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.ParticleEffec
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.SoundEffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.power.PowerProvider;
 import johnsmith.enchantingoverhauled.config.Config;
+import johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu;
 import johnsmith.enchantingoverhauled.lib.EnchantmentLib;
 import johnsmith.enchantingoverhauled.mixin.accessor.AbstractBlockSettingsAccessor;
 import johnsmith.enchantingoverhauled.platform.Services;
@@ -23,9 +26,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.BlockGetter;
@@ -366,5 +372,10 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
         // If Vanilla Mode is Active (Config is TRUE)
         // Delegate to super, which calculates based on the cached 5.0F hardness
         return super.getDestroyProgress(state, player, level, pos);
+    }
+
+    @ModifyReturnValue(method = "getMenuProvider", at = @At("RETURN"))
+    private MenuProvider overrideMenu(final MenuProvider original, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final BlockPos position) {
+        return new SimpleMenuProvider((id, inventory, player) -> new OverhauledEnchantmentMenu(id, inventory, ContainerLevelAccess.create(level, position)), original.getDisplayName());
     }
 }

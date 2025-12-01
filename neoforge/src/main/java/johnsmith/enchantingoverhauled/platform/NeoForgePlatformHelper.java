@@ -1,24 +1,26 @@
 package johnsmith.enchantingoverhauled.platform;
 
-import johnsmith.enchantingoverhauled.api.config.data.Property;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
 import johnsmith.enchantingoverhauled.block.Blocks;
+import johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu;
 import johnsmith.enchantingoverhauled.item.Items;
 import johnsmith.enchantingoverhauled.platform.services.IPlatformHelper;
-import johnsmith.enchantingoverhauled.structure.processor.*;
-
+import johnsmith.enchantingoverhauled.registry.OverhauledMenuTypes;
+import johnsmith.enchantingoverhauled.structure.processor.BlockAgeProcessor;
+import johnsmith.enchantingoverhauled.structure.processor.DesertifyProcessor;
+import johnsmith.enchantingoverhauled.structure.processor.OvergrowthProcessor;
+import johnsmith.enchantingoverhauled.structure.processor.Processors;
+import johnsmith.enchantingoverhauled.structure.processor.VinesProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.FMLPaths;
 
-import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -89,5 +91,10 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public StructureProcessorType<VinesProcessor> getVinesProcessor() {
         return Processors.VINES_PROCESSOR.get();
+    }
+
+    @Override
+    public MenuType<OverhauledEnchantmentMenu> getOverhauledEnchantmentMenuType() {
+        return OverhauledMenuTypes.OVERHAULED_ENCHANTMENT_MENU.value();
     }
 }

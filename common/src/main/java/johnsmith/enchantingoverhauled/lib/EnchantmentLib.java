@@ -37,7 +37,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.level.block.Block;
@@ -148,7 +147,7 @@ public class EnchantmentLib {
      * @return The ItemEnchantments container, or ItemEnchantments.EMPTY if none is found.
      */
     public static ItemEnchantments getEnchantments(ItemStack stack) {
-        return (ItemEnchantments)stack.getOrDefault(getEnchantmentsComponentType(stack), ItemEnchantments.EMPTY);
+        return stack.getOrDefault(getEnchantmentsComponentType(stack), ItemEnchantments.EMPTY);
     }
 
     /**
@@ -428,7 +427,7 @@ public class EnchantmentLib {
      * Generates a randomized list of possible enchantments for an item based on its enchantability,
      * filtered by available themed power providers.
      */
-    public static List<EnchantmentInstance> generateEnchantments(FeatureFlagSet enabledFeatures, RandomSource random, ItemStack target, boolean treasureAllowed, Level level, BlockPos pos) {
+    public static List<EnchantmentInstance> generateEnchantments(RandomSource random, ItemStack target, boolean treasureAllowed, Level level, BlockPos pos) {
         List<EnchantmentInstance> enchantments = Lists.newArrayList();
         Item item = target.getItem();
 
@@ -437,7 +436,7 @@ public class EnchantmentLib {
             return enchantments;
         }
 
-        List<EnchantmentInstance> possibleEntries = EnchantmentLib.getPossibleEntries(enabledFeatures, target, treasureAllowed, level, pos);
+        List<EnchantmentInstance> possibleEntries = EnchantmentLib.getPossibleEntries(target, treasureAllowed, level, pos);
 
         enchantments.addAll(possibleEntries);
         enchantments = EnchantmentLib.weightedSkewedShuffle(enchantments, entry -> entry.getWeight().asInt(), random);
@@ -474,7 +473,7 @@ public class EnchantmentLib {
      * Gets a list of all enchantment entries that can possibly be applied to the given item,
      * filtered by the available themed power providers.
      */
-    public static List<EnchantmentInstance> getPossibleEntries(FeatureFlagSet enabledFeatures, ItemStack target, boolean treasureAllowed, Level level, BlockPos pos) {
+    public static List<EnchantmentInstance> getPossibleEntries(ItemStack target, boolean treasureAllowed, Level level, BlockPos pos) {
         List<EnchantmentInstance> enchantments = Lists.newArrayList();
         boolean isTargetBook = target.is(Items.BOOK);
 
