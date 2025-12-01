@@ -12,7 +12,7 @@
     "entity.player.CommonPlayerMixin",
     "entity.player.PlayerMixin",
     "loot.LootInjectionMixin",
-    "menu.AnvilMenuMixin"
+    "menu.FabricAnvilMenuMixin"
   ],
   "client": [],
   "server": [],

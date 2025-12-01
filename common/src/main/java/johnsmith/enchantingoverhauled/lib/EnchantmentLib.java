@@ -642,7 +642,7 @@ public class EnchantmentLib {
             Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
             Holder<Enchantment> protection = registry.getHolderOrThrow(Enchantments.PROTECTION);
 
-            builder.set(protection, Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get() + 1);
+            builder.set(protection, protection.value().getMaxLevel() + 1);
             tomeStack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
         }
 
@@ -661,7 +661,7 @@ public class EnchantmentLib {
         Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
         Holder<Enchantment> protection = registry.getHolderOrThrow(Enchantments.PROTECTION);
 
-        builder.set(protection, Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get() + 1);
+        builder.set(protection, protection.value().getMaxLevel() + 1);
         tome.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
         return tome;
     }
