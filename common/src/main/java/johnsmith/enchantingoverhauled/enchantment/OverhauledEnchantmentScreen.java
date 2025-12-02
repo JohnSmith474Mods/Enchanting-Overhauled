@@ -118,92 +118,20 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
                 continue;
             }
 
+            // Checks which part of the GUI is hovered to determine which tooltip to show
             int buttonY = ENCHANTING_BUTTON_Y_OFFSET + (ENCHANTING_BUTTON_HEIGHT * (slot - currentScroll));
 
             if (isHovering(ENCHANTING_BUTTON_X_OFFSET, buttonY, ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT, mouseX, mouseY)) {
-                EnchantmentSource source = EnchantmentSource.byId(menu.enchantmentSources[slot]);
-
-                switch (source) {
-                    case TARGET -> {
-                        if (level >= enchantment.value().getMaxLevel()) {
-                            renderMaxTooltip(graphics, mouseX, mouseY, enchantment, level);
-                        } else {
-                            List<FormattedCharSequence> tooltip = new ArrayList<>();
-                            int cost = menu.calculateEnchantmentCost(enchantment);
-
-                            tooltip.add(Component.translatable("gui.enchanting_overhauled.upgrade").withStyle(ChatFormatting.WHITE).getVisualOrderText());
-                            collectEnchantmentTooltip(enchantment, level, tooltip);
-                            collectCostTooltip(tooltip, powerRequirement, cost);
-
-                            graphics.renderTooltip(font, tooltip, mouseX, mouseY);
-                        }
-                    }
-                    case SOURCE -> {
-                        List<FormattedCharSequence> tooltip = new ArrayList<>();
-                        int cost = menu.calculateEnchantmentCost(enchantment);
-
-                        tooltip.add(Component.translatable("gui.enchanting_overhauled.transfer").withStyle(ChatFormatting.WHITE).getVisualOrderText());
-                        collectEnchantmentTooltip(enchantment, level, tooltip);
-                        collectCostTooltip(tooltip, powerRequirement, cost);
-
-                        graphics.renderTooltip(font, tooltip, mouseX, mouseY);
-                    }
-                    case TABLE -> {
-                        List<FormattedCharSequence> tooltip = new ArrayList<>();
-                        int cost = menu.calculateEnchantmentCost(enchantment);
-
-                        tooltip.add(Component.translatable("gui.enchanting_overhauled.apply").withStyle(ChatFormatting.WHITE).getVisualOrderText());
-
-                        ResourceKey<EnchantmentTheme> themeKey = EnchantmentLib.getThemeKey(minecraft.player.registryAccess(), enchantment);
-                        Registry<EnchantmentTheme> registry = Services.PLATFORM.getThemeRegistry(minecraft.player.registryAccess()).orElse(null);
-
-                        Component name = Enchantment.getFullname(enchantment, level);
-
-                        int color = 0xFFFFFF;
-                        TextColor enchantmentColor = name.getStyle().getColor();
-
-                        if (enchantmentColor != null) {
-                            color = enchantmentColor.getValue();
-                        }
-
-                        if (registry != null) {
-                            EnchantmentTheme theme = registry.get(themeKey);
-
-                            if (theme != null && theme.colorCode().isPresent()) {
-                                color = theme.colorCode().get();
-                            }
-                        }
-
-                        MutableComponent mutableName = name.copy().withStyle(name.getStyle().withColor(color));
-
-                        if (Config.BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS.get()) {
-                            mutableName.withStyle(mutableName.getStyle().withFont(GALACTIC_FONT_ID));
-                        }
-
-                        tooltip.add(mutableName.getVisualOrderText());
-
-                        if (Config.BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS.get()) {
-                            //noinspection OptionalGetWithoutIsPresent -> The registry only returns Holder.Reference
-                            String descriptionKey = Util.makeDescriptionId("enchantment", enchantment.unwrapKey().get().location()) + ".desc";
-
-                            if (I18n.exists(descriptionKey)) {
-                                MutableComponent description = Component.translatable(descriptionKey).withColor(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION_COLOR.get());
-
-                                if (Config.BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS.get()) {
-                                    description = description.withStyle(description.getStyle().withFont(GALACTIC_FONT_ID));
-                                }
-
-                                tooltip.addAll(EnchantmentLib.wrapDescription(description));
-                            }
-                        }
-
-                        collectCostTooltip(tooltip, powerRequirement, cost);
-                        graphics.renderTooltip(font, tooltip, mouseX, mouseY);
-                    }
+                // An enchantment slot is hovered
+                switch (EnchantmentSource.byId(menu.enchantmentSources[slot])) {
+                    case TARGET -> renderTargetSlotTooltip(graphics, mouseX, mouseY, level, enchantment, powerRequirement);
+                    case SOURCE -> renderSourceSlotTooltip(graphics, mouseX, mouseY, enchantment, level, powerRequirement);
+                    case TABLE -> renderTableSlotTooltip(graphics, mouseX, mouseY, enchantment, level, powerRequirement);
                 }
 
                 break;
             } else if (isHovering(REROLL_BUTTON_X_OFFSET, REROLL_BUTTON_Y_OFFSET, REROLL_BUTTON_WIDTH, REROLL_BUTTON_HEIGHT, mouseX, mouseY)) {
+                // Reroll button is hovered
                 List<FormattedCharSequence> tooltip = new ArrayList<>();
                 tooltip.add(Component.translatable("gui.enchanting_overhauled.turn_page").withStyle(ChatFormatting.WHITE).getVisualOrderText());
 
@@ -218,6 +146,98 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
                 break;
             }
         }
+    }
+
+    /**
+     * Renders the tooltips for enchantment slots provided by the enchantment table </br>
+     * - Slots will have information about the requirements and cost, provided by {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentScreen#collectCostTooltip} </br>
+     * - If {@link Config#BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS} is enabled it will contain the enchantment description </br>
+     * - If {@link Config#BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS} is enabled both the name and description will be obfuscated </br> </br>
+     *
+     * Color </br>
+     * - The enchantment color is determined by {@link johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme} if an entry exists and a color is specified </br>
+     * - Otherwise the original color of the enchantment is used or '0xFFFFFF' if the enchantment has no color
+     */
+    private void renderTableSlotTooltip(final @NotNull GuiGraphics graphics, final int mouseX, final int mouseY, final Holder<Enchantment> enchantment, final int level, final int powerRequirement) {
+        List<FormattedCharSequence> tooltip = new ArrayList<>();
+        int cost = menu.calculateEnchantmentCost(enchantment);
+
+        tooltip.add(Component.translatable("gui.enchanting_overhauled.apply").withStyle(ChatFormatting.WHITE).getVisualOrderText());
+
+        //noinspection DataFlowIssue -> minecraft and player are present
+        ResourceKey<EnchantmentTheme> themeKey = EnchantmentLib.getThemeKey(minecraft.player.registryAccess(), enchantment);
+        Registry<EnchantmentTheme> registry = Services.PLATFORM.getThemeRegistry(minecraft.player.registryAccess()).orElse(null);
+
+        Component name = Enchantment.getFullname(enchantment, level);
+
+        int color = 0xFFFFFF;
+        TextColor enchantmentColor = name.getStyle().getColor();
+
+        if (enchantmentColor != null) {
+            color = enchantmentColor.getValue();
+        }
+
+        if (registry != null) {
+            EnchantmentTheme theme = registry.get(themeKey);
+
+            if (theme != null && theme.colorCode().isPresent()) {
+                color = theme.colorCode().get();
+            }
+        }
+
+        MutableComponent mutableName = name.copy().withStyle(name.getStyle().withColor(color));
+
+        if (Config.BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS.get()) {
+            mutableName.withStyle(mutableName.getStyle().withFont(GALACTIC_FONT_ID));
+        }
+
+        tooltip.add(mutableName.getVisualOrderText());
+
+        if (Config.BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS.get()) {
+            //noinspection OptionalGetWithoutIsPresent -> The registry only returns Holder.Reference
+            String descriptionKey = Util.makeDescriptionId("enchantment", enchantment.unwrapKey().get().location()) + ".desc";
+
+            if (I18n.exists(descriptionKey)) {
+                MutableComponent description = Component.translatable(descriptionKey).withColor(Config.BOUNDED_ACCESSIBILITY_ENCHANTMENT_DESCRIPTION_COLOR.get());
+
+                if (Config.BINARY_ACCESSIBILITY_OBFUSCATE_NEW_ENCHANTMENTS.get()) {
+                    description = description.withStyle(description.getStyle().withFont(GALACTIC_FONT_ID));
+                }
+
+                tooltip.addAll(EnchantmentLib.wrapDescription(description));
+            }
+        }
+
+        collectCostTooltip(tooltip, powerRequirement, cost);
+        graphics.renderTooltip(font, tooltip, mouseX, mouseY);
+    }
+
+    /** Renders the tooltips for enchantment slots provided by the source item */
+    private void renderSourceSlotTooltip(final @NotNull GuiGraphics graphics, final int mouseX, final int mouseY, final Holder<Enchantment> enchantment, final int level, final int powerRequirement) {
+        List<FormattedCharSequence> tooltip = new ArrayList<>();
+
+        tooltip.add(Component.translatable("gui.enchanting_overhauled.transfer").withStyle(ChatFormatting.WHITE).getVisualOrderText());
+        collectEnchantmentTooltip(enchantment, level, tooltip);
+        collectCostTooltip(tooltip, powerRequirement, menu.calculateEnchantmentCost(enchantment));
+
+        graphics.renderTooltip(font, tooltip, mouseX, mouseY);
+    }
+
+    /**
+     * Renders the tooltips for enchantment slots provided by the target item </br>
+     * - Upgradable slots will have information about the requirements and cost, provided by {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentScreen#collectCostTooltip}
+     */
+    private void renderTargetSlotTooltip(final @NotNull GuiGraphics graphics, final int mouseX, final int mouseY, final int level, final Holder<Enchantment> enchantment, final int powerRequirement) {
+        List<FormattedCharSequence> tooltip = new ArrayList<>();
+        collectEnchantmentTooltip(enchantment, level, tooltip);
+
+        if (level < enchantment.value().getMaxLevel()) {
+            // Move the upgrade part to the top of the tooltip
+            tooltip.addFirst(Component.translatable("gui.enchanting_overhauled.upgrade").withStyle(ChatFormatting.WHITE).getVisualOrderText());
+            collectCostTooltip(tooltip, powerRequirement, menu.calculateEnchantmentCost(enchantment));
+        }
+
+        graphics.renderTooltip(font, tooltip, mouseX, mouseY);
     }
 
     @Override
@@ -245,8 +265,8 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
 
             Holder<Enchantment> enchantment = map.byId(enchantmentId);
 
-            // Empty slot
             if (enchantingPower <= 0 || enchantment == null) {
+                // Empty slot
                 RenderSystem.enableBlend();
 
                 ResourceLocation resource = usePlain
@@ -283,6 +303,11 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
         graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + 29, 4210752, false);
     }
 
+    /**
+     * Determines the reroll cost based on the gathered enchantments </br>
+     * - If a source enchantment is present or no table-provided enchantments exist, it will return '-1' </br>
+     * - The reroll cost follows the logic of the menu: Number of enchantments (excluding curses) + 1
+     */
     private int getRerollCost() {
         ItemStack target = menu.getSlot(OverhauledEnchantmentMenu.ITEM_TO_ENCHANT_SLOT).getItem();
 
@@ -308,6 +333,14 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
         return enchantmentAmount + 1;
     }
 
+    /**
+     * Gathers information about the requirements and cost, unless the player is in creative mode </br>
+     * - No further information will be shown, if the experience level of the player does not match the {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu#enchantingPower} requirements </br> </br>
+     *
+     * Otherwise it contains: </br>
+     * - The lapis cost (colored red if it is not met) </br>
+     * - The experience level cost (no color adjustments needed, due to the enchanting power check) </br>
+     */
     private void collectCostTooltip(final List<FormattedCharSequence> tooltip, final int powerRequirement, final int cost) {
         //noinspection DataFlowIssue -> minecraft and player are present
         if (!minecraft.player.hasInfiniteMaterials()) {
@@ -339,12 +372,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
         }
     }
 
-    private void renderMaxTooltip(final @NotNull GuiGraphics graphics, final int mouseX, final int mouseY, final Holder<Enchantment> enchantment, final int level) {
-        List<FormattedCharSequence> tooltip = new ArrayList<>();
-        collectEnchantmentTooltip(enchantment, level, tooltip);
-        graphics.renderTooltip(font, tooltip, mouseX, mouseY);
-    }
-
+    /** Gathers the name of the enchantment and the description (if any exists) */
     private static void collectEnchantmentTooltip(final Holder<Enchantment> enchantment, final int level, final List<FormattedCharSequence> tooltip) {
         tooltip.add(Enchantment.getFullname(enchantment, level).getVisualOrderText());
 
@@ -535,11 +563,13 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
             }
 
             RenderSystem.enableBlend();
+            // The slot background
             graphics.blit(resource, buttonX, buttonY, 0, 0,
                     ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT,
                     ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT
             );
 
+            // The experience icon to the left
             graphics.blitSprite(ENABLED_LEVEL_SPRITES[costIndex],
                     buttonX + ENCHANTING_COST_X_OFFSET, buttonY + ENCHANTING_COST_Y_OFFSET,
                     ENCHANTING_COST_WIDTH, ENCHANTING_COST_HEIGHT
@@ -554,11 +584,13 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
             color = ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR;
         } else {
             RenderSystem.enableBlend();
+            // The slot background
             graphics.blit(disabled, buttonX, buttonY, 0, 0,
                     ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT,
                     ENCHANTING_BUTTON_WIDTH, ENCHANTING_BUTTON_HEIGHT
             );
 
+            // The experience icon to the left
             graphics.blitSprite(DISABLED_LEVEL_SPRITES[costIndex],
                     buttonX + ENCHANTING_COST_X_OFFSET, buttonY + ENCHANTING_COST_Y_OFFSET,
                     ENCHANTING_COST_WIDTH, ENCHANTING_COST_HEIGHT
@@ -574,6 +606,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
         }
 
         if (level < enchantment.value().getMaxLevel()) {
+            // Render the enchanting power requirement to the right of the slot
             String power = String.valueOf(enchantingPower);
             int textWidth = font.width(power);
 

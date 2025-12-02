@@ -326,7 +326,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
     /**
      * Collects up to {@value MAX_ROLLABLE_SLOTS} compatible enchantments from the enchantment table </br>
-     * - Custom logic using the {@link johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry} is used to generate the options
+     * - Custom logic using the {@link johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry} is used to generate these options
      */
     private void gatherFromTable(final ItemStack target, final Level level, final BlockPos position, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
         int initialAmount = enchantments.size();
@@ -518,7 +518,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
     /**
      * Upgrade the specific existing enchantment of the item </br>
-     * - Level is determined using {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu#rollLevel} with a static bonus of 1 </br>
+     * - Level is determined using {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu#rollLevel} with a static bonus of 1
      */
     private boolean upgradeEnchant(@NotNull final Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
         int enchantmentLevel = levelClue[buttonId];
