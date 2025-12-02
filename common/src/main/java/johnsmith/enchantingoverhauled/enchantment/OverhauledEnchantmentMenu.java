@@ -118,7 +118,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             }
         });
 
-        // Source (e.g. ancient tome) slot
+        // Source (e.g. enchanted tome) slot
         addSlot(new Slot(enchantSlots, SOURCE_SLOT, 8, 65) {
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return stack.getItem() instanceof EnchantedBookItem;
@@ -169,6 +169,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         addDataSlot(enchantmentSeed).set(playerInventory.player.getEnchantmentSeed());
     }
 
+    @Override
     public void slotsChanged(@NotNull final Container inventory) {
         if (inventory != enchantSlots) {
             return;
@@ -228,9 +229,9 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         });
     }
 
+    /** Gathers the enchantments that will be shown in the menu as slots */
     private List<EnchantmentInstance> gatherEnchantments(final ItemStack target, final ItemStack source, final Level level, final BlockPos position) {
         List<EnchantmentInstance> enchantments = new ArrayList<>();
-        Set<Enchantment> knownEnchantments = new HashSet<>();
 
         // We add the options as long as the number of enchantments does not exceed the config
         int enchantmentAmount = EnchantmentLib.getEnchantments(EnchantmentLib.removeCursesFrom(target)).size();
@@ -240,21 +241,29 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         gatherCurrent(target, enchantments);
 
         // Adjust current entries using the source to allow higher-level enchantments
-        applyOverrides(target, source, enchantments, knownEnchantments);
+        applyOverrides(target, source, enchantments);
+
+        // Avoid adding duplicate options from the source / table
+        Set<Enchantment> knownEnchantments = new HashSet<>();
 
         if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
-            // Add the enchantments from sources at the top
+            // Add new enchantments provided by the source
             gatherFromSource(target, source, enchantments, knownEnchantments);
         }
 
         if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
-            // If less than MAX_ROLLABLE_SLOTS enchantments exist at this point, fill up to max. with enchantments from the table
+            // Add up to MAX_ROLLABLE_SLOTS entries from the enchantment table
             gatherFromTable(target, level, position, enchantments, knownEnchantments);
         }
 
         return enchantments;
     }
 
+    /**
+     * Collects the enchantments from the provided item into the list </br>
+     * - Enchantments that are equal or above the maximum level are sorted to the bottom </br>
+     * - Curses are excluded
+     */
     private void gatherCurrent(final ItemStack target, final List<EnchantmentInstance> enchantments) {
         if (!target.isEnchanted()) {
             return;
@@ -288,7 +297,12 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         enchantments.addAll(current);
     }
 
-    private void applyOverrides(final ItemStack target, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
+    /**
+     * Adjusts the level of the currently collected enchantments, using the enchantments of the provided source </br>
+     * - Enchantments from the source that are not present on the target are ignored </br>
+     * - Does not apply if the target is a book (which would usually not hold enchantments in the first place)
+     */
+    private void applyOverrides(final ItemStack target, final ItemStack source, final List<EnchantmentInstance> enchantments) {
         if (source.isEmpty() || target.is(Items.BOOK)) {
             return;
         }
@@ -310,6 +324,10 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
+    /**
+     * Collects up to {@value MAX_ROLLABLE_SLOTS} compatible enchantments from the enchantment table </br>
+     * - Custom logic using the {@link johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry} is used to generate the options
+     */
     private void gatherFromTable(final ItemStack target, final Level level, final BlockPos position, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
         int initialAmount = enchantments.size();
 
@@ -335,6 +353,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
+    /** Collects compatible enchantments from the provided source */
     private void gatherFromSource(final ItemStack target, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
         if (source.isEmpty() || target.is(Items.BOOK)) {
             return;
@@ -345,23 +364,23 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
                 return;
             }
 
-            Enchantment enchantment = entry.enchantment.value();
-
-            if (!knownEnchantments.add(enchantment)) {
+            if (!knownEnchantments.add(entry.enchantment.value())) {
                 continue;
             }
 
-            if (enchantment.canEnchant(target) && isCompatibleWith(target, entry.enchantment)) {
+            if (entry.enchantment.value().canEnchant(target) && isCompatibleWith(target, entry.enchantment)) {
                 enchantmentSources[enchantments.size()] = EnchantmentSource.SOURCE.getId();
                 enchantments.add(entry);
             }
         }
     }
 
+    /** Checks whether the enchantment is compatible with the current enchantments on the item */
     private boolean isCompatibleWith(final ItemStack target, final Holder<Enchantment> enchantment) {
         return EnchantmentHelper.isEnchantmentCompatible(EnchantmentHelper.getEnchantmentsForCrafting(target).keySet(), enchantment);
     }
 
+    @Override
     public boolean clickMenuButton(@NotNull final Player player, int buttonId) {
         if (buttonId == Integer.MIN_VALUE) {
             return false;
@@ -430,6 +449,11 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         // TODO :: check for neoforge events etc.
     }
 
+    /**
+     * Enchants the item with the provided enchantment </br>
+     * - Level is determined using {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu#rollLevel} </br>
+     * - {@link Items#BOOK} is turned into {@link Items#ENCHANTED_BOOK} if enchanted
+     */
     private boolean enchant(final Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
         access.execute((level, position) -> {
             ItemStack targetReference = target;
@@ -453,7 +477,13 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return true;
     }
 
-    private boolean transferEnchant(final @NotNull Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack source, final ItemStack lapis, final int lapisCost, final int levelCost) {
+    /**
+     * Enchants the item with the provided enchantment </br>
+     * - Level is determined using {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu#rollLevel} </br>
+     * - {@link Items#BOOK} is turned into {@link Items#ENCHANTED_BOOK} if enchanted </br>
+     * - The source is turned into a {@link Items#BOOK}, unless it is an enchanted tome
+     */
+    private boolean transferEnchant(@NotNull final Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack source, final ItemStack lapis, final int lapisCost, final int levelCost) {
         if (source.isEmpty()) {
             return false;
         }
@@ -486,7 +516,11 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return true;
     }
 
-    private boolean upgradeEnchant(final @NotNull Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
+    /**
+     * Upgrade the specific existing enchantment of the item </br>
+     * - Level is determined using {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu#rollLevel} with a static bonus of 1 </br>
+     */
+    private boolean upgradeEnchant(@NotNull final Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
         int enchantmentLevel = levelClue[buttonId];
 
         if (enchantmentLevel >= enchantment.value().getMaxLevel()) {
@@ -510,6 +544,11 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return true;
     }
 
+    /**
+     * Uses a probabilistic system based on the item enchantibility to determine the new level </br>
+     * - For each potential level increase (up to the maximum), a roll is performed </br>
+     * - A higher enchantibility provides a higher chance of success for each roll </br>
+     */
     private int rollLevel(final Holder<Enchantment> enchantment, final ItemStack target, final int enchantmentLevel) {
         int enchantibility = Math.clamp(target.getItem().getEnchantmentValue(), 1, 50);
         double probability = Math.clamp(2 * Math.pow(enchantibility / 50d, 2), 0, 1);
@@ -526,20 +565,19 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return newLevel;
     }
 
+    /**
+     * If enchantments provided by the table exist (while no source enchantment is present), it will reroll the options </br>
+     * - No special logic happens here, the call to {@link johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu#performedEnchantment} triggers the new selection
+     */
     private boolean handleReroll(@NotNull final Player player, final ItemStack lapis, final int lapisCost, final int rerollCost) {
-        boolean isSourceEnchantable = false;
         boolean isTableEnchantable = false;
 
         for (int enchantmentSource : enchantmentSources) {
             if (enchantmentSource == EnchantmentSource.SOURCE.getId()) {
-                isSourceEnchantable = true;
+                return false;
             } else if (enchantmentSource == EnchantmentSource.TABLE.getId()) {
                 isTableEnchantable = true;
             }
-        }
-
-        if (isSourceEnchantable) {
-            return false;
         }
 
         if (isTableEnchantable) {
@@ -554,6 +592,13 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return false;
     }
 
+    /**
+     * Handles the usual things that happen when an item is enchanted
+     * - Decreasing the {@link Items#LAPIS_LAZULI} supply, if the player is not in creative mode </br>
+     * - Applying the experience cost (on non-creative-mode players) while also rerolling the enchantment seed </br>
+     * - Signaling that the (enchantment) slots have changed </br>
+     * - (These steps will cause a new selection of enchantments to appear)
+     */
     private void performedEnchantment(@NotNull final Player player, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
         if (!player.hasInfiniteMaterials()) {
             lapis.shrink(lapisCost);
@@ -573,16 +618,22 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return this.enchantmentSeed.get();
     }
 
+    @Override
     public void removed(@NotNull final Player player) {
         super.removed(player);
         this.access.execute((level, position) -> this.clearContainer(player, this.enchantSlots));
     }
 
+    @Override
     public boolean stillValid(@NotNull final Player player) {
         return stillValid(this.access, player, Blocks.ENCHANTING_TABLE);
     }
 
-    /** Slots are shifted by 1 (due to the source slot) compared to the usual enchantment menu */
+    /**
+     * Slots are shifted by 1 (due to the new source slot) compared to the vanilla enchantment menu </br>
+     * - The end index is non-inclusive
+     */
+    @Override
     public @NotNull ItemStack quickMoveStack(@NotNull final Player player, final int slotIndex) {
         ItemStack originalStack = ItemStack.EMPTY;
         Slot slot = slots.get(slotIndex);
