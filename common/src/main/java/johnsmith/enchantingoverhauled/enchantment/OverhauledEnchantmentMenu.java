@@ -1,6 +1,5 @@
 package johnsmith.enchantingoverhauled.enchantment;
 
-import com.mojang.datafixers.util.Pair;
 import johnsmith.enchantingoverhauled.api.enchantment.EnchantmentSource;
 import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.lib.EnchantmentLib;
@@ -10,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.IdMap;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -25,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -53,10 +50,8 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
     public static final int LAPIS_SLOT = 1;
     public static final int SOURCE_SLOT = 2;
 
-    private static final int LAST_INVENTORYS_SLOT = 29;
+    private static final int LAST_INVENTORY_SLOT = 29;
     private static final int LAST_HOTBAR_SLOT = 38;
-
-    private static final ResourceLocation EMPTY_SLOT_LAPIS_LAZULI = ResourceLocation.withDefaultNamespace("item/empty_slot_lapis_lazuli");
 
     /** Max. number of slots of enchantments added by the table */
     private static final int MAX_ROLLABLE_SLOTS = 3;
@@ -66,12 +61,13 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
     private final RandomSource random;
     private final DataSlot enchantmentSeed;
 
-    public final int[] costs;
+    /** Experience level requirement for that slot */
+    public final int[] enchantingPower;
     public final int[] enchantClue;
     public final int[] levelClue;
 
     /**
-     * Tracks the origin of the enchantment in the corresponding slot
+     * Tracks the origin of the enchantment in the corresponding slot </br>
      * The value corresponds to one of the static constants (NONE, TARGET, SOURCE, TABLE).
      */
     public final int[] enchantmentSources;
@@ -120,10 +116,6 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return stack.is(Items.LAPIS_LAZULI);
             }
-
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, OverhauledEnchantmentMenu.EMPTY_SLOT_LAPIS_LAZULI);
-            }
         });
 
         // Source (e.g. ancient tome) slot
@@ -150,16 +142,16 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         sourceTextureIndices = new int[AVAILABLE_SLOTS];
         tableTextureIndices = new int[AVAILABLE_SLOTS];
 
-        costs = new int[AVAILABLE_SLOTS];
+        enchantingPower = new int[AVAILABLE_SLOTS];
         enchantClue = new int[AVAILABLE_SLOTS];
         levelClue = new int[AVAILABLE_SLOTS];
 
         for (int slot = 0; slot < AVAILABLE_SLOTS; slot++) {
-            costs[slot] = 0;
+            enchantingPower[slot] = 0;
             enchantClue[slot] = -1;
             levelClue[slot] = -1;
 
-            addDataSlot(DataSlot.shared(costs, slot));
+            addDataSlot(DataSlot.shared(enchantingPower, slot));
             addDataSlot(DataSlot.shared(enchantClue, slot));
             addDataSlot(DataSlot.shared(levelClue, slot));
 
@@ -182,12 +174,12 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             return;
         }
 
-        ItemStack stack = inventory.getItem(ITEM_TO_ENCHANT_SLOT);
+        ItemStack target = inventory.getItem(ITEM_TO_ENCHANT_SLOT);
         ItemStack source = inventory.getItem(SOURCE_SLOT);
 
-        if (stack.isEmpty() || !stack.isEnchantable()) {
+        if (target.isEmpty() || !target.isEnchantable()) {
             for (int slot = 0; slot < AVAILABLE_SLOTS; slot++) {
-                costs[slot] = 0;
+                enchantingPower[slot] = 0;
                 enchantClue[slot] = -1;
                 levelClue[slot] = -1;
             }
@@ -209,12 +201,12 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             random.setSeed(enchantmentSeed.get());
 
             for (int slot = 0; slot < AVAILABLE_SLOTS; slot++) {
-                costs[slot] = (25 - Math.min(power, 24)) * (slot + 1);
+                enchantingPower[slot] = (25 - Math.min(power, 24)) * (slot + 1);
                 enchantClue[slot] = -1;
                 levelClue[slot] = -1;
 
-                if (costs[slot] < slot + 1) {
-                    costs[slot] = 0;
+                if (enchantingPower[slot] < slot + 1) {
+                    enchantingPower[slot] = 0;
                 }
 
                 enchantmentSources[slot] = EnchantmentSource.NONE.getId();
@@ -224,7 +216,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             }
 
             var map = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
-            List<EnchantmentInstance> enchantments = gatherEnchantments(stack, source, level, position);
+            List<EnchantmentInstance> enchantments = gatherEnchantments(target, source, level, position);
 
             for (int slot = 0; slot < enchantments.size(); slot++) {
                 EnchantmentInstance instance = enchantments.get(slot);
@@ -236,53 +228,47 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         });
     }
 
-    private List<EnchantmentInstance> gatherEnchantments(final ItemStack stack, final ItemStack source, final Level level, final BlockPos position) {
+    private List<EnchantmentInstance> gatherEnchantments(final ItemStack target, final ItemStack source, final Level level, final BlockPos position) {
         List<EnchantmentInstance> enchantments = new ArrayList<>();
         Set<Enchantment> knownEnchantments = new HashSet<>();
 
         // We add the options as long as the number of enchantments does not exceed the config
-        int enchantmentAmount = EnchantmentLib.getEnchantments(EnchantmentLib.removeCursesFrom(stack)).size();
+        int enchantmentAmount = EnchantmentLib.getEnchantments(EnchantmentLib.removeCursesFrom(target)).size();
+
+        // Add the current enchantments from the item
+        // Fully upgraded ones will appear after the upgradable ones
+        gatherCurrent(target, enchantments);
+
+        // Adjust current entries using the source to allow higher-level enchantments
+        applyOverrides(target, source, enchantments, knownEnchantments);
 
         if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
             // Add the enchantments from sources at the top
-            gatherFromSource(stack, source, enchantments, knownEnchantments);
+            gatherFromSource(target, source, enchantments, knownEnchantments);
         }
 
         if (enchantmentAmount < Config.BOUNDED_MAX_ENCHANTMENTS.get()) {
             // If less than MAX_ROLLABLE_SLOTS enchantments exist at this point, fill up to max. with enchantments from the table
-            gatherFromTable(stack, level, position, enchantments, knownEnchantments);
+            gatherFromTable(target, level, position, enchantments, knownEnchantments);
         }
-
-        // Add upgradable enchantments from the current item
-        gatherCurrent(stack, false, enchantments);
-
-        // Add fully upgraded enchantments from the current item
-        gatherCurrent(stack, true, enchantments);
-
-        // Adjust current entries using the source to allow higher-level enchantments
-        applyOverrides(stack, source, enchantments, knownEnchantments);
 
         return enchantments;
     }
 
-    private void gatherCurrent(final ItemStack stack, final boolean fullyUpgraded, final List<EnchantmentInstance> enchantments) {
-        if (!stack.isEnchanted()) {
+    private void gatherCurrent(final ItemStack target, final List<EnchantmentInstance> enchantments) {
+        if (!target.isEnchanted()) {
             return;
         }
 
-        for (var entry : EnchantmentLib.getEnchantments(stack).entrySet()) {
-            if (enchantments.size() == AVAILABLE_SLOTS) {
+        List<EnchantmentInstance> current = new ArrayList<>();
+
+        for (var entry : EnchantmentLib.getEnchantments(target).entrySet()) {
+            if (enchantments.size() + current.size() == AVAILABLE_SLOTS) {
                 return;
             }
 
             Holder<Enchantment> enchantment = entry.getKey();
             int level = entry.getIntValue();
-
-            if (fullyUpgraded && level < enchantment.value().getMaxLevel()) {
-                continue;
-            } else if (!fullyUpgraded && level >= enchantment.value().getMaxLevel()) {
-                continue;
-            }
 
             if (enchantment.is(EnchantmentTags.CURSE)) {
                 continue;
@@ -290,18 +276,25 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
             // There is no need to check / add known enchantments
             // Since the other sources should not add duplicates (using the compatible check)
-            enchantmentSources[enchantments.size()] = EnchantmentSource.TARGET.getId();
-            enchantments.add(new EnchantmentInstance(enchantment, level));
+            enchantmentSources[enchantments.size() + current.size()] = EnchantmentSource.TARGET.getId();
+            current.add(new EnchantmentInstance(enchantment, level));
         }
+
+        current.sort((first, second) -> Boolean.compare(
+                first.level == first.enchantment.value().getMaxLevel(),
+                second.level == second.enchantment.value().getMaxLevel()
+        ));
+
+        enchantments.addAll(current);
     }
 
-    private void applyOverrides(final ItemStack stack, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
-        if (source.isEmpty() || stack.is(Items.BOOK)) {
+    private void applyOverrides(final ItemStack target, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
+        if (source.isEmpty() || target.is(Items.BOOK)) {
             return;
         }
 
         for (EnchantmentInstance entry : EnchantmentLib.getEnchantmentsAsList(EnchantmentLib.getEnchantments(source))) {
-            if (EnchantmentHelper.getItemEnchantmentLevel(entry.enchantment, stack) == 0) {
+            if (EnchantmentHelper.getItemEnchantmentLevel(entry.enchantment, target) == 0) {
                 continue;
             }
 
@@ -317,13 +310,15 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
-    private void gatherFromTable(final ItemStack stack, final Level level, final BlockPos position, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
-        for (EnchantmentInstance entry : EnchantmentLib.generateEnchantments(random, stack, false, level, position)) {
+    private void gatherFromTable(final ItemStack target, final Level level, final BlockPos position, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
+        int initialAmount = enchantments.size();
+
+        for (EnchantmentInstance entry : EnchantmentLib.generateEnchantments(random, target, false, level, position)) {
             if (enchantments.size() == AVAILABLE_SLOTS) {
                 return;
             }
 
-            if (enchantments.size() == MAX_ROLLABLE_SLOTS) {
+            if (enchantments.size() - initialAmount == MAX_ROLLABLE_SLOTS) {
                 break;
             }
 
@@ -331,7 +326,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
                 continue;
             }
 
-            if (!isCompatibleWith(stack, entry.enchantment)) {
+            if (!isCompatibleWith(target, entry.enchantment)) {
                 continue;
             }
 
@@ -340,8 +335,8 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
-    private void gatherFromSource(final ItemStack stack, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
-        if (source.isEmpty() || stack.is(Items.BOOK)) {
+    private void gatherFromSource(final ItemStack target, final ItemStack source, final List<EnchantmentInstance> enchantments, final Set<Enchantment> knownEnchantments) {
+        if (source.isEmpty() || target.is(Items.BOOK)) {
             return;
         }
 
@@ -356,15 +351,15 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
                 continue;
             }
 
-            if (enchantment.canEnchant(stack) && isCompatibleWith(stack, entry.enchantment)) {
+            if (enchantment.canEnchant(target) && isCompatibleWith(target, entry.enchantment)) {
                 enchantmentSources[enchantments.size()] = EnchantmentSource.SOURCE.getId();
                 enchantments.add(entry);
             }
         }
     }
 
-    private boolean isCompatibleWith(final ItemStack stack, final Holder<Enchantment> enchantment) {
-        return EnchantmentHelper.isEnchantmentCompatible(EnchantmentHelper.getEnchantmentsForCrafting(stack).keySet(), enchantment);
+    private boolean isCompatibleWith(final ItemStack target, final Holder<Enchantment> enchantment) {
+        return EnchantmentHelper.isEnchantmentCompatible(EnchantmentHelper.getEnchantmentsForCrafting(target).keySet(), enchantment);
     }
 
     public boolean clickMenuButton(@NotNull final Player player, int buttonId) {
@@ -372,17 +367,17 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             return false;
         }
 
-        ItemStack stack = enchantSlots.getItem(ITEM_TO_ENCHANT_SLOT);
+        ItemStack target = enchantSlots.getItem(ITEM_TO_ENCHANT_SLOT);
 
-        if (stack.isEmpty() || !stack.isEnchantable()) {
+        if (target.isEmpty() || !target.isEnchantable()) {
             return false;
         }
 
         ItemStack lapis = enchantSlots.getItem(LAPIS_SLOT);
         ItemStack source = enchantSlots.getItem(SOURCE_SLOT);
 
-        ItemStack uncursedStack = EnchantmentLib.removeCursesFrom(stack);
-        int occupiedSlots = EnchantmentLib.getEnchantments(uncursedStack).size();
+        ItemStack curseFreeTarget = EnchantmentLib.removeCursesFrom(target);
+        int occupiedSlots = EnchantmentLib.getEnchantments(curseFreeTarget).size();
 
         Optional<Holder<Enchantment>> potentialEnchantment = Optional.empty();
         IdMap<Holder<Enchantment>> map = player.registryAccess().registryOrThrow(Registries.ENCHANTMENT).asHolderIdMap();
@@ -396,14 +391,20 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             }
         }
 
+        if (buttonId != REROLL_BUTTON && player.experienceLevel < enchantingPower[buttonId]) {
+            // Checks if the players' level matches the required enchanting power
+            return false;
+        }
+
         int rerollCost = occupiedSlots + 1;
         int lapisCost = potentialEnchantment.map(this::calculateEnchantmentCost).orElse(rerollCost);
         int levelCost;
 
-        if (buttonId != REROLL_BUTTON) {
-            levelCost = lapisCost;
-        } else {
+        if (buttonId == REROLL_BUTTON) {
             levelCost = rerollCost;
+        } else {
+            // The value from 'calculateEnchantmentCost' determines both lapis and experience cost
+            levelCost = lapisCost;
         }
 
         if (!player.hasInfiniteMaterials() && (lapis.getCount() < lapisCost || player.experienceLevel < levelCost)) {
@@ -420,30 +421,30 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         }
 
         return switch (EnchantmentSource.byId(enchantmentSources[buttonId])) {
-            case TARGET -> upgradeEnchant(player, buttonId, potentialEnchantment.get(), stack, lapis, lapisCost, levelCost);
-            case SOURCE -> transferEnchant(player, buttonId, potentialEnchantment.get(), stack, source, lapis, lapisCost, levelCost);
-            case TABLE -> enchant(player, buttonId, potentialEnchantment.get(), stack, lapis, lapisCost, levelCost);
+            case TARGET -> upgradeEnchant(player, buttonId, potentialEnchantment.get(), target, lapis, lapisCost, levelCost);
+            case SOURCE -> transferEnchant(player, buttonId, potentialEnchantment.get(), target, source, lapis, lapisCost, levelCost);
+            case TABLE -> enchant(player, buttonId, potentialEnchantment.get(), target, lapis, lapisCost, levelCost);
             default -> false;
         };
 
         // TODO :: check for neoforge events etc.
     }
 
-    private boolean enchant(final Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack stack, final ItemStack lapis, final int lapisCost, final int levelCost) {
+    private boolean enchant(final Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
         access.execute((level, position) -> {
-            ItemStack stackReference = stack;
+            ItemStack targetReference = target;
 
-            if (stack.is(Items.BOOK)) {
-                stackReference = stack.transmuteCopy(Items.ENCHANTED_BOOK);
-                enchantSlots.setItem(ITEM_TO_ENCHANT_SLOT, stackReference);
+            if (target.is(Items.BOOK)) {
+                targetReference = target.transmuteCopy(Items.ENCHANTED_BOOK);
+                enchantSlots.setItem(ITEM_TO_ENCHANT_SLOT, targetReference);
             }
 
-            stackReference.enchant(enchantment, rollLevel(enchantment, stack, levelClue[buttonId]));
-            performedEnchantment(player, stack, lapis, lapisCost, levelCost);
+            targetReference.enchant(enchantment, rollLevel(enchantment, target, levelClue[buttonId]));
+            performedEnchantment(player, target, lapis, lapisCost, levelCost);
             player.awardStat(Stats.ENCHANT_ITEM);
 
             if (player instanceof ServerPlayer serverPlayer) {
-                CriteriaTriggers.ENCHANTED_ITEM.trigger(serverPlayer, stack, levelCost);
+                CriteriaTriggers.ENCHANTED_ITEM.trigger(serverPlayer, target, levelCost);
             }
 
             level.playSound(null, position, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1, level.getRandom().nextFloat() * 0.1f + 0.9f);
@@ -452,31 +453,31 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return true;
     }
 
-    private boolean transferEnchant(final @NotNull Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack stack, final ItemStack source, final ItemStack lapis, final int lapisCost, final int levelCost) {
+    private boolean transferEnchant(final @NotNull Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack source, final ItemStack lapis, final int lapisCost, final int levelCost) {
         if (source.isEmpty()) {
             return false;
         }
 
         access.execute((level, position) -> {
-            ItemStack stackReference = stack;
+            ItemStack targetReference = target;
 
-            if (stack.is(Items.BOOK)) {
-                stackReference = stack.transmuteCopy(Items.ENCHANTED_BOOK);
-                enchantSlots.setItem(ITEM_TO_ENCHANT_SLOT, stackReference);
+            if (target.is(Items.BOOK)) {
+                targetReference = target.transmuteCopy(Items.ENCHANTED_BOOK);
+                enchantSlots.setItem(ITEM_TO_ENCHANT_SLOT, targetReference);
             }
 
-            stackReference.enchant(enchantment, rollLevel(enchantment, stack, levelClue[buttonId]));
+            targetReference.enchant(enchantment, rollLevel(enchantment, target, levelClue[buttonId]));
 
             if (!source.is(Services.PLATFORM.getEnchantedTome())) {
                 enchantSlots.setItem(SOURCE_SLOT, Items.BOOK.getDefaultInstance());
             }
 
-            performedEnchantment(player, stack, lapis, lapisCost, levelCost);
+            performedEnchantment(player, target, lapis, lapisCost, levelCost);
 
             player.awardStat(Stats.ENCHANT_ITEM);
 
             if (player instanceof ServerPlayer serverPlayer) {
-                CriteriaTriggers.ENCHANTED_ITEM.trigger(serverPlayer, stack, levelCost);
+                CriteriaTriggers.ENCHANTED_ITEM.trigger(serverPlayer, target, levelCost);
             }
 
             level.playSound(null, position, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1, level.getRandom().nextFloat() * 0.1f + 0.9f);
@@ -485,7 +486,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return true;
     }
 
-    private boolean upgradeEnchant(final @NotNull Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack stack, final ItemStack lapis, final int lapisCost, final int levelCost) {
+    private boolean upgradeEnchant(final @NotNull Player player, final int buttonId, final Holder<Enchantment> enchantment, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
         int enchantmentLevel = levelClue[buttonId];
 
         if (enchantmentLevel >= enchantment.value().getMaxLevel()) {
@@ -494,13 +495,13 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
 
         access.execute((level, position) -> {
             // Guarantee a level increase of 1 with a chance of a bonus from the roll
-            EnchantmentHelper.updateEnchantments(stack, mutable -> mutable.upgrade(enchantment, rollLevel(enchantment, stack, enchantmentLevel + 1)));
-            performedEnchantment(player, lapis, stack, lapisCost, levelCost);
+            EnchantmentHelper.updateEnchantments(target, mutable -> mutable.upgrade(enchantment, rollLevel(enchantment, target, enchantmentLevel + 1)));
+            performedEnchantment(player, target, lapis, lapisCost, levelCost);
 
             player.awardStat(Stats.ENCHANT_ITEM);
 
             if (player instanceof ServerPlayer serverPlayer) {
-                CriteriaTriggers.ENCHANTED_ITEM.trigger(serverPlayer, stack, levelCost);
+                CriteriaTriggers.ENCHANTED_ITEM.trigger(serverPlayer, target, levelCost);
             }
 
             level.playSound(null, position, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1, level.getRandom().nextFloat() * 0.1f + 0.9f);
@@ -509,8 +510,8 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return true;
     }
 
-    private int rollLevel(final Holder<Enchantment> enchantment, final ItemStack stack, final int enchantmentLevel) {
-        int enchantibility = Math.clamp(stack.getItem().getEnchantmentValue(), 1, 50);
+    private int rollLevel(final Holder<Enchantment> enchantment, final ItemStack target, final int enchantmentLevel) {
+        int enchantibility = Math.clamp(target.getItem().getEnchantmentValue(), 1, 50);
         double probability = Math.clamp(2 * Math.pow(enchantibility / 50d, 2), 0, 1);
 
         int newLevel = enchantmentLevel;
@@ -553,7 +554,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
         return false;
     }
 
-    private void performedEnchantment(@NotNull final Player player, final ItemStack enchanted, final ItemStack lapis, final int lapisCost, final int levelCost) {
+    private void performedEnchantment(@NotNull final Player player, final ItemStack target, final ItemStack lapis, final int lapisCost, final int levelCost) {
         if (!player.hasInfiniteMaterials()) {
             lapis.shrink(lapisCost);
 
@@ -562,7 +563,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
             }
         }
 
-        player.onEnchantmentPerformed(enchanted, player.hasInfiniteMaterials() ? levelCost : 0);
+        player.onEnchantmentPerformed(target, player.hasInfiniteMaterials() ? 0 : levelCost);
         enchantSlots.setChanged();
         enchantmentSeed.set(player.getEnchantmentSeed());
         slotsChanged(enchantSlots);
@@ -613,14 +614,14 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
                     if (!moveItemStackTo(movedStack, ITEM_TO_ENCHANT_SLOT, ITEM_TO_ENCHANT_SLOT + 1, true)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (slotIndex > SOURCE_SLOT && slotIndex <= LAST_INVENTORYS_SLOT) {
+                } else if (slotIndex > SOURCE_SLOT && slotIndex <= LAST_INVENTORY_SLOT) {
                     // From inventory to hotbar
-                    if (!moveItemStackTo(movedStack, LAST_INVENTORYS_SLOT + 1, LAST_HOTBAR_SLOT + 1, false)) {
+                    if (!moveItemStackTo(movedStack, LAST_INVENTORY_SLOT + 1, LAST_HOTBAR_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (slotIndex > LAST_INVENTORYS_SLOT && slotIndex < LAST_HOTBAR_SLOT + 1) {
+                } else if (slotIndex > LAST_INVENTORY_SLOT && slotIndex < LAST_HOTBAR_SLOT + 1) {
                     // From hotbar to inventory
-                    if (!moveItemStackTo(movedStack, SOURCE_SLOT + 1, LAST_INVENTORYS_SLOT + 1, false)) {
+                    if (!moveItemStackTo(movedStack, SOURCE_SLOT + 1, LAST_INVENTORY_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 }

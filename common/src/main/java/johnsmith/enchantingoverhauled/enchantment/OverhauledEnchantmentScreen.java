@@ -111,7 +111,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
 
         for (int slot = currentScroll; slot < OverhauledEnchantmentMenu.AVAILABLE_SLOTS; slot++) {
             Holder<Enchantment> enchantment = map.byId(menu.enchantClue[slot]);
-            int powerRequirement = menu.costs[slot];
+            int powerRequirement = menu.enchantingPower[slot];
             int level = menu.levelClue[slot];
 
             if (enchantment == null || level <= 0 || powerRequirement <= 0) {
@@ -238,7 +238,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
             int buttonX = leftPos + ENCHANTING_BUTTON_X_OFFSET;
             int buttonY = topPos + ENCHANTING_BUTTON_Y_OFFSET + ENCHANTING_BUTTON_HEIGHT * (buttonIndex - currentScroll);
 
-            int enchantingPower = menu.costs[buttonIndex];
+            int enchantingPower = menu.enchantingPower[buttonIndex];
             int source = menu.enchantmentSources[buttonIndex];
             int enchantmentId = menu.enchantClue[buttonIndex];
             int level = menu.levelClue[buttonIndex];
@@ -284,9 +284,9 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
     }
 
     private int getRerollCost() {
-        ItemStack stack = menu.getSlot(OverhauledEnchantmentMenu.ITEM_TO_ENCHANT_SLOT).getItem();
+        ItemStack target = menu.getSlot(OverhauledEnchantmentMenu.ITEM_TO_ENCHANT_SLOT).getItem();
 
-        if (stack.isEmpty() || (!stack.isEnchantable() && !stack.is(Items.BOOK))) {
+        if (target.isEmpty() || (!target.isEnchantable() && !target.is(Items.BOOK))) {
             return -1;
         }
 
@@ -304,7 +304,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
             return -1;
         }
 
-        int enchantmentAmount = EnchantmentLib.getEnchantments(EnchantmentLib.removeCursesFrom(stack)).size();
+        int enchantmentAmount = EnchantmentLib.getEnchantments(EnchantmentLib.removeCursesFrom(target)).size();
         return enchantmentAmount + 1;
     }
 
@@ -397,10 +397,10 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
     }
 
     private void renderReroll(final @NotNull GuiGraphics graphics, final int mouseX, final int mouseY) {
-        ItemStack stack = menu.getSlot(OverhauledEnchantmentMenu.ITEM_TO_ENCHANT_SLOT).getItem();
-        ItemStack uncursedStack = EnchantmentLib.removeCursesFrom(stack);
+        ItemStack target = menu.getSlot(OverhauledEnchantmentMenu.ITEM_TO_ENCHANT_SLOT).getItem();
+        ItemStack curseFreeTarget = EnchantmentLib.removeCursesFrom(target);
 
-        boolean isValidItem = !stack.isEmpty() && (stack.isEnchantable() || stack.is(Items.BOOK));
+        boolean isValidItem = !target.isEmpty() && (target.isEnchantable() || target.is(Items.BOOK));
 
         boolean hasTableSource = false;
         boolean isSourceEnchantable = false;
@@ -421,7 +421,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
 
         boolean canReroll = isValidItem && hasTableSource && !isSourceEnchantable;
 
-        int enchantmentCount = EnchantmentLib.getEnchantments(uncursedStack).size();
+        int enchantmentCount = EnchantmentLib.getEnchantments(curseFreeTarget).size();
         int rerollCost = enchantmentCount + 1;
         int costIndex = Math.clamp(enchantmentCount, 0, 2);
 
@@ -482,7 +482,7 @@ public class OverhauledEnchantmentScreen extends AbstractContainerScreen<Overhau
             final int buttonX,
             final int buttonY
     ) {
-        int enchantingPower = menu.costs[buttonIndex];
+        int enchantingPower = menu.enchantingPower[buttonIndex];
         int level = menu.levelClue[buttonIndex];
 
         int cost = menu.calculateEnchantmentCost(enchantment);
