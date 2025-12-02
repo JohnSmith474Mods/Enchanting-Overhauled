@@ -1,7 +1,6 @@
 package johnsmith.enchantingoverhauled;
 
 import johnsmith.enchantingoverhauled.advancement.Advancements;
-import johnsmith.enchantingoverhauled.advancement.CriteriaRegistry;
 import johnsmith.enchantingoverhauled.api.enchantment.effect.EnchantmentEffectComponentRegistry;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
@@ -13,11 +12,9 @@ import johnsmith.enchantingoverhauled.datagen.NeoForgeLootModifiersProvider;
 import johnsmith.enchantingoverhauled.item.Items;
 import johnsmith.enchantingoverhauled.item.NeoForgeItemGroups;
 import johnsmith.enchantingoverhauled.loot.NeoForgeLootModifiers;
+import johnsmith.enchantingoverhauled.registry.OverhauledMenuTypes;
 import johnsmith.enchantingoverhauled.structure.processor.Processors;
-
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.storage.LevelResource;
-
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -26,12 +23,8 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
-
-import static net.neoforged.neoforge.common.NeoForge.EVENT_BUS;
 
 @Mod(Constants.MOD_ID)
 public class NeoForge {
@@ -50,6 +43,7 @@ public class NeoForge {
         Processors.initialize(eventBus);
         Advancements.initialize(eventBus);
         NeoForgeLootModifiers.initialize(eventBus);
+        OverhauledMenuTypes.register(eventBus);
 
         // 5. Mod Bus Events
         eventBus.addListener(this::onRegister);

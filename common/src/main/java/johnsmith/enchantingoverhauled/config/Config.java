@@ -7,6 +7,7 @@ import johnsmith.enchantingoverhauled.api.config.data.PropertyGroup;
 import johnsmith.enchantingoverhauled.api.config.data.PropertyTab;
 import johnsmith.enchantingoverhauled.api.config.data.Property;
 import johnsmith.enchantingoverhauled.api.config.ConfigManager;
+import johnsmith.enchantingoverhauled.enchantment.OverhauledEnchantmentMenu;
 
 public class Config {
 
@@ -46,6 +47,9 @@ public class Config {
     public static final Property.Binary BINARY_MINEABLE_ENCHANTING_TABLE = GROUP_ENCHANTING_TABLE.register(
             new Property.Binary("mineable_enchanting_table", "Whether the default enchanting table can be mined or instead drops its tome.", GROUP_ENCHANTING_TABLE, false)
     );
+    public static final Property.Bounded<Integer> BOUNDED_MAX_ENCHANTMENTS = GROUP_ENCHANTING_TABLE.register(
+            new Property.Bounded<>("max_enchantments", "The max. amount of enchantments an item can have.", GROUP_ENCHANTING_TABLE, 3, 1, OverhauledEnchantmentMenu.AVAILABLE_SLOTS, Codec.INT)
+    );
     // endregion
 
     // region Anvil Values
@@ -62,7 +66,7 @@ public class Config {
 
     // region Enchantment Values
     public static final Property.Bounded<Integer> BOUNDED_ENCHANTMENT_MAX_LEVEL = GROUP_ENCHANTMENT_GENERAL.register(
-            new Property.Bounded<>("enchantment_max_level", "The maximum level an enchantment can be *naturally* obtained at.", GROUP_ENCHANTMENT_GENERAL, 3, 1, 254, Codec.INT)
+            new Property.Bounded<>("enchantment_max_level", "The maximum level an enchantment can be *naturally* obtained at (set it to 0 to disable this override).", GROUP_ENCHANTMENT_GENERAL, 3, 0, 254, Codec.INT)
     );
     public static final Property<Boolean> BINARY_TOMES_HAVE_GREATER_ENCHANTMENTS = GROUP_ENCHANTMENT_GENERAL.register(
             new Property.Binary("tomes_have_greater_enchantments", "Whether enchanted tomes can contain enchantments of a higher level than naturally possible.", GROUP_ENCHANTMENT_GENERAL, true)

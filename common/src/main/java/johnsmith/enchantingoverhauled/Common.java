@@ -4,6 +4,7 @@ import johnsmith.enchantingoverhauled.advancement.CriteriaRegistry;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
 import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.damagesource.DamageTypeRegistry;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * The common entry point for Enchanting Overhauled.
@@ -28,5 +29,9 @@ public class Common {
         DamageTypeRegistry.initialize();
 
         CriteriaRegistry.initialize();
+    }
+
+    public static ResourceLocation resource(final String path) {
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, path);
     }
 }
