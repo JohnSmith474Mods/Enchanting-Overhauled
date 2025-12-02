@@ -67,7 +67,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
     public final int[] levelClue;
 
     /**
-     * Tracks the origin of the enchantment in the corresponding slot </br>
+     * Tracks the origin of the enchantment in the corresponding slot <br>
      * The value corresponds to one of the static constants (NONE, TARGET, SOURCE, TABLE).
      */
     public final int[] enchantmentSources;
@@ -630,7 +630,7 @@ public class OverhauledEnchantmentMenu extends AbstractContainerMenu {
     }
 
     /**
-     * Slots are shifted by 1 (due to the new source slot) compared to the vanilla enchantment menu </br>
+     * Slots are shifted by 1 (due to the new source slot) compared to the vanilla enchantment menu <br>
      * - The end index is non-inclusive
      */
     @Override
