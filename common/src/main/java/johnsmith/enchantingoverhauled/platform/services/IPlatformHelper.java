@@ -1,12 +1,15 @@
 package johnsmith.enchantingoverhauled.platform.services;
 
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
+import johnsmith.enchantingoverhauled.menu.EnchantmentMenu;
 import johnsmith.enchantingoverhauled.structure.processor.BlockAgeProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.DesertifyProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.OvergrowthProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.VinesProcessor;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -77,6 +80,8 @@ public interface IPlatformHelper {
      * Gets the Disturbed Enchanting Table block item.
      */
     Item getDisturbedEnchantingTableItem();
+
+    MenuType<EnchantmentMenu> getEnchantmentMenyType();
 
     /**
      * Retrieves the {@link EnchantmentTheme} registry from the provided access object.
