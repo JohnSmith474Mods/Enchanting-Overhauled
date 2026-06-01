@@ -29,6 +29,8 @@ public class EnchantmentMixin {
     public void getMaxLevel(CallbackInfoReturnable<Integer> cir) {
         int originalMax = this.definition.maxLevel();
         if (originalMax == 1) { return; }
-        cir.setReturnValue(Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get());
+        if (Config.BINARY_OVERRIDE_ENCHANTMENT_MAX_LEVEL.get()) {
+            cir.setReturnValue(Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get());
+        }
     }
 }
