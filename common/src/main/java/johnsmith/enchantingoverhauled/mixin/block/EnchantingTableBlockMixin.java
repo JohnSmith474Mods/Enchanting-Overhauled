@@ -8,6 +8,7 @@ import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.SoundEffectDa
 import johnsmith.enchantingoverhauled.api.enchantment.theme.power.PowerProvider;
 import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.lib.EnchantmentLib;
+import johnsmith.enchantingoverhauled.menu.EnchantmentMenu;
 import johnsmith.enchantingoverhauled.mixin.accessor.AbstractBlockSettingsAccessor;
 import johnsmith.enchantingoverhauled.platform.Services;
 
@@ -18,14 +19,18 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.BlockGetter;
@@ -40,10 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -72,6 +74,14 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     private static BlockBehaviour.Properties modifySettings(BlockBehaviour.Properties properties) {
         ((AbstractBlockSettingsAccessor) properties).setToolRequired(false);
         return properties;
+    }
+
+    @Override
+    public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
+        Component component = Component.translatable("container.enchant");
+        return new SimpleMenuProvider((id, inventory, player) -> {
+            return new EnchantmentMenu(id, inventory, ContainerLevelAccess.create(level, pos));
+        }, component);
     }
 
     @Override
@@ -170,24 +180,27 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
         // 3. If a dominant theme is found (and it has effects), spawn them
         if (dominantThemeOpt.isPresent()) {
             EnchantmentTheme theme = dominantThemeOpt.get();
-            // getDominantTheme only returns themes with !effects.isEmpty(), so this is safe
-            EffectData effects = theme.effects().get();
 
-            // Spawn particles/sound at the enchanting table itself
-            this.enchantingOverhauled$spawnThemedEffects(level, blockPos, randomSource, effects, false);
+            if (theme.effects().isPresent()) {
+                EffectData effects = theme.effects().get();
 
-            // Spawn particles/sound at the power providers
-            for(BlockPos providerOffset : BOOKSHELF_OFFSETS) {
-                BlockPos providerPos = blockPos.offset(providerOffset);
+                // Spawn particles/sound at the enchanting table itself
+                this.enchantingOverhauled$spawnThemedEffects(level, blockPos, randomSource, effects, false);
 
-                // Check if this provider block matches the dominant theme
-                if (EnchantmentLib.getEnchantingPower(level, providerPos, theme) > 0) {
-                    // Check if the transmitter block is clear
-                    BlockPos transmitterPos = blockPos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
-                    if (level.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
-                        this.enchantingOverhauled$spawnThemedEffects(level, providerPos, randomSource, effects, true);
+                // Spawn particles/sound at the power providers
+                for(BlockPos providerOffset : BOOKSHELF_OFFSETS) {
+                    BlockPos providerPos = blockPos.offset(providerOffset);
+
+                    // Check if this provider block matches the dominant theme
+                    if (EnchantmentLib.getEnchantingPower(level, providerPos, theme) > 0) {
+                        // Check if the transmitter block is clear
+                        BlockPos transmitterPos = blockPos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
+                        if (level.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
+                            this.enchantingOverhauled$spawnThemedEffects(level, providerPos, randomSource, effects, true);
+                        }
                     }
                 }
+
             }
         }
     }
