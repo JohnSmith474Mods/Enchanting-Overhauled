@@ -1,6 +1,7 @@
 package johnsmith.enchantingoverhauled.mixin.item;
 
 import johnsmith.enchantingoverhauled.config.Config;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentType;
@@ -62,7 +63,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             TooltipFlag tooltipFlag,
             CallbackInfo ci
     ) {
-        if (Config.BINARY_SHOW_ENCHANTMENT_TOOLTIP_HEADER.get()) {
+        if (Config.BINARY_SHOW_ENCHANTMENT_TOOLTIP_HEADER.get() && Config.BINARY_ENABLE_ENCHANTMENT_TOOLTIP_MODIFICATIONS.get()) {
             ItemEnchantments enchantments = null;
             Component baseHeader = null;
 
