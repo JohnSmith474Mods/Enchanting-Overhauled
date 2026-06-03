@@ -85,9 +85,14 @@ public class ConfigList extends ContainerObjectSelectionList<Entry> {
      */
     @SuppressWarnings("unchecked")
     private void addConfigEntry(Property<?> config) {
-        if (config instanceof Property.Binary binary) {
+        // 1. Check for Color specific property first.
+        // Since Color extends Bounded, we must check this before the generic Bounded check
+        // to ensure we get the Hex editor and Color Preview instead of a plain Integer box.
+        if (config instanceof Property.Color color) {
+            addEntry(new ColorEntry(color, minecraft, this, screen::updateMasterResetButton));
+        } else if (config instanceof Property.Binary binary) { // 2. Check for Boolean
             addEntry(new BooleanEntry(binary, minecraft, this, screen::updateMasterResetButton));
-        } else if (config instanceof Property.Bounded<?> bounded) {
+        } else if (config instanceof Property.Bounded<?> bounded) { // 3. Check for generic Bounded numbers
             Object def = bounded.defaultValue;
             if (def instanceof Integer) {
                 addEntry(new IntEntry((Property.Bounded<Integer>) bounded, minecraft, this, screen::updateMasterResetButton));

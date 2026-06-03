@@ -7,12 +7,16 @@ import johnsmith.enchantingoverhauled.api.config.data.PropertyTab;
 import johnsmith.enchantingoverhauled.api.config.io.ConfigProvider;
 import johnsmith.enchantingoverhauled.api.config.io.ConfigWriter;
 import johnsmith.enchantingoverhauled.api.config.registry.ConfigRegistry;
+
 import net.minecraft.client.gui.screens.Screen;
+
 import org.slf4j.Logger;
 
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -121,15 +125,22 @@ public class ConfigManager {
         this.configPath = configDir.resolve(modId + ".properties");
         logInfo("Loading configuration from: {}", this.configPath);
 
+        boolean isNewFile = false;
+
         if (Files.exists(this.configPath)) {
             this.activeConfig = ConfigWriter.fromFile(this.configPath);
         } else {
             logInfo("Config file not found. A new file will be created on save.");
             this.activeConfig = new ConfigWriter();
+            isNewFile = true;
         }
 
         for (Property<?> property : registeredConfigs.values()) {
             applySavedValue(property);
+        }
+
+        if (isNewFile) {
+            save().join();
         }
     }
 

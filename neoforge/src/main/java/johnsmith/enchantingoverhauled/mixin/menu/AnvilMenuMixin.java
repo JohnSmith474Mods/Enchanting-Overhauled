@@ -69,7 +69,7 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin {
             BlockState blockState = level.getBlockState(pos);
 
             // Check anvil break chance
-            if (!player.getAbilities().instabuild &&
+            if (!player.isCreative() &&
                     blockState.is(BlockTags.ANVIL) &&
                     player.getRandom().nextFloat() < Config.BOUNDED_ANVIL_BREAK_CHANCE.get().floatValue()) {
 

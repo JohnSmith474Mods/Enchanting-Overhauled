@@ -1,8 +1,9 @@
 package johnsmith.enchantingoverhauled.item;
 
 import johnsmith.enchantingoverhauled.Constants;
+import johnsmith.enchantingoverhauled.config.Config;
 import johnsmith.enchantingoverhauled.platform.Services;
-import net.minecraft.core.Holder;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -75,7 +76,7 @@ public class ItemGroups {
             // 3. Apply your "Over-Level" logic
             int maxLevel = enchantment.getMaxLevel();
             // Force single-level enchants (like Mending) to stay at 1, otherwise boost by 1.
-            int level = (maxLevel == 1) ? 1 : maxLevel + 1;
+            int level = (maxLevel == 1) ? 1 : Config.BINARY_TOMES_HAVE_GREATER_ENCHANTMENTS.get() ? maxLevel + 1 : maxLevel;
 
             ItemStack stack = new ItemStack(Services.PLATFORM.getEnchantedTome());
 

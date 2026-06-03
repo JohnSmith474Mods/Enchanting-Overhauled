@@ -1,6 +1,5 @@
 package johnsmith.enchantingoverhauled.api.config.client.gui.entry;
 
-import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.config.data.Property;
 import johnsmith.enchantingoverhauled.api.config.client.gui.ConfigList;
 
@@ -12,9 +11,10 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.input.MouseButtonEvent;
+
 import net.minecraft.network.chat.Component;
 
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -36,51 +36,29 @@ public abstract class OptionEntry<T extends Comparable<T>, W extends AbstractWid
     protected final W widget;
     protected final Component labelComponent;
 
+    protected final List<FormattedCharSequence> tooltip;
+
     protected final Minecraft minecraft;
     protected final ConfigList parentList;
     protected final Runnable onValueChanged;
 
-    /**
-     * Constructs an OptionEntry, initializing the label, reset button, and main widget.
-     *
-     * @param configType     The data-driven property instance managed by this entry.
-     * @param minecraft      The Minecraft client instance.
-     * @param parentList     The parent configuration list, used primarily to access scroll position for layout.
-     * @param onValueChanged A callback to execute after the property value is successfully changed,
-     * used to update the parent screen.
-     */
     public OptionEntry(Property<T> configType, Minecraft minecraft, ConfigList parentList, Runnable onValueChanged) {
         this.configType = configType;
         this.minecraft = minecraft;
         this.parentList = parentList;
         this.onValueChanged = onValueChanged;
-
         this.labelComponent = Component.translatable(configType.translationKey);
+        this.tooltip = minecraft.font.split(configType.getTranslatedDescription(), 200);
         this.resetButton = Button.builder(Component.translatable("controls.reset"), b -> reset())
                 .bounds(0, 0, 50, 20).build();
         this.widget = createWidget();
         updateResetButton();
     }
 
-    /**
-     * Abstract method responsible for creating the specific interactive widget.
-     * Subclasses must implement this to define how the property value is edited.
-     *
-     * @return A configured instance of the main interactive widget type {@code W}.
-     */
     protected abstract W createWidget();
 
-    /**
-     * Abstract method responsible for synchronizing the widget's visual state
-     * with the current value of {@code configType}.
-     * This is called after a load or reset operation.
-     */
     protected abstract void updateWidgetValue();
 
-    /**
-     * Resets the configuration property back to its {@code defaultValue}.
-     * Updates the widget, refreshes the reset button state, and triggers the change callback.
-     */
     public void reset() {
         configType.set(configType.defaultValue);
         updateWidgetValue();
@@ -88,31 +66,14 @@ public abstract class OptionEntry<T extends Comparable<T>, W extends AbstractWid
         this.onValueChanged.run();
     }
 
-    /**
-     * Checks if the current value of the property is equal to its default value.
-     *
-     * @return True if the current and default values are equal (using {@link Objects#equals}).
-     */
     public boolean isDefault() {
         return Objects.equals(configType.get(), configType.defaultValue);
     }
 
-    /**
-     * Updates the active state of the {@code resetButton} based on the result of {@link #isDefault()}.
-     */
     protected void updateResetButton() {
         this.resetButton.active = !isDefault();
     }
 
-    /**
-     * Renders the entry, including the localized label, the input widget, and the reset button.
-     *
-     * @param guiGraphics The graphics context for rendering.
-     * @param mouseX      The current mouse x-coordinate.
-     * @param mouseY      The current mouse y-coordinate.
-     * @param isHovering  Whether the mouse is hovering over this entry.
-     * @param partialTick The partial tick time.
-     */
     @Override
     public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
         // 1. Calculate Y position for centering widgets vertically in this row
@@ -141,20 +102,22 @@ public abstract class OptionEntry<T extends Comparable<T>, W extends AbstractWid
         // 5. Render Label Text
         //    'this.getX()' is the left X coordinate of this entry row.
         int textY = this.getY() + (this.getHeight() - minecraft.font.lineHeight) / 2;
-        guiGraphics.drawString(minecraft.font, this.labelComponent, this.getX(), textY, 0xFFFFFFFF, false);
+
+        // Truncate label if it overlaps the widget
+        int maxLabelWidth = widgetX - this.getX() - 5;
+        if (maxLabelWidth > 0) {
+            // Draws text with handling for overflow
+            guiGraphics.drawString(minecraft.font, this.labelComponent, this.getX(), textY, 0xFFFFFFFF);
+        }
+
+        if (isHovering) {
+            guiGraphics.setTooltipForNextFrame(minecraft.font, this.tooltip, mouseX, mouseY);
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     * Returns an immutable list containing the main widget and the reset button as interactive children.
-     */
     @Override
     public @NotNull List<? extends GuiEventListener> children() { return ImmutableList.of(widget, resetButton); }
 
-    /**
-     * {@inheritDoc}
-     * Returns an immutable list containing the main widget and the reset button for narration support.
-     */
     @Override
     public @NotNull List<? extends NarratableEntry> narratables() { return ImmutableList.of(widget, resetButton); }
 }

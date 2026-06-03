@@ -44,6 +44,7 @@ public class PlayerMixin {
      */
     @Inject(method = "getXpNeededForNextLevel", at = @At("HEAD"), cancellable = true)
     private void onGetNextLevelExperience(CallbackInfoReturnable<Integer> cir) {
+        if (!Config.BINARY_ENABLE_XP_MODIFICATIONS.get()) return;
         int currentLevel = this.experienceLevel;
         // Calculate step based on bracket size
         int step = (int) Math.round(Math.floor((double) currentLevel / Config.BOUNDED_XP_LEVEL_BRACKET_SIZE.get()));
@@ -59,7 +60,7 @@ public class PlayerMixin {
      */
     @Inject(method = "giveExperienceLevels", at = @At("HEAD"), cancellable = true)
     private void onAddExperienceLevels(int levels, CallbackInfo ci) {
-        if (Config.BOUNDED_XP_MAX_LEVEL.get() <= 0) {
+        if (!Config.BINARY_CAP_MAX_XP_LEVEL.get() || !Config.BINARY_ENABLE_XP_MODIFICATIONS.get()) {
             return;
         }
         if (levels > 0 && this.experienceLevel >= Config.BOUNDED_XP_MAX_LEVEL.get()) {

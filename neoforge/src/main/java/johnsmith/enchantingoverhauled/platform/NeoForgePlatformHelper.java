@@ -1,24 +1,23 @@
 package johnsmith.enchantingoverhauled.platform;
 
-import johnsmith.enchantingoverhauled.api.config.data.Property;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
 import johnsmith.enchantingoverhauled.block.Blocks;
 import johnsmith.enchantingoverhauled.item.Items;
+import johnsmith.enchantingoverhauled.menu.EnchantmentMenu;
+import johnsmith.enchantingoverhauled.menu.MenuTypes;
 import johnsmith.enchantingoverhauled.platform.services.IPlatformHelper;
 import johnsmith.enchantingoverhauled.structure.processor.*;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.FMLPaths;
 
-import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -64,6 +63,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public Item getDisturbedEnchantingTableItem() {
         return Items.DISTURBED_ENCHANTING_TABLE_ITEM.get();
+    }
+
+    @Override
+    public MenuType<EnchantmentMenu> getEnchantmentMenyType() {
+        return MenuTypes.ENCHANTMENT_MENU.value();
     }
 
     @Override

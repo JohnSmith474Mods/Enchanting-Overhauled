@@ -1,5 +1,9 @@
 package johnsmith.enchantingoverhauled.mixin.component.type;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+
 import johnsmith.enchantingoverhauled.config.Config;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -10,15 +14,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentGetter;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
@@ -29,8 +28,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -42,14 +39,14 @@ public abstract class ItemEnchantmentsMixin {
     Object2IntOpenHashMap<Holder<Enchantment>> enchantments;
 
     @Unique
-    private static final Component INDENT = Component.literal("  ");
+    private static final Component enchanting_Overhauled$INDENT = Component.literal("  ");
 
     @Unique
     private static final int MAX_LINE_LENGTH = 40;
 
     @Unique
     private void enchanting_Overhauled$addEnchantmentDescription(Holder<Enchantment> enchantmentHolder, Consumer<Component> tooltip) {
-        if (!Config.BINARY_ACCESSIBILITY_SHOW_ENCHANTMENT_DESCRIPTIONS.get()) {
+        if (!Config.BINARY_SHOW_TOOLTIP_ENCHANTMENT_DESCRIPTIONS.get() || !Config.BINARY_ENABLE_ENCHANTMENT_TOOLTIP_MODIFICATIONS.get()) {
             return;
         }
 
@@ -81,11 +78,11 @@ public abstract class ItemEnchantmentsMixin {
                 remainingString = remainingString.substring(wrapAt + 1);
             }
 
-            tooltip.accept(INDENT.copy().append(Component.literal(line)).withStyle(descStyle));
+            tooltip.accept(enchanting_Overhauled$INDENT.copy().append(Component.literal(line)).withStyle(descStyle));
         }
 
         if (!remainingString.isEmpty()) {
-            tooltip.accept(INDENT.copy().append(Component.literal(remainingString)).withStyle(descStyle));
+            tooltip.accept(enchanting_Overhauled$INDENT.copy().append(Component.literal(remainingString)).withStyle(descStyle));
         }
     }
 
@@ -100,38 +97,45 @@ public abstract class ItemEnchantmentsMixin {
         return HolderSet.direct();
     }
 
-    @Inject(
+    @WrapOperation(
             method = "addToTooltip",
-            at = @At("HEAD"),
-            cancellable = true
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V",
+                    ordinal = 0
+            )
     )
-    private void overwriteAddToTooltip(
-            Item.TooltipContext context,
-            Consumer<Component> tooltip,
-            TooltipFlag flag,
-            DataComponentGetter componentGetter,
-            CallbackInfo ci
+    private void enchanting_Overhauled$wrapTooltipLoop1(
+            Consumer<Component> tooltipAdder,
+            Object componentObj, // The Component being added (Name + Level)
+            Operation<Void> original,
+            @Local Holder<Enchantment> holder // Captured Local Variable!
     ) {
-        HolderLookup.Provider wrapperLookup = context.registries();
-        HolderSet<Enchantment> registryEntryList = enchanting_Overhauled$getTooltipOrderList(wrapperLookup, Registries.ENCHANTMENT, EnchantmentTags.TOOLTIP_ORDER);
+        // 1. Run original logic (Add the Enchantment Name)
+        original.call(tooltipAdder, componentObj);
 
-        for(Holder<Enchantment> registryEntry : registryEntryList) {
-            int i = this.enchantments.getInt(registryEntry);
-            if (i > 0) {
-                tooltip.accept(Enchantment.getFullname(registryEntry, i));
-                this.enchanting_Overhauled$addEnchantmentDescription(registryEntry, tooltip);
-            }
-        }
+        // 2. Run our logic (Add the Description immediately after)
+        this.enchanting_Overhauled$addEnchantmentDescription(holder, tooltipAdder);
+    }
 
-        for (Object2IntMap.Entry<Holder<Enchantment>> entry : this.enchantments.object2IntEntrySet()) {
-            Holder<Enchantment> registryEntry2 = entry.getKey();
+    @WrapOperation(
+            method = "addToTooltip",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V",
+                    ordinal = 1
+            )
+    )
+    private void enchanting_Overhauled$wrapTooltipLoop2(
+            Consumer<Component> tooltipAdder,
+            Object componentObj,
+            Operation<Void> original,
+            @Local Object2IntMap.Entry<Holder<Enchantment>> entry // Captured Map Entry!
+    ) {
+        // 1. Run original logic (Add the Enchantment Name)
+        original.call(tooltipAdder, componentObj);
 
-            if (!registryEntryList.contains(registryEntry2)) {
-                tooltip.accept(Enchantment.getFullname(registryEntry2, entry.getIntValue()));
-                this.enchanting_Overhauled$addEnchantmentDescription(registryEntry2, tooltip);
-            }
-        }
-
-        ci.cancel();
+        // 2. Run our logic (Extract Key -> Add Description)
+        this.enchanting_Overhauled$addEnchantmentDescription(entry.getKey(), tooltipAdder);
     }
 }

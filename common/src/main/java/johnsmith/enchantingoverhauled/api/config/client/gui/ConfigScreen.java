@@ -5,14 +5,18 @@ import johnsmith.enchantingoverhauled.api.config.data.PropertyTab;
 import johnsmith.enchantingoverhauled.api.config.ConfigManager;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.tabs.TabManager;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The main configuration GUI screen.
@@ -22,6 +26,7 @@ import net.minecraft.network.chat.Component;
  * footer buttons (Reset, Done), and the lifecycle of the configuration data (saving on close).
  */
 public class ConfigScreen extends Screen {
+    public static final ResourceLocation TAB_HEADER_BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/tab_header_background.png");
 
     /**
      * The parent screen to return to when this configuration screen is closed.
@@ -202,5 +207,23 @@ public class ConfigScreen extends Screen {
         if (this.minecraft != null) {
             this.minecraft.setScreen(this.parent);
         }
+    }
+
+    @Override
+    protected void renderMenuBackground(GuiGraphics guiGraphics) {
+        // 1. Draw the tab header texture in the top section
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TAB_HEADER_BACKGROUND, 0, 0, 0.0F, 0.0F, this.width, this.layout.getHeaderHeight(), 16, 16);
+
+        // 2. Instruct the base Screen class to draw the standard darkened background
+        // ONLY from the bottom of the header downwards.
+        this.renderMenuBackground(guiGraphics, 0, this.layout.getHeaderHeight(), this.width, this.height);
+    }
+
+    @Override
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+
+        // Draw the dark horizontal lines separating the header, body, and footer
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.FOOTER_SEPARATOR, 0, this.height - this.layout.getFooterHeight() - 2, 0.0F, 0.0F, this.width, 2, 32, 2);
     }
 }

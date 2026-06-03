@@ -2,11 +2,7 @@ package johnsmith.enchantingoverhauled.api.config.data;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.world.item.enchantment.LevelBasedValue;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
+import net.minecraft.network.chat.Component;
 
 /**
  * An abstract sealed class representing a single configuration option.
@@ -139,6 +135,10 @@ public abstract sealed class Property<T extends Comparable<T>> permits Property.
         return value;
     }
 
+    public Component getTranslatedDescription() {
+        return Component.translatable(this.translationKey + ".desc");
+    }
+
     /**
      * A non-sealed subclass for numeric configuration values that require hard upper and lower limits.
      *
@@ -203,27 +203,31 @@ public abstract sealed class Property<T extends Comparable<T>> permits Property.
         }
     }
 
-    public static final class Hexadecimal extends Property.Bounded<Integer> {
+    /**
+     * A specialized subclass of {@link Bounded} representing a hexadecimal RGB color.
+     * <p>
+     * This property is automatically bounded between {@code 0x000000} (Black) and {@code 0xFFFFFF} (White).
+     * While functionally identical to a Bounded Integer, using this specific type allows the configuration
+     * GUI to automatically assign the {@code ColorEntry} widget with its color preview and hex parsing.
+     */
+    public static final class Color extends Bounded<Integer> {
 
         /**
-         * Constructs a new bounded numeric property.
+         * Constructs a new Color property.
          *
-         * @param resourceName
-         * @param description
-         * @param category
-         * @param defaultValue
-         * @param lowerBound
-         * @param upperBound
+         * @param resourceName The simple name for the property.
+         * @param description  The description of the property.
+         * @param category     The parent property group.
+         * @param defaultValue The default RGB integer value.
          */
-        public Hexadecimal(
+        public Color(
                 String resourceName,
                 String description,
                 PropertyGroup category,
-                Integer defaultValue,
-                Integer lowerBound,
-                Integer upperBound
+                Integer defaultValue
         ) {
-            super(resourceName, description, category, defaultValue, lowerBound, upperBound, Codec.INT);
+            // Enforce standard RGB bounds (0 to 16777215)
+            super(resourceName, description, category, defaultValue, 0x000000, 0xFFFFFF, Codec.INT);
         }
     }
 }

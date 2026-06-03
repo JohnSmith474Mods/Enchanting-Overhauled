@@ -4,16 +4,20 @@ import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
 import johnsmith.enchantingoverhauled.block.Blocks;
 import johnsmith.enchantingoverhauled.item.Items;
+import johnsmith.enchantingoverhauled.menu.EnchantmentMenu;
+import johnsmith.enchantingoverhauled.menu.MenuTypes;
 import johnsmith.enchantingoverhauled.platform.services.IPlatformHelper;
-
 import johnsmith.enchantingoverhauled.structure.processor.Processors;
 import johnsmith.enchantingoverhauled.structure.processor.BlockAgeProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.DesertifyProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.OvergrowthProcessor;
 import johnsmith.enchantingoverhauled.structure.processor.VinesProcessor;
+
 import net.fabricmc.loader.api.FabricLoader;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -63,6 +67,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
     @Override
     public Item getDisturbedEnchantingTableItem() {
         return Items.DISTURBED_ENCHANTING_TABLE_ITEM;
+    }
+
+    @Override
+    public MenuType<EnchantmentMenu> getEnchantmentMenyType() {
+        return MenuTypes.ENCHANTMENT_MENU;
     }
 
     @Override

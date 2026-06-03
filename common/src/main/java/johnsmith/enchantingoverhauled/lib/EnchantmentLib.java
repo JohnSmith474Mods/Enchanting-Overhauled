@@ -550,20 +550,13 @@ public class EnchantmentLib {
                 .collect(Collectors.toList());
     }
 
-    private static class WeightedSortItem<T> implements Comparable<WeightedSortItem<T>> {
-        final T item;
-        final double sortKey;
-
-        WeightedSortItem(T item, double sortKey) {
-            this.item = item;
-            this.sortKey = sortKey;
-        }
+    private record WeightedSortItem<T>(T item, double sortKey) implements Comparable<WeightedSortItem<T>> {
 
         @Override
-        public int compareTo(WeightedSortItem<T> other) {
-            return Double.compare(other.sortKey, this.sortKey);
+            public int compareTo(WeightedSortItem<T> other) {
+                return Double.compare(other.sortKey, this.sortKey);
+            }
         }
-    }
 
     /**
      * Enchants a given Enchanted Tome ItemStack with 3 random, high-level enchantments.
@@ -656,7 +649,7 @@ public class EnchantmentLib {
             Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
             Holder<Enchantment> protection = registry.getOrThrow(Enchantments.PROTECTION);
 
-            builder.set(protection, Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get() + 1);
+            builder.set(protection, protection.value().getMaxLevel() + 1);
             tomeStack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
         }
 
@@ -675,7 +668,7 @@ public class EnchantmentLib {
         Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
         Holder<Enchantment> protection = registry.getOrThrow(Enchantments.PROTECTION);
 
-        builder.set(protection, Config.BOUNDED_ENCHANTMENT_MAX_LEVEL.get() + 1);
+        builder.set(protection, protection.value().getMaxLevel() + 1);
         tome.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
         return tome;
     }

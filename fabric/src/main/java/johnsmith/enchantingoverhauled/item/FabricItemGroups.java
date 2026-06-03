@@ -1,7 +1,5 @@
 package johnsmith.enchantingoverhauled.item;
 
-import johnsmith.enchantingoverhauled.Constants;
-
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
