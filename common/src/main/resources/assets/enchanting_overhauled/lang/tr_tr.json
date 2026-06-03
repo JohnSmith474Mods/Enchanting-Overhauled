@@ -159,8 +159,5 @@
   "config.enchanting_overhauled.accessibility.enchantment_tooltip.override_enchantment_header_color.desc": "Büyü ipucu bloğu başlığının tek tip renklendirilip renklendirilmeyeceğini belirler.",
   "config.enchanting_overhauled.accessibility.enchantment_tooltip.enchantment_level_color_override_value.desc": "Büyü ipucu başlıklarının üzerine yazılacağı renk değeri.",
   "config.enchanting_overhauled.accessibility.enchantment_description.enchantment_description_color_value.desc": "Büyü açıklamalarının üzerine yazılacağı renk değeri.",
-  "config.enchanting_overhauled.accessibility.enchantment_description.show_enchantment_descriptions": "Enchantment Descriptions",
-  "config.enchanting_overhauled.enchantment.damage_calculation": "Protection Calculation",
-  "config.enchanting_overhauled.enchantment.damage_calculation.protection_denominator": "Protection Denominator",
-  "config.enchanting_overhauled.enchantment.damage_calculation.protection_numerator": "Max Protection Numerator",
+  "config.enchanting_overhauled.accessibility.enchantment_description.show_enchantment_descriptions": "Enchantment Descriptions"
 }
