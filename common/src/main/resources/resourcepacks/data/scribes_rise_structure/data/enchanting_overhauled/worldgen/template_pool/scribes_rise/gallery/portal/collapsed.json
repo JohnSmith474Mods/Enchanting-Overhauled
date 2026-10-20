@@ -1,0 +1,78 @@
+{
+  "name": "enchanting_overhauled:scribes_rise/gallery/portal/collapsed",
+  "fallback": "enchanting_overhauled:scribes_rise/gallery/portal/collapsed",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/weathered_1",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/weathered"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/weathered_2",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/weathered"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/damaged_1",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/damaged"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/damaged_2",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/damaged"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/collapsed_1",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/collapsed"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/collapsed_2",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/collapsed"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/ruined_1",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/ruined"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/portal/ruined_2",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/ruined"
+      }
+    }
+  ]
+}

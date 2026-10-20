@@ -1,0 +1,194 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.multishot"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "multishot",
+        "property": "min_cost_base"
+      },
+      "fallback": 20
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "multishot",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "multishot",
+        "property": "max_cost_base"
+      },
+      "fallback": 50
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "multishot",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "multishot",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "multishot",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "multishot",
+      "property": "supported_items"
+    },
+    "fallback": "#enchanting_overhauled:enchantable/all_ranged"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "multishot",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "multishot",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:projectile_count": [
+      {
+        "effect": {
+          "value": {
+            "id": "multishot.projectile_count",
+            "value": {
+              "offset_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_value_offset"
+              },
+              "offset_default": 1.0,
+              "level_offset_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_value_level_offset"
+              },
+              "level_offset_default": 0.0,
+              "scale_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_value_scale"
+              },
+              "scale_default": 1.0,
+              "power_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_value_power"
+              },
+              "power_default": 1.0,
+              "type": "enchantment_core:configurable_polynomial"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        },
+        "requirements": {
+          "chance": {
+            "amount": {
+              "id": "multishot.projectile_count.random_chance",
+              "value": {
+                "base": 0.45,
+                "decrement": 0.15,
+                "minimum": 0.1,
+                "type": "enchantment_core:diminishing_returns"
+              },
+              "type": "enchantment_core:pointer"
+            },
+            "type": "minecraft:enchantment_level"
+          },
+          "condition": "minecraft:random_chance"
+        }
+      }
+    ],
+    "minecraft:projectile_spread": [
+      {
+        "effect": {
+          "value": {
+            "id": "multishot.projectile_spread",
+            "value": {
+              "offset_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_2_value_offset"
+              },
+              "offset_default": 25.0,
+              "level_offset_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_2_value_level_offset"
+              },
+              "level_offset_default": 0.0,
+              "scale_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_2_value_scale"
+              },
+              "scale_default": -5.0,
+              "power_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "multishot",
+                "property": "value_2_value_power"
+              },
+              "power_default": 1.0,
+              "type": "enchantment_core:configurable_polynomial"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        }
+      }
+    ]
+  }
+}

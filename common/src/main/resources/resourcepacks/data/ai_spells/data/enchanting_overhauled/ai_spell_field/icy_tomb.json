@@ -1,0 +1,95 @@
+{
+  "anchor": {
+    "activation_delay": 4,
+    "duration": 5
+  },
+  "cast_type": "direct",
+  "difficulty_gate": "hard",
+  "role": "defensive",
+  "schools": "enchanting_overhauled:conjuration",
+  "spell_field": {
+    "block_effects": [
+      {
+        "type": "enchantment_core:place_temporary_block",
+        "block": "minecraft:powder_snow",
+        "evaluator": {
+          "threshold": 0.6
+        },
+        "lifetime": 160.0,
+        "require_air": false
+      },
+      {
+        "type": "enchantment_core:place_temporary_block",
+        "block": "minecraft:packed_ice",
+        "evaluator": {
+          "threshold": 0.2
+        },
+        "lifetime": 140.0,
+        "require_air": false
+      },
+      {
+        "type": "enchantment_core:place_temporary_block",
+        "block": "minecraft:ice",
+        "evaluator": {
+          "threshold": 0.1
+        },
+        "lifetime": 120.0,
+        "require_air": false
+      }
+    ],
+    "visual_effects": [
+      {
+        "type": "enchantment_core:ambient_field",
+        "count": 22.0,
+        "distribution": {
+          "sampling_attempts": 15
+        },
+        "particle": {
+          "type": "minecraft:snowflake"
+        },
+        "speed": 0.05
+      }
+    ],
+    "volume_effects": [
+      {
+        "type": "enchantment_core:play_sound_volume",
+        "pitch": 1.2,
+        "sound": "minecraft:block.glass.break",
+        "source": "hostile",
+        "volume": 0.85
+      }
+    ],
+    "volumes": [
+      {
+        "offset": {
+          "y": 1.0
+        },
+        "shape": {
+          "type": "enchantment_core:cuboid",
+          "x_radius": 1.5,
+          "y_radius": 4.0,
+          "z_radius": 1.5
+        },
+        "topology": {
+          "axial_range": 6.0,
+          "axial_scaling": {
+            "type": "enchantment_core:linear"
+          },
+          "axis": {
+            "y": 1.0
+          },
+          "origin_range": 6.0,
+          "origin_scaling": {
+            "type": "enchantment_core:exponential",
+            "decay_rate": 0.1
+          },
+          "radial_range": 1.5,
+          "radial_scaling": {
+            "type": "enchantment_core:linear"
+          }
+        }
+      }
+    ]
+  },
+  "target": "hostile"
+}

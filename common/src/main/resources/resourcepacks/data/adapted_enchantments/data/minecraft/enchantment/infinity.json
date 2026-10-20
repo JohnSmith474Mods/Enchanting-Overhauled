@@ -1,0 +1,52 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.minecraft.infinity"
+  },
+  "effects": {
+    "minecraft:ammo_use": [
+      {
+        "effect": {
+          "type": "minecraft:set",
+          "value": {
+            "type": "enchantment_core:probabilistic",
+            "chance": {
+              "type": "enchantment_core:pointer",
+              "id": "infinity.ammo_use",
+              "value": {
+                "type": "minecraft:fraction",
+                "denominator": 10.0,
+                "numerator": {
+                  "type": "enchantment_core:diminishing_returns",
+                  "base": 4.0,
+                  "decrement": 1.0,
+                  "minimum": 1.0
+                }
+              }
+            }
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "items": "#enchanting_overhauled:all_ammunition"
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 20,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#enchanting_overhauled:enchantable/all_ranged",
+  "weight": 1
+}

@@ -5,20 +5,21 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 /**
- * A data-driven power bonus implementation that multiplies the base enchanting power
+ * A data-driven {@link PowerBonus} implementation that multiplies the base enchanting power
  * by the integer value of a specified block state property.
  * <p>
- * This is designed to model variable power sources, such as multiplying the base power
- * provided by a candle by the number of candles in a group, using the 'candles' block state property.
+ * Designed to model variable power sources, such as multiplying the base power provided by a candle
+ * by the number of candles in a cluster using the {@code "candles"} integer block state property.
  *
- * @param property The name of the {@link net.minecraft.world.level.block.state.properties.Property}
- * to check on the block state (e.g., "candles"). This property must hold an integer value.
+ * @param property The name of the {@link net.minecraft.world.level.block.state.properties.IntegerProperty}
+ *                 to check on the block state (e.g., {@code "candles"}).
  */
 public record MultiplyByBlockStateBonus(
         String property
 ) implements PowerBonus {
+
     /**
-     * The codec responsible for serializing and deserializing instances of this record from data files (e.g., JSON).
+     * The codec responsible for serializing and deserializing instances of this record from JSON.
      */
     public static final MapCodec<MultiplyByBlockStateBonus> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
@@ -29,7 +30,7 @@ public record MultiplyByBlockStateBonus(
     /**
      * {@inheritDoc}
      *
-     * @return The constant ID string for this bonus type: "multiply_by_block_state".
+     * @return The constant ID string for this bonus type: {@code "multiply_by_block_state"}.
      */
     @Override
     public String getTypeId() {

@@ -1,0 +1,93 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.fortune"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fortune",
+        "property": "min_cost_base"
+      },
+      "fallback": 15
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fortune",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fortune",
+        "property": "max_cost_base"
+      },
+      "fallback": 65
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fortune",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fortune",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fortune",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fortune",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/mining_loot"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fortune",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fortune",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "exclusive_set": "#minecraft:exclusive_set/mining"
+}

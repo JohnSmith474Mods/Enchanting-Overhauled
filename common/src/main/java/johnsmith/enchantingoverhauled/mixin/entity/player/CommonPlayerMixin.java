@@ -1,6 +1,6 @@
 package johnsmith.enchantingoverhauled.mixin.entity.player;
 
-import johnsmith.enchantingoverhauled.api.enchantment.effect.EnchantmentEffectComponentRegistry;
+import johnsmith.enchantingoverhauled.api.enchantment.effect.EnchantmentEffectComponents;
 import johnsmith.enchantingoverhauled.api.enchantment.effect.VanishingCurseEffect;
 import johnsmith.enchantingoverhauled.api.player.SavedItemEntry;
 import johnsmith.enchantingoverhauled.api.player.SavedItemsAccessor;
@@ -9,7 +9,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,9 +47,10 @@ public class CommonPlayerMixin implements SavedItemsAccessor {
                     target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;has(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/component/DataComponentType;)Z"
             )
     )
+    @SuppressWarnings("unchecked")
     private boolean interceptVanishingDestruction(ItemStack stack, DataComponentType<?> component) {
         // 1. Verify we are checking for the right component
-        if (component != EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP) {
+        if (component != net.minecraft.world.item.enchantment.EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP) {
             return EnchantmentHelper.has(stack, component);
         }
 
@@ -65,7 +65,7 @@ public class CommonPlayerMixin implements SavedItemsAccessor {
         ItemEnchantments enchantments = stack.getEnchantments();
 
         for (Map.Entry<Holder<Enchantment>, Integer> entry : enchantments.entrySet()) {
-            VanishingCurseEffect effect = entry.getKey().value().effects().get(EnchantmentEffectComponentRegistry.VANISHING_CHANCE);
+            VanishingCurseEffect effect = entry.getKey().value().effects().get((DataComponentType<VanishingCurseEffect>) EnchantmentEffectComponents.VANISHING_CHANCE.get());
 
             if (effect != null) {
                 int level = entry.getValue();

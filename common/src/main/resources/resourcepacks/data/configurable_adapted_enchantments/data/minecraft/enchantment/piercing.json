@@ -1,0 +1,122 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.piercing"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "piercing",
+        "property": "min_cost_base"
+      },
+      "fallback": 1
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "piercing",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 10
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "piercing",
+        "property": "max_cost_base"
+      },
+      "fallback": 50
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "piercing",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "piercing",
+      "property": "anvil_cost"
+    },
+    "fallback": 1
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "piercing",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "piercing",
+      "property": "supported_items"
+    },
+    "fallback": "#enchanting_overhauled:enchantable/all_ranged"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "piercing",
+      "property": "weight"
+    },
+    "fallback": 10
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "piercing",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:projectile_piercing": [
+      {
+        "effect": {
+          "value": {
+            "id": "piercing.projectile_piercing",
+            "value": {
+              "per_level_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "piercing",
+                "property": "value_value_per_level"
+              },
+              "per_level_default": 1.5,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "piercing",
+                "property": "value_value_base"
+              },
+              "base_default": 1.5,
+              "type": "enchantment_core:configurable_linear"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        }
+      }
+    ]
+  }
+}

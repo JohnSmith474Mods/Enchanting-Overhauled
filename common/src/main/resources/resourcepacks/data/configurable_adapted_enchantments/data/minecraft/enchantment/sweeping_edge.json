@@ -1,0 +1,142 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.sweeping_edge"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sweeping_edge",
+        "property": "min_cost_base"
+      },
+      "fallback": 5
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sweeping_edge",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sweeping_edge",
+        "property": "max_cost_base"
+      },
+      "fallback": 20
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sweeping_edge",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sweeping_edge",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sweeping_edge",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sweeping_edge",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/sword"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sweeping_edge",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sweeping_edge",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "id": "minecraft:enchantment.sweeping_edge",
+        "attribute": "minecraft:player.sweeping_damage_ratio",
+        "amount": {
+          "id": "sweeping_edge.sweeping_damage_ratio",
+          "value": {
+            "numerator": {
+              "per_level_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "sweeping_edge",
+                "property": "amount_value_numerator_per_level"
+              },
+              "per_level_default": 1.0,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "sweeping_edge",
+                "property": "amount_value_numerator_base"
+              },
+              "base_default": 1.0,
+              "type": "enchantment_core:configurable_linear"
+            },
+            "denominator": {
+              "per_level_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "sweeping_edge",
+                "property": "amount_value_denominator_per_level"
+              },
+              "per_level_default": 1.0,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "sweeping_edge",
+                "property": "amount_value_denominator_base"
+              },
+              "base_default": 2.0,
+              "type": "enchantment_core:configurable_linear"
+            },
+            "type": "minecraft:fraction"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "operation": "add_value"
+      }
+    ]
+  }
+}

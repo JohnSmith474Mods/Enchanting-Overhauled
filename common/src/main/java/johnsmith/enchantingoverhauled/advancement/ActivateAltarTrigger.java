@@ -1,14 +1,12 @@
 package johnsmith.enchantingoverhauled.advancement;
 
-import johnsmith.enchantingoverhauled.Constants;
-
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -26,65 +24,53 @@ public class ActivateAltarTrigger extends SimpleCriterionTrigger<ActivateAltarTr
      * @param player The player who activated the altar.
      */
     public void trigger(ServerPlayer player) {
-        this.trigger(player, (conditions) -> conditions.matches(player));
+        this.trigger(player, Conditions::matches);
     }
 
     /**
      * Gets the codec used to serialize and deserialize the conditions for this trigger.
      *
-     * @return The conditions codec.
+     * @return The conditions' codec.
      */
     @Override
-    public Codec<Conditions> codec() {
+    public @NotNull Codec<Conditions> codec() {
         return Conditions.CODEC;
     }
 
     /**
-     * Defines the conditions required to trigger this advancement.
-     * <p>
-     * Currently, this trigger only checks the standard player predicate, as the specific
-     * activation logic is handled by the block interaction event.
-     */
-    public static class Conditions implements SimpleCriterionTrigger.SimpleInstance {
-
-        private final Optional<ContextAwarePredicate> player;
-
-        /**
-         * The codec for serializing these conditions to and from JSON.
+         * Defines the conditions required to trigger this advancement.
+         * <p>
+         * Currently, this trigger only checks the standard player predicate, as the specific
+         * activation logic is handled by the block interaction event.
          */
-        public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(
-                instance -> instance.group(
-                        ContextAwarePredicate.CODEC.optionalFieldOf("player").forGetter(Conditions::player)
-                ).apply(instance, Conditions::new)
-        );
+        public record Conditions(Optional<ContextAwarePredicate> player) implements SimpleInstance {
 
-        /**
-         * Creates a new Conditions instance.
-         *
-         * @param player The player predicate to check against.
-         */
-        public Conditions(Optional<ContextAwarePredicate> player) {
-            this.player = player;
+            /**
+             * The codec for serializing these conditions to and from JSON.
+             */
+            public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(
+                    instance -> instance.group(
+                            ContextAwarePredicate.CODEC.optionalFieldOf("player").forGetter(Conditions::player)
+                    ).apply(instance, Conditions::new)
+            );
+
+            /**
+             * Gets the player predicate associated with this condition.
+             *
+             * @return An Optional containing the player predicate.
+             */
+            @Override
+            public @NotNull Optional<ContextAwarePredicate> player() {
+                return this.player;
+            }
+
+            /**
+             * Checks if the conditions match the given player context.
+             *
+             * @return Always true in this implementation, as the event trigger itself implies success.
+             */
+            public boolean matches() {
+                return true;
+            }
         }
-
-        /**
-         * Gets the player predicate associated with this condition.
-         *
-         * @return An Optional containing the player predicate.
-         */
-        @Override
-        public Optional<ContextAwarePredicate> player() {
-            return this.player;
-        }
-
-        /**
-         * Checks if the conditions match the given player context.
-         *
-         * @param player The player to check.
-         * @return Always true in this implementation, as the event trigger itself implies success.
-         */
-        public boolean matches(ServerPlayer player) {
-            return true;
-        }
-    }
 }

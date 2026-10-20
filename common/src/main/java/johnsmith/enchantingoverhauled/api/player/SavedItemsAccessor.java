@@ -1,11 +1,9 @@
 package johnsmith.enchantingoverhauled.api.player;
 
-import net.minecraft.world.item.ItemStack;
-
 import java.util.List;
 
 /**
- * Accessor interface implemented via Mixin on the {@code Player} entity class.
+ * Accessor interface implemented via Mixin on the {@link net.minecraft.world.entity.player.Player} entity class.
  * <p>
  * This interface provides a mechanism to temporarily store and retrieve a list of
  * {@link SavedItemEntry} objects. This system is crucial for implementing custom
@@ -14,18 +12,19 @@ import java.util.List;
  * inventory (specifically their original equipment slots) upon respawn or dimension transfer.
  */
 public interface SavedItemsAccessor {
+
     /**
      * Retrieves the mutable list of items that were successfully saved and should be restored
      * (e.g., items affected by a probabilistic Binding Curse that survived player death).
      *
-     * @return A {@code List} of {@link SavedItemEntry} objects.
+     * @return A {@link List} of {@link SavedItemEntry} objects.
      */
     List<SavedItemEntry> enchanting_overhauled$getSavedItems();
 
     /**
      * Adds a new {@link SavedItemEntry} to the list of items pending restoration.
      * <p>
-     * This is typically called just before the inventory is cleared on death.
+     * This is typically called just before the inventory is dropped/cleared on death.
      *
      * @param entry The item and its original slot index to be saved.
      */

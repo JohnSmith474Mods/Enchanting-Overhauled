@@ -1,0 +1,13 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:processor_list",
+    "processors": [
+      "enchanting_overhauled:roof/ruined",
+      "enchanting_overhauled:wall/ruined",
+      "enchanting_overhauled:frame/ruined",
+      "enchanting_overhauled:enchanted_library/enchanting_table/ruined",
+      "enchanting_overhauled:enchanted_library/lectern/ruined",
+      "enchanting_overhauled:mossify"
+    ]
+  }
+]

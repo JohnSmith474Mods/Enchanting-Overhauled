@@ -1,26 +1,21 @@
 package johnsmith.enchantingoverhauled.mixin.entity.player;
 
 import johnsmith.enchantingoverhauled.api.enchantment.effect.BindingCurseEffect;
-import johnsmith.enchantingoverhauled.api.enchantment.effect.EnchantmentEffectComponentRegistry;
-import johnsmith.enchantingoverhauled.api.enchantment.effect.VanishingCurseEffect;
+import johnsmith.enchantingoverhauled.api.enchantment.effect.EnchantmentEffectComponents;
 import johnsmith.enchantingoverhauled.api.player.SavedItemEntry;
 import johnsmith.enchantingoverhauled.api.player.SavedItemsAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
@@ -38,6 +33,7 @@ public abstract class InventoryMixin {
      * Runs BEFORE drops occur. Scans inventory for bound items, saves them, and removes them.
      */
     @Inject(method = "dropAll", at = @At("HEAD"))
+    @SuppressWarnings("unchecked")
     private void scanAndSaveBoundItems(CallbackInfo ci) {
         for (int i = 0; i < this.getContainerSize(); i++) {
             // CONSTRAINT: Only check Armor Slots (Indices 36, 37, 38, 39)
@@ -54,7 +50,7 @@ public abstract class InventoryMixin {
             ItemEnchantments enchantments = stack.getEnchantments();
             for (Map.Entry<Holder<Enchantment>, Integer> entry : enchantments.entrySet()) {
                 // Check for Binding Curse Effect
-                BindingCurseEffect bindingEffect = entry.getKey().value().effects().get(EnchantmentEffectComponentRegistry.BINDING_CHANCE);
+                BindingCurseEffect bindingEffect = entry.getKey().value().effects().get((DataComponentType<BindingCurseEffect>) EnchantmentEffectComponents.BINDING_CHANCE.get());
 
                 if (bindingEffect != null) {
                     int level = entry.getValue();

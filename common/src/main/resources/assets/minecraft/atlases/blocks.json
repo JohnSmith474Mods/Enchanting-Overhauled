@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "enchanting_overhauled:entity/enchanted_book"
+    },
+    {
+      "type": "single",
+      "resource": "enchanting_overhauled:entity/enchanted_tome"
+    }
+  ]
+}

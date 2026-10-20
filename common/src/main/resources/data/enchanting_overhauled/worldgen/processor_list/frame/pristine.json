@@ -1,0 +1,88 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:rule",
+    "rules": [
+      {
+        "input_predicate": {
+          "predicate_type": "minecraft:blockstate_match",
+          "block_state": {
+            "Name": "minecraft:polished_andesite"
+          }
+        },
+        "probability": 0.5,
+        "output": {
+          "type": "gradient",
+          "noise": 0.5,
+          "min_distance": 0.0,
+          "max_distance": 15.0,
+          "axis": {
+            "up": 1.0
+          },
+          "states": [
+            {
+              "Name": "minecraft:polished_andesite"
+            },
+            {
+              "Name": "minecraft:andesite_slab",
+              "Properties": {
+                "type": "double"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "input_predicate": {
+          "predicate_type": "minecraft:blockstate_match",
+          "block_state": {
+            "Name": "minecraft:polished_andesite_slab"
+          }
+        },
+        "copy_properties": true,
+        "probability": 0.5,
+        "output": {
+          "type": "gradient",
+          "noise": 0.5,
+          "min_distance": 0.0,
+          "max_distance": 15.0,
+          "axis": {
+            "up": 1.0
+          },
+          "states": [
+            {
+              "Name": "minecraft:polished_andesite_slab"
+            },
+            {
+              "Name": "minecraft:andesite_slab"
+            }
+          ]
+        }
+      },
+      {
+        "input_predicate": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:polished_andesite_stairs"
+        },
+        "copy_properties": true,
+        "probability": 0.5,
+        "output": {
+          "type": "gradient",
+          "noise": 0.5,
+          "min_distance": 0.0,
+          "max_distance": 15.0,
+          "axis": {
+            "up": 1.0
+          },
+          "states": [
+            {
+              "Name": "minecraft:polished_andesite_stairs"
+            },
+            {
+              "Name": "minecraft:andesite_stairs"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

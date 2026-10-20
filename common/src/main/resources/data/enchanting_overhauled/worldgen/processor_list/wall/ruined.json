@@ -1,0 +1,132 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:rule",
+    "rules": [
+      {
+        "location_predicate": {
+          "predicate_type": "minecraft:blockstate_match",
+          "block_state": {
+            "Name": "minecraft:stone_slab",
+            "Properties": {
+              "type": "double"
+            }
+          }
+        },
+        "probability": 0.66,
+        "output": {
+          "type": "gradient",
+          "noise": 0.66,
+          "min_distance": 0.0,
+          "max_distance": 15.0,
+          "axis": {
+            "up": 1.0
+          },
+          "states": [
+            {
+              "Name": "minecraft:stone_bricks"
+            },
+            {
+              "Name": "minecraft:cracked_stone_bricks"
+            },
+            {
+              "Name": "minecraft:cobblestone"
+            },
+            {
+              "Name": "minecraft:gravel"
+            },
+            {
+              "Name": "minecraft:andesite_slab",
+              "Properties": {
+                "type": "double"
+              }
+            },
+            {
+              "Name": "minecraft:stone_slab",
+              "Properties": {
+                "type": "double"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "location_predicate": [
+          {
+            "predicate_type": "minecraft:blockstate_match",
+            "block_state": {
+              "Name": "minecraft:stone_slab",
+              "Properties": {
+                "type": "top"
+              }
+            }
+          },
+          {
+            "predicate_type": "minecraft:blockstate_match",
+            "block_state": {
+              "Name": "minecraft:stone_slab",
+              "Properties": {
+                "type": "bottom"
+              }
+            }
+          }
+        ],
+        "copy_properties": true,
+        "probability": 0.66,
+        "output": {
+          "type": "gradient",
+          "noise": 0.66,
+          "min_distance": 0.0,
+          "max_distance": 15.0,
+          "axis": {
+            "up": 1.0
+          },
+          "states": [
+            {
+              "Name": "minecraft:stone_brick_slab"
+            },
+            {
+              "Name": "minecraft:cobblestone_slab"
+            },
+            {
+              "Name": "minecraft:andesite_slab"
+            },
+            {
+              "Name": "minecraft:stone_slab"
+            }
+          ]
+        }
+      },
+      {
+        "location_predicate": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:stone_stairs"
+        },
+        "copy_properties": true,
+        "probability": 0.66,
+        "output": {
+          "type": "gradient",
+          "noise": 0.66,
+          "min_distance": 0.0,
+          "max_distance": 15.0,
+          "axis": {
+            "up": 1.0
+          },
+          "states": [
+            {
+              "Name": "minecraft:stone_brick_stairs"
+            },
+            {
+              "Name": "minecraft:cobblestone_stairs"
+            },
+            {
+              "Name": "minecraft:andesite_stairs"
+            },
+            {
+              "Name": "minecraft:stone_stairs"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

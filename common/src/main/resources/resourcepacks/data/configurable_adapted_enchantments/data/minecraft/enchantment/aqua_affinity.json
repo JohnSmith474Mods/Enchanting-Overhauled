@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.aqua_affinity"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "aqua_affinity",
+        "property": "min_cost_base"
+      },
+      "fallback": 1
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "aqua_affinity",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "aqua_affinity",
+        "property": "max_cost_base"
+      },
+      "fallback": 41
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "aqua_affinity",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "aqua_affinity",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "aqua_affinity",
+      "property": "slots"
+    },
+    "fallback": [
+      "head"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "aqua_affinity",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/head_armor"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "aqua_affinity",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "aqua_affinity",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "id": "minecraft:enchantment.aqua_affinity",
+        "attribute": "minecraft:player.submerged_mining_speed",
+        "amount": {
+          "id": "aqua_affinity.submerged_mining_speed",
+          "value": {
+            "decrement_default": 0.33333334,
+            "minimum_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "aqua_affinity",
+              "property": "amount_value_minimum"
+            },
+            "minimum_default": 1.0,
+            "base_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "aqua_affinity",
+              "property": "amount_value_base"
+            },
+            "base_default": 1.6666666,
+            "decrement_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "aqua_affinity",
+              "property": "amount_value_decrement"
+            },
+            "type": "enchantment_core:configurable_diminishing_returns"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "operation": "add_multiplied_total"
+      }
+    ]
+  }
+}

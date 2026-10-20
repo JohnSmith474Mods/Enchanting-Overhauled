@@ -1,0 +1,41 @@
+{
+  "cast_type": "direct",
+  "role": "defensive",
+  "schools": "enchanting_overhauled:deception",
+  "spell_field": {
+    "visual_effects": [
+      {
+        "type": "enchantment_core:ambient_field",
+        "count": 24.0,
+        "distribution": {
+          "sampling_attempts": 15
+        },
+        "particle": {
+          "type": "enchanting_overhauled:enchant"
+        },
+        "speed": 0.05
+      }
+    ],
+    "volume_effects": [
+      {
+        "type": "enchanting_overhauled:summon_mirage",
+        "duration": 600.0
+      },
+      {
+        "type": "enchantment_core:play_sound_volume",
+        "pitch": 1.05,
+        "sound": "minecraft:entity.illusioner.mirror_move",
+        "source": "hostile",
+        "volume": 0.95
+      }
+    ],
+    "volumes": [
+      {
+        "topology": {
+          "origin_range": 8.0
+        }
+      }
+    ]
+  },
+  "target": "self"
+}

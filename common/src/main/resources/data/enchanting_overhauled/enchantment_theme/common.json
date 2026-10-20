@@ -1,0 +1,11 @@
+{
+  "name": {
+    "text": "common"
+  },
+  "power_providers": [
+    {
+      "blocks": "minecraft:bookshelf",
+      "power": 1
+    }
+  ]
+}

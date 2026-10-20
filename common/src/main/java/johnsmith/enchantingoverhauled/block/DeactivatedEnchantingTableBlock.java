@@ -1,11 +1,12 @@
 package johnsmith.enchantingoverhauled.block;
 
+import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
-import johnsmith.enchantingoverhauled.accessor.TomeStorageAccessor;
-import johnsmith.enchantingoverhauled.advancement.CriteriaRegistry;
-import johnsmith.enchantingoverhauled.config.Config;
-import johnsmith.enchantingoverhauled.damagesource.DamageTypeRegistry;
-import johnsmith.enchantingoverhauled.platform.Services;
+import johnsmith.enchantingoverhauled.advancement.ActivateAltarTrigger;
+import johnsmith.enchantingoverhauled.api.accessor.TomeStorageAccessor;
+import johnsmith.enchantingoverhauled.advancement.Criteria;
+import johnsmith.enchantingoverhauled.api.damagesource.DamageTypes;
+import johnsmith.enchantingoverhauled.item.Items;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,14 +26,12 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -58,6 +57,9 @@ import java.util.List;
  * </ol>
  */
 public class DeactivatedEnchantingTableBlock extends Block {
+    public static final String DEACTIVATED = "deactivated_enchanting_table";
+    public static final String DISTURBED = "disturbed_enchanting_table";
+
     /**
      * The bounding box for the block, matching the vanilla Enchanting Table shape (12 pixels high).
      */
@@ -68,7 +70,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
      *
      * @param properties The block properties.
      */
-    public DeactivatedEnchantingTableBlock(BlockBehaviour.Properties properties) {
+    public DeactivatedEnchantingTableBlock(Properties properties) {
         super(properties);
     }
 
@@ -97,7 +99,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
         ItemStack itemStack = player.getMainHandItem();
 
         // 1. Check if the player is right-clicking with an Enchanted Tome
-        if (itemStack.is(Services.PLATFORM.getEnchantedTome())) {
+        if (itemStack.is(Items.ENCHANTED_TOME.get())) {
             if (!level.isClientSide) {
                 ServerLevel serverLevel = (ServerLevel) level;
                 // Replace this block with a vanilla Enchanting Table
@@ -116,7 +118,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
                     itemStack.shrink(1);
                 }
 
-                boolean shouldCreateActivationEffects = Config.BINARY_ACTIVATION_EFFECTS.get();
+                boolean shouldCreateActivationEffects = Config.ENABLE_ALTAR_ACTIVATION_EFFECTS.get();
                 if (shouldCreateActivationEffects) {
                     // Spawn activation effects (Sound, Lightning, Particles, Glowing Effect)
                     serverLevel.playSound(null, pos, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -149,7 +151,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
             // Trigger the activation advancement
             if (!level.isClientSide && player instanceof ServerPlayer) {
                 Constants.LOG.info("Attempting to trigger advancement for " + player.getName().getString());
-                CriteriaRegistry.ACTIVATE_ALTAR.trigger((ServerPlayer) player);
+                ((ActivateAltarTrigger) Criteria.ACTIVATE_ALTAR.get()).trigger((ServerPlayer) player);
             }
 
             return InteractionResult.SUCCESS;
@@ -157,12 +159,12 @@ public class DeactivatedEnchantingTableBlock extends Block {
 
 
         // 2. Check for incorrect book types (Punishment Logic)
-        boolean isWrongBook = itemStack.is(Items.BOOK)
-                || itemStack.is(Items.WRITABLE_BOOK)
-                || itemStack.is(Items.WRITTEN_BOOK)
-                || itemStack.is(Items.ENCHANTED_BOOK);
+        boolean isWrongBook = itemStack.is(net.minecraft.world.item.Items.BOOK)
+                || itemStack.is(net.minecraft.world.item.Items.WRITABLE_BOOK)
+                || itemStack.is(net.minecraft.world.item.Items.WRITTEN_BOOK)
+                || itemStack.is(net.minecraft.world.item.Items.ENCHANTED_BOOK);
         if (isWrongBook) {
-            boolean isArcaneRetributionActivate = Config.BINARY_ARCANE_RETRIBUTION.get();
+            boolean isArcaneRetributionActivate = Config.ENABLE_ARCANE_RETRIBUTION.get();
             if (isArcaneRetributionActivate) {
                 if (!level.isClientSide) {
                     ServerLevel serverLevel = (ServerLevel) level;
@@ -173,7 +175,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
                     }
 
                     // Special effects for Enchanted Books (Vex sounds + Soul particles)
-                    if (itemStack.is(Items.ENCHANTED_BOOK)) {
+                    if (itemStack.is(net.minecraft.world.item.Items.ENCHANTED_BOOK)) {
                         serverLevel.playSound(null, pos, SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 2.0F, 0.0F);
                         serverLevel.sendParticles(
                                 ParticleTypes.SOUL,
@@ -193,7 +195,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
 
                     // Retrieve the custom damage type
                     DamageSource arcaneRetribution = new DamageSource(
-                            level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypeRegistry.ARCANE_RETRIBUTION)
+                            level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.ARCANE_RETRIBUTION)
                     );
 
                     // Create an explosion at the block's location

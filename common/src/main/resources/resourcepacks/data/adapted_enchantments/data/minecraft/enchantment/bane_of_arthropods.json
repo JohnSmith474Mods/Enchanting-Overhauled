@@ -1,0 +1,108 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.minecraft.bane_of_arthropods"
+  },
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchantment_core:pointer",
+            "id": "bane_of_arthropods.damage",
+            "value": {
+              "type": "enchantment_core:diminishing_returns",
+              "base": 4.5,
+              "decrement": 1.5,
+              "minimum": 1.5
+            }
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type": "#minecraft:sensitive_to_bane_of_arthropods"
+          }
+        }
+      }
+    ],
+    "minecraft:post_attack": [
+      {
+        "affected": "victim",
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "max_amplifier": {
+            "type": "enchantment_core:pointer",
+            "id": "bane_of_arthropods.slowness.max_amplifier",
+            "value": {
+              "type": "minecraft:linear",
+              "base": 1.0,
+              "per_level_above_first": 1.0
+            }
+          },
+          "max_duration": {
+            "type": "enchantment_core:pointer",
+            "id": "bane_of_arthropods.slowness.max_duration",
+            "value": {
+              "type": "enchantment_core:diminishing_returns",
+              "base": 6.0,
+              "decrement": 2.0,
+              "minimum": 2.0
+            }
+          },
+          "min_amplifier": {
+            "type": "enchantment_core:pointer",
+            "id": "bane_of_arthropods.slowness.min_amplifier",
+            "value": 0.0
+          },
+          "min_duration": {
+            "type": "enchantment_core:pointer",
+            "id": "bane_of_arthropods.slowness.min_duration",
+            "value": {
+              "type": "enchantment_core:diminishing_returns",
+              "base": 1.5,
+              "decrement": 0.5,
+              "minimum": 0.5
+            }
+          },
+          "to_apply": "minecraft:slowness"
+        },
+        "enchanted": "attacker",
+        "requirements": {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type": "#minecraft:sensitive_to_bane_of_arthropods"
+              }
+            },
+            {
+              "condition": "minecraft:damage_source_properties",
+              "predicate": {
+                "is_direct": true
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 8
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#enchanting_overhauled:enchantable/all_melee",
+  "weight": 5
+}

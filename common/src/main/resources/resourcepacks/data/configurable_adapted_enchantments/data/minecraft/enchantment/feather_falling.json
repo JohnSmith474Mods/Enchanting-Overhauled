@@ -1,0 +1,144 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.feather_falling"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "feather_falling",
+        "property": "min_cost_base"
+      },
+      "fallback": 5
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "feather_falling",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 6
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "feather_falling",
+        "property": "max_cost_base"
+      },
+      "fallback": 11
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "feather_falling",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 6
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "feather_falling",
+      "property": "anvil_cost"
+    },
+    "fallback": 2
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "feather_falling",
+      "property": "slots"
+    },
+    "fallback": [
+      "feet"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "feather_falling",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/foot_armor"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "feather_falling",
+      "property": "weight"
+    },
+    "fallback": 5
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "feather_falling",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:damage_protection": [
+      {
+        "effect": {
+          "value": {
+            "id": "feather_falling.damage_protection",
+            "value": {
+              "decrement_default": 2.0,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "feather_falling",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 0.0,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "feather_falling",
+                "property": "value_value_base"
+              },
+              "base_default": 8.0,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "feather_falling",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        },
+        "requirements": {
+          "predicate": {
+            "tags": [
+              {
+                "id": "minecraft:is_fall",
+                "expected": true
+              },
+              {
+                "id": "minecraft:bypasses_invulnerability",
+                "expected": false
+              }
+            ]
+          },
+          "condition": "minecraft:damage_source_properties"
+        }
+      }
+    ]
+  }
+}

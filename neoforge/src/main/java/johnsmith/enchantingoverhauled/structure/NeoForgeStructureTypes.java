@@ -1,0 +1,23 @@
+package johnsmith.enchantingoverhauled.structure;
+
+import johnsmith.enchantingoverhauled.Constants;
+import johnsmith.enchantingoverhauled.api.structure.UpdatingJigsawStructure;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+public final class NeoForgeStructureTypes {
+
+    private static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES =
+            DeferredRegister.create(Registries.STRUCTURE_TYPE, Constants.MOD_ID);
+
+    public static void initialize(IEventBus eventBus) {
+        STRUCTURE_TYPES.register("updating_jigsaw", () -> UpdatingJigsawStructure.TYPE);
+        STRUCTURE_TYPES.register(eventBus);
+    }
+
+    private NeoForgeStructureTypes() {}
+}

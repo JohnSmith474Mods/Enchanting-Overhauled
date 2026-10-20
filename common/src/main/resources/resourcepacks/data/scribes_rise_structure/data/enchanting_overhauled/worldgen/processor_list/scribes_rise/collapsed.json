@@ -1,0 +1,11 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:processor_list",
+    "processors": [
+      "enchanting_overhauled:roof/collapsed",
+      "enchanting_overhauled:wall/collapsed",
+      "enchanting_overhauled:frame/collapsed",
+      "enchanting_overhauled:mossify"
+    ]
+  }
+]

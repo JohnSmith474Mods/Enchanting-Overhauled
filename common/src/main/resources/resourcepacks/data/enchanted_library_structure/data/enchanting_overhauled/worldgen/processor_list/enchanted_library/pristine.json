@@ -1,0 +1,12 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:processor_list",
+    "processors": [
+      "enchanting_overhauled:roof/pristine",
+      "enchanting_overhauled:wall/pristine",
+      "enchanting_overhauled:frame/pristine",
+      "enchanting_overhauled:enchanted_library/enchanting_table/pristine",
+      "enchanting_overhauled:enchanted_library/lectern/pristine"
+    ]
+  }
+]

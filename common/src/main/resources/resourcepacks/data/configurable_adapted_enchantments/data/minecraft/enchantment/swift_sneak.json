@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.swift_sneak"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "swift_sneak",
+        "property": "min_cost_base"
+      },
+      "fallback": 25
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "swift_sneak",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 25
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "swift_sneak",
+        "property": "max_cost_base"
+      },
+      "fallback": 75
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "swift_sneak",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 25
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "swift_sneak",
+      "property": "anvil_cost"
+    },
+    "fallback": 8
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "swift_sneak",
+      "property": "slots"
+    },
+    "fallback": [
+      "legs"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "swift_sneak",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/leg_armor"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "swift_sneak",
+      "property": "weight"
+    },
+    "fallback": 1
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "swift_sneak",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "id": "minecraft:enchantment.swift_sneak",
+        "attribute": "minecraft:player.sneaking_speed",
+        "amount": {
+          "id": "swift_sneak.sneaking_speed",
+          "value": {
+            "decrement_default": 0.05,
+            "minimum_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "swift_sneak",
+              "property": "amount_value_minimum"
+            },
+            "minimum_default": 0.0,
+            "base_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "swift_sneak",
+              "property": "amount_value_base"
+            },
+            "base_default": 0.2,
+            "decrement_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "swift_sneak",
+              "property": "amount_value_decrement"
+            },
+            "type": "enchantment_core:configurable_diminishing_returns"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "operation": "add_value"
+      }
+    ]
+  }
+}

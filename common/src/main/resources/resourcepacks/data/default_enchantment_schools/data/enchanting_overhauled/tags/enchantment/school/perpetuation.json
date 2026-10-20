@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:infinity",
+    "minecraft:mending",
+    "minecraft:respiration",
+    "minecraft:soul_speed",
+    "minecraft:unbreaking"
+  ]
+}

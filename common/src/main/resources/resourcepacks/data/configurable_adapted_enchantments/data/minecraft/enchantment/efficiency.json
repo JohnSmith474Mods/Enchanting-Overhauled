@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.efficiency"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "efficiency",
+        "property": "min_cost_base"
+      },
+      "fallback": 1
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "efficiency",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 10
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "efficiency",
+        "property": "max_cost_base"
+      },
+      "fallback": 51
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "efficiency",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 10
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "efficiency",
+      "property": "anvil_cost"
+    },
+    "fallback": 1
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "efficiency",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "efficiency",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/mining"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "efficiency",
+      "property": "weight"
+    },
+    "fallback": 10
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "efficiency",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "id": "minecraft:enchantment.efficiency",
+        "attribute": "minecraft:player.mining_efficiency",
+        "amount": {
+          "id": "efficiency.mining_efficiency",
+          "value": {
+            "decrement_default": 4.0,
+            "minimum_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "efficiency",
+              "property": "amount_value_minimum"
+            },
+            "minimum_default": 0.0,
+            "base_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "efficiency",
+              "property": "amount_value_base"
+            },
+            "base_default": 22.0,
+            "decrement_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "efficiency",
+              "property": "amount_value_decrement"
+            },
+            "type": "enchantment_core:configurable_diminishing_returns"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "operation": "add_value"
+      }
+    ]
+  }
+}

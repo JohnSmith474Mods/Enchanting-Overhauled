@@ -1,32 +1,27 @@
 package johnsmith.enchantingoverhauled;
 
-import johnsmith.enchantingoverhauled.advancement.CriteriaRegistry;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.registry.EnchantmentThemeRegistry;
-import johnsmith.enchantingoverhauled.config.Config;
-import johnsmith.enchantingoverhauled.damagesource.DamageTypeRegistry;
+import johnsmith.enchantingoverhauled.api.damagesource.DamageTypes;
+import johnsmith.enchantingoverhauled.api.enchantment.recipe.EnchantRecipes;
+import johnsmith.enchantingoverhauled.api.enchantment.school.MagicSchools;
+import johnsmith.enchantingoverhauled.api.enchantment.spellfield.AiSpellFields;
+import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentThemes;
 
 /**
  * The common entry point for Enchanting Overhauled.
  * <p>
- * This class handles the initialization of features that are shared across all platforms
- * and do not require loader-specific registration mechanisms (like DeferredRegisters)
- * at this stage. It ensures that static registry keys and definitions are loaded into the JVM.
+ * Only initializes static {@link net.minecraft.resources.ResourceKey} definitions that do not
+ * mutate frozen vanilla {@link net.minecraft.core.registries.BuiltInRegistries}, ensuring compatibility
+ * with NeoForge and Forge's strict {@code RegisterEvent} lifecycle.
  */
-public class Common {
-
-    /**
-     * Initializes common mod components.
-     * <p>
-     * This method must be called by the platform-specific
-     * entry points during their initialization phase.
-     */
+public final class Common {
     public static void initialize() {
-        Config.initialize();
+        EnchantmentThemes.initialize();
+        MagicSchools.initialize();
+        EnchantRecipes.initialize();
+        AiSpellFields.initialize();
 
-        EnchantmentThemeRegistry.initialize();
-
-        DamageTypeRegistry.initialize();
-
-        CriteriaRegistry.initialize();
+        DamageTypes.initialize();
     }
+
+    private Common() {}
 }

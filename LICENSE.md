@@ -1,22 +1,24 @@
-Copyright (C) 2025 JohnSmith474Mods - All Rights Reserved
+Copyright (C) 2026 JohnSmith474Mods - All Rights Reserved
 
-This mod ("The Mod") is the property of JohnSmith474Mods ("The Owner").
+This modification and API ("The Mod") is the property of JohnSmith474Mods ("The Owner").
 
-### 1. Usage Rights
+### 1. Grant of License & Developer Integration
+* **Personal Use:** You are free to download, install, and execute compiled binaries of The Mod in your Minecraft client or server for personal, non-commercial use.
+* **API and Data Integration:** Developers and pack creators ("Users") are granted a limited, non-exclusive, royalty-free license to link against The Mod's API, create data packs targeting its registries, and reference its classes within third-party modifications ("User Mods"). This integration does not make the User Mod a derivative work of The Mod.
 
-* You are free to download, install, and use The Mod in your Minecraft client or server for personal, non-commercial use.
+### 2. Source Access and Visibility
+* **Authorized View Access:** The source code of The Mod is publicly visible for transparency, educational use, and API reference.
+* **Local Compilation:** Users may download and compile the source code locally only to debug or diagnose integration issues with User Mods.
+* **Contributions:** Users may fork the official repository only to submit Pull Requests directly to The Owner. Forking to create an independent, public, or competing distribution is strictly prohibited.
+* **Notice Preservation:** All authorized local copies, compilations, and repository forks must retain this Agreement and all original copyright notices without modification.
 
-### 2. Distribution Terms
+### 3. Distribution Restrictions
+* **Authorized Channels:** The Mod must be downloaded only from official project pages designated by The Owner.
+* **Re-Distribution Prohibited:** You may not upload, publish, host, or mirror compiled binaries or source code files of The Mod on any other website, platform, or public repository.
+* **Modpacks:** You may include The Mod in non-commercial modpacks only if the modpack platform resolves and downloads The Mod files directly from an authorized platform via automated tools (such as Modrinth or CurseForge).
 
-* **Authorized Distribution:** The Mod may ONLY be downloaded from its official project pages, as designated by The Owner.
-* **Re-Distribution Prohibited:** You may NOT re-upload, re-distribute, or mirror The Mod or its files on any other website or platform. Any copies found on sites other than the officially designated pages are unauthorized.
-* **Modpacks:** You MAY include The Mod in any modpack, provided that:
-    1.  The modpack is distributed non-commercially.
-    3.  The modpack downloads The Mod files *from an authorized platform* (e.g., via the Modrinth or CurseForge platform tools).
+### 4. Restrictions on Modification and Derivative Works
+* **Independent Distributions and Offshoots:** You may not modify, alter, or create derivative works of The Mod's source code or assets for public distribution. Publishing independent variations, alternative branches, or forks under another name or namespace is prohibited.
+* **Commercial Restriction:** You may not sell The Mod, its compiled files, its source code, or its assets. You may not use The Mod for commercial profit.
 
-### 3. Restrictions
-
-* **Modification:** You may not modify, decompile, reverse-engineer, or create derivative works of The Mod.
-* **Commercial Use:** You may not sell The Mod, its source code, or any assets, nor use it for any commercial purpose.
-
-THIS MOD IS PROVIDED 'AS-IS' WITH NO WARRANTIES, EXPRESS OR IMPLIED. THE OWNER OF THIS MOD TAKES NO RESPONSIBILITY FOR ANY DAMAGES INCURRED FROM THE USE OF THIS MOD.
+THIS MOD IS PROVIDED 'AS-IS' WITH NO WARRANTIES, EXPRESS OR IMPLIED. THE OWNER ACCEPTS NO LIABILITY FOR ANY DAMAGES ARISING FROM THE USE OF THIS MOD.

@@ -1,0 +1,69 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.minecraft.multishot"
+  },
+  "effects": {
+    "minecraft:projectile_count": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchantment_core:pointer",
+            "id": "multishot.projectile_count",
+            "value": {
+              "type": "enchantment_core:polynomial",
+              "offset": 1.0
+            }
+          }
+        },
+        "requirements": {
+          "chance": {
+            "type": "minecraft:enchantment_level",
+            "amount": {
+              "type": "enchantment_core:pointer",
+              "id": "multishot.projectile_count.random_chance",
+              "value": {
+                "type": "enchantment_core:diminishing_returns",
+                "base": 0.45,
+                "decrement": 0.15,
+                "minimum": 0.1
+              }
+            }
+          },
+          "condition": "minecraft:random_chance"
+        }
+      }
+    ],
+    "minecraft:projectile_spread": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchantment_core:pointer",
+            "id": "multishot.projectile_spread",
+            "value": {
+              "type": "enchantment_core:polynomial",
+              "offset": 25.0,
+              "scale": -5.0
+            }
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 20,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#enchanting_overhauled:enchantable/all_ranged",
+  "weight": 2
+}

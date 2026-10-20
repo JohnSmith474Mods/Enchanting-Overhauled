@@ -1,0 +1,5 @@
+{
+  "input": "minecraft:splash_potion",
+  "output": "minecraft:experience_bottle",
+  "attachment": "void"
+}

@@ -1,0 +1,124 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.infinity"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "infinity",
+        "property": "min_cost_base"
+      },
+      "fallback": 20
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "infinity",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "infinity",
+        "property": "max_cost_base"
+      },
+      "fallback": 50
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "infinity",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "infinity",
+      "property": "anvil_cost"
+    },
+    "fallback": 8
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "infinity",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "infinity",
+      "property": "supported_items"
+    },
+    "fallback": "#enchanting_overhauled:enchantable/all_ranged"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "infinity",
+      "property": "weight"
+    },
+    "fallback": 1
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "infinity",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:ammo_use": [
+      {
+        "effect": {
+          "value": {
+            "chance": {
+              "id": "infinity.ammo_use",
+              "value": {
+                "numerator": {
+                  "base": 4.0,
+                  "decrement": 1.0,
+                  "minimum": 1.0,
+                  "type": "enchantment_core:diminishing_returns"
+                },
+                "denominator": 10.0,
+                "type": "minecraft:fraction"
+              },
+              "type": "enchantment_core:pointer"
+            },
+            "type": "enchantment_core:probabilistic"
+          },
+          "type": "minecraft:set"
+        },
+        "requirements": {
+          "predicate": {
+            "items": "#enchanting_overhauled:all_ammunition"
+          },
+          "condition": "minecraft:match_tool"
+        }
+      }
+    ]
+  }
+}

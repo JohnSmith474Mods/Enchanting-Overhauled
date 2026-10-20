@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:aqua_affinity",
+    "minecraft:efficiency",
+    "minecraft:fire_aspect",
+    "minecraft:flame",
+    "minecraft:silk_touch"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "enchanting_overhauled:enchanted_tome",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "enchanting_overhauled:enchant_randomly",
+              "treasure": true
+            }
+          ]
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

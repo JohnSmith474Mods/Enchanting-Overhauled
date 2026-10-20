@@ -1,0 +1,9 @@
+{
+  "targets": [
+    "minecraft:chests/desert_pyramid",
+    "minecraft:chests/simple_dungeon"
+  ],
+  "injections": [
+    "enchanting_overhauled:inject/enchanted_tome/uncommon"
+  ]
+}

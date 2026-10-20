@@ -1,0 +1,217 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.frost_walker"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "frost_walker",
+        "property": "min_cost_base"
+      },
+      "fallback": 10
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "frost_walker",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 10
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "frost_walker",
+        "property": "max_cost_base"
+      },
+      "fallback": 25
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "frost_walker",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 10
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "frost_walker",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "frost_walker",
+      "property": "slots"
+    },
+    "fallback": [
+      "feet"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "frost_walker",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/foot_armor"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "frost_walker",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "frost_walker",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "exclusive_set": "#minecraft:exclusive_set/boots",
+  "effects": {
+    "minecraft:damage_immunity": [
+      {
+        "effect": {},
+        "requirements": {
+          "predicate": {
+            "tags": [
+              {
+                "id": "minecraft:burn_from_stepping",
+                "expected": true
+              },
+              {
+                "id": "minecraft:bypasses_invulnerability",
+                "expected": false
+              }
+            ]
+          },
+          "condition": "minecraft:damage_source_properties"
+        }
+      }
+    ],
+    "minecraft:location_changed": [
+      {
+        "effect": {
+          "predicate": {
+            "predicates": [
+              {
+                "offset": [
+                  0,
+                  1,
+                  0
+                ],
+                "tag": "minecraft:air",
+                "type": "minecraft:matching_block_tag"
+              },
+              {
+                "blocks": "minecraft:water",
+                "type": "minecraft:matching_blocks"
+              },
+              {
+                "fluids": "minecraft:water",
+                "type": "minecraft:matching_fluids"
+              },
+              {
+                "type": "minecraft:unobstructed"
+              }
+            ],
+            "type": "minecraft:all_of"
+          },
+          "block_state": {
+            "state": {
+              "Properties": {
+                "age": "0"
+              },
+              "Name": "minecraft:frosted_ice"
+            },
+            "type": "minecraft:simple_state_provider"
+          },
+          "trigger_game_event": "minecraft:block_place",
+          "radius": {
+            "id": "frost_walker.location_changed",
+            "value": {
+              "type": "enchantment_core:configurable_clamped",
+              "value": {
+                "decrement_default": 1.0,
+                "minimum_config": {
+                  "mod_id": "enchanting_overhauled",
+                  "category": "enchantment",
+                  "group": "frost_walker",
+                  "property": "radius_value_value_minimum"
+                },
+                "minimum_default": 1.0,
+                "base_config": {
+                  "mod_id": "enchanting_overhauled",
+                  "category": "enchantment",
+                  "group": "frost_walker",
+                  "property": "radius_value_value_base"
+                },
+                "base_default": 3.0,
+                "decrement_config": {
+                  "mod_id": "enchanting_overhauled",
+                  "category": "enchantment",
+                  "group": "frost_walker",
+                  "property": "radius_value_value_decrement"
+                },
+                "type": "enchantment_core:configurable_diminishing_returns"
+              },
+              "min_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "frost_walker",
+                "property": "radius_value_min"
+              },
+              "min_default": 0.0,
+              "max_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "frost_walker",
+                "property": "radius_value_max"
+              },
+              "max_default": 16.0
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "height": 1.0,
+          "offset": [
+            0,
+            -1,
+            0
+          ],
+          "type": "minecraft:replace_disk"
+        },
+        "requirements": {
+          "predicate": {
+            "flags": {
+              "is_on_ground": true
+            }
+          },
+          "entity": "this",
+          "condition": "minecraft:entity_properties"
+        }
+      }
+    ]
+  }
+}

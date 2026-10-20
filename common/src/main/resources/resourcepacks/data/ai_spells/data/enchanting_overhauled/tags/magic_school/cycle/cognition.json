@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "enchanting_overhauled:deception",
+    "enchanting_overhauled:coercion",
+    "enchanting_overhauled:divination"
+  ]
+}

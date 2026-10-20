@@ -1,0 +1,136 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.impaling"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "impaling",
+        "property": "min_cost_base"
+      },
+      "fallback": 1
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "impaling",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 8
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "impaling",
+        "property": "max_cost_base"
+      },
+      "fallback": 21
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "impaling",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 8
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "impaling",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "impaling",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "impaling",
+      "property": "supported_items"
+    },
+    "fallback": "#enchanting_overhauled:enchantable/all_melee"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "impaling",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "impaling",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "value": {
+            "id": "impaling.damage",
+            "value": {
+              "decrement_default": 1.5,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "impaling",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 1.5,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "impaling",
+                "property": "value_value_base"
+              },
+              "base_default": 4.5,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "impaling",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        },
+        "requirements": {
+          "predicate": {
+            "type": "#minecraft:sensitive_to_impaling"
+          },
+          "entity": "this",
+          "condition": "minecraft:entity_properties"
+        }
+      }
+    ]
+  }
+}

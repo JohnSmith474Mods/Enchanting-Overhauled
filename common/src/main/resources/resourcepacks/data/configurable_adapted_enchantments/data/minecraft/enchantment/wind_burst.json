@@ -1,0 +1,164 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.wind_burst"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "wind_burst",
+        "property": "min_cost_base"
+      },
+      "fallback": 15
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "wind_burst",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "wind_burst",
+        "property": "max_cost_base"
+      },
+      "fallback": 65
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "wind_burst",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "wind_burst",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "wind_burst",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "wind_burst",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/mace"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "wind_burst",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "wind_burst",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:post_attack": [
+      {
+        "enchanted": "attacker",
+        "affected": "attacker",
+        "effect": {
+          "small_particle": {
+            "type": "minecraft:gust_emitter_small"
+          },
+          "large_particle": {
+            "type": "minecraft:gust_emitter_large"
+          },
+          "sound": "minecraft:entity.wind_charge.wind_burst",
+          "radius": {
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "wind_burst",
+              "property": "radius"
+            },
+            "default_value": 3.5,
+            "type": "enchantment_core:configurable_constant"
+          },
+          "block_interaction": "trigger",
+          "knockback_multiplier": {
+            "id": "wind_burst.post_attack.explode_effect",
+            "value": {
+              "decrement_default": 0.65,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "wind_burst",
+                "property": "knockback_multiplier_value_minimum"
+              },
+              "minimum_default": 0.45,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "wind_burst",
+                "property": "knockback_multiplier_value_base"
+              },
+              "base_default": 1.2,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "wind_burst",
+                "property": "knockback_multiplier_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "immune_blocks": "#minecraft:blocks_wind_charge_explosions",
+          "type": "minecraft:explode"
+        },
+        "requirements": {
+          "predicate": {
+            "flags": {
+              "is_flying": false
+            },
+            "movement": {
+              "fall_distance": {
+                "min": 1.5
+              }
+            }
+          },
+          "entity": "direct_attacker",
+          "condition": "minecraft:entity_properties"
+        }
+      }
+    ]
+  }
+}

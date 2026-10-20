@@ -1,0 +1,345 @@
+{
+  "anchor": {
+    "duration": 60
+  },
+  "cast_type": "projectile",
+  "role": "offensive",
+  "schools": "enchanting_overhauled:coercion",
+  "spell_field": {
+    "entity_effects": [
+      {
+        "type": "enchantment_core:apply_potion",
+        "entity_filter": [
+          {
+            "condition": "minecraft:all_of",
+            "terms": [
+              {
+                "condition": "minecraft:all_of",
+                "terms": [
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "this",
+                      "predicate": {
+                        "type": "#enchanting_overhauled:enchanted_tome_allies"
+                      }
+                    }
+                  },
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "this",
+                      "predicate": {
+                        "type": "#enchanting_overhauled:enchanted_tome_neutral"
+                      }
+                    }
+                  },
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "this",
+                      "predicate": {
+                        "type": "#enchanting_overhauled:enchanted_tome_avoid_collateral"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "condition": "minecraft:any_of",
+                "terms": [
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:any_of",
+                      "terms": [
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "head": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "chest": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "legs": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "feet": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "condition": "enchanting_overhauled:caster_hostile"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "potion_effects": [
+          {
+            "amplifier": 255.0,
+            "duration_ticks": 2.0,
+            "effect": "minecraft:slowness"
+          },
+          {
+            "amplifier": 255.0,
+            "duration_ticks": 2.0,
+            "effect": "minecraft:mining_fatigue"
+          },
+          {
+            "amplifier": 255.0,
+            "duration_ticks": 2.0,
+            "effect": "minecraft:weakness"
+          }
+        ]
+      },
+      {
+        "type": "enchantment_core:absolute_stasis",
+        "entity_filter": [
+          {
+            "condition": "minecraft:all_of",
+            "terms": [
+              {
+                "condition": "minecraft:all_of",
+                "terms": [
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "this",
+                      "predicate": {
+                        "type": "#enchanting_overhauled:enchanted_tome_allies"
+                      }
+                    }
+                  },
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "this",
+                      "predicate": {
+                        "type": "#enchanting_overhauled:enchanted_tome_neutral"
+                      }
+                    }
+                  },
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "this",
+                      "predicate": {
+                        "type": "#enchanting_overhauled:enchanted_tome_avoid_collateral"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "condition": "minecraft:any_of",
+                "terms": [
+                  {
+                    "condition": "minecraft:inverted",
+                    "term": {
+                      "condition": "minecraft:any_of",
+                      "terms": [
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "head": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "chest": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "legs": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "condition": "minecraft:entity_properties",
+                          "entity": "this",
+                          "predicate": {
+                            "equipment": {
+                              "feet": {
+                                "predicates": {
+                                  "minecraft:enchantments": [
+                                    {
+                                      "levels": {
+                                        "min": 1
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "condition": "enchanting_overhauled:caster_hostile"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "enchantment_core:burst_entity",
+        "count": 10.0,
+        "particle": {
+          "type": "minecraft:enchanted_hit"
+        },
+        "speed": 0.15
+      }
+    ],
+    "visual_effects": [
+      {
+        "type": "enchantment_core:vector_field",
+        "axis": "radial",
+        "count": 22.0,
+        "distribution": {
+          "sampling_attempts": 15
+        },
+        "particle": {
+          "type": "enchanting_overhauled:enchant"
+        },
+        "speed": -0.15
+      }
+    ],
+    "volume_effects": [
+      {
+        "type": "enchantment_core:play_sound_volume",
+        "pitch": 0.9,
+        "sound": "minecraft:entity.player.attack.crit",
+        "source": "hostile",
+        "volume": 0.9
+      }
+    ],
+    "volumes": [
+      {
+        "topology": {
+          "origin_range": 4.0,
+          "origin_scaling": {
+            "type": "enchantment_core:linear"
+          }
+        }
+      }
+    ]
+  },
+  "target": "hostile"
+}

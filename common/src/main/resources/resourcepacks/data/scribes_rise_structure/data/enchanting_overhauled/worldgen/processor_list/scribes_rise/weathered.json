@@ -1,0 +1,10 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:processor_list",
+    "processors": [
+      "enchanting_overhauled:roof/weathered",
+      "enchanting_overhauled:wall/weathered",
+      "enchanting_overhauled:frame/weathered"
+    ]
+  }
+]
