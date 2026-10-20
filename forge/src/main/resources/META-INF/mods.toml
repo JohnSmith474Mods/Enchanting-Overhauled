@@ -1,0 +1,39 @@
+modLoader = "javafml" #mandatory
+loaderVersion = "${forge_loader_version_range}" #mandatory
+license = "${license}"
+issueTrackerURL="https://github.com/JohnSmith474Mods/Enchanting-Overhauled/issues"
+[[mods]] #mandatory
+modId = "${mod_id}" #mandatory
+version = "${version}" #mandatory
+displayName = "${mod_name}" #mandatory
+displayURL="https://modrinth.com/mod/enchanting-overhauled"
+logoFile = "${mod_id}.png"
+credits = "${credits}"
+authors = "${mod_author}"
+description = "${description}"
+[[dependencies.${mod_id}]]
+modId = "forge"
+mandatory = true
+versionRange = "[${forge_version},)"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraft_version},${minecraft_version_upper_limit})"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.${mod_id}]]
+modId = "${config_overhauled_mod_id}"
+type="required"
+mandatory = true
+versionRange = "[${config_overhauled_version},${config_overhauled_version_upper_limit})"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.${mod_id}]]
+modId = "${enchantment_core_mod_id}"
+type="required"
+mandatory = true
+versionRange = "[${enchantment_core_version},${enchantment_core_version_upper_limit})"
+ordering = "AFTER"
+side = "BOTH"

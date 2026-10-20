@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.sharpness"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sharpness",
+        "property": "min_cost_base"
+      },
+      "fallback": 1
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sharpness",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 11
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sharpness",
+        "property": "max_cost_base"
+      },
+      "fallback": 21
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "sharpness",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 11
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sharpness",
+      "property": "anvil_cost"
+    },
+    "fallback": 1
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sharpness",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sharpness",
+      "property": "supported_items"
+    },
+    "fallback": "#enchanting_overhauled:enchantable/all_melee"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sharpness",
+      "property": "weight"
+    },
+    "fallback": 10
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "sharpness",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "value": {
+            "id": "sharpness.damage",
+            "value": {
+              "decrement_default": 0.5,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "sharpness",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 0.5,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "sharpness",
+                "property": "value_value_base"
+              },
+              "base_default": 1.5,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "sharpness",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        }
+      }
+    ]
+  }
+}

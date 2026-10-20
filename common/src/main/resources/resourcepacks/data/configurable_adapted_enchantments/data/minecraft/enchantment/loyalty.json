@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.loyalty"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "loyalty",
+        "property": "min_cost_base"
+      },
+      "fallback": 12
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "loyalty",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 7
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "loyalty",
+        "property": "max_cost_base"
+      },
+      "fallback": 50
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "loyalty",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "loyalty",
+      "property": "anvil_cost"
+    },
+    "fallback": 2
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "loyalty",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "loyalty",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/trident"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "loyalty",
+      "property": "weight"
+    },
+    "fallback": 5
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "loyalty",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:trident_return_acceleration": [
+      {
+        "effect": {
+          "value": {
+            "id": "loyalty.trident_return_acceleration",
+            "value": {
+              "decrement_default": 0.5,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "loyalty",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 1.0,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "loyalty",
+                "property": "value_value_base"
+              },
+              "base_default": 2.0,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "loyalty",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        }
+      }
+    ]
+  }
+}

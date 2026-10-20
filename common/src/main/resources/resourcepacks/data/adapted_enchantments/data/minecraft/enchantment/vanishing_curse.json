@@ -1,0 +1,35 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.minecraft.vanishing_curse"
+  },
+  "effects": {
+    "enchanting_overhauled:vanishing_chance": {
+      "chance": {
+        "type": "enchantment_core:pointer",
+        "id": "vanishing_curse.vanishing_chance",
+        "value": {
+          "type": "enchantment_core:diminishing_returns",
+          "base": 0.4,
+          "decrement": 0.1,
+          "minimum": 0.0
+        }
+      }
+    },
+    "minecraft:prevent_equipment_drop": {}
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "any"
+  ],
+  "supported_items": "#minecraft:enchantable/vanishing",
+  "weight": 1
+}

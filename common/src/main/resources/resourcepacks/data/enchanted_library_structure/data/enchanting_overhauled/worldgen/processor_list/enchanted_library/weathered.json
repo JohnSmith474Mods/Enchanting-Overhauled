@@ -1,0 +1,12 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:processor_list",
+    "processors": [
+      "enchanting_overhauled:roof/weathered",
+      "enchanting_overhauled:wall/weathered",
+      "enchanting_overhauled:frame/weathered",
+      "enchanting_overhauled:enchanted_library/enchanting_table/weathered",
+      "enchanting_overhauled:enchanted_library/lectern/weathered"
+    ]
+  }
+]

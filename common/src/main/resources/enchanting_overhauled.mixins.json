@@ -10,33 +10,36 @@
   "mixins": [
     "accessor.AbstractBlockSettingsAccessor",
     "block.EnchantingTableBlockMixin",
-    "block.PowderSnowBlockMixin",
+    "block.LecternBlockMixin",
     "block.entity.EnchantingTableBlockEntityMixin",
-    "component.type.ItemEnchantmentsMixin",
+    "block.entity.LecternBlockEntityMixin",
     "enchantment.EnchantmentMixin",
-    "entity.CombatRulesMixin",
     "entity.item.ItemEntityMixin",
+    "entity.npc.VillagerMixin",
     "entity.player.CommonPlayerMixin",
     "entity.player.InventoryMixin",
-    "entity.projectile.AbstractArrowMixin",
-    "item.BowItemMixin",
+    "item.EnchantedBookItemMixin",
     "item.ItemStackMixin",
+    "item.trading.MerchantOfferMixin",
     "loot.EnchantRandomlyFunctionMixin",
+    "loot.LootTableMixin",
     "loot.MatchToolMixin",
     "menu.AnvilMenuMixin",
+    "menu.GrindstoneMenuMixin",
+    "menu.GrindstoneMenuResultSlotMixin",
     "menu.ItemCombinerMenuMixin",
-    "server.level.ServerLevelMixin",
-    "server.level.ServerPlayerMixin"
+    "pack.PackRepositoryMixin",
+    "server.PlayerListMixin",
+    "server.level.ServerPlayerMixin",
+    "world.level.NaturalSpawnerMixin"
   ],
   "client": [
-    "client.enchantment.EnchantmentMixin",
-    "client.item.ItemPropertiesMixin",
-    "client.render.FogRendererMixin",
-    "client.render.block.entity.EnchantTableRendererMixin"
+    "client.OptionsMixin",
+    "client.render.block.entity.EnchantTableRendererMixin",
+    "client.render.block.entity.LecternRendererMixin"
   ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
   }
 }
-

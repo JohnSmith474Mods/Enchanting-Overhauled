@@ -1,0 +1,130 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.density"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "density",
+        "property": "min_cost_base"
+      },
+      "fallback": 5
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "density",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 8
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "density",
+        "property": "max_cost_base"
+      },
+      "fallback": 25
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "density",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 8
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "density",
+      "property": "anvil_cost"
+    },
+    "fallback": 2
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "density",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "density",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/mace"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "density",
+      "property": "weight"
+    },
+    "fallback": 5
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "density",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "exclusive_set": "#minecraft:exclusive_set/damage",
+  "effects": {
+    "minecraft:smash_damage_per_fallen_block": [
+      {
+        "effect": {
+          "value": {
+            "id": "density.smash_damage_per_fallen_bock",
+            "value": {
+              "decrement_default": 0.2,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "density",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 0.2,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "density",
+                "property": "value_value_base"
+              },
+              "base_default": 0.8,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "density",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        }
+      }
+    ]
+  }
+}

@@ -1,16 +1,25 @@
 package johnsmith.enchantingoverhauled.client;
 
-import johnsmith.enchantingoverhauled.client.gui.screen.MenuScreens;
-import johnsmith.enchantingoverhauled.client.render.entity.model.TomeModel;
+import johnsmith.enchantingoverhauled.client.gui.screen.FabricMenuScreens;
+import johnsmith.enchantingoverhauled.client.particle.FabricSimpleParticleTypes;
+import johnsmith.enchantingoverhauled.client.render.entity.FabricEntityRenderers;
+import johnsmith.enchantingoverhauled.client.render.entity.model.FabricModelLayers;
+import johnsmith.enchantingoverhauled.platform.network.FabricNetworkRegistry;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 
 public class FabricClient implements ClientModInitializer {
+
     @Override
     public void onInitializeClient() {
-        MenuScreens.initialize();
+        // Common init
+        Common.initialize();
 
-        EntityModelLayerRegistry.registerModelLayer(TomeModel.LAYER_LOCATION, TomeModel::createBodyLayer);
+        // Platform init
+        FabricMenuScreens.initialize();
+        FabricSimpleParticleTypes.initialize();
+        FabricModelLayers.initialize();
+        FabricEntityRenderers.initialize();
+        FabricNetworkRegistry.initializeClient();
     }
 }

@@ -1,0 +1,131 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.riptide"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "riptide",
+        "property": "min_cost_base"
+      },
+      "fallback": 17
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "riptide",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 7
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "riptide",
+        "property": "max_cost_base"
+      },
+      "fallback": 50
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "riptide",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "riptide",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "riptide",
+      "property": "slots"
+    },
+    "fallback": [
+      "hand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "riptide",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/trident"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "riptide",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "riptide",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "exclusive_set": "#minecraft:exclusive_set/riptide",
+  "effects": {
+    "minecraft:trident_sound": [
+      "minecraft:item.trident.riptide_1",
+      "minecraft:item.trident.riptide_2",
+      "minecraft:item.trident.riptide_3"
+    ],
+    "minecraft:trident_spin_attack_strength": {
+      "value": {
+        "id": "riptide.trident_spin_attack_strength",
+        "value": {
+          "decrement_default": 0.5,
+          "minimum_config": {
+            "mod_id": "enchanting_overhauled",
+            "category": "enchantment",
+            "group": "riptide",
+            "property": "value_value_minimum"
+          },
+          "minimum_default": 0.5,
+          "base_config": {
+            "mod_id": "enchanting_overhauled",
+            "category": "enchantment",
+            "group": "riptide",
+            "property": "value_value_base"
+          },
+          "base_default": 1.5,
+          "decrement_config": {
+            "mod_id": "enchanting_overhauled",
+            "category": "enchantment",
+            "group": "riptide",
+            "property": "value_value_decrement"
+          },
+          "type": "enchantment_core:configurable_diminishing_returns"
+        },
+        "type": "enchantment_core:pointer"
+      },
+      "type": "minecraft:add"
+    }
+  }
+}

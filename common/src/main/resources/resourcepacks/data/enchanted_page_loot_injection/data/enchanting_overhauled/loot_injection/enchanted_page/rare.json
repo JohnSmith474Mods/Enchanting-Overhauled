@@ -1,0 +1,14 @@
+{
+  "targets": [
+    "minecraft:chests/ancient_city",
+    "minecraft:chests/bastion_treasure",
+    "minecraft:chests/buried_treasure",
+    "minecraft:chests/end_city_treasure",
+    "minecraft:chests/jungle_temple",
+    "minecraft:chests/stronghold_library",
+    "minecraft:chests/woodland_mansion"
+  ],
+  "injections": [
+    "enchanting_overhauled:inject/enchanted_page/rare"
+  ]
+}

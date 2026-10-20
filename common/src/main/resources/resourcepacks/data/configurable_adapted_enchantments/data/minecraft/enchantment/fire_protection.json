@@ -1,0 +1,173 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.fire_protection"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_protection",
+        "property": "min_cost_base"
+      },
+      "fallback": 10
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_protection",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 8
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_protection",
+        "property": "max_cost_base"
+      },
+      "fallback": 18
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_protection",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 8
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_protection",
+      "property": "anvil_cost"
+    },
+    "fallback": 2
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_protection",
+      "property": "slots"
+    },
+    "fallback": [
+      "chest"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_protection",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:chest_armor"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_protection",
+      "property": "weight"
+    },
+    "fallback": 5
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_protection",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "id": "minecraft:enchantment.fire_protection",
+        "attribute": "minecraft:generic.burning_time",
+        "amount": {
+          "id": "fire_protection.burning_time",
+          "value": {
+            "value": {
+              "numerator": {
+                "base": 4.0,
+                "decrement": 1.0,
+                "minimum": 0.0,
+                "type": "enchantment_core:diminishing_returns"
+              },
+              "denominator": 10.0,
+              "type": "minecraft:fraction"
+            },
+            "type": "enchantment_core:negative"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "operation": "add_multiplied_base"
+      }
+    ],
+    "minecraft:damage_protection": [
+      {
+        "effect": {
+          "value": {
+            "id": "fire_protection.damage_protection",
+            "value": {
+              "decrement_default": 2.0,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "fire_protection",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 2.0,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "fire_protection",
+                "property": "value_value_base"
+              },
+              "base_default": 6.0,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "fire_protection",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        },
+        "requirements": {
+          "terms": [
+            {
+              "predicate": {
+                "tags": [
+                  {
+                    "id": "minecraft:is_fire",
+                    "expected": true
+                  },
+                  {
+                    "id": "minecraft:bypasses_invulnerability",
+                    "expected": false
+                  }
+                ]
+              },
+              "condition": "minecraft:damage_source_properties"
+            }
+          ],
+          "condition": "minecraft:all_of"
+        }
+      }
+    ]
+  }
+}

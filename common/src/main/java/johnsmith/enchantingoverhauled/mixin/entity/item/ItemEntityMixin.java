@@ -1,5 +1,6 @@
 package johnsmith.enchantingoverhauled.mixin.entity.item;
 
+import johnsmith.enchantingoverhauled.item.Items;
 import johnsmith.enchantingoverhauled.platform.Services;
 
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,7 +21,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Override
     public boolean isInvulnerableTo(@NotNull DamageSource source) {
-        if (((ItemEntity) (Object) this).getItem().is(Services.PLATFORM.getEnchantedTome())) return true;
+        if (((ItemEntity) (Object) this).getItem().is(Items.ENCHANTED_TOME.get())) return true;
         return super.isInvulnerableTo(source);
     }
 }

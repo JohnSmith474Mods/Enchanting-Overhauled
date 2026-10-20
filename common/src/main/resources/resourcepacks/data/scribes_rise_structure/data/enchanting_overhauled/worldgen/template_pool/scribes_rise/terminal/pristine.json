@@ -1,0 +1,33 @@
+{
+  "name": "enchanting_overhauled:scribes_rise/terminal/pristine",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 5,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/pristine",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/pristine"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/weathered"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/damaged"
+      }
+    }
+  ]
+}

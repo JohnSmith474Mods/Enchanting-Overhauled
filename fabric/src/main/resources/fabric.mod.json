@@ -23,10 +23,10 @@
           "johnsmith.enchantingoverhauled.client.FabricClient"
         ],
         "modmenu": [
-          "johnsmith.enchantingoverhauled.client.gui.ModMenuIntegration"
+          "johnsmith.enchantingoverhauled.client.ModMenuIntegration"
         ],
         "fabric-datagen": [
-          "johnsmith.enchantingoverhauled.datagen.FabricLootTableInjectionGenerator"
+          "johnsmith.enchantingoverhauled.data.datagen.FabricDataGeneratorEntrypoint"
         ]
     },
     "mixins": [

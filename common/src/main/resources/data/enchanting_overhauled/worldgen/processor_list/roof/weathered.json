@@ -1,0 +1,70 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:rule",
+    "rules": [
+      {
+        "input_predicate": {
+          "predicate_type": "minecraft:blockstate_match",
+          "block_state": {
+            "Name": "minecraft:polished_deepslate"
+          }
+        },
+        "probability": 0.66,
+        "output": {
+          "type": "constant",
+          "state": {
+            "Name": "minecraft:deepslate_tiles"
+          }
+        }
+      },
+      {
+        "input_predicate": {
+          "predicate_type": "minecraft:blockstate_match",
+          "block_state": {
+            "Name": "minecraft:polished_deepslate_stairs"
+          }
+        },
+        "copy_properties": true,
+        "probability": 0.66,
+        "output": {
+          "type": "constant",
+          "state": {
+            "Name": "minecraft:deepslate_tile_stairs"
+          }
+        }
+      },
+      {
+        "input_predicate": {
+          "predicate_type": "minecraft:blockstate_match",
+          "block_state": {
+            "Name": "minecraft:polished_deepslate_slab"
+          }
+        },
+        "copy_properties": true,
+        "probability": 0.66,
+        "output": {
+          "type": "constant",
+          "state": {
+            "Name": "minecraft:deepslate_tile_slab"
+          }
+        }
+      },
+      {
+        "input_predicate": {
+          "predicate_type": "minecraft:blockstate_match",
+          "block_state": {
+            "Name": "minecraft:polished_deepslate_wall"
+          }
+        },
+        "copy_properties": true,
+        "probability": 0.66,
+        "output": {
+          "type": "constant",
+          "state": {
+            "Name": "minecraft:deepslate_tile_wall"
+          }
+        }
+      }
+    ]
+  }
+]

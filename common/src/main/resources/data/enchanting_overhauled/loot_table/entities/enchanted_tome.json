@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "enchanting_overhauled:enchanted_tome",
+          "functions": [
+            {
+              "function": "enchanting_overhauled:enchant_randomly"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

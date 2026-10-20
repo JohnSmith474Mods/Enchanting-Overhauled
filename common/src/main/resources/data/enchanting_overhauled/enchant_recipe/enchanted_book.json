@@ -1,0 +1,5 @@
+{
+  "input": "minecraft:book",
+  "output": "minecraft:enchanted_book",
+  "attachment": "stored"
+}

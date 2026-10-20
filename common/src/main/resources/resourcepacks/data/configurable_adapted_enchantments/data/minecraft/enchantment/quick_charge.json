@@ -1,0 +1,140 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.quick_charge"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "quick_charge",
+        "property": "min_cost_base"
+      },
+      "fallback": 12
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "quick_charge",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 20
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "quick_charge",
+        "property": "max_cost_base"
+      },
+      "fallback": 50
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "quick_charge",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "quick_charge",
+      "property": "anvil_cost"
+    },
+    "fallback": 2
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "quick_charge",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand",
+      "offhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "quick_charge",
+      "property": "supported_items"
+    },
+    "fallback": "#enchanting_overhauled:enchantable/all_ranged"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "quick_charge",
+      "property": "weight"
+    },
+    "fallback": 5
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "quick_charge",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "enchantment_core:bow_charge_time": {
+      "amount": {
+        "value": {
+          "id": "quick_charge.bow_charge_time",
+          "value": {
+            "base": 0.32,
+            "decrement": 0.08,
+            "minimum": 0.0,
+            "type": "enchantment_core:diminishing_returns"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "type": "enchantment_core:negative"
+      }
+    },
+    "minecraft:crossbow_charge_time": {
+      "value": {
+        "value": {
+          "id": "quick_charge.crossbow_charge_time",
+          "value": {
+            "base": 0.4,
+            "decrement": 0.1,
+            "minimum": 0.0,
+            "type": "enchantment_core:diminishing_returns"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "type": "enchantment_core:negative"
+      },
+      "type": "minecraft:add"
+    },
+    "minecraft:crossbow_charging_sounds": [
+      {
+        "start": "minecraft:item.crossbow.quick_charge_1",
+        "end": "minecraft:item.crossbow.loading_end"
+      },
+      {
+        "start": "minecraft:item.crossbow.quick_charge_2",
+        "end": "minecraft:item.crossbow.loading_end"
+      },
+      {
+        "start": "minecraft:item.crossbow.quick_charge_3",
+        "end": "minecraft:item.crossbow.loading_end"
+      }
+    ]
+  }
+}

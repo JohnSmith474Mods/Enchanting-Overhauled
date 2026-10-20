@@ -10,24 +10,25 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 
 /**
- * A data-driven power bonus implementation that calculates bonus enchanting power
- * based on the quantity of specific items found inside a neighboring block entity's inventory.
+ * A data-driven {@link PowerBonus} implementation that calculates bonus enchanting power
+ * based on the quantity of specific items found inside a power-providing block entity's inventory.
  * <p>
- * This is typically applied to block entities that function as item containers (e.g., Chests)
- * or specialized item storage (e.g., Chiseled Bookshelves).
+ * Typically applied to block entities that implement {@link net.minecraft.world.Container},
+ * such as Chiseled Bookshelves holding Enchanted Books.
  *
  * @param items        A {@link HolderSet} representing the item(s) or item tag that should be counted
- * within the target block entity's inventory.
- * @param bonusPerItem The fixed integer amount of enchanting power added for *each* matching item counted.
+ *                     within the target block entity's inventory.
+ * @param bonusPerItem The fixed integer amount of enchanting power added for <em>each</em> matching item counted.
  */
 public record CountItemsInInventoryBonus(
         HolderSet<Item> items,
         int bonusPerItem
 ) implements PowerBonus {
+
     /**
-     * The codec responsible for serializing and deserializing instances of this record from data files (e.g., JSON).
+     * The codec responsible for serializing and deserializing instances of this record from JSON.
      * <p>
-     * It uses {@link RegistryCodecs#homogeneousList} to correctly handle the {@link HolderSet} of items.
+     * Uses {@link RegistryCodecs#homogeneousList} to handle the {@link HolderSet} of items.
      */
     public static final MapCodec<CountItemsInInventoryBonus> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
@@ -39,7 +40,7 @@ public record CountItemsInInventoryBonus(
     /**
      * {@inheritDoc}
      *
-     * @return The constant ID string for this bonus type: "count_items_in_inventory".
+     * @return The constant ID string for this bonus type: {@code "count_items_in_inventory"}.
      */
     @Override
     public String getTypeId() {

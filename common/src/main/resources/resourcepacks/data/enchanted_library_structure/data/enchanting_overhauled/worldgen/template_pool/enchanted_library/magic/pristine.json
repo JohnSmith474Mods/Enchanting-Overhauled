@@ -1,0 +1,33 @@
+{
+  "name": "enchanting_overhauled:enchanted_library/root",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 5,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/magic/pristine",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/pristine"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/magic/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/weathered"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/magic/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/damaged"
+      }
+    }
+  ]
+}

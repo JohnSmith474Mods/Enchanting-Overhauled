@@ -1,0 +1,11 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:processor_list",
+    "processors": [
+      "enchanting_overhauled:roof/ruined",
+      "enchanting_overhauled:wall/ruined",
+      "enchanting_overhauled:frame/ruined",
+      "enchanting_overhauled:mossify"
+    ]
+  }
+]

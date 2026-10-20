@@ -14,24 +14,26 @@ import java.util.List;
 
 /**
  * A data-driven record that defines a rule for how a specific block or group of blocks
- * contributes enchanting power toward a theme (e.g., a Bookshelf contributes 1 power to the Default theme).
+ * contributes enchanting power toward an {@link johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme}
+ * (e.g., a Bookshelf contributing {@code 1} power to the Common theme).
  * <p>
- * This is the core data unit used by the enchanting table logic to determine available thematic power.
+ * This is the core data unit used by the Enchanting Altar logic to determine available thematic and agnostic power.
  *
  * @param blocks  A {@link HolderSet} representing the block(s) or block tag that provide power for the theme.
  * @param power   The base integer amount of enchanting power this provider grants.
  * @param bonuses A list of optional {@link PowerBonus} rules that apply conditional or dynamic modifications
- * to the base power value.
+ *                to the base power value.
  */
 public record PowerProvider(
         HolderSet<Block> blocks,
         int power,
         List<PowerBonus> bonuses
 ) {
+
     /**
-     * The codec responsible for serializing and deserializing instances of this record from data files (e.g., JSON).
+     * The codec responsible for serializing and deserializing instances of this record from JSON.
      * <p>
-     * It uses {@link RegistryCodecs#homogeneousList} to correctly handle the required {@link HolderSet} of blocks.
+     * Uses {@link RegistryCodecs#homogeneousList} to handle the {@link HolderSet} of blocks.
      * The {@code bonuses} field defaults to an empty list if omitted.
      */
     public static final Codec<PowerProvider> CODEC = RecordCodecBuilder.create(instance ->

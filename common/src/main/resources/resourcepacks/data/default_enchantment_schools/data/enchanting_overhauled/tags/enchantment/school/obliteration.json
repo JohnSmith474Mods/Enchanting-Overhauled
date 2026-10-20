@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:bane_of_arthropods",
+    "minecraft:breach",
+    "minecraft:density",
+    "minecraft:impaling",
+    "minecraft:piercing",
+    "minecraft:power",
+    "minecraft:sharpness",
+    "minecraft:smite",
+    "minecraft:sweeping_edge"
+  ]
+}

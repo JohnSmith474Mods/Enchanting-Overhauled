@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:binding_curse",
+    "minecraft:knockback",
+    "minecraft:loyalty",
+    "minecraft:punch",
+    "minecraft:thorns"
+  ]
+}

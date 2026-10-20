@@ -1,0 +1,46 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.minecraft.smite"
+  },
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "enchantment_core:pointer",
+            "id": "smite.damage",
+            "value": {
+              "type": "enchantment_core:diminishing_returns",
+              "base": 4.5,
+              "decrement": 1.5,
+              "minimum": 1.5
+            }
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type": "#minecraft:sensitive_to_smite"
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 8
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 8
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#enchanting_overhauled:enchantable/all_melee",
+  "weight": 5
+}

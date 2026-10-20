@@ -1,8 +1,8 @@
 package johnsmith.enchantingoverhauled.item;
 
+import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
-import johnsmith.enchantingoverhauled.config.Config;
-import johnsmith.enchantingoverhauled.platform.Services;
+import johnsmith.enchantingoverhauled.block.Blocks;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -35,26 +35,33 @@ public class ItemGroups {
      */
     public static void displayItems(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         // 1. Add the tables
-        output.accept(Services.PLATFORM.getDeactivatedEnchantingTable());
-        output.accept(Services.PLATFORM.getDisturbedEnchantingTable());
+        output.accept(Blocks.DEACTIVATED_ENCHANTING_TABLE.get());
+        output.accept(Blocks.DISTURBED_ENCHANTING_TABLE.get());
 
         // 2. Add all enchantments with custom levels
         generateTomes(parameters, output);
+        generatePages(parameters, output);
     }
 
     /**
      * Populates the vanilla "Ingredients" tab with Enchanted Tomes.
      */
-    public static void populateIngredients(CreativeModeTab.ItemDisplayParameters params, CreativeModeTab.Output output) {
-        generateTomes(params, output);
+    public static void populateIngredients(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        generateTomes(parameters, output);
+        generatePages(parameters, output);
     }
 
     /**
      * Populates the vanilla "Functional Blocks" tab with the mod's tables.
      */
-    public static void populateFunctional(CreativeModeTab.ItemDisplayParameters params, CreativeModeTab.Output output) {
-        output.accept(Services.PLATFORM.getDeactivatedEnchantingTableItem());
-        output.accept(Services.PLATFORM.getDisturbedEnchantingTableItem());
+    public static void populateFunctional(CreativeModeTab.Output output) {
+        output.accept(Items.DEACTIVATED_ENCHANTING_ALTAR.get());
+        output.accept(Items.DISTURBED_ENCHANTING_ALTAR.get());
+    }
+
+    public static void populateSpawnEggs(CreativeModeTab.Output output) {
+        output.accept(Items.ENCHANTED_TOME_SPAWN_EGG.get());
+        output.accept(Items.ENCHANTED_BOOK_SPAWN_EGG.get());
     }
 
     /**
@@ -65,24 +72,34 @@ public class ItemGroups {
      * by the parameters only contains enabled enchantments.
      */
     private static void generateTomes(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        // 1. Retrieve the dynamic registry
         HolderLookup.RegistryLookup<Enchantment> registry = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
 
-        // 2. Iterate through all registered enchantments (Holders)
-        // The registry.listElements() stream is already filtered for enabled features by the game.
         registry.listElements().forEach(holder -> {
             Enchantment enchantment = holder.value();
 
-            // 3. Apply your "Over-Level" logic
             int maxLevel = enchantment.getMaxLevel();
-            // Force single-level enchants (like Mending) to stay at 1, otherwise boost by 1.
-            int level = (maxLevel == 1) ? 1 : Config.BINARY_TOMES_HAVE_GREATER_ENCHANTMENTS.get() ? maxLevel + 1 : maxLevel;
+            int level = (maxLevel == 1) ? 1 : Config.CAN_TOMES_HAVE_GREATER_ENCHANTMENTS.get() ? maxLevel + 1 : maxLevel;
 
-            ItemStack stack = new ItemStack(Services.PLATFORM.getEnchantedTome());
+            ItemStack stack = new ItemStack(Items.ENCHANTED_TOME.get());
 
-            // 4. Set the stored enchantments component using the Holder
             ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
             builder.set(holder, level);
+
+            stack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
+
+            output.accept(stack);
+        });
+    }
+
+    private static void generatePages(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        HolderLookup.RegistryLookup<Enchantment> registry = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
+
+        registry.listElements().forEach(holder -> {
+
+            ItemStack stack = new ItemStack(Items.ENCHANTED_PAGE.get());
+
+            ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+            builder.set(holder, 1);
 
             stack.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
 

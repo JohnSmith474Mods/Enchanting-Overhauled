@@ -1,0 +1,81 @@
+{
+  "anchor": {
+    "activation_delay": 2,
+    "duration": 3
+  },
+  "cast_type": "direct",
+  "difficulty_gate": "hard",
+  "role": "supportive",
+  "schools": "enchanting_overhauled:transmutation",
+  "spell_field": {
+    "block_effects": [
+      {
+        "type": "enchantment_core:temporary_transmute_block",
+        "decay_duration": 1.0,
+        "evaluator": {
+          "threshold": 0.1
+        },
+        "lifetime": 60.0,
+        "replacement_block": "minecraft:air"
+      }
+    ],
+    "visual_effects": [
+      {
+        "type": "enchantment_core:vector_field",
+        "axis": "vertical",
+        "count": 24.0,
+        "distribution": {
+          "sampling_attempts": 15
+        },
+        "particle": {
+          "type": "enchanting_overhauled:enchant"
+        },
+        "speed": 0.12
+      }
+    ],
+    "volume_effects": [
+      {
+        "type": "enchantment_core:play_sound_volume",
+        "pitch": 1.2,
+        "sound": "minecraft:item.chorus_fruit.teleport",
+        "source": "hostile",
+        "volume": 0.9
+      }
+    ],
+    "volumes": [
+      {
+        "offset": {
+          "y": -16.0
+        },
+        "shape": {
+          "type": "enchantment_core:cuboid",
+          "x_radius": 2.0,
+          "y_radius": 16.0,
+          "z_radius": 2.0
+        },
+        "topology": {
+          "axial_range": 32.0,
+          "axial_scaling": {
+            "type": "enchantment_core:linear"
+          },
+          "axis": {
+            "y": 1.0
+          },
+          "origin_offset": {
+            "y": 16.0
+          },
+          "origin_range": 32.0,
+          "origin_scaling": {
+            "type": "enchantment_core:exponential",
+            "decay_rate": 0.1
+          },
+          "radial_range": 2.0,
+          "radial_scaling": {
+            "type": "enchantment_core:linear"
+          }
+        }
+      }
+    ]
+  },
+  "target": "hostile"
+}

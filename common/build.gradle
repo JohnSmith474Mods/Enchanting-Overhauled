@@ -21,6 +21,9 @@ dependencies {
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+
+    compileOnly "maven.modrinth:config-overhauled:1.0.1+1.21-neoforge"
+    compileOnly "johnsmith.enchantmentcore:enchantment-core:1.1.0+1.21-neoforge"
 }
 
 configurations {
@@ -34,7 +37,19 @@ configurations {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+            // Include standard resources
+            srcDirs += ['src/main/resources']
+            // Include our routed datagen output
+            srcDirs += ['src/main/generated']
+        }
+    }
+}
+
 artifacts {
-    commonJava sourceSets.main.java.sourceDirectories.singleFile
-    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+    // Expose directory elements to platform projects
+    commonJava sourceSets.main.java.sourceDirectories.elements
+    commonResources sourceSets.main.resources.sourceDirectories.elements
 }

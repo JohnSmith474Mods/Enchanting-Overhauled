@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "enchanting_overhauled:scribes_rise",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 80,
+    "separation": 15,
+    "salt": 177013
+  }
+}

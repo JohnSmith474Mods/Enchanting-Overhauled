@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#enchanting_overhauled:spawns_enchanted_book",
+  "spawners": {
+    "type": "enchanting_overhauled:enchanted_book",
+    "weight": 5,
+    "minCount": 1,
+    "maxCount": 4
+  }
+}

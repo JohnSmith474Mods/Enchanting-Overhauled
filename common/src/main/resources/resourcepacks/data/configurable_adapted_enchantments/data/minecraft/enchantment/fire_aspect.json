@@ -1,0 +1,146 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.fire_aspect"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_aspect",
+        "property": "min_cost_base"
+      },
+      "fallback": 10
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_aspect",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 20
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_aspect",
+        "property": "max_cost_base"
+      },
+      "fallback": 60
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "fire_aspect",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 20
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_aspect",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_aspect",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_aspect",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/fire_aspect"
+  },
+  "primary_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_aspect",
+      "property": "primary_items"
+    },
+    "fallback": "#minecraft:enchantable/sword"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_aspect",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "fire_aspect",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:post_attack": [
+      {
+        "enchanted": "attacker",
+        "affected": "victim",
+        "effect": {
+          "duration": {
+            "id": "fire_aspect.post_attack.ignite",
+            "value": {
+              "decrement_default": 1.0,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "fire_aspect",
+                "property": "duration_value_minimum"
+              },
+              "minimum_default": 2.0,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "fire_aspect",
+                "property": "duration_value_base"
+              },
+              "base_default": 5.0,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "fire_aspect",
+                "property": "duration_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:ignite"
+        },
+        "requirements": {
+          "predicate": {
+            "is_direct": true
+          },
+          "condition": "minecraft:damage_source_properties"
+        }
+      }
+    ]
+  }
+}

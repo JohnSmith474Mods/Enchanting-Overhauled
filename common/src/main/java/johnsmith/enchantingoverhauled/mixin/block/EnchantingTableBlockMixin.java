@@ -1,16 +1,19 @@
 package johnsmith.enchantingoverhauled.mixin.block;
 
-import johnsmith.enchantingoverhauled.accessor.TomeStorageAccessor;
+import johnsmith.enchantingoverhauled.Config;
+import johnsmith.enchantingoverhauled.api.accessor.TomeStorageAccessor;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.EffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.ParticleEffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.SoundEffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.power.PowerProvider;
-import johnsmith.enchantingoverhauled.config.Config;
-import johnsmith.enchantingoverhauled.lib.EnchantmentLib;
-import johnsmith.enchantingoverhauled.menu.EnchantmentMenu;
+import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentThemes;
+import johnsmith.enchantingoverhauled.api.lib.EnchantmentLib;
+import johnsmith.enchantingoverhauled.block.Blocks;
+import johnsmith.enchantingoverhauled.item.EnchantedTomeItem;
+import johnsmith.enchantingoverhauled.item.Items;
+import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 import johnsmith.enchantingoverhauled.mixin.accessor.AbstractBlockSettingsAccessor;
-import johnsmith.enchantingoverhauled.platform.Services;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -40,7 +43,6 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantingTableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
@@ -63,7 +65,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     @Final
     public static List<BlockPos> BOOKSHELF_OFFSETS;
 
-    public EnchantingTableBlockMixin(BlockBehaviour.Properties properties) {
+    public EnchantingTableBlockMixin(Properties properties) {
         super(properties);
     }
 
@@ -71,7 +73,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/BaseEntityBlock;<init>(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"),
             index = 0)
-    private static BlockBehaviour.Properties modifySettings(BlockBehaviour.Properties properties) {
+    private static Properties modifySettings(Properties properties) {
         ((AbstractBlockSettingsAccessor) properties).setToolRequired(false);
         return properties;
     }
@@ -79,9 +81,11 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     @Override
     public MenuProvider getMenuProvider(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos) {
         Component component = Component.translatable("container.enchant");
-        return new SimpleMenuProvider((id, inventory, player) -> {
-            return new EnchantmentMenu(id, inventory, ContainerLevelAccess.create(level, pos));
-        }, component);
+        return new SimpleMenuProvider((id, inventory, player) -> new EnchantmentMenu(
+                id,
+                inventory,
+                ContainerLevelAccess.create(level, pos)
+        ), component);
     }
 
     @Override
@@ -91,17 +95,18 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             @NotNull BlockState blockState,
             @NotNull Player player
     ) {
-        if (Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) {
+        if (Config.ENABLE_MINEABLE_ENCHANTING_TABLE.get()) {
             this.spawnDestroyParticles(level, player, blockPos, blockState);
             if (blockState.is(BlockTags.GUARDED_BY_PIGLINS)) {
                 PiglinAi.angerNearbyPiglins(player, false);
             }
-
             level.gameEvent(GameEvent.BLOCK_DESTROY, blockPos, GameEvent.Context.of(player, blockState));
             return blockState;
         }
+
         level.playSound(null, blockPos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
         level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
+
         return blockState;
     }
 
@@ -114,14 +119,14 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             BlockEntity blockEntity,
             @NotNull ItemStack tool
     ) {
-        if (Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) {
+        if (Config.ENABLE_MINEABLE_ENCHANTING_TABLE.get()) {
             player.awardStat(Stats.BLOCK_MINED.get(this));
             player.causeFoodExhaustion(0.005F);
             dropResources(blockState, level, blockPos, blockEntity, player, tool);
             return;
         }
 
-        level.setBlock(blockPos, Services.PLATFORM.getDisturbedEnchantingTable().defaultBlockState(), 3);
+        level.setBlock(blockPos, Blocks.DISTURBED_ENCHANTING_TABLE.get().defaultBlockState(), 3);
 
         if (!level.isClientSide()) {
             ItemStack stackToDrop = ItemStack.EMPTY;
@@ -131,12 +136,12 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             }
 
             if (stackToDrop.isEmpty()) {
-                stackToDrop = new ItemStack(Services.PLATFORM.getEnchantedTome());
+                stackToDrop = new ItemStack(Items.ENCHANTED_TOME.get());
             }
 
             ItemEnchantments enchants = stackToDrop.get(DataComponents.STORED_ENCHANTMENTS);
             if (enchants == null || enchants.isEmpty()) {
-                stackToDrop = EnchantmentLib.enchantTomeRandomly(stackToDrop, level, level.getRandom());
+                stackToDrop = EnchantedTomeItem.enchantRandomly(stackToDrop, level, level.getRandom());
             }
 
             double x = (double)blockPos.getX() + 0.5;
@@ -146,13 +151,14 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             ItemEntity itemEntity = new ItemEntity(level, x, y, z, stackToDrop);
             itemEntity.setDeltaMovement(0.0, 0.1, 0.0);
             itemEntity.setDefaultPickUpDelay();
+
             level.addFreshEntity(itemEntity);
         }
     }
 
     /**
      * Overrides the vanilla particle-spawning logic.
-     * Now ALWAYS spawns vanilla glyphs, then optionally overlays theme effects.
+     * Always spawns vanilla glyphs, then optionally overlays theme effects.
      */
     @Inject(method = "animateTick", at = @At("HEAD"), cancellable = true)
     private void onRandomDisplayTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
@@ -167,40 +173,38 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
                 3.0D, // Vanilla book-opening distance
                 false
         );
+
         if (playerEntity == null) {
             return;
         }
 
         // 1. Always spawn vanilla particles (Glyphs) for any valid provider
-        this.enchantingOverhauled$spawnAlwaysVanillaParticles(level, blockPos, randomSource);
+        this.enchanting_overhauled$spawnAlwaysVanillaParticles(level, blockPos, randomSource);
 
         // 2. Find the dominant theme based on nearby power
-        Optional<EnchantmentTheme> dominantThemeOpt = this.enchantingOverhauled$getDominantTheme(level, blockPos);
+        Optional<EnchantmentTheme> dominantThemeOpt = this.enchanting_overhauled$getDominantTheme(level, blockPos);
 
         // 3. If a dominant theme is found (and it has effects), spawn them
         if (dominantThemeOpt.isPresent()) {
             EnchantmentTheme theme = dominantThemeOpt.get();
-
             if (theme.effects().isPresent()) {
                 EffectData effects = theme.effects().get();
 
                 // Spawn particles/sound at the enchanting table itself
-                this.enchantingOverhauled$spawnThemedEffects(level, blockPos, randomSource, effects, false);
+                this.enchanting_overhauled$spawnThemedEffects(level, blockPos, randomSource, effects, false);
 
                 // Spawn particles/sound at the power providers
                 for(BlockPos providerOffset : BOOKSHELF_OFFSETS) {
                     BlockPos providerPos = blockPos.offset(providerOffset);
-
                     // Check if this provider block matches the dominant theme
-                    if (EnchantmentLib.getEnchantingPower(level, providerPos, theme) > 0) {
+                    if (this.enchanting_overhauled$getEnchantingPower(level, providerPos, theme) > 0) {
                         // Check if the transmitter block is clear
                         BlockPos transmitterPos = blockPos.offset(providerOffset.getX() / 2, providerOffset.getY(), providerOffset.getZ() / 2);
                         if (level.getBlockState(transmitterPos).is(BlockTags.ENCHANTMENT_POWER_TRANSMITTER)) {
-                            this.enchantingOverhauled$spawnThemedEffects(level, providerPos, randomSource, effects, true);
+                            this.enchanting_overhauled$spawnThemedEffects(level, providerPos, randomSource, effects, true);
                         }
                     }
                 }
-
             }
         }
     }
@@ -209,22 +213,22 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
      * Spawns the vanilla 'enchant' particles for ANY block that provides power of ANY theme.
      */
     @Unique
-    private void enchantingOverhauled$spawnAlwaysVanillaParticles(Level level, BlockPos blockPos, RandomSource randomSource) {
-        RegistryAccess registryAccess = level.registryAccess();
-        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = Services.PLATFORM.getThemeRegistry(registryAccess);
-
+    private void enchanting_overhauled$spawnAlwaysVanillaParticles(Level level, BlockPos blockPos, RandomSource randomSource) {
+        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = level.registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (themeRegistryOpt.isEmpty()) return;
         Registry<EnchantmentTheme> themeRegistry = themeRegistryOpt.get();
 
         for(BlockPos providerOffset : BOOKSHELF_OFFSETS) {
             BlockPos providerPos = blockPos.offset(providerOffset);
-            boolean providesPower = false;
+            boolean providesPower = level.getBlockState(providerPos).is(net.minecraft.world.level.block.Blocks.STRUCTURE_VOID);
 
             // Inefficient but reliable: Check if this block provides power
-            for (EnchantmentTheme theme : themeRegistry) {
-                if (EnchantmentLib.getEnchantingPower(level, providerPos, theme) > 0) {
-                    providesPower = true;
-                    break;
+            if (!providesPower) {
+                for (EnchantmentTheme theme : themeRegistry) {
+                    if (this.enchanting_overhauled$getEnchantingPower(level, providerPos, theme) > 0) {
+                        providesPower = true;
+                        break;
+                    }
                 }
             }
 
@@ -253,14 +257,10 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
      * @return An Optional containing the dominant EnchantmentTheme.
      */
     @Unique
-    private Optional<EnchantmentTheme> enchantingOverhauled$getDominantTheme(Level level, BlockPos blockPos) {
+    private Optional<EnchantmentTheme> enchanting_overhauled$getDominantTheme(Level level, BlockPos blockPos) {
         Map<EnchantmentTheme, Integer> themePower = new HashMap<>();
-
-        RegistryAccess registryAccess = level.registryAccess();
-        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = Services.PLATFORM.getThemeRegistry(registryAccess);
-
+        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = level.registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (themeRegistryOpt.isEmpty()) return Optional.empty();
-
         Registry<EnchantmentTheme> themeRegistry = themeRegistryOpt.get();
 
         for (BlockPos providerOffset : BOOKSHELF_OFFSETS) {
@@ -271,11 +271,16 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
 
             BlockPos providerPos = blockPos.offset(providerOffset);
             BlockState providerState = level.getBlockState(providerPos);
+            boolean isStructureVoid = providerState.is(net.minecraft.world.level.block.Blocks.STRUCTURE_VOID);
             Holder<Block> blockEntry = providerState.getBlockHolder();
 
             for (EnchantmentTheme theme : themeRegistry) {
-                // Only consider themes that actually have effects to play
                 if (theme.effects().isEmpty()) {
+                    continue;
+                }
+
+                if (isStructureVoid) {
+                    themePower.merge(theme, Config.MAX_ENCHANTING_POWER.get(), Integer::sum);
                     continue;
                 }
 
@@ -294,7 +299,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     }
 
     @Unique
-    private void enchantingOverhauled$spawnThemedEffects(Level level, BlockPos blockPos, RandomSource randomSource, EffectData effectData, boolean atProvider) {
+    private void enchanting_overhauled$spawnThemedEffects(Level level, BlockPos blockPos, RandomSource randomSource, EffectData effectData, boolean atProvider) {
         if (effectData.particle().isEmpty() && effectData.sound().isEmpty()) {
             return;
         }
@@ -345,8 +350,36 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
         }
     }
 
+    /**
+     * Calculates the enchanting power provided by a block at a given position for a specific theme.
+     *
+     * @param level The level to check.
+     * @param providerPos The BlockPos of the potential power-providing block.
+     * @param theme The EnchantmentTheme to calculate power for.
+     * @return The integer power level (0 or the calculated value).
+     */
+    @Unique
+    public int enchanting_overhauled$getEnchantingPower(Level level, BlockPos providerPos, EnchantmentTheme theme) {
+        BlockState state = level.getBlockState(providerPos);
+        if (state.is(net.minecraft.world.level.block.Blocks.STRUCTURE_VOID)) {
+            return Config.MAX_ENCHANTING_POWER.get();
+        }
+        Holder<Block> blockEntry = state.getBlockHolder();
+
+        for (PowerProvider provider : theme.powerProviders()) {
+            if (provider.blocks().contains(blockEntry)) {
+                return EnchantmentLib.calculatePower(level, providerPos, state, provider);
+            }
+        }
+        return 0;
+    }
+
     @Override
     public @NotNull ItemStack getCloneItemStack(LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+        if (Config.ENABLE_MINEABLE_ENCHANTING_TABLE.get()) {
+            return super.getCloneItemStack(levelReader, blockPos, blockState);
+        }
+
         BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);
 
         if (blockEntity instanceof TomeStorageAccessor accessor) {
@@ -356,7 +389,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             }
         }
         RegistryAccess registryAccess = levelReader.registryAccess();
-        return EnchantmentLib.getTomeWithDefaultEnchantment(registryAccess);
+        return EnchantedTomeItem.withDefaultEnchantment(registryAccess);
     }
 
     /**
@@ -370,14 +403,9 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             @NotNull BlockGetter level,
             @NotNull BlockPos pos
     ) {
-        // If Custom Mode is Active (Config is FALSE)
-        if (!Config.BINARY_MINEABLE_ENCHANTING_TABLE.get()) {
-            // Return 1.0F to indicate the block breaks instantly (Hardness 0 behavior)
+        if (!Config.ENABLE_MINEABLE_ENCHANTING_TABLE.get()) {
             return 1.0F;
         }
-
-        // If Vanilla Mode is Active (Config is TRUE)
-        // Delegate to super, which calculates based on the cached 5.0F hardness
         return super.getDestroyProgress(state, player, level, pos);
     }
 }

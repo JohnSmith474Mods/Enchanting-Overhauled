@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:depth_strider",
+    "minecraft:riptide",
+    "minecraft:quick_charge",
+    "minecraft:wind_burst"
+  ]
+}

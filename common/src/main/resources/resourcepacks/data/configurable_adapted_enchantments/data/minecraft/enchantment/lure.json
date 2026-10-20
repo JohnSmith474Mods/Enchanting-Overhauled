@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.lure"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "lure",
+        "property": "min_cost_base"
+      },
+      "fallback": 15
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "lure",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "lure",
+        "property": "max_cost_base"
+      },
+      "fallback": 65
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "lure",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "lure",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "lure",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "lure",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/fishing"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "lure",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "lure",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:fishing_time_reduction": [
+      {
+        "effect": {
+          "value": {
+            "id": "lure.fishing_time_reduction",
+            "value": {
+              "decrement_default": 1.5,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "lure",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 1.5,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "lure",
+                "property": "value_value_base"
+              },
+              "base_default": 7.5,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "lure",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        }
+      }
+    ]
+  }
+}

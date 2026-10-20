@@ -1,0 +1,137 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.looting"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "looting",
+        "property": "min_cost_base"
+      },
+      "fallback": 15
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "looting",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "looting",
+        "property": "max_cost_base"
+      },
+      "fallback": 65
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "looting",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 9
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "looting",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "looting",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "looting",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/sword"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "looting",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "looting",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:equipment_drops": [
+      {
+        "enchanted": "attacker",
+        "effect": {
+          "value": {
+            "id": "looting.equipment_drops",
+            "value": {
+              "decrement_default": 0.005,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "looting",
+                "property": "value_value_minimum"
+              },
+              "minimum_default": 0.005,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "looting",
+                "property": "value_value_base"
+              },
+              "base_default": 0.015,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "looting",
+                "property": "value_value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:add"
+        },
+        "requirements": {
+          "predicate": {
+            "type": "minecraft:player"
+          },
+          "entity": "attacker",
+          "condition": "minecraft:entity_properties"
+        }
+      }
+    ]
+  }
+}

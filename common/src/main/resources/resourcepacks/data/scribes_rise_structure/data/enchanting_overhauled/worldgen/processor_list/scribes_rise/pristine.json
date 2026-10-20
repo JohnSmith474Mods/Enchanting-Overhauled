@@ -1,0 +1,10 @@
+[
+  {
+    "processor_type": "enchanting_overhauled:processor_list",
+    "processors": [
+      "enchanting_overhauled:roof/pristine",
+      "enchanting_overhauled:wall/pristine",
+      "enchanting_overhauled:frame/pristine"
+    ]
+  }
+]

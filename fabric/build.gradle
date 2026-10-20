@@ -21,10 +21,15 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    modApi "maven.modrinth:config-overhauled:1.0.1+1.21-fabric"
+    modImplementation "johnsmith.enchantmentcore:enchantment-core:1.1.0+1.21-fabric"
+
     modImplementation "com.terraformersmc:modmenu:11.0.3"
 
-    // You might need ModMenu as in your old file, uncomment if needed:
-    // modImplementation "com.terraformersmc:modmenu:11.0.1"
+    // Explicitly add Night Config for the development environment runtime
+    implementation "com.electronwill.night-config:toml:3.8.3"
+    implementation "com.electronwill.night-config:core:3.8.3"
 }
 
 loom {
@@ -47,6 +52,14 @@ loom {
             setConfigName('Fabric Server')
             ideConfigGenerated(true)
             runDir('runs/server')
+        }
+        datagen {
+            inherit client
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${project(":common").file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
+            runDir "build/datagen"
         }
     }
 }

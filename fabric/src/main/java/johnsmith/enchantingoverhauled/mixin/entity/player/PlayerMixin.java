@@ -1,6 +1,6 @@
 package johnsmith.enchantingoverhauled.mixin.entity.player;
 
-import johnsmith.enchantingoverhauled.config.Config;
+import johnsmith.enchantingoverhauled.Config;
 
 import net.minecraft.world.entity.player.Player;
 
@@ -40,12 +40,12 @@ public class PlayerMixin {
      */
     @Inject(method = "getXpNeededForNextLevel", at = @At("HEAD"), cancellable = true)
     private void onGetNextLevelExperience(CallbackInfoReturnable<Integer> cir) {
-        if (!Config.BINARY_ENABLE_XP_MODIFICATIONS.get()) return;
+        if (!Config.ENABLE_XP_MODIFICATIONS.get()) return;
         int currentLevel = this.experienceLevel;
         // Calculate step based on bracket size
-        int step = (int) Math.round(Math.floor((double) currentLevel / Config.BOUNDED_XP_LEVEL_BRACKET_SIZE.get()));
+        int step = (int) Math.round(Math.floor((double) currentLevel / Config.XP_LEVEL_BRACKET_SIZE.get()));
         // Linear growth formula: (Slope * BracketStep) + InitialOffset
-        cir.setReturnValue((Config.BOUNDED_XP_GROWTH_FACTOR.get() * Math.clamp(step, 1, Integer.MAX_VALUE)) + Config.BOUNDED_XP_GROWTH_Y_OFFSET.get());
+        cir.setReturnValue((Config.XP_GROWTH_FACTOR.get() * Math.clamp(step, 1, Integer.MAX_VALUE)) + Config.XP_GROWTH_Y_OFFSET.get());
     }
 
     /**
@@ -56,10 +56,10 @@ public class PlayerMixin {
      */
     @Inject(method = "giveExperienceLevels", at = @At("HEAD"), cancellable = true)
     private void onAddExperienceLevels(int levels, CallbackInfo ci) {
-        if (!Config.BINARY_CAP_MAX_XP_LEVEL.get() || !Config.BINARY_ENABLE_XP_MODIFICATIONS.get()) {
+        if (!Config.CAP_MAX_XP_LEVEL.get() || !Config.ENABLE_XP_MODIFICATIONS.get()) {
             return;
         }
-        if (levels > 0 && this.experienceLevel >= Config.BOUNDED_XP_MAX_LEVEL.get()) {
+        if (levels > 0 && this.experienceLevel >= Config.XP_MAX_LEVEL.get()) {
             ci.cancel();
         }
     }

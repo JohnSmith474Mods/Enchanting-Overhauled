@@ -4,7 +4,8 @@ plugins {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    archivesName = project.mod_name_normalized
+    version = "${project.version}+${project.minecraft_version}-${project.name}"
 }
 
 java {
@@ -24,6 +25,19 @@ repositories {
             }
         }
         filter { includeGroupAndSubgroups("org.spongepowered") }
+    }
+    exclusiveContent {
+        forRepositories(
+                maven {
+                    name = 'ParchmentMC'
+                    url = 'https://maven.parchmentmc.org/'
+                },
+                maven {
+                    name = "NeoForge"
+                    url = 'https://maven.neoforged.net/releases'
+                }
+        )
+        filter { includeGroup('org.parchmentmc.data') }
     }
     maven {
         name = 'BlameJared'
@@ -69,22 +83,43 @@ jar {
 }
 
 processResources {
-    def expandProps = [
-            "version": version,
-            "group": project.group, //Else we target the task's group.
-            "minecraft_version": minecraft_version,
-            "minecraft_version_range": minecraft_version_range,
-            "fabric_version": fabric_version,
-            "fabric_loader_version": fabric_loader_version,
-            "mod_name": mod_name,
-            "mod_author": mod_author,
-            "mod_id": mod_id,
-            "license": license,
-            "description": project.description,
-            "neoforge_version": neoforge_version,
-            "neoforge_loader_version_range": neoforge_loader_version_range,
-            "credits": credits,
-            "java_version": java_version
+    var expandProps = [
+            // Project
+            'version'                               : version,
+            'group'                                 : project.group, //Else we target the task's group.
+            'java_version'                          : java_version,
+            // Minecraft
+            'minecraft_version'                     : minecraft_version,
+            'minecraft_version_supremum'            : minecraft_version_supremum,
+            'minecraft_version_upper_limit'         : minecraft_version_upper_limit,
+            // Common
+            'mod_name'                              : mod_name,
+            'mod_author'                            : mod_author,
+            'mod_id'                                : mod_id,
+            'license'                               : license,
+            'credits'                               : credits,
+            'description'                           : project.description,
+            // Fabric
+            'fabric_version'                        : fabric_version,
+            'fabric_loader_version'                 : fabric_loader_version,
+            // Forge
+            "forge_version"                         : forge_version,
+            "forge_loader_version_range"            : forge_loader_version_range,
+            // NeoForge
+            'neoforge_version'                      : neoforge_version,
+            'neoforge_loader_version_range'         : neoforge_loader_version_range,
+            // Config Overhauled
+            "config_overhauled_mod_id"              : project.config_overhauled_mod_id,
+            "config_overhauled_project_id"          : project.config_overhauled_project_id,
+            "config_overhauled_project_name"        : project.config_overhauled_project_name,
+            "config_overhauled_version"             : project.config_overhauled_version,
+            "config_overhauled_version_upper_limit" : project.config_overhauled_version_upper_limit,
+            // Enchantment Core
+            "enchantment_core_mod_id"               : project.enchantment_core_mod_id,
+            "enchantment_core_project_id"           : project.enchantment_core_project_id,
+            "enchantment_core_project_name"         : project.enchantment_core_project_name,
+            "enchantment_core_version"              : project.enchantment_core_version,
+            "enchantment_core_version_upper_limit"  : project.enchantment_core_version_upper_limit
     ]
 
     filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {

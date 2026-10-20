@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.mending"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "mending",
+        "property": "min_cost_base"
+      },
+      "fallback": 25
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "mending",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 25
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "mending",
+        "property": "max_cost_base"
+      },
+      "fallback": 75
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "mending",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 25
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "mending",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "mending",
+      "property": "slots"
+    },
+    "fallback": [
+      "any"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "mending",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/durability"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "mending",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "mending",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:repair_with_xp": [
+      {
+        "effect": {
+          "factor": {
+            "id": "mending.repair_with_xp",
+            "value": {
+              "decrement_default": 1.5,
+              "minimum_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "mending",
+                "property": "value_minimum"
+              },
+              "minimum_default": 1.5,
+              "base_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "mending",
+                "property": "value_base"
+              },
+              "base_default": 4.5,
+              "decrement_config": {
+                "mod_id": "enchanting_overhauled",
+                "category": "enchantment",
+                "group": "mending",
+                "property": "value_decrement"
+              },
+              "type": "enchantment_core:configurable_diminishing_returns"
+            },
+            "type": "enchantment_core:pointer"
+          },
+          "type": "minecraft:multiply"
+        }
+      }
+    ]
+  }
+}

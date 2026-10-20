@@ -1,0 +1,186 @@
+{
+  "name": "enchanting_overhauled:scribes_rise/intermediary/damaged",
+  "fallback": "enchanting_overhauled:scribes_rise/terminal/damaged",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/balcony/core/pristine",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/pristine"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/habitat/core/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/pristine"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/core/pristine",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/pristine"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/pristine",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/pristine"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/balcony/core/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/weathered"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/habitat/core/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/weathered"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/core/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/weathered"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/weathered"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/balcony/core/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/damaged"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/habitat/core/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/damaged"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/core/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/damaged"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/damaged"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/balcony/core/collapsed",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/collapsed"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/habitat/core/collapsed",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/collapsed"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/core/collapsed",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/collapsed"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/collapsed",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/collapsed"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/balcony/core/ruined",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/ruined"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/habitat/core/ruined",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/ruined"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/gallery/core/ruined",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/ruined"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:scribes_rise/roof/ruined",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:scribes_rise/ruined"
+      }
+    }
+  ]
+}

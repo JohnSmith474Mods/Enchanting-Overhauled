@@ -1,0 +1,51 @@
+{
+  "name": "enchanting_overhauled:enchanted_library/root",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/root/pristine",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/pristine"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/root/weathered",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/weathered"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/root/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/damaged"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/root/collapsed",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/collapsed"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/root/ruined",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/ruined"
+      }
+    }
+  ]
+}

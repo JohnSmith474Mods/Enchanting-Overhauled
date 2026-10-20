@@ -7,8 +7,8 @@ import com.mojang.serialization.MapCodec;
  * A sealed interface representing a conditional bonus applied to the base enchanting power
  * provided by a single block in an {@link johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme}.
  * <p>
- * Implementations of this interface define dynamic rules (e.g., checking block states, counting inventory items)
- * that modify the final power value. The interface is {@code sealed} to restrict implementations to a known set.
+ * Implementations of this interface define dynamic rules (such as checking block states or counting
+ * container inventory items) that modify the final power value.
  *
  * @see AddIfBlockStateBonus
  * @see CountItemsInInventoryBonus
@@ -17,12 +17,12 @@ import com.mojang.serialization.MapCodec;
 public sealed interface PowerBonus permits
         AddIfBlockStateBonus,
         CountItemsInInventoryBonus,
-        MultiplyByBlockStateBonus
-{
+        MultiplyByBlockStateBonus {
+
     /**
      * The primary codec for serializing and deserializing any implementation of {@code PowerBonus}.
      * <p>
-     * It uses a dispatch mechanism based on the string value of the "type" field in the JSON,
+     * Uses a type dispatch mechanism based on the string value of the {@code "type"} field in JSON,
      * delegating decoding to the appropriate codec retrieved via {@link PowerBonusType#getCodecById(String)}.
      */
     Codec<PowerBonus> CODEC = Codec.STRING.dispatch(
@@ -32,18 +32,16 @@ public sealed interface PowerBonus permits
     );
 
     /**
-     * Retrieves the unique identifier string associated with this specific implementation of the bonus.
-     * <p>
-     * This method is crucial for the dispatch codec to identify the correct serialization type from JSON.
+     * Retrieves the unique identifier string associated with this specific bonus implementation.
      *
-     * @return The unique ID string (e.g., "add_if_block_state").
+     * @return The unique ID string (e.g., {@code "add_if_block_state"}).
      */
     String getTypeId();
 
     /**
      * Retrieves the {@link MapCodec} responsible for encoding and decoding this specific bonus implementation.
      *
-     * @return The specialized codec for this class.
+     * @return The specialized {@link MapCodec} for this class.
      */
     MapCodec<? extends PowerBonus> getCodec();
 }

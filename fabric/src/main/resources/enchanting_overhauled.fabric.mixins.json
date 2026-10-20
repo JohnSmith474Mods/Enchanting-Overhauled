@@ -8,10 +8,8 @@
     "minVersion": "0.5.0"
   },
   "mixins": [
-    "accessor.LootTableAccessor",
     "entity.player.CommonPlayerMixin",
     "entity.player.PlayerMixin",
-    "loot.LootInjectionMixin",
     "menu.FabricAnvilMenuMixin"
   ],
   "client": [],

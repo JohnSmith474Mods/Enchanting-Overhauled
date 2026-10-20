@@ -7,16 +7,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 
 /**
- * A data-driven record defining the audio properties for a sound event associated with an enchantment theme.
+ * A data-driven record defining the audio properties for a sound event associated with an
+ * {@link johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme}.
  * <p>
- * This record specifies the sound to play and how its volume and pitch should be randomized upon emission.
- * The sound is played locally by the client upon receiving the particle effect command from the server.
+ * Specifies the sound to play and how its volume and pitch should be randomized upon emission.
  *
- * @param effect          A {@link Holder} referencing the {@link SoundEvent} to play (e.g., "minecraft:particle.soul_escape").
- * @param volume          The base volume (0.0 to 1.0) for the sound.
- * @param volumeVariance  A random offset added to the base volume.
- * @param pitch           The base pitch (0.0 to 2.0) for the sound.
- * @param pitchVariance   A random offset added to the base pitch.
+ * @param effect         A {@link Holder} referencing the {@link SoundEvent} to play (e.g., {@code minecraft:particle.soul_escape}).
+ * @param volume         The base volume ({@code 0.0} to {@code 1.0}) for the sound.
+ * @param volumeVariance A random offset range added to or subtracted from the base volume.
+ * @param pitch          The base pitch ({@code 0.0} to {@code 2.0}) for the sound.
+ * @param pitchVariance  A random offset range added to or subtracted from the base pitch.
  */
 public record SoundEffectData(
         Holder<SoundEvent> effect,
@@ -25,9 +25,10 @@ public record SoundEffectData(
         float pitch,
         float pitchVariance
 ) {
+
     /**
      * The codec responsible for serializing and deserializing instances of this record from JSON.
-     * It uses {@link SoundEvent#CODEC} to correctly handle the sound event holder.
+     * Uses {@link SoundEvent#CODEC} to handle the sound event holder.
      */
     public static final Codec<SoundEffectData> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(

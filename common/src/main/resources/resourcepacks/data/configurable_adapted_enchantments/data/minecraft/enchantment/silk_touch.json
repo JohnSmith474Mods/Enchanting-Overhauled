@@ -1,0 +1,142 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.silk_touch"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "silk_touch",
+        "property": "min_cost_base"
+      },
+      "fallback": 15
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "silk_touch",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "silk_touch",
+        "property": "max_cost_base"
+      },
+      "fallback": 65
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "silk_touch",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 0
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "silk_touch",
+      "property": "anvil_cost"
+    },
+    "fallback": 8
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "silk_touch",
+      "property": "slots"
+    },
+    "fallback": [
+      "mainhand"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "silk_touch",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/mining_loot"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "silk_touch",
+      "property": "weight"
+    },
+    "fallback": 1
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "silk_touch",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "exclusive_set": "#minecraft:exclusive_set/mining",
+  "effects": {
+    "enchanting_overhauled:silk_touch": {
+      "chance": {
+        "id": "silk_touch.chance",
+        "value": {
+          "decrement_default": 0.1,
+          "minimum_config": {
+            "mod_id": "enchanting_overhauled",
+            "category": "enchantment",
+            "group": "silk_touch",
+            "property": "chance_value_minimum"
+          },
+          "minimum_default": 0.0,
+          "base_config": {
+            "mod_id": "enchanting_overhauled",
+            "category": "enchantment",
+            "group": "silk_touch",
+            "property": "chance_value_base"
+          },
+          "base_default": 0.4,
+          "decrement_config": {
+            "mod_id": "enchanting_overhauled",
+            "category": "enchantment",
+            "group": "silk_touch",
+            "property": "chance_value_decrement"
+          },
+          "type": "enchantment_core:configurable_diminishing_returns"
+        },
+        "type": "enchantment_core:pointer"
+      }
+    },
+    "minecraft:block_experience": [
+      {
+        "effect": {
+          "value": {
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "silk_touch",
+              "property": "value"
+            },
+            "default_value": 0.0,
+            "type": "enchantment_core:configurable_constant"
+          },
+          "type": "minecraft:set"
+        }
+      }
+    ]
+  }
+}

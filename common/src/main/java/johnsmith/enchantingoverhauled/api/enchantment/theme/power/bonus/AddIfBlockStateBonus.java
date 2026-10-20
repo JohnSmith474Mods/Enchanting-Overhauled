@@ -5,15 +5,15 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 /**
- * A data-driven power bonus implementation that adds a fixed {@code bonus} amount
+ * A data-driven {@link PowerBonus} implementation that adds a fixed {@code bonus} amount
  * to the enchanting power if a specific block state property on the power-providing block
  * matches a designated string {@code value}.
  * <p>
- * This is useful for conditional power, such as granting a bonus only if a candle is lit.
+ * Useful for conditional power, such as granting a bonus only if a candle is lit ({@code lit = "true"}).
  *
  * @param property The name of the {@link net.minecraft.world.level.block.state.properties.Property}
- * to check on the block state (e.g., "lit" or "has_book").
- * @param value    The expected string representation of the property's value for the bonus to apply (e.g., "true").
+ *                 to check on the block state (e.g., {@code "lit"} or {@code "has_book"}).
+ * @param value    The expected string representation of the property's value for the bonus to apply (e.g., {@code "true"}).
  * @param bonus    The flat integer amount of enchanting power to add if the condition is met.
  */
 public record AddIfBlockStateBonus(
@@ -21,8 +21,9 @@ public record AddIfBlockStateBonus(
         String value,
         int bonus
 ) implements PowerBonus {
+
     /**
-     * The codec responsible for serializing and deserializing instances of this record from data files (e.g., JSON).
+     * The codec responsible for serializing and deserializing instances of this record from JSON.
      */
     public static final MapCodec<AddIfBlockStateBonus> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
@@ -35,7 +36,7 @@ public record AddIfBlockStateBonus(
     /**
      * {@inheritDoc}
      *
-     * @return The constant ID string for this bonus type: "add_if_block_state".
+     * @return The constant ID string for this bonus type: {@code "add_if_block_state"}.
      */
     @Override
     public String getTypeId() {

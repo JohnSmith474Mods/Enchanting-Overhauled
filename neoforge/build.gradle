@@ -3,6 +3,11 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
+dependencies {
+    implementation "maven.modrinth:config-overhauled:1.0.1+1.21-neoforge"
+    implementation "johnsmith.enchantmentcore:enchantment-core:1.1.0+1.21-neoforge"
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable neoforge AccessTransformers if the file exists

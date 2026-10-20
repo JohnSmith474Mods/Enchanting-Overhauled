@@ -1,0 +1,129 @@
+{
+  "description": {
+    "translate": "enchantment.minecraft.respiration"
+  },
+  "min_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "respiration",
+        "property": "min_cost_base"
+      },
+      "fallback": 10
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "respiration",
+        "property": "min_cost_per_level"
+      },
+      "fallback": 10
+    }
+  },
+  "max_cost": {
+    "base": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "respiration",
+        "property": "max_cost_base"
+      },
+      "fallback": 40
+    },
+    "per_level_above_first": {
+      "config": {
+        "mod_id": "enchanting_overhauled",
+        "category": "enchantment",
+        "group": "respiration",
+        "property": "max_cost_per_level"
+      },
+      "fallback": 10
+    }
+  },
+  "anvil_cost": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "respiration",
+      "property": "anvil_cost"
+    },
+    "fallback": 4
+  },
+  "slots": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "respiration",
+      "property": "slots"
+    },
+    "fallback": [
+      "head"
+    ]
+  },
+  "supported_items": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "respiration",
+      "property": "supported_items"
+    },
+    "fallback": "#minecraft:enchantable/head_armor"
+  },
+  "weight": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "respiration",
+      "property": "weight"
+    },
+    "fallback": 2
+  },
+  "max_level": {
+    "config": {
+      "mod_id": "enchanting_overhauled",
+      "category": "enchantment",
+      "group": "respiration",
+      "property": "max_level"
+    },
+    "fallback": 3
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "id": "minecraft:enchantment.respiration",
+        "attribute": "minecraft:generic.oxygen_bonus",
+        "amount": {
+          "id": "respiration.oxygen_bonus",
+          "value": {
+            "decrement_default": 0.5,
+            "minimum_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "respiration",
+              "property": "amount_value_minimum"
+            },
+            "minimum_default": 0.5,
+            "base_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "respiration",
+              "property": "amount_value_base"
+            },
+            "base_default": 1.5,
+            "decrement_config": {
+              "mod_id": "enchanting_overhauled",
+              "category": "enchantment",
+              "group": "respiration",
+              "property": "amount_value_decrement"
+            },
+            "type": "enchantment_core:configurable_diminishing_returns"
+          },
+          "type": "enchantment_core:pointer"
+        },
+        "operation": "add_value"
+      }
+    ]
+  }
+}

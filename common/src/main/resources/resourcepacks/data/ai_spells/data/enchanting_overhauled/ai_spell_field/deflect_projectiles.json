@@ -1,0 +1,63 @@
+{
+  "anchor": {
+    "duration": 600
+  },
+  "cast_type": "direct",
+  "difficulty_gate": "normal",
+  "role": "defensive",
+  "schools": "enchanting_overhauled:abjuration",
+  "spell_field": {
+    "entity_effects": [
+      {
+        "type": "enchantment_core:impulse",
+        "direction": "radial",
+        "entity_filter": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#minecraft:impact_projectiles"
+            }
+          },
+          {
+            "condition": "minecraft:inverted",
+            "term": {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type": "enchanting_overhauled:magic_missile"
+              }
+            }
+          }
+        ],
+        "strength": 2.0
+      }
+    ],
+    "visual_effects": [
+      {
+        "type": "enchantment_core:vector_field",
+        "axis": "radial",
+        "count": 4.0,
+        "distribution": {
+          "sampling_attempts": 15
+        },
+        "particle": {
+          "type": "enchanting_overhauled:enchant"
+        },
+        "speed": 0.16
+      }
+    ],
+    "volumes": [
+      {
+        "shape": {
+          "type": "enchantment_core:cube",
+          "radius": 6.0
+        },
+        "topology": {
+          "origin_range": 6.0
+        }
+      }
+    ]
+  },
+  "target": "self"
+}

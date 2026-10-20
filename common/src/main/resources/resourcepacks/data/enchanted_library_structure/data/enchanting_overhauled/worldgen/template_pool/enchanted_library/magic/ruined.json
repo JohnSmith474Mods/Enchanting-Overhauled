@@ -1,0 +1,33 @@
+{
+  "name": "enchanting_overhauled:enchanted_library/root",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/magic/damaged",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/damaged"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/magic/collapsed",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/collapsed"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "enchanting_overhauled:enchanted_library/magic/ruined",
+        "projection": "rigid",
+        "processors": "enchanting_overhauled:enchanted_library/ruined"
+      }
+    }
+  ]
+}
