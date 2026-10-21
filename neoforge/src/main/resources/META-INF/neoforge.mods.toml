@@ -12,7 +12,7 @@ displayURL="https://modrinth.com/mod/enchanting-overhauled"
 logoFile = "${mod_id}.png"
 credits = "${credits}"
 authors = "${mod_author}"
-description = "${description}"
+description = '''${description}'''
 [[mixins]]
 config = "${mod_id}.mixins.json"
 [[mixins]]

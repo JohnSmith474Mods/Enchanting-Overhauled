@@ -86,7 +86,7 @@ processResources {
     var expandProps = [
             // Project
             'version'                               : version,
-            'group'                                 : project.group, //Else we target the task's group.
+            'group'                                 : project.group,
             'java_version'                          : java_version,
             // Minecraft
             'minecraft_version'                     : minecraft_version,
@@ -109,17 +109,17 @@ processResources {
             'neoforge_version'                      : neoforge_version,
             'neoforge_loader_version_range'         : neoforge_loader_version_range,
             // Config Overhauled
-            "config_overhauled_mod_id"              : project.config_overhauled_mod_id,
-            "config_overhauled_project_id"          : project.config_overhauled_project_id,
-            "config_overhauled_project_name"        : project.config_overhauled_project_name,
-            "config_overhauled_version"             : project.config_overhauled_version,
-            "config_overhauled_version_upper_limit" : project.config_overhauled_version_upper_limit,
+            "config_overhauled_mod_id"              : config_overhauled_mod_id,
+            "config_overhauled_project_id"          : config_overhauled_project_id,
+            "config_overhauled_project_name"        : config_overhauled_project_name,
+            "config_overhauled_version"             : config_overhauled_version,
+            "config_overhauled_version_upper_limit" : config_overhauled_version_upper_limit,
             // Enchantment Core
-            "enchantment_core_mod_id"               : project.enchantment_core_mod_id,
-            "enchantment_core_project_id"           : project.enchantment_core_project_id,
-            "enchantment_core_project_name"         : project.enchantment_core_project_name,
-            "enchantment_core_version"              : project.enchantment_core_version,
-            "enchantment_core_version_upper_limit"  : project.enchantment_core_version_upper_limit
+            "enchantment_core_mod_id"               : enchantment_core_mod_id,
+            "enchantment_core_project_id"           : enchantment_core_project_id,
+            "enchantment_core_project_name"         : enchantment_core_project_name,
+            "enchantment_core_version"              : enchantment_core_version,
+            "enchantment_core_version_upper_limit"  : enchantment_core_version_upper_limit
     ]
 
     filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
