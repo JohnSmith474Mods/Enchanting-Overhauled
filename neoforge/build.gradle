@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation "maven.modrinth:config-overhauled:1.0.1+1.21-neoforge"
-    implementation "johnsmith.enchantmentcore:enchantment-core:1.1.0+1.21-neoforge"
+    implementation "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-neoforge"
+    implementation "johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-neoforge"
 }
 
 neoForge {

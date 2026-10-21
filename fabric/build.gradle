@@ -22,8 +22,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modApi "maven.modrinth:config-overhauled:1.0.1+1.21-fabric"
-    modImplementation "johnsmith.enchantmentcore:enchantment-core:1.1.0+1.21-fabric"
+    modApi "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-fabric"
+    modImplementation "johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-fabric"
 
     modImplementation "com.terraformersmc:modmenu:11.0.3"
 
