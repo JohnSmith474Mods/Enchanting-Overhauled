@@ -3,7 +3,7 @@ package johnsmith.enchantingoverhauled.entity;
 import johnsmith.enchantingoverhauled.client.particle.SgaRuneParticle;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
 import johnsmith.enchantingoverhauled.particle.SimpleParticleTypes;
-import net.minecraft.client.multiplayer.ClientLevel;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -767,7 +767,7 @@ public class MirageEntity extends Mob {
     }
 
     @Nullable
-    public Entity getOrCreateVisualCaster(ClientLevel clientLevel) {
+    public Entity getOrCreateVisualCaster(Level clientLevel) {
         Entity liveCaster = this.getCaster();
         if (liveCaster != null && !(liveCaster instanceof MirageEntity)) {
             return liveCaster;
