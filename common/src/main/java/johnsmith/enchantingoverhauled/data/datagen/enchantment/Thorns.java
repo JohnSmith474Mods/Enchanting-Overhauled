@@ -13,8 +13,8 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentTarget;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.AllOf;
+import net.minecraft.world.item.enchantment.effects.ChangeItemDamage;
 import net.minecraft.world.item.enchantment.effects.DamageEntity;
-import net.minecraft.world.item.enchantment.effects.DamageItem;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.EnchantmentLevelProvider;
 
@@ -42,7 +42,7 @@ public class Thorns {
                                     new DamageEntity(new PointerValue("thorns.post_attack.damage_entity.min_damage", LevelBasedValue.constant(1.0F)),
                                                      new PointerValue("thorns.post_attack.damage_entity.max_damage", LevelBasedValue.constant(5.0F)),
                                                      context.lookup(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.THORNS)),
-                                    new DamageItem(new PointerValue("thorns.post_attack.damage_item", LevelBasedValue.constant(2.0F)))
+                                    new ChangeItemDamage(new PointerValue("thorns.post_attack.damage_item", LevelBasedValue.constant(2.0F)))
                             ),
                             LootItemRandomChanceCondition.randomChance(EnchantmentLevelProvider.forEnchantmentLevel(new PointerValue("thorns.random_chance", new DiminishingReturnsValue(0.20F, 0.05F, 0.00F))))
                     )

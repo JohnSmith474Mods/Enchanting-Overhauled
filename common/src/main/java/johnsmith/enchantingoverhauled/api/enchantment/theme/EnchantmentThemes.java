@@ -84,9 +84,9 @@ public class EnchantmentThemes {
     public static ResourceKey<EnchantmentTheme> getThemeKey(@Nullable RegistryAccess registryAccess,
                                                             Holder<Enchantment> enchantment) {
         if (registryAccess != null) {
-            var themeRegistryOpt = registryAccess.registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+            var themeRegistryOpt = registryAccess.lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
             if (themeRegistryOpt.isPresent()) {
-                for (var themeRef : themeRegistryOpt.get().holders().toList()) {
+                for (var themeRef : themeRegistryOpt.get().listElements().toList()) {
                     ResourceKey<EnchantmentTheme> key = themeRef.key();
                     if (isCommon(key)) {
                         continue;

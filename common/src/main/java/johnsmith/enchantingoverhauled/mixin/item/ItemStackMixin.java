@@ -18,9 +18,8 @@ public abstract class ItemStackMixin implements DataComponentHolder {
     public abstract Item getItem();
 
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
-    private void modifyIsEnchantable(CallbackInfoReturnable<Boolean> cir) {
-        ItemStack self = (ItemStack) (Object) this;
-        if (!this.getItem().isEnchantable(self)) {
+    private void enchanting_overhauled$modifyIsEnchantable(CallbackInfoReturnable<Boolean> cir) {
+        if (!this.has(DataComponents.ENCHANTABLE)) {
             cir.setReturnValue(false);
             return;
         }

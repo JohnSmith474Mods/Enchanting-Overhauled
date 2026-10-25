@@ -5,6 +5,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
@@ -146,5 +147,16 @@ public class Tags {
     public static final TagKey<Biome> SPAWNS_ENCHANTED_BOOK = TagKey.create(
             Registries.BIOME,
             ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "spawns_enchanted_book")
+    );
+
+    /**
+     * DamageType tag identifying damage types which {@link johnsmith.enchantingoverhauled.item.EnchantedTomeItem}
+     * is immune to.
+     * <p>
+     * Tag ID: {@code #enchanting_overhauled:item/enchanted_tome/immune_damage_type}
+     */
+    public static final TagKey<DamageType> TOME_IMMUNE_DAMAGE_TYPE = TagKey.create(
+            Registries.DAMAGE_TYPE,
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item/enchanted_tome/immune_damage_type")
     );
 }

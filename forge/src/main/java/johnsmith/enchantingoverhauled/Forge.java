@@ -25,7 +25,6 @@ import johnsmith.enchantingoverhauled.structure.processor.ForgeStructureProcesso
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -33,8 +32,8 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 @Mod(Constants.MOD_ID)
 public class Forge {
-    public Forge() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public Forge(FMLJavaModLoadingContext context) {
+        IEventBus eventBus = context.getModEventBus();
 
         // Config init
         Config.MANAGER.init(FMLPaths.CONFIGDIR.get());
@@ -71,7 +70,7 @@ public class Forge {
 
         // Client init
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            ForgeClient.initialize(eventBus, ModLoadingContext.get());
+            ForgeClient.initialize(eventBus, context);
         }
     }
 }

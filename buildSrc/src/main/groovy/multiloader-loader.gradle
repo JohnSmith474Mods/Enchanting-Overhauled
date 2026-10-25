@@ -50,6 +50,8 @@ publishMods {
     type = STABLE
     dryRun = gradle.startParameter.taskNames.contains("dryRunPublish")
 
+    def targetMcVer = project.name == 'forge' ? rootProject.minecraft_version_forge : rootProject.minecraft_version
+
     modLoaders.add(project.name)
 
     modrinth {

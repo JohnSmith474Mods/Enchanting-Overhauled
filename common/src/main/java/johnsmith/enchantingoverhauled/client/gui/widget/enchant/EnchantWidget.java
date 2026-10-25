@@ -15,6 +15,7 @@ import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -266,7 +267,7 @@ public sealed abstract class EnchantWidget permits
             // Fall back to the default table source texture to fill the blank space
             ResourceLocation disabledTex = this.usePlainBackground ? EnchantmentSource.TABLE.disabledTexture : EnchantmentSource.TABLE.getDisabledTexture(this.texIndex);
             RenderSystem.enableBlend();
-            context.blit(disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderType::guiTextured, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
             RenderSystem.disableBlend();
         }
         // endregion
@@ -387,8 +388,8 @@ public sealed abstract class EnchantWidget permits
             }
 
             RenderSystem.enableBlend();
-            context.blit(textureToDraw, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
-            context.blitSprite(levelSprite, this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
+            context.blit(RenderType::guiTextured, textureToDraw, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blitSprite(RenderType::guiTextured, levelSprite, this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
             RenderSystem.disableBlend();
 
             MutableComponent displayComponent = this.getFormattedEnchantmentName(source);
@@ -478,7 +479,7 @@ public sealed abstract class EnchantWidget permits
             EnchantmentSource source = this.state.visualSource();
             ResourceLocation disabledTex = this.usePlainBackground ? source.disabledTexture : source.getDisabledTexture(this.texIndex);
             RenderSystem.enableBlend();
-            context.blit(disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderType::guiTextured, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             if (this.state.enchantment().isEmpty()) {
                 RenderSystem.disableBlend();
@@ -486,7 +487,7 @@ public sealed abstract class EnchantWidget permits
             }
 
             int costIndex = Math.max(0, this.state.xpCost() - 1);
-            context.blitSprite(DISABLED_LEVEL_SPRITES[costIndex], this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
+            context.blitSprite(RenderType::guiTextured, DISABLED_LEVEL_SPRITES[costIndex], this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
             RenderSystem.disableBlend();
 
             Minecraft minecraft = Minecraft.getInstance();
@@ -579,7 +580,7 @@ public sealed abstract class EnchantWidget permits
             if (this.state.enchantment().isEmpty()) {
                 return;
             }
-            context.blit(ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderType::guiTextured, ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             MutableComponent displayComponent = this.getFormattedEnchantmentName(EnchantmentSource.NONE);
             Style maxedStyle = Style.EMPTY.withColor(ENCHANTMENT_MAXED_OUT_TEXT_COLOR);
@@ -659,7 +660,7 @@ public sealed abstract class EnchantWidget permits
             if (this.state.enchantment().isEmpty()) {
                 return;
             }
-            context.blit(ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderType::guiTextured, ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             MutableComponent displayComponent = this.getFormattedEnchantmentName(EnchantmentSource.NONE);
             Style overleveledStyle = Style.EMPTY.withColor(ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR);

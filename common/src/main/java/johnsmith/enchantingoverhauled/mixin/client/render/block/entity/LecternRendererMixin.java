@@ -2,14 +2,11 @@ package johnsmith.enchantingoverhauled.mixin.client.render.block.entity;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import johnsmith.enchantingoverhauled.client.ClientConstants;
 import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookModel;
 import johnsmith.enchantingoverhauled.item.Items;
-
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -19,7 +16,6 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,7 +33,6 @@ public class LecternRendererMixin {
 
     @Unique
     private EnchantedBookModel enchanting_overhauled$enchantedBookModel;
-
     @Unique
     private EnchantedBookModel enchanting_overhauled$enchantedTomeModel;
 
@@ -89,25 +84,15 @@ public class LecternRendererMixin {
 
     @WrapOperation(
             method = "render",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/BookModel;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/BookModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V")
     )
-    private void wrapRender(BookModel instance, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color, Operation<Void> original, LecternBlockEntity blockEntity) {
+    private void wrapRender(BookModel instance, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, Operation<Void> original, LecternBlockEntity blockEntity, float partialTick, PoseStack poseStackParam, MultiBufferSource bufferSource) {
         BookModel modelToUse = this.enchanting_overhauled$getModel(blockEntity, instance);
-        modelToUse.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
-    }
-
-    @WrapOperation(
-            method = "render",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/BookModel;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V")
-    )
-    private void wrapRender(BookModel instance, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color, Operation<Void> original, LecternBlockEntity blockEntity, float partialTick, PoseStack poseStackParam, MultiBufferSource bufferSource) {
-        BookModel modelToUse = this.enchanting_overhauled$getModel(blockEntity, instance);
-
-        modelToUse.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        modelToUse.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay);
 
         if (blockEntity.getBook().hasFoil()) {
             VertexConsumer glintBuffer = bufferSource.getBuffer(RenderType.entityGlint());
-            modelToUse.render(poseStack, glintBuffer, packedLight, packedOverlay, color);
+            modelToUse.renderToBuffer(poseStack, glintBuffer, packedLight, packedOverlay);
         }
     }
 

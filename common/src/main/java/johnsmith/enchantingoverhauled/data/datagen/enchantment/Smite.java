@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
@@ -36,6 +37,6 @@ public class Smite {
                             new AddValue(new PointerValue("smite.damage", new DiminishingReturnsValue(4.5F, 1.5F, 1.5F))),
                             LootItemEntityPropertyCondition.hasProperties(
                                     LootContext.EntityTarget.THIS,
-                                    EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityTypeTags.SENSITIVE_TO_SMITE))))
+                                    EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.SENSITIVE_TO_SMITE))))
                     .build(AdaptedEnchantments.SMITE.location());
 }

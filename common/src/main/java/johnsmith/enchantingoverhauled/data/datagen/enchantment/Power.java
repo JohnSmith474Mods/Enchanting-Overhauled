@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
@@ -34,7 +35,7 @@ public class Power {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE,
                             new AddValue(new PointerValue("power.damage", new DiminishingReturnsValue(0.8F, 0.2F, 0.2F))),
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.ARROWS))
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER, EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.ARROWS))
                     )
                     .build(AdaptedEnchantments.POWER.location());
 }

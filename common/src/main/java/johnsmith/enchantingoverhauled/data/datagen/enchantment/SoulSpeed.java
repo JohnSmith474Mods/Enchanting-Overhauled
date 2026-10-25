@@ -1,5 +1,6 @@
 package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
@@ -20,7 +21,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
-import net.minecraft.world.item.enchantment.effects.DamageItem;
+import net.minecraft.world.item.enchantment.effects.ChangeItemDamage;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import net.minecraft.world.item.enchantment.effects.PlaySoundEffect;
 import net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect;
@@ -41,11 +42,11 @@ public class SoulSpeed {
             EquipmentSlotGroup.FEET
     );
 
-    public static final EntityPredicate.Builder TICK_PREDICATE = EntityPredicate.Builder.entity()
+    public static final Function<BootstrapContext<Enchantment>, EntityPredicate.Builder> TICK_PREDICATE = context -> EntityPredicate.Builder.entity()
             .periodicTick(5)
             .flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false).setOnGround(true))
             .moving(MovementPredicate.horizontalSpeed(Doubles.atLeast(1.0E-5F)))
-            .movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS)));
+            .movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(RegistryLookup.BLOCK.apply(context), BlockTags.SOUL_SPEED_BLOCKS)));
 
     public static final EnchantmentAttributeEffect MOVEMENT_SPEED_EFFECT = new EnchantmentAttributeEffect(
             ResourceLocation.withDefaultNamespace("enchantment.soul_speed"),
@@ -73,13 +74,13 @@ public class SoulSpeed {
                                                     EnchantmentActiveCheck.enchantmentActiveCheck(),
                                                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false))),
                                                     AnyOfCondition.anyOf(
-                                                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS)))),
+                                                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(RegistryLookup.BLOCK.apply(context), BlockTags.SOUL_SPEED_BLOCKS)))),
                                                             LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnGround(false)).build())
                                                     )
                                             ),
                                             AllOfCondition.allOf(
                                                     EnchantmentActiveCheck.enchantmentInactiveCheck(),
-                                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS))).flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false)))
+                                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(RegistryLookup.BLOCK.apply(context), BlockTags.SOUL_SPEED_BLOCKS))).flags(EntityFlagsPredicate.Builder.flags().setIsFlying(false)))
                                             )
                                     )
                             )
@@ -87,27 +88,27 @@ public class SoulSpeed {
                     .withEffect(
                             EnchantmentEffectComponents.LOCATION_CHANGED,
                             SoulSpeed.MOVEMENT_EFFICIENCY_EFFECT,
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS))))
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(RegistryLookup.BLOCK.apply(context), BlockTags.SOUL_SPEED_BLOCKS))))
                     )
                     .withEffect(
                             EnchantmentEffectComponents.LOCATION_CHANGED,
-                            new DamageItem(new PointerValue("soul_speed.damage_item", LevelBasedValue.constant(1.0F))),
+                            new ChangeItemDamage(new PointerValue("soul_speed.damage_item", LevelBasedValue.constant(1.0F))),
                             AllOfCondition.allOf(
                                     LootItemRandomChanceCondition.randomChance(EnchantmentLevelProvider.forEnchantmentLevel(new PointerValue("soul_speed.damage_item", LevelBasedValue.constant(0.04F)))),
-                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnGround(true)).movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.SOUL_SPEED_BLOCKS))))
+                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnGround(true)).movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(RegistryLookup.BLOCK.apply(context), BlockTags.SOUL_SPEED_BLOCKS))))
                             )
                     )
                     .withEffect(
                             EnchantmentEffectComponents.TICK,
                             new SpawnParticlesEffect(ParticleTypes.SOUL, SpawnParticlesEffect.inBoundingBox(), SpawnParticlesEffect.offsetFromEntityPosition(0.1F), SpawnParticlesEffect.movementScaled(-0.2F), SpawnParticlesEffect.fixedVelocity(ConstantFloat.of(0.1F)), ConstantFloat.of(1.0F)),
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, SoulSpeed.TICK_PREDICATE)
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, SoulSpeed.TICK_PREDICATE.apply(context))
                     )
                     .withEffect(
                             EnchantmentEffectComponents.TICK,
                             new PlaySoundEffect(SoundEvents.SOUL_ESCAPE, ConstantFloat.of(0.6F), UniformFloat.of(0.6F, 1.0F)),
                             AllOfCondition.allOf(
                                     LootItemRandomChanceCondition.randomChance(0.35F),
-                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, SoulSpeed.TICK_PREDICATE)
+                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, SoulSpeed.TICK_PREDICATE.apply(context))
                             )
                     )
                     .build(AdaptedEnchantments.SOUL_SPEED.location());

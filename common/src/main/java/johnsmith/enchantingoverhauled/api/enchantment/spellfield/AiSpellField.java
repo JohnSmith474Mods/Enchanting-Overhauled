@@ -537,7 +537,7 @@ public record AiSpellField(
             if (spatialSource instanceof LivingEntity living
                     && living.isAlive()
                     && !(living instanceof Player)
-                    && (owner == null || living == owner || (owner instanceof AbstractFlyingBookEntity book && !book.isValidHostileTarget(living)))) {
+                    && (owner == null || living == owner || (owner instanceof AbstractFlyingBookEntity book && !book.isValidNPCTarget(living) && !book.isValidPlayerTarget(living)))) {
                 anchor.startRiding(living, true);
             }
         } else {

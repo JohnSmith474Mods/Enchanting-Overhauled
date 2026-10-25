@@ -180,7 +180,7 @@ public class UpdatingJigsawStructure extends Structure {
     }
 
     /**
-     * Computes the starting generation point and assembles the jigsaw pieces via {@link JigsawPlacement#addPieces}.
+     * Computes the starting generation point and assembles the jigsaw pieces via {@link JigsawPlacement}.
      *
      * @param context The world generation context.
      * @return An {@link Optional} containing the {@link GenerationStub} if placement succeeded.
@@ -226,10 +226,10 @@ public class UpdatingJigsawStructure extends Structure {
 
         BoundingBox chunkBox = new BoundingBox(
                 chunkPos.getMinBlockX(),
-                level.getMinBuildHeight(),
+                level.getMinY(),
                 chunkPos.getMinBlockZ(),
                 chunkPos.getMaxBlockX(),
-                level.getMaxBuildHeight() - 1,
+                level.getMaxY() - 1,
                 chunkPos.getMaxBlockZ()
         );
 

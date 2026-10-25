@@ -20,6 +20,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -233,16 +234,16 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
         int alignX = this.leftPos;
         int alignY = this.topPos;
 
-        context.blit(BACKGROUND_TEXTURE, alignX, alignY, 0, 0, this.imageWidth, this.imageHeight);
+        context.blit(RenderType::guiTextured, BACKGROUND_TEXTURE, alignX, alignY, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
         if (!this.menu.getSlot(0).hasItem()) {
-            context.blit(EMPTY_SLOT_TARGET_TEXTURE, alignX + this.menu.getSlot(0).x, alignY + this.menu.getSlot(0).y, 0, 0, 16, 16, 16, 16);
+            context.blit(RenderType::guiTextured, EMPTY_SLOT_TARGET_TEXTURE, alignX + this.menu.getSlot(0).x, alignY + this.menu.getSlot(0).y, 0, 0, 16, 16, 16, 16);
         }
         if (!this.menu.getSlot(1).hasItem()) {
-            context.blit(EMPTY_SLOT_FUEL_TEXTURE, alignX + this.menu.getSlot(1).x, alignY + this.menu.getSlot(1).y, 0, 0, 16, 16, 16, 16);
+            context.blit(RenderType::guiTextured, EMPTY_SLOT_FUEL_TEXTURE, alignX + this.menu.getSlot(1).x, alignY + this.menu.getSlot(1).y, 0, 0, 16, 16, 16, 16);
         }
         if (!this.menu.getSlot(2).hasItem()) {
-            context.blit(EMPTY_SLOT_SOURCE_TEXTURE, alignX + this.menu.getSlot(2).x, alignY + this.menu.getSlot(2).y, 0, 0, 16, 16, 16, 16);
+            context.blit(RenderType::guiTextured, EMPTY_SLOT_SOURCE_TEXTURE, alignX + this.menu.getSlot(2).x, alignY + this.menu.getSlot(2).y, 0, 0, 16, 16, 16, 16);
         }
 
         for (EnchantWidget widget : this.enchantmentWidgets) {
@@ -362,13 +363,13 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
         int barX = alignX + this.layout.experienceBarXOffset();
         int barY = alignY + this.layout.experienceBarYOffset();
 
-        context.blit(EXPERIENCE_BAR_INACTIVE, barX, barY, 0, 0, this.layout.experienceBarWidth(), this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
+        context.blit(RenderType::guiTextured, EXPERIENCE_BAR_INACTIVE, barX, barY, 0, 0, this.layout.experienceBarWidth(), this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
 
         float progress = this.minecraft.player.experienceProgress;
         int activeWidth = (int) (progress * (float) this.layout.experienceBarWidth());
 
         if (activeWidth > 0) {
-            context.blit(EXPERIENCE_BAR_ACTIVE, barX, barY, 0, 0, activeWidth, this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
+            context.blit(RenderType::guiTextured, EXPERIENCE_BAR_ACTIVE, barX, barY, 0, 0, activeWidth, this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
         }
 
         int playerLevel = this.minecraft.player.experienceLevel;

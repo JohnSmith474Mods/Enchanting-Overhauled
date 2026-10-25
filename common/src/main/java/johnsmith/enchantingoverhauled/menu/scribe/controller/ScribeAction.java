@@ -119,7 +119,7 @@ public sealed interface ScribeAction permits
             if (sourceEnchants.isEmpty()) return;
 
             int selectedId = gridData.getSelectedEnchantmentIndex();
-            Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+            Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             Holder<Enchantment> sourceEnch = null;
             int sourceLevel = 0;
 
@@ -226,7 +226,7 @@ public sealed interface ScribeAction permits
 
                     // Retrieve the custom damage type
                     DamageSource arcaneRetribution = new DamageSource(
-                            level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.ARCANE_RETRIBUTION)
+                            level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.ARCANE_RETRIBUTION)
                     );
 
                     serverLevel.explode(

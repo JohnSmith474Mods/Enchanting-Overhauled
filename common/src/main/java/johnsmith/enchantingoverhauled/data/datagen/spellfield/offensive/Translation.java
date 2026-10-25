@@ -43,7 +43,7 @@ public class Translation {
             Optional.empty()
     );
 
-    public static final SpellFieldComponent COMPONENT = new SpellFieldComponent(
+    public static final Function<BootstrapContext<AiSpellField>, SpellFieldComponent> COMPONENT = context -> new SpellFieldComponent(
             List.of(new SpellFieldVolume(
                     Optional.of(new CubeShape(LevelBasedValue.constant(3.F))),
                     Optional.of(new SpatialVector(
@@ -68,8 +68,8 @@ public class Translation {
             )),
             List.of(new ImpulseEffect(LevelBasedValue.constant(8.0F),
                             Optional.of(FieldAxis.RADIAL),
-                            Optional.of(DefaultSpellFields.CAN_HARM.get())),
-                    new DamageEffect(DamageTypes.WIND_CHARGE, LevelBasedValue.constant(2.F), Optional.of(DefaultSpellFields.CAN_HARM.get())),
+                            Optional.of(DefaultSpellFields.CAN_HARM.apply(context))),
+                    new DamageEffect(DamageTypes.WIND_CHARGE, LevelBasedValue.constant(2.F), Optional.of(DefaultSpellFields.CAN_HARM.apply(context))),
                     new BurstEntityVisualEffect(ParticleTypes.SMALL_GUST, LevelBasedValue.constant(16.0F), LevelBasedValue.constant(0.2F))
             ),
             List.of(),
@@ -87,6 +87,6 @@ public class Translation {
                     Optional.of(DefaultSpellFields.schoolSet(context, DefaultMagicSchools.TRANSLATION)),
                     EnchantmentThemes.COMMON,
                     Optional.of(Translation.ANCHOR),
-                    Translation.COMPONENT
+                    Translation.COMPONENT.apply(context)
             );
 }

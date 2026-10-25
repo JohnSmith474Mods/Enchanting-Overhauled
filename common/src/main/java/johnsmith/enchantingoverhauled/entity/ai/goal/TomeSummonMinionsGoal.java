@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.ClipContext;
@@ -247,7 +248,7 @@ public class TomeSummonMinionsGoal extends Goal {
                     : Vec3.atCenterOf(this.targetBlock.above());
 
             for (int i = 0; i < spawnCount; i++) {
-                EnchantedBookEntity book = (EnchantedBookEntity) Entities.ENCHANTED_BOOK.get().create(serverLevel);
+                EnchantedBookEntity book = (EnchantedBookEntity) Entities.ENCHANTED_BOOK.get().create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
                 if (book == null) {
                     continue;
                 }
@@ -310,8 +311,8 @@ public class TomeSummonMinionsGoal extends Goal {
 
         int minX = originX - HORIZONTAL_SEARCH_RANGE;
         int maxX = originX + HORIZONTAL_SEARCH_RANGE;
-        int minY = Math.max(level.getMinBuildHeight(), originY - VERTICAL_SEARCH_RANGE);
-        int maxY = Math.min(level.getMaxBuildHeight() - 2, originY + VERTICAL_SEARCH_RANGE);
+        int minY = Math.max(level.getMinY(), originY - VERTICAL_SEARCH_RANGE);
+        int maxY = Math.min(level.getMaxY() - 2, originY + VERTICAL_SEARCH_RANGE);
         int minZ = originZ - HORIZONTAL_SEARCH_RANGE;
         int maxZ = originZ + HORIZONTAL_SEARCH_RANGE;
 

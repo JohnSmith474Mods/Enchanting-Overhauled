@@ -9,6 +9,7 @@ import johnsmith.enchantingoverhauled.api.item.ArcaneItemNamingUtil;
 
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -18,7 +19,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -31,13 +32,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A custom item representing an Enchanted Page (a fleeting enchantment source).
  * Supports dynamic {@code "<Theme> <Item Name> of <School>"} attribution and
  * naming.
  */
-public class EnchantedPageItem extends EnchantedBookItem {
+public class EnchantedPageItem extends Item {
 
     /**
      * Constructs a new EnchantedPageItem.
@@ -55,7 +57,7 @@ public class EnchantedPageItem extends EnchantedBookItem {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        Component baseName = Component.translatable(this.getDescriptionId(stack));
+        Component baseName = Component.translatable(this.getDescriptionId());
         return ArcaneItemNamingUtil.formatItemName(stack, baseName);
     }
 
@@ -100,8 +102,8 @@ public class EnchantedPageItem extends EnchantedBookItem {
             return itemStack;
         }
 
-        Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
-        List<Holder<Enchantment>> allHolders = registry.holders()
+        Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
+        List<Holder<Enchantment>> allHolders = registry.listElements()
                 .map(h -> (Holder<Enchantment>) h)
                 .collect(Collectors.toList());
 
@@ -152,16 +154,21 @@ public class EnchantedPageItem extends EnchantedBookItem {
         if (!itemStack.is(Items.ENCHANTED_PAGE.get())) {
             return itemStack;
         }
+
         ItemEnchantments enchants = itemStack.get(DataComponents.STORED_ENCHANTMENTS);
         if (enchants != null && !enchants.isEmpty()) {
             return itemStack;
         }
 
-        Registry<Enchantment> registry = world.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
-        List<Holder<Enchantment>> commonEnchants = registry.getOrCreateTag(commonTag).stream()
+        List<Holder<Enchantment>> commonEnchants = registry.get(commonTag)
+                .map(HolderSet.Named::stream)
+                .orElseGet(Stream::empty)
                 .collect(Collectors.toList());
-        List<Holder<Enchantment>> specialEnchants = registry.getOrCreateTag(specialTag).stream()
+        List<Holder<Enchantment>> specialEnchants = registry.get(specialTag)
+                .map(HolderSet.Named::stream)
+                .orElseGet(Stream::empty)
                 .collect(Collectors.toList());
 
         Util.shuffle(commonEnchants, random);
@@ -176,8 +183,10 @@ public class EnchantedPageItem extends EnchantedBookItem {
         }
 
         if (selected == null) {
-            List<Holder<Enchantment>> fallbackEnchants = registry.getOrCreateTag(EnchantmentTags.IN_ENCHANTING_TABLE)
-                    .stream().collect(Collectors.toList());
+            List<Holder<Enchantment>> fallbackEnchants = registry.get(EnchantmentTags.IN_ENCHANTING_TABLE)
+                    .map(HolderSet.Named::stream)
+                    .orElseGet(Stream::empty)
+                    .collect(Collectors.toList());
             if (fallbackEnchants.isEmpty()) {
                 Constants.LOG.error("Critical failure: No enchantments found in fallback tag for {}", itemStack);
                 return itemStack;

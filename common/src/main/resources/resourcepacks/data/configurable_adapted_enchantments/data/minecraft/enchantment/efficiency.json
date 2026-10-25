@@ -93,7 +93,7 @@
     "minecraft:attributes": [
       {
         "id": "minecraft:enchantment.efficiency",
-        "attribute": "minecraft:player.mining_efficiency",
+        "attribute": "minecraft:mining_efficiency",
         "amount": {
           "id": "efficiency.mining_efficiency",
           "value": {

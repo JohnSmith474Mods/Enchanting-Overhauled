@@ -40,8 +40,8 @@ public class EnchantRandomlyFunctionMixin {
         List<Holder<Enchantment>> candidates = this.options
                 .map(HolderSet::stream)
                 .orElseGet(() -> context.getLevel().registryAccess()
-                        .registryOrThrow(Registries.ENCHANTMENT)
-                        .holders()
+                        .lookupOrThrow(Registries.ENCHANTMENT)
+                        .listElements()
                         .map(h -> h))
                 .collect(Collectors.toList());
 

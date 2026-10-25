@@ -49,7 +49,7 @@ public class ScribeRules {
         ItemEnchantments sourceEnchants = EnchantmentLib.getEnchantments(sourceStack);
         if (sourceEnchants.isEmpty()) return ScribeGameState.MISSING_SOURCE;
 
-        Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         Holder<Enchantment> sourceEnch = null;
         int sourceLevel = 0;
 
@@ -178,7 +178,7 @@ public class ScribeRules {
         if (source.isEmpty() || source.is(Tags.PERSISTENT_ENCHANTMENT_SOURCE)) return;
 
         int selectedId = gridData.getSelectedEnchantmentIndex();
-        Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         Holder<Enchantment> selectedEnch = null;
 
         for (var entry : EnchantmentLib.getEnchantments(source).entrySet()) {

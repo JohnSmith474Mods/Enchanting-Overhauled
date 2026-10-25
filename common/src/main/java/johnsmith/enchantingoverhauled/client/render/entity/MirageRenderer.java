@@ -8,17 +8,23 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.inventory.InventoryMenu;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Generic renderer for {@link MirageEntity} that delegates rendering to the caster's
  * {@link EntityRenderer}, preserving the caster's exact model, textures, layers, and animations.
  */
-public class MirageRenderer extends EntityRenderer<MirageEntity> {
+public class MirageRenderer extends EntityRenderer<MirageEntity, MirageRenderer.RenderState> {
+
+    public static class RenderState extends EntityRenderState {
+        @Nullable
+        public MirageEntity entity;
+        public float partialTick = 0.0F;
+    }
 
     public MirageRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -26,24 +32,34 @@ public class MirageRenderer extends EntityRenderer<MirageEntity> {
     }
 
     @Override
+    public @NotNull RenderState createRenderState() {
+        return new RenderState();
+    }
+
+    @Override
+    public void extractRenderState(@NotNull MirageEntity entity, @NotNull RenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.entity = entity;
+        state.partialTick = partialTick;
+    }
+
+    @Override
     public void render(
-            @NotNull MirageEntity entity,
-            float entityYaw,
-            float partialTick,
+            @NotNull RenderState state,
             @NotNull PoseStack poseStack,
             @NotNull MultiBufferSource buffer,
             int packedLight
     ) {
-        if (!(entity.level() instanceof ClientLevel clientLevel)) {
+        MirageEntity entity = state.entity;
+        if (entity == null || !(entity.level() instanceof ClientLevel clientLevel)) {
             return;
         }
-
         Entity visualCaster = entity.getOrCreateVisualCaster(clientLevel);
         if (visualCaster == null || visualCaster instanceof MirageEntity) {
             return;
         }
 
-        EntityRenderer<? super Entity> casterRenderer = this.entityRenderDispatcher.getRenderer(visualCaster);
+        EntityRenderer<? super Entity, ?> casterRenderer = this.entityRenderDispatcher.getRenderer(visualCaster);
         if ((Object) casterRenderer instanceof MirageRenderer) {
             return;
         }
@@ -89,7 +105,7 @@ public class MirageRenderer extends EntityRenderer<MirageEntity> {
         poseStack.pushPose();
         try {
             if (savedBookState == null) {
-                casterRenderer.render(visualCaster, entityYaw, partialTick, poseStack, buffer, packedLight);
+                renderCaster(casterRenderer, visualCaster, state.partialTick, poseStack, buffer, packedLight);
             }
         } catch (Throwable ignored) {
         } finally {
@@ -111,17 +127,17 @@ public class MirageRenderer extends EntityRenderer<MirageEntity> {
         }
     }
 
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull MirageEntity entity) {
-        if (entity.level() instanceof ClientLevel clientLevel) {
-            Entity visualCaster = entity.getOrCreateVisualCaster(clientLevel);
-            if (visualCaster != null && !(visualCaster instanceof MirageEntity)) {
-                EntityRenderer<? super Entity> casterRenderer = this.entityRenderDispatcher.getRenderer(visualCaster);
-                if (!((Object) casterRenderer instanceof MirageRenderer)) {
-                    return casterRenderer.getTextureLocation(visualCaster);
-                }
-            }
-        }
-        return InventoryMenu.BLOCK_ATLAS;
+    @SuppressWarnings("unchecked")
+    private static <E extends Entity, S extends EntityRenderState> void renderCaster(
+            EntityRenderer<E, S> renderer,
+            Entity visualCaster,
+            float partialTick,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight
+    ) {
+        E castEntity = (E) visualCaster;
+        S casterState = renderer.createRenderState(castEntity, partialTick);
+        renderer.render(casterState, poseStack, buffer, packedLight);
     }
 }

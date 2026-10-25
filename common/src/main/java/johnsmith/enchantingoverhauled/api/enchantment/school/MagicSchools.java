@@ -117,11 +117,11 @@ public class MagicSchools {
         if (registryAccess == null || schoolKey == null || isAberration(schoolKey)) {
             return List.of();
         }
-        Optional<Registry<MagicSchool>> regOpt = registryAccess.registry(REGISTRY_KEY);
+        Optional<Registry<MagicSchool>> regOpt = registryAccess.lookup(REGISTRY_KEY);
         if (regOpt.isEmpty()) {
             return List.of();
         }
-        Optional<Holder.Reference<MagicSchool>> holderOpt = regOpt.get().getHolder(schoolKey);
+        Optional<Holder.Reference<MagicSchool>> holderOpt = regOpt.get().get(schoolKey);
         if (holderOpt.isEmpty()) {
             return List.of();
         }
@@ -154,13 +154,13 @@ public class MagicSchools {
         if (firstSchool.equals(secondSchool)) {
             return true;
         }
-        Optional<Registry<MagicSchool>> regOpt = registryAccess.registry(REGISTRY_KEY);
+        Optional<Registry<MagicSchool>> regOpt = registryAccess.lookup(REGISTRY_KEY);
         if (regOpt.isEmpty()) {
             return false;
         }
         Registry<MagicSchool> registry = regOpt.get();
-        Optional<Holder.Reference<MagicSchool>> firstHolder = registry.getHolder(firstSchool);
-        Optional<Holder.Reference<MagicSchool>> secondHolder = registry.getHolder(secondSchool);
+        Optional<Holder.Reference<MagicSchool>> firstHolder = registry.get(firstSchool);
+        Optional<Holder.Reference<MagicSchool>> secondHolder = registry.get(secondSchool);
         if (firstHolder.isEmpty() || secondHolder.isEmpty()) {
             return false;
         }
@@ -191,11 +191,11 @@ public class MagicSchools {
      */
     public static MagicSchool getSchool(@Nullable RegistryAccess registryAccess, ResourceKey<MagicSchool> schoolKey) {
         if (registryAccess != null) {
-            Optional<Registry<MagicSchool>> regOpt = registryAccess.registry(REGISTRY_KEY);
+            Optional<Registry<MagicSchool>> regOpt = registryAccess.lookup(REGISTRY_KEY);
             if (regOpt.isPresent()) {
-                MagicSchool found = regOpt.get().get(schoolKey);
-                if (found != null) {
-                    return found;
+                Optional<Holder.Reference<MagicSchool>> found = regOpt.get().get(schoolKey);
+                if (found.isPresent()) {
+                    return found.get().value();
                 }
             }
         }
@@ -220,9 +220,9 @@ public class MagicSchools {
      */
     private static Holder<Enchantment> resolveCanonicalHolder(@Nullable RegistryAccess registryAccess, Holder<Enchantment> enchantment) {
         if (registryAccess != null && enchantment.unwrapKey().isPresent()) {
-            Optional<Registry<Enchantment>> enchRegOpt = registryAccess.registry(Registries.ENCHANTMENT);
+            Optional<Registry<Enchantment>> enchRegOpt = registryAccess.lookup(Registries.ENCHANTMENT);
             if (enchRegOpt.isPresent()) {
-                Optional<Holder.Reference<Enchantment>> bound = enchRegOpt.get().getHolder(enchantment.unwrapKey().get());
+                Optional<Holder.Reference<Enchantment>> bound = enchRegOpt.get().get(enchantment.unwrapKey().get());
                 if (bound.isPresent()) {
                     return bound.get();
                 }
@@ -242,9 +242,9 @@ public class MagicSchools {
     public static ResourceKey<MagicSchool> getSchoolKey(@Nullable RegistryAccess registryAccess, Holder<Enchantment> enchantment) {
         if (registryAccess != null) {
             Holder<Enchantment> targetHolder = resolveCanonicalHolder(registryAccess, enchantment);
-            var schoolRegistryOpt = registryAccess.registry(REGISTRY_KEY);
+            var schoolRegistryOpt = registryAccess.lookup(REGISTRY_KEY);
             if (schoolRegistryOpt.isPresent()) {
-                for (var schoolRef : schoolRegistryOpt.get().holders().toList()) {
+                for (var schoolRef : schoolRegistryOpt.get().listElements().toList()) {
                     ResourceKey<MagicSchool> key = schoolRef.key();
                     if (isAberration(key)) {
                         continue;
@@ -271,9 +271,9 @@ public class MagicSchools {
         List<ResourceKey<MagicSchool>> matches = new ArrayList<>();
         if (registryAccess != null) {
             Holder<Enchantment> targetHolder = resolveCanonicalHolder(registryAccess, enchantment);
-            var schoolRegistryOpt = registryAccess.registry(REGISTRY_KEY);
+            var schoolRegistryOpt = registryAccess.lookup(REGISTRY_KEY);
             if (schoolRegistryOpt.isPresent()) {
-                for (var schoolRef : schoolRegistryOpt.get().holders().toList()) {
+                for (var schoolRef : schoolRegistryOpt.get().listElements().toList()) {
                     ResourceKey<MagicSchool> key = schoolRef.key();
                     if (isAberration(key)) {
                         continue;

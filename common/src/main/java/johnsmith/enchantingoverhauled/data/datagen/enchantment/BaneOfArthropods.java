@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
@@ -42,7 +43,7 @@ public class BaneOfArthropods {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE,
                             new AddValue(new PointerValue("bane_of_arthropods.damage", new DiminishingReturnsValue(4.5F, 1.5F, 1.5F))),
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)))
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)))
                     )
                     .withEffect(
                             EnchantmentEffectComponents.POST_ATTACK,
@@ -55,7 +56,7 @@ public class BaneOfArthropods {
                                     new PointerValue("bane_of_arthropods.slowness.min_amplifier", LevelBasedValue.constant(0.0F)),
                                     new PointerValue("bane_of_arthropods.slowness.max_amplifier", LevelBasedValue.perLevel(1.0F))
                             ),
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)))
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)))
                                     .and(DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().isDirect(true)))
                     )
                     .build(AdaptedEnchantments.BANE_OF_ARTHROPODS.location());

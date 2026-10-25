@@ -27,12 +27,12 @@ public class LootFunctionUtils {
         if (options.isPresent()) {
             return options.get().stream().toList();
         } else {
-            var registry = context.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-            var tag = registry.getTag(EnchantmentTags.ON_RANDOM_LOOT);
+            var registry = context.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            var tag = registry.get(EnchantmentTags.ON_RANDOM_LOOT);
 
             // Map the stream of Holder.Reference<Enchantment> explicitly to Holder<Enchantment>
             List<Holder<Enchantment>> all = tag.map(holders -> holders.stream().toList())
-                    .orElseGet(() -> registry.holders().map(h -> (Holder<Enchantment>) h).toList());
+                    .orElseGet(() -> registry.listElements().map(h -> (Holder<Enchantment>) h).toList());
 
             if (!allowTreasure) {
                 return all.stream().filter(h -> !h.is(EnchantmentTags.TREASURE)).toList();

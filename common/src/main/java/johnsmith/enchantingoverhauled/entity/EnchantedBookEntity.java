@@ -27,8 +27,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -36,6 +37,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -82,15 +84,15 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
     public static boolean checkEnchantedBookSpawnRules(
             EntityType<EnchantedBookEntity> type,
             ServerLevelAccessor level,
-            MobSpawnType spawnType,
+            EntitySpawnReason entitySpawnReason,
             BlockPos pos,
             RandomSource random
     ) {
-        return Monster.checkMonsterSpawnRules(type, level, spawnType, pos, random);
+        return Monster.checkMonsterSpawnRules(type, level, entitySpawnReason, pos, random);
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnType) {
+    public boolean checkSpawnRules(LevelAccessor level, EntitySpawnReason spawnType) {
         return super.checkSpawnRules(level, spawnType);
     }
 
@@ -160,9 +162,9 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, AbstractFlyingBookEntity.class).setAlertOthers());
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 15, true, false, this::isValidHostileTarget));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 20, true, false, this::isValidHostileTarget));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers(AbstractFlyingBookEntity.class));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 15, true, false, (e, s) -> this.isValidPlayerTarget(e)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 20, true, false, (e, s) -> this.isValidNPCTarget(e)));
     }
 
     @Override
@@ -205,10 +207,10 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
             ResourceKey<MagicSchool> schoolKey
     ) {
         ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-        Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
-        List<Holder<Enchantment>> allHolders = registry.holders()
+        Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
+        List<Holder<Enchantment>> allHolders = registry.listElements()
                 .map(h -> (Holder<Enchantment>) h)
-                .collect(Collectors.toList());
+                .toList();
         if (allHolders.isEmpty()) {
             return stack;
         }
@@ -298,6 +300,31 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
         } else {
             this.homeShelfPos = null;
         }
+    }
+
+    @Override
+    public boolean isValidNPCTarget(LivingEntity entity) {
+        if (entity == null || !entity.isAlive() || entity == this) {
+            return false;
+        }
+        if (this.isBookAlly(entity) || this.isNeutralEntity(entity)) {
+            return false;
+        }
+        if (this.isAngryAt(entity)) {
+            return true;
+        }
+        return entity instanceof Mob;
+    }
+
+    @Override
+    public boolean isValidPlayerTarget(LivingEntity entity) {
+        if (entity instanceof Player player) {
+            if (player.isCreative() || player.isSpectator()) {
+                return false;
+            }
+            return !this.isPlayerPacified(player);
+        }
+        return false;
     }
 
     @Override

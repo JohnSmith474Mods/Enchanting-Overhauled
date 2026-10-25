@@ -8,7 +8,8 @@
   },
   "mixins": [
     "entity.player.CommonPlayerMixin",
-    "entity.player.PlayerMixin"
+    "entity.player.PlayerMixin",
+    "menu.ForgeAnvilMenuMixin"
   ],
   "client": [],
   "server": [],

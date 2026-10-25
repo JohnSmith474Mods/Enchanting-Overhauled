@@ -133,7 +133,7 @@ public class ScribeMenu extends AbstractContainerMenu {
                 } else {
                     int selectedId = this.gridData.getSelectedEnchantmentIndex();
                     if (selectedId >= 0) {
-                        Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+                        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
                         boolean found = false;
                         for (var entry : EnchantmentLib.getEnchantments(sourceStack).entrySet()) {
                             if (registry.getId(entry.getKey().value()) == selectedId) {

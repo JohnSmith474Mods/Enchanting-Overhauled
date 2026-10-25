@@ -118,12 +118,12 @@ public class UIFormattingUtil {
         Minecraft client = Minecraft.getInstance();
         if (client.level != null) {
             ResourceKey<EnchantmentTheme> themeKey = EnchantmentThemes.getThemeKey(client.level.registryAccess(), enchantment);
-            var themeRegistry = client.level.registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+            var themeRegistry = client.level.registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
 
             if (themeRegistry.isPresent()) {
                 var theme = themeRegistry.get().get(themeKey);
-                if (theme != null && theme.colorCode().isPresent()) {
-                    return theme.colorCode().get();
+                if (theme.isPresent() && theme.get().value().colorCode().isPresent()) {
+                    return theme.get().value().colorCode().get();
                 }
             }
         }

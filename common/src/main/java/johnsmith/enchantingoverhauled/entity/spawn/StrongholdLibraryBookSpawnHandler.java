@@ -63,11 +63,11 @@ public final class StrongholdLibraryBookSpawnHandler {
             StructureManager structureManager,
             BlockPos pos
     ) {
-        var registryOpt = level.registryAccess().registry(Registries.STRUCTURE);
+        var registryOpt = level.registryAccess().lookup(Registries.STRUCTURE);
         if (registryOpt.isEmpty()) {
             return false;
         }
-        Optional<Holder.Reference<Structure>> strongholdHolder = registryOpt.get().getHolder(BuiltinStructures.STRONGHOLD);
+        Optional<Holder.Reference<Structure>> strongholdHolder = registryOpt.get().get(BuiltinStructures.STRONGHOLD);
         if (strongholdHolder.isEmpty()) {
             return false;
         }

@@ -68,7 +68,7 @@ public class MagicMissileEntity extends ThrowableProjectile {
             Optional<AiSpellField.AnchorPayload> anchorPayload,
             ItemStack weapon
     ) {
-        super(Entities.MAGIC_MISSILE.get(), owner, level);
+        super(Entities.MAGIC_MISSILE.get(), level);
         this.setNoGravity(true);
         this.spellField = spellField;
         this.anchorPayload = anchorPayload != null ? anchorPayload : Optional.empty();
@@ -130,9 +130,9 @@ public class MagicMissileEntity extends ThrowableProjectile {
     }
 
     public int getThemeColor() {
-        var regOpt = this.level().registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+        var regOpt = this.level().registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (regOpt.isPresent()) {
-            EnchantmentTheme theme = regOpt.get().get(this.getThemeKey());
+            EnchantmentTheme theme = regOpt.get().getValue(this.getThemeKey());
             if (theme != null && theme.colorCode().isPresent()) {
                 return theme.colorCode().get() & 0xFFFFFF;
             }
@@ -216,11 +216,11 @@ public class MagicMissileEntity extends ThrowableProjectile {
                         damage *= 1.5F;
                     }
                     DamageSource source = new DamageSource(
-                            this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.MAGIC_MISSILE),
+                            this.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.MAGIC_MISSILE),
                             this,
                             this.getOwner()
                     );
-                    if (target.hurt(source, damage) && crit && this.level() instanceof ServerLevel serverLevel) {
+                    if (crit && this.level() instanceof ServerLevel serverLevel && target.hurtServer(serverLevel, source, damage)) {
                         serverLevel.playSound(
                                 null,
                                 target.getX(),

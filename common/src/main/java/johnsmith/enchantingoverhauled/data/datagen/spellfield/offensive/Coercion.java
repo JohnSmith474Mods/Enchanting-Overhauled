@@ -38,15 +38,15 @@ public class Coercion {
             Optional.empty()
     );
 
-    public static final SpellFieldComponent COMPONENT = new SpellFieldComponent(
+    public static final Function<BootstrapContext<AiSpellField>, SpellFieldComponent> COMPONENT = context -> new SpellFieldComponent(
             List.of(DefaultSpellFields.linearSphereVolume(4.0F)),
             List.of(
                     new ApplyPotionEffect(List.of(
                             new PotionPayload(MobEffects.MOVEMENT_SLOWDOWN, LevelBasedValue.constant(2), LevelBasedValue.constant(255)),
                             new PotionPayload(MobEffects.DIG_SLOWDOWN, LevelBasedValue.constant(2), LevelBasedValue.constant(255)),
                             new PotionPayload(MobEffects.WEAKNESS, LevelBasedValue.constant(2), LevelBasedValue.constant(255))
-                    ), Optional.of(DefaultSpellFields.CAN_HARM.get())),
-                    new AbsoluteStasisEffect(Optional.of(DefaultSpellFields.CAN_HARM.get())),
+                    ), Optional.of(DefaultSpellFields.CAN_HARM.apply(context))),
+                    new AbsoluteStasisEffect(Optional.of(DefaultSpellFields.CAN_HARM.apply(context))),
                     new BurstEntityVisualEffect(ParticleTypes.ENCHANTED_HIT, LevelBasedValue.constant(10.0F), LevelBasedValue.constant(0.15F))
             ),
             List.of(),
@@ -64,6 +64,6 @@ public class Coercion {
                     Optional.of(DefaultSpellFields.schoolSet(context, DefaultMagicSchools.COERCION)),
                     EnchantmentThemes.COMMON,
                     Optional.of(Coercion.ANCHOR),
-                    Coercion.COMPONENT
+                    Coercion.COMPONENT.apply(context)
             );
 }

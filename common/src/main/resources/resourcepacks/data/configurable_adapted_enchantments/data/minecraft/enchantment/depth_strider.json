@@ -94,7 +94,7 @@
     "minecraft:attributes": [
       {
         "id": "minecraft:enchantment.depth_strider",
-        "attribute": "minecraft:generic.water_movement_efficiency",
+        "attribute": "minecraft:water_movement_efficiency",
         "amount": {
           "id": "depth_strider.water_movement_efficiency",
           "value": {

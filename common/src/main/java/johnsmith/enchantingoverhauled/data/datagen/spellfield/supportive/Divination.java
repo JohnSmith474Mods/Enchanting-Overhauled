@@ -35,7 +35,7 @@ public class Divination {
             Optional.empty()
     );
 
-    public static final SpellFieldComponent COMPONENT = new SpellFieldComponent(
+    public static final Function<BootstrapContext<AiSpellField>, SpellFieldComponent> COMPONENT = context -> new SpellFieldComponent(
             List.of(DefaultSpellFields.linearSphereVolume(4.0F)),
             List.of(
                     new ApplyPotionEffect(
@@ -43,7 +43,7 @@ public class Divination {
                                     new PotionPayload(MobEffects.MOVEMENT_SPEED, LevelBasedValue.constant(100.0F), LevelBasedValue.constant(0.0F)),
                                     new PotionPayload(MobEffects.DAMAGE_BOOST, LevelBasedValue.constant(80.0F), LevelBasedValue.constant(0.0F))
                             ),
-                            Optional.of(DefaultSpellFields.DO_NOT_HARM.get())
+                            Optional.of(DefaultSpellFields.DO_NOT_HARM.apply(context))
                     )
             ),
             List.of(),
@@ -60,7 +60,7 @@ public class Divination {
                             LevelBasedValue.constant(0),
                             false,
                             Optional.of(new ProbabilityDistribution(15)),
-                            Optional.of(DefaultSpellFields.CAN_HARM.get())
+                            Optional.of(DefaultSpellFields.CAN_HARM.apply(context))
                     )
             ),
             List.of(new AmbientFieldVisualEffect(ParticleTypes.END_ROD, LevelBasedValue.constant(18.0F), LevelBasedValue.constant(0.03F), new ProbabilityDistribution(15)))
@@ -77,6 +77,6 @@ public class Divination {
                     Optional.of(DefaultSpellFields.schoolSet(context, DefaultMagicSchools.DIVINATION)),
                     EnchantmentThemes.COMMON,
                     Optional.of(Divination.ANCHOR),
-                    Divination.COMPONENT
+                    Divination.COMPONENT.apply(context)
             );
 }

@@ -1,14 +1,11 @@
 package johnsmith.enchantingoverhauled.item.enchantment.spellfield;
 
 import com.mojang.serialization.MapCodec;
-
 import johnsmith.enchantingoverhauled.Constants;
-
 import johnsmith.enchantmentcore.api.enchantment.spellfield.effect.SpellFieldEffect;
 import johnsmith.enchantmentcore.api.registry.EnchantmentCoreRegistries;
 
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
-
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;

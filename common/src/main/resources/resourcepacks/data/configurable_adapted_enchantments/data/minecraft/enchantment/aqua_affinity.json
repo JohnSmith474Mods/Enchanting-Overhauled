@@ -93,7 +93,7 @@
     "minecraft:attributes": [
       {
         "id": "minecraft:enchantment.aqua_affinity",
-        "attribute": "minecraft:player.submerged_mining_speed",
+        "attribute": "minecraft:submerged_mining_speed",
         "amount": {
           "id": "aqua_affinity.submerged_mining_speed",
           "value": {

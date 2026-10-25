@@ -3,40 +3,56 @@ package johnsmith.enchantingoverhauled.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.AnchorVisualConfig;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.SpellFieldAnchorEntity;
-
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.InventoryMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity> {
+public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, AnchorModelRenderer.RenderState> {
+
+    public static class RenderState extends EntityRenderState {
+        @Nullable
+        public SpellFieldAnchorEntity entity;
+        public float partialTick = 0.0F;
+    }
 
     public AnchorModelRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
+    public @NotNull RenderState createRenderState() {
+        return new RenderState();
+    }
+
+    @Override
+    public void extractRenderState(@NotNull SpellFieldAnchorEntity entity, @NotNull RenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.entity = entity;
+        state.partialTick = partialTick;
+    }
+
+    @Override
     public void render(
-            @NotNull SpellFieldAnchorEntity entity,
-            float entityYaw,
-            float partialTick,
+            @NotNull RenderState state,
             @NotNull PoseStack poseStack,
             @NotNull MultiBufferSource buffer,
             int packedLight
     ) {
-        renderAnchor(entity, null, partialTick, poseStack, buffer, packedLight);
-        super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+        if (state.entity != null) {
+            renderAnchor(state.entity, null, state.partialTick, poseStack, buffer, packedLight);
+        }
+        super.render(state, poseStack, buffer, packedLight);
     }
 
     public static void renderAnchor(
@@ -215,10 +231,5 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity> 
             consumer.addVertex(matrix, c0 * radius, 0.0F, s0 * radius).setColor(r, g, b, a);
             consumer.addVertex(matrix, c0 * inner, 0.0F, s0 * inner).setColor(r, g, b, a);
         }
-    }
-
-    @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull SpellFieldAnchorEntity entity) {
-        return InventoryMenu.BLOCK_ATLAS;
     }
 }

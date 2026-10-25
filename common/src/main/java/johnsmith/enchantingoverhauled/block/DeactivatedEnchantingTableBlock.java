@@ -3,8 +3,8 @@ package johnsmith.enchantingoverhauled.block;
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.advancement.ActivateAltarTrigger;
-import johnsmith.enchantingoverhauled.api.accessor.TomeStorageAccessor;
 import johnsmith.enchantingoverhauled.advancement.Criteria;
+import johnsmith.enchantingoverhauled.api.accessor.TomeStorageAccessor;
 import johnsmith.enchantingoverhauled.api.damagesource.DamageTypes;
 import johnsmith.enchantingoverhauled.item.Items;
 
@@ -21,6 +21,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
@@ -122,7 +123,8 @@ public class DeactivatedEnchantingTableBlock extends Block {
                 if (shouldCreateActivationEffects) {
                     // Spawn activation effects (Sound, Lightning, Particles, Glowing Effect)
                     serverLevel.playSound(null, pos, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(serverLevel);
+
+                    LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(serverLevel, EntitySpawnReason.TRIGGERED);
                     if (lightningBolt != null) {
                         lightningBolt.moveTo(Vec3.atBottomCenterOf(pos));
                         serverLevel.addFreshEntity(lightningBolt);
@@ -195,7 +197,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
 
                     // Retrieve the custom damage type
                     DamageSource arcaneRetribution = new DamageSource(
-                            level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.ARCANE_RETRIBUTION)
+                            level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.ARCANE_RETRIBUTION)
                     );
 
                     // Create an explosion at the block's location

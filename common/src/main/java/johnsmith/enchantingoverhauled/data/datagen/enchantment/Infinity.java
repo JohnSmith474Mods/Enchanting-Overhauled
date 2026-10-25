@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 import johnsmith.enchantmentcore.api.enchantment.value.ProbabilisticValue;
@@ -33,6 +34,6 @@ public class Infinity {
             Enchantment.enchantment(Infinity.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.AMMO_USE,
                             new SetValue(new ProbabilisticValue(new PointerValue("infinity.ammo_use", new LevelBasedValue.Fraction(new DiminishingReturnsValue(4.F, 1.F, 1.F), new LevelBasedValue.Constant(10))))),
-                            MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.ALL_AMMUNITION)))
+                            MatchTool.toolMatches(ItemPredicate.Builder.item().of(RegistryLookup.ITEM.apply(context), Tags.ALL_AMMUNITION)))
                     .build(AdaptedEnchantments.INFINITY.location());
 }

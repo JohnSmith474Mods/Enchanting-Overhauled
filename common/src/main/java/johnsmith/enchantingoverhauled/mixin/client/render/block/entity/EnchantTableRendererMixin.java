@@ -2,21 +2,17 @@ package johnsmith.enchantingoverhauled.mixin.client.render.block.entity;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import johnsmith.enchantingoverhauled.client.ClientConstants;
 import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookModel;
-
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.EnchantTableRenderer;
-
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
@@ -39,7 +35,6 @@ public class EnchantTableRendererMixin {
      */
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(BlockEntityRendererProvider.Context context, CallbackInfo ci) {
-
         // 1. Get the root ModelPart from our custom layer
         ModelPart tomeRoot = context.bakeLayer(ClientConstants.ENCHANTED_TOME_LAYER);
 
@@ -57,11 +52,12 @@ public class EnchantTableRendererMixin {
 
     @WrapOperation(
             method = "render(Lnet/minecraft/world/level/block/entity/EnchantingTableBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/BookModel;render(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/BookModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V")
     )
-    private void wrapRender(BookModel instance, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color, Operation<Void> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
-        original.call(instance, poseStack, vertexConsumer, packedLight, packedOverlay, color);
+    private void wrapRender(BookModel instance, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, Operation<Void> original, @Local(argsOnly = true) MultiBufferSource multiBufferSource) {
+        original.call(instance, poseStack, vertexConsumer, packedLight, packedOverlay);
+
         VertexConsumer glintBuffer = multiBufferSource.getBuffer(RenderType.entityGlint());
-        instance.render(poseStack, glintBuffer, packedLight, packedOverlay, color);
+        instance.renderToBuffer(poseStack, glintBuffer, packedLight, packedOverlay);
     }
 }

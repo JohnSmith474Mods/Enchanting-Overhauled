@@ -39,7 +39,7 @@ public class Obliteration {
             Optional.empty()
     );
 
-    public static final SpellFieldComponent COMPONENT = new SpellFieldComponent(
+    public static final Function<BootstrapContext<AiSpellField>, SpellFieldComponent> COMPONENT = context -> new SpellFieldComponent(
             List.of(new SpellFieldVolume(
                     Optional.of(new CubeShape(new DifficultyBasedValue(LevelBasedValue.perLevel(1.0F, 1.0F)))),
                     Optional.of(new SpatialVector(
@@ -71,7 +71,7 @@ public class Obliteration {
                                     false,
                                     true,
                                     ExplosionDefinition.ExplosionInteraction.NONE,
-                                    Optional.of(DefaultSpellFields.DO_NOT_HARM.get()),
+                                    Optional.of(DefaultSpellFields.DO_NOT_HARM.apply(context)),
                                     Optional.empty(),
                                     Optional.empty(),
                                     Optional.empty()
@@ -105,6 +105,6 @@ public class Obliteration {
                     Optional.of(DefaultSpellFields.schoolSet(context, DefaultMagicSchools.OBLITERATION)),
                     EnchantmentThemes.COMMON,
                     Optional.of(Obliteration.ANCHOR),
-                    Obliteration.COMPONENT
+                    Obliteration.COMPONENT.apply(context)
             );
 }

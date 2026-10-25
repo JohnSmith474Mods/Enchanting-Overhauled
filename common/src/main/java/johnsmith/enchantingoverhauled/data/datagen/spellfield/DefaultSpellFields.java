@@ -8,6 +8,7 @@ import johnsmith.enchantingoverhauled.api.enchantment.spellfield.AiSpellField;
 import johnsmith.enchantingoverhauled.api.enchantment.spellfield.AiSpellFields;
 import johnsmith.enchantingoverhauled.api.loot.condition.CasterHostileCondition;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.math.DistanceMetric;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.math.FieldTopology;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.ConstantScalingFunction;
@@ -42,6 +43,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class DefaultSpellFields {
@@ -65,8 +67,8 @@ public class DefaultSpellFields {
      * Use this for {@code entity_filter} on {@code SpellFieldEntityEffect}s (e.g., {@code ApplyPotionEffect},
      * {@code AbsoluteStasisEffect}, {@code DamageEffect}, {@code ImpulseEffect}).
      */
-    public static final Supplier<ContextAwarePredicate> CAN_HARM = () -> ContextAwarePredicate.create(
-            canHarmCondition().build()
+    public static final Function<BootstrapContext<?>, ContextAwarePredicate> CAN_HARM = context -> ContextAwarePredicate.create(
+            canHarmCondition(RegistryLookup.ENTITY_TYPE.apply(context)).build()
     );
 
     /**
@@ -78,13 +80,14 @@ public class DefaultSpellFields {
      * </ul>
      * Use this for {@code ExplosionDefinition}'s immunity predicate where {@code true} grants immunity.
      */
-    public static final Supplier<ContextAwarePredicate> DO_NOT_HARM = () -> ContextAwarePredicate.create(
-            InvertedLootItemCondition.invert(canHarmCondition()).build()
+    public static final Function<BootstrapContext<?>, ContextAwarePredicate> DO_NOT_HARM = context -> ContextAwarePredicate.create(
+            InvertedLootItemCondition.invert(canHarmCondition(RegistryLookup.ENTITY_TYPE.apply(context))).build()
     );
 
-    public static LootItemCondition.Builder canHarmCondition() {
+    public static LootItemCondition.Builder canHarmCondition(HolderGetter<EntityType<?>> type) {
         return AllOfCondition.allOf(
                 noneOf(
+                        type,
                         Tags.ENCHANTED_TOME_ALLIES,
                         Tags.ENCHANTED_TOME_NEUTRAL,
                         Tags.ENCHANTED_TOME_AVOID_COLLATERAL
@@ -97,13 +100,13 @@ public class DefaultSpellFields {
     }
 
     @SafeVarargs
-    public static LootItemCondition.Builder noneOf(TagKey<EntityType<?>>... tags) {
+    public static LootItemCondition.Builder noneOf(HolderGetter<EntityType<?>> type, TagKey<EntityType<?>>... tags) {
         LootItemCondition.Builder[] conditions = new LootItemCondition.Builder[tags.length];
         for (int i = 0; i < tags.length; i++) {
             conditions[i] = InvertedLootItemCondition.invert(
                     LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
-                            EntityPredicate.Builder.entity().of(tags[i])
+                            EntityPredicate.Builder.entity().of(type, tags[i])
                     )
             );
         }
@@ -138,19 +141,19 @@ public class DefaultSpellFields {
         ).build();
     }
 
-    public static final Supplier<ContextAwarePredicate> NON_PLAYER_FILTER = () -> ContextAwarePredicate.create(
+    public static final Function<BootstrapContext<?>, ContextAwarePredicate> NON_PLAYER_FILTER = context -> ContextAwarePredicate.create(
             InvertedLootItemCondition.invert(
                     LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
-                            EntityPredicate.Builder.entity().of(EntityType.PLAYER)
+                            EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.PLAYER)
                     )
             ).build()
     );
 
-    public static final Supplier<ContextAwarePredicate> PLAYER_ONLY_FILTER = () -> ContextAwarePredicate.create(
+    public static final Function<BootstrapContext<?>, ContextAwarePredicate> PLAYER_ONLY_FILTER = context -> ContextAwarePredicate.create(
             LootItemEntityPropertyCondition.hasProperties(
                     LootContext.EntityTarget.THIS,
-                    EntityPredicate.Builder.entity().of(EntityType.PLAYER)
+                    EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.PLAYER)
             ).build()
     );
 

@@ -1,5 +1,6 @@
 package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
@@ -37,7 +38,7 @@ public class Looting {
                             EnchantmentTarget.ATTACKER,
                             EnchantmentTarget.VICTIM,
                             new AddValue(new PointerValue("looting.equipment_drops", new DiminishingReturnsValue(0.015F, 0.005F, 0.005F))),
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityType.PLAYER)))
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.PLAYER)))
                     )
                     .build(AdaptedEnchantments.LOOTING.location());
 }

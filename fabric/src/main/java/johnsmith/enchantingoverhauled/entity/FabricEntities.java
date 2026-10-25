@@ -2,8 +2,10 @@ package johnsmith.enchantingoverhauled.entity;
 
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.tag.Tags;
+
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +15,6 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 public class FabricEntities {
-
     public static void initialize() {
         for (Entities entity : Entities.values()) {
             Registry.register(

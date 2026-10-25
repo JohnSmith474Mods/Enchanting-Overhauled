@@ -1,7 +1,7 @@
 {
   "enchantment.enchanting_overhauled.magic_protection": "Magic Protection",
   "enchantment.enchanting_overhauled.physical_protection": "Physical Protection",
-  "block.enchanting_overhauled.deactivated_enchanting_table": "Enchanting Altar",
+  "block.enchanting_overhauled.deactivated_enchanting_table": "Deactivated Enchanting Altar",
   "block.enchanting_overhauled.deactivated_enchanting_table.wrong_catalyst": "The Enchanting Altar rejects your Catalyst.",
   "block.enchanting_overhauled.disturbed_enchanting_table": "Disturbed Enchanting Altar",
   "container.enchanting_overhauled.scribe": "Scribe",
@@ -15,6 +15,8 @@
   "item.enchanting_overhauled.enchanted_page": "Enchanted Page",
   "item.enchanting_overhauled.enchanted_tome_spawn_egg": "Enchanted Tome Spawn Egg",
   "item.enchanting_overhauled.enchanted_book_spawn_egg": "Enchanted Book Spawn Egg",
+  "item.enchanting_overhauled.deactivated_enchanting_table": "Deactivated Enchanting Altar",
+  "item.enchanting_overhauled.disturbed_enchanting_table": "Disturbed Enchanting Altar",
   "gui.enchanting_overhauled.turn_page": "Turn Page",
   "gui.enchanting_overhauled.upgrade": "Upgrade:",
   "gui.enchanting_overhauled.transfer": "Transfer:",

@@ -82,10 +82,9 @@ public class EnchantmentLib {
         Holder<Block> blockEntry = state.getBlockHolder();
         int maxPower = 0;
 
-        Optional<Registry<EnchantmentTheme>> registryOpt = level.registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+        Optional<Registry<EnchantmentTheme>> registryOpt = level.registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (registryOpt.isPresent()) {
             Registry<EnchantmentTheme> registry = registryOpt.get();
-
             for (EnchantmentTheme theme : registry) {
                 for (PowerProvider provider : theme.powerProviders()) {
                     if (provider.blocks().contains(blockEntry)) {
@@ -98,6 +97,7 @@ public class EnchantmentLib {
                 }
             }
         }
+
         return maxPower;
     }
 
@@ -148,7 +148,6 @@ public class EnchantmentLib {
                             }
                         }
                     }
-
                     totalPower += (itemCount * bonusPerItem);
                 }
             } catch (Exception e) {
@@ -173,7 +172,6 @@ public class EnchantmentLib {
     public static ItemStack removeCursesFrom(ItemStack target) {
         DataComponentType<ItemEnchantments> componentType = getEnchantmentsComponentType(target);
         ItemEnchantments enchants = target.get(componentType);
-
         if (enchants == null || enchants.isEmpty()) {
             return target;
         }

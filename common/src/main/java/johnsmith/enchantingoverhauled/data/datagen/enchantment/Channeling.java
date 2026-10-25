@@ -1,5 +1,6 @@
 package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
@@ -55,7 +56,7 @@ public class Channeling {
                                     ),
                                     WeatherCheck.weather().setThundering(true),
                                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().located(net.minecraft.advancements.critereon.LocationPredicate.Builder.location().setCanSeeSky(true))),
-                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().of(EntityType.TRIDENT))
+                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.TRIDENT))
                             )
                     )
                     .withEffect(EnchantmentEffectComponents.HIT_BLOCK,
@@ -70,7 +71,7 @@ public class Channeling {
                                             )
                                     ),
                                     WeatherCheck.weather().setThundering(true),
-                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().of(EntityType.TRIDENT)),
+                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.TRIDENT)),
                                     LocationCheck.checkLocation(net.minecraft.advancements.critereon.LocationPredicate.Builder.location().setCanSeeSky(true)),
                                     LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.LIGHTNING_ROD)
                             )

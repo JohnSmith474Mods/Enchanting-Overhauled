@@ -60,8 +60,8 @@ public record EnchantmentMenuSyncPayload(int containerId, List<EnchantContext> c
             ResourceLocation loc = ResourceLocation.STREAM_CODEC.decode(buf);
             int level = buf.readVarInt();
             Holder<Enchantment> holder = buf.registryAccess()
-                    .registryOrThrow(Registries.ENCHANTMENT)
-                    .getHolder(ResourceKey.create(Registries.ENCHANTMENT, loc))
+                    .lookupOrThrow(Registries.ENCHANTMENT)
+                    .get(ResourceKey.create(Registries.ENCHANTMENT, loc))
                     .orElseThrow();
             return new EnchantmentInstance(holder, level);
         }

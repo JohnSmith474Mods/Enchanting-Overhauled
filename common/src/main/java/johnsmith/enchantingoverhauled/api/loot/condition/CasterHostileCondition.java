@@ -6,6 +6,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
 import johnsmith.enchantingoverhauled.entity.MirageEntity;
 import johnsmith.enchantingoverhauled.loot.condition.LootItemConditionTypes;
+
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.SpellFieldAnchorEntity;
 
 import net.minecraft.server.level.ServerLevel;
@@ -83,14 +84,14 @@ public record CasterHostileCondition() implements LootItemCondition {
      */
     @Override
     public boolean test(LootContext context) {
-        Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
+        Entity entity = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof LivingEntity target) || !target.isAlive()) {
             return false;
         }
 
         Entity caster = MirageEntity.getCurrentCasterContext();
         if (caster == null || caster == target) {
-            caster = context.getParamOrNull(LootContextParams.ATTACKING_ENTITY);
+            caster = context.getOptionalParameter(LootContextParams.ATTACKING_ENTITY);
         }
         if (caster instanceof Projectile projectile && projectile.getOwner() != null) {
             caster = projectile.getOwner();
@@ -102,7 +103,8 @@ public record CasterHostileCondition() implements LootItemCondition {
         if (caster instanceof AbstractFlyingBookEntity bookCaster) {
             return bookCaster.isAngryAt(target)
                     || bookCaster.getTarget() == target
-                    || bookCaster.isValidHostileTarget(target);
+                    || bookCaster.isValidPlayerTarget(target)
+                    || bookCaster.isValidNPCTarget(target);
         }
 
         if (caster instanceof Mob mobCaster && mobCaster != target) {
@@ -129,7 +131,8 @@ public record CasterHostileCondition() implements LootItemCondition {
                 book -> book.isAlive()
                         && (book.isAngryAt(target)
                         || book.getTarget() == target
-                        || book.isValidHostileTarget(target))
+                        || book.isValidPlayerTarget(target)
+                        || book.isValidNPCTarget(target))
         );
         return !hostileBooks.isEmpty();
     }

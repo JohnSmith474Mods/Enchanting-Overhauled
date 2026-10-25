@@ -23,6 +23,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -97,8 +98,8 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     ) {
         if (Config.ENABLE_MINEABLE_ENCHANTING_TABLE.get()) {
             this.spawnDestroyParticles(level, player, blockPos, blockState);
-            if (blockState.is(BlockTags.GUARDED_BY_PIGLINS)) {
-                PiglinAi.angerNearbyPiglins(player, false);
+            if (blockState.is(BlockTags.GUARDED_BY_PIGLINS) && level instanceof ServerLevel serverlevel) {
+                PiglinAi.angerNearbyPiglins(serverlevel, player, false);
             }
             level.gameEvent(GameEvent.BLOCK_DESTROY, blockPos, GameEvent.Context.of(player, blockState));
             return blockState;
@@ -214,7 +215,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
      */
     @Unique
     private void enchanting_overhauled$spawnAlwaysVanillaParticles(Level level, BlockPos blockPos, RandomSource randomSource) {
-        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = level.registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = level.registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (themeRegistryOpt.isEmpty()) return;
         Registry<EnchantmentTheme> themeRegistry = themeRegistryOpt.get();
 
@@ -259,7 +260,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     @Unique
     private Optional<EnchantmentTheme> enchanting_overhauled$getDominantTheme(Level level, BlockPos blockPos) {
         Map<EnchantmentTheme, Integer> themePower = new HashMap<>();
-        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = level.registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+        Optional<Registry<EnchantmentTheme>> themeRegistryOpt = level.registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (themeRegistryOpt.isEmpty()) return Optional.empty();
         Registry<EnchantmentTheme> themeRegistry = themeRegistryOpt.get();
 

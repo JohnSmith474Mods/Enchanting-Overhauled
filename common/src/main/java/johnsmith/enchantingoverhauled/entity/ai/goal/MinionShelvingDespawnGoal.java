@@ -285,8 +285,8 @@ public class MinionShelvingDespawnGoal extends Goal {
 
         int minX = originX - HORIZONTAL_SEARCH_RANGE;
         int maxX = originX + HORIZONTAL_SEARCH_RANGE;
-        int minY = Math.max(level.getMinBuildHeight(), originY - VERTICAL_SEARCH_RANGE);
-        int maxY = Math.min(level.getMaxBuildHeight() - 2, originY + VERTICAL_SEARCH_RANGE);
+        int minY = Math.max(level.getMinY(), originY - VERTICAL_SEARCH_RANGE);
+        int maxY = Math.min(level.getMaxY() - 2, originY + VERTICAL_SEARCH_RANGE);
         int minZ = originZ - HORIZONTAL_SEARCH_RANGE;
         int maxZ = originZ + HORIZONTAL_SEARCH_RANGE;
 

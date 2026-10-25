@@ -1,8 +1,5 @@
 package johnsmith.enchantingoverhauled.client.render.entity.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -12,10 +9,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import org.jetbrains.annotations.NotNull;
-
 public class EnchantedBookModel extends BookModel {
-
     private final ModelPart root;
     private final ModelPart buckle;
     public boolean renderedOnLectern = false;
@@ -73,19 +67,10 @@ public class EnchantedBookModel extends BookModel {
     }
 
     @Override
-    public void renderToBuffer(
-            @NotNull PoseStack poseStack,
-            @NotNull VertexConsumer buffer,
-            int packedLight,
-            int packedOverlay,
-            int color
-    ) {
-        this.root.render(poseStack, buffer, packedLight, packedOverlay, color);
-    }
-
-    @Override
     public void setupAnim(float time, float rightPageFlip, float leftPageFlip, float pageFlip) {
+        this.root.resetPose();
         super.setupAnim(time, rightPageFlip, leftPageFlip, pageFlip);
+
         float targetRot = (float) (Math.PI / 2F) - (pageFlip * (float) Math.PI);
         if (this.renderedOnLectern) {
             targetRot = Math.max(targetRot, -0.7F);

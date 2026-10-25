@@ -14,7 +14,6 @@
     "block.entity.EnchantingTableBlockEntityMixin",
     "block.entity.LecternBlockEntityMixin",
     "enchantment.EnchantmentMixin",
-    "entity.item.ItemEntityMixin",
     "entity.npc.VillagerMixin",
     "entity.player.CommonPlayerMixin",
     "entity.player.InventoryMixin",

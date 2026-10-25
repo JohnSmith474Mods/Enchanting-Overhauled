@@ -16,7 +16,7 @@
             "minimum": 0.25
           }
         },
-        "attribute": "minecraft:generic.water_movement_efficiency",
+        "attribute": "minecraft:water_movement_efficiency",
         "id": "minecraft:enchantment.depth_strider",
         "operation": "add_value"
       }

@@ -89,6 +89,9 @@ public class FlyingBookIdleGoal extends Goal {
             this.scoutingTimer = SCOUTING_DURATION_TICKS;
             this.targetPos = this.findRandomScoutingPos();
             if (this.targetPos != null) {
+                if (this.book instanceof EnchantedTomeEntity tome) {
+                    tome.setBoredomTicks(0);
+                }
                 return true;
             }
             this.scanCooldown = 40 + this.book.getRandom().nextInt(40);
@@ -202,7 +205,7 @@ public class FlyingBookIdleGoal extends Goal {
             this.book.setDeltaMovement(toHover.scale(0.32D));
 
             if (distToHoverSqr <= 0.65D || isAlreadyRoosted) {
-                if (this.book instanceof EnchantedTomeEntity tome) {
+                if (this.book instanceof EnchantedTomeEntity tome && this.activeTier != RoostTier.ALTAR_VIGIL) {
                     this.tickDaytimeBoredom(tome);
                 }
 
@@ -270,8 +273,8 @@ public class FlyingBookIdleGoal extends Goal {
 
         int minX = originX - this.searchRange;
         int maxX = originX + this.searchRange;
-        int minY = Math.max(level.getMinBuildHeight(), originY - this.verticalSearchRange);
-        int maxY = Math.min(level.getMaxBuildHeight() - 2, originY + this.verticalSearchRange);
+        int minY = Math.max(level.getMinY(), originY - this.verticalSearchRange);
+        int maxY = Math.min(level.getMaxY() - 2, originY + this.verticalSearchRange);
         int minZ = originZ - this.searchRange;
         int maxZ = originZ + this.searchRange;
 

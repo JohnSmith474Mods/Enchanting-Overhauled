@@ -3,7 +3,6 @@ package johnsmith.enchantingoverhauled.entity;
 import johnsmith.enchantingoverhauled.client.particle.SgaRuneParticle;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
 import johnsmith.enchantingoverhauled.particle.SimpleParticleTypes;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,13 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.ClipContext;
@@ -165,7 +158,7 @@ public class MirageEntity extends Mob {
 
         List<MirageEntity> spawnedMirages = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            MirageEntity mirage = Entities.MIRAGE.<MirageEntity>get().create(serverLevel);
+            MirageEntity mirage = Entities.MIRAGE.<MirageEntity>get().create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
             if (mirage == null) {
                 continue;
             }
@@ -767,7 +760,7 @@ public class MirageEntity extends Mob {
     }
 
     @Nullable
-    public Entity getOrCreateVisualCaster(Level clientLevel) {
+    public Entity getOrCreateVisualCaster(Level level) {
         Entity liveCaster = this.getCaster();
         if (liveCaster != null && !(liveCaster instanceof MirageEntity)) {
             return liveCaster;
@@ -782,7 +775,7 @@ public class MirageEntity extends Mob {
             this.clientVisualProxyType = rawType;
             Optional<EntityType<?>> typeOpt = EntityType.byString(rawType);
             if (typeOpt.isPresent() && typeOpt.get() != Entities.MIRAGE.get()) {
-                Entity created = typeOpt.get().create(clientLevel);
+                Entity created = typeOpt.get().create(level, EntitySpawnReason.MOB_SUMMONED);
                 if (created != null && !(created instanceof MirageEntity)) {
                     CompoundTag snapshot = this.getCasterDataSnapshot();
                     if (!snapshot.isEmpty()) {
@@ -818,14 +811,14 @@ public class MirageEntity extends Mob {
         }
         Entity caster = this.getCaster();
         if (caster instanceof AbstractFlyingBookEntity book && other instanceof LivingEntity livingOther) {
-            return !book.isValidHostileTarget(livingOther);
+            return !book.isValidNPCTarget(livingOther) || !book.isValidPlayerTarget(livingOther);
         }
         return caster != null && caster.isAlliedTo(other);
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float amount) {
-        if (this.isInvulnerableTo(source) || amount <= 0.0F) {
+    public boolean hurtServer(@NotNull ServerLevel level, @NotNull DamageSource source, float amount) {
+        if (this.isInvulnerableTo(level, source) || amount <= 0.0F) {
             return false;
         }
         if (!this.level().isClientSide()) {

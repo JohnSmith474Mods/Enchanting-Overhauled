@@ -5,27 +5,20 @@ plugins {
 
 repositories {
     maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org/'
-    }
-    maven {
         url "https://maven.terraformersmc.com/releases/"
     }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     modApi "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-fabric"
     modImplementation "johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-fabric"
 
-    modImplementation "com.terraformersmc:modmenu:11.0.3"
+    modImplementation "com.terraformersmc:modmenu:12.0.1"
 
     // Explicitly add Night Config for the development environment runtime
     implementation "com.electronwill.night-config:toml:3.8.3"
@@ -62,4 +55,8 @@ loom {
             runDir "build/datagen"
         }
     }
+}
+
+publishMods {
+    file = remapJar.archiveFile
 }

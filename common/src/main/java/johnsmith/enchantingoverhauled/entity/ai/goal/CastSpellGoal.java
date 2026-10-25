@@ -115,7 +115,7 @@ public class CastSpellGoal extends Goal {
             return false;
         }
         LivingEntity target = this.mob.getTarget();
-        return target != null && target.isAlive() && this.mob.isValidHostileTarget(target);
+        return target != null && target.isAlive() && (this.mob.isValidPlayerTarget(target) || this.mob.isValidNPCTarget(target));
     }
 
     @Override
@@ -321,7 +321,8 @@ public class CastSpellGoal extends Goal {
     private void tickChargingCast(LivingEntity primaryTarget) {
         if (this.selectedSpellField != null
                 && this.selectedSpellField.griefing()
-                && !this.mob.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                && this.mob.level() instanceof ServerLevel serverLevel
+                && !serverLevel.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
             this.resetChargeState();
             this.mob.setAnimationState(BookAnimationState.TARGET_ACQUISITION);
             this.attackTime = 15;
@@ -568,7 +569,7 @@ public class CastSpellGoal extends Goal {
             return null;
         }
 
-        var registryOpt = serverLevel.registryAccess().registry(AiSpellFields.REGISTRY_KEY);
+        var registryOpt = serverLevel.registryAccess().lookup(AiSpellFields.REGISTRY_KEY);
         ResourceKey<EnchantmentTheme> entityTheme = this.mob.getThemeKey();
         ResourceKey<MagicSchool> entitySchool = this.mob.getSchoolKey();
         boolean canGrief = serverLevel.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);

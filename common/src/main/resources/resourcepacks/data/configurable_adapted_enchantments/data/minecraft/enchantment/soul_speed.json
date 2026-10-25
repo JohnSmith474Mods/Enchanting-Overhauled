@@ -94,7 +94,7 @@
       {
         "effect": {
           "id": "minecraft:enchantment.soul_speed",
-          "attribute": "minecraft:generic.movement_speed",
+          "attribute": "minecraft:movement_speed",
           "amount": {
             "id": "soul_speed.movement_speed",
             "value": {
@@ -216,7 +216,7 @@
       {
         "effect": {
           "id": "minecraft:enchantment.soul_speed",
-          "attribute": "minecraft:generic.movement_efficiency",
+          "attribute": "minecraft:movement_efficiency",
           "amount": {
             "id": "soul_speed.movement_efficiency",
             "value": 1.0,
@@ -244,7 +244,7 @@
             "value": 1.0,
             "type": "enchantment_core:pointer"
           },
-          "type": "minecraft:damage_item"
+          "type": "minecraft:change_item_damage"
         },
         "requirements": {
           "terms": [

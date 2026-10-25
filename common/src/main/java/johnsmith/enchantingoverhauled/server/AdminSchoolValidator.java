@@ -54,13 +54,13 @@ public final class AdminSchoolValidator {
         List<ResourceLocation> aberrant = new ArrayList<>();
         Map<ResourceLocation, List<ResourceLocation>> multiAssigned = new LinkedHashMap<>();
 
-        var enchantmentRegistryOpt = registryAccess.registry(Registries.ENCHANTMENT);
+        var enchantmentRegistryOpt = registryAccess.lookup(Registries.ENCHANTMENT);
         if (enchantmentRegistryOpt.isEmpty()) {
             return new ValidationReport(aberrant, multiAssigned);
         }
 
         Registry<Enchantment> enchantmentRegistry = enchantmentRegistryOpt.get();
-        for (Holder.Reference<Enchantment> holder : enchantmentRegistry.holders().toList()) {
+        for (Holder.Reference<Enchantment> holder : enchantmentRegistry.listElements().toList()) {
             ResourceLocation enchId = holder.key().location();
             List<ResourceKey<MagicSchool>> matchedSchools = MagicSchools.getMatchingSchools(registryAccess, holder);
 

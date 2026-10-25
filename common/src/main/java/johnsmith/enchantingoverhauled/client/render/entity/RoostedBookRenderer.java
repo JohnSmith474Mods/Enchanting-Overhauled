@@ -9,7 +9,7 @@ import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +34,6 @@ public final class RoostedBookRenderer {
         if (state != BookAnimationState.ALTAR_VIGIL && state != BookAnimationState.LECTERN_ROOST) {
             return false;
         }
-
         BlockPos roostPos = entity.getRoostPos();
         if (roostPos == null) {
             return false;
@@ -45,7 +44,7 @@ public final class RoostedBookRenderer {
         double entityZ = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 
         int blockLight = LevelRenderer.getLightColor(entity.level(), roostPos.above());
-        int overlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
+        int overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(entity.hurtTime > 0 || entity.deathTime > 0));
 
         poseStack.pushPose();
         poseStack.translate(
@@ -134,6 +133,7 @@ public final class RoostedBookRenderer {
 
         VertexConsumer glintConsumer = buffer.getBuffer(RenderType.entityGlint());
         bookModel.renderToBuffer(poseStack, glintConsumer, packedLight, packedOverlay, 0xFFFFFFFF);
+
         bookModel.renderedOnLectern = false;
     }
 }

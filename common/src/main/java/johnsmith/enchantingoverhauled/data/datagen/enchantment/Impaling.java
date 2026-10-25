@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
@@ -35,7 +36,7 @@ public class Impaling {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE,
                             new AddValue(new PointerValue("impaling.damage", new DiminishingReturnsValue(4.5F, 1.5F, 1.5F))),
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityTypeTags.SENSITIVE_TO_IMPALING)))
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.SENSITIVE_TO_IMPALING)))
                     )
                     .build(AdaptedEnchantments.IMPALING.location());
 }

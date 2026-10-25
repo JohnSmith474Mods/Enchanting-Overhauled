@@ -25,7 +25,7 @@
               }
             },
             {
-              "type": "minecraft:damage_item",
+              "type": "minecraft:change_item_damage",
               "amount": {
                 "type": "enchantment_core:pointer",
                 "id": "thorns.post_attack.damage_item",

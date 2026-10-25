@@ -104,7 +104,7 @@ public class ScribePageWidget {
         int selectedId = this.menu.getGridData().getSelectedEnchantmentIndex();
 
         if (selectedId >= 0 && !this.menu.getSlot(0).getItem().isEmpty()) {
-            Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+            Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             for (var entry : EnchantmentLib.getEnchantments(this.menu.getSlot(0).getItem()).entrySet()) {
                 if (registry.getId(entry.getKey().value()) == selectedId) {
                     selectedSourceEnch = entry.getKey();
@@ -184,7 +184,7 @@ public class ScribePageWidget {
                 if (lineIndex >= 0 && lineIndex < list.size()) {
                     var entry = list.get(lineIndex);
                     if (this.isEnchantmentAvailable(entry.getKey(), entry.getValue())) {
-                        Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+                        Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
                         int enchId = registry.getId(entry.getKey().value());
                         return new ScribeInput(enchId, 0, ScribeInput.ACTION_SELECT_ENCHANTMENT).encode();
                     }
@@ -237,7 +237,7 @@ public class ScribePageWidget {
             int selectedId = this.menu.getGridData().getSelectedEnchantmentIndex();
             if (selectedId >= 0 && !sourceStack.isEmpty()) {
                 ItemEnchantments sourceEnchants = EnchantmentLib.getEnchantments(sourceStack);
-                Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+                Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
                 Holder<Enchantment> sourceEnch = null;
                 int sourceLevel = 0;
@@ -286,7 +286,7 @@ public class ScribePageWidget {
 
     private List<PageLine> buildPageLines(List<Map.Entry<Holder<Enchantment>, Integer>> enchantments, boolean obfuscate) {
         List<PageLine> allLines = new ArrayList<>();
-        Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = Minecraft.getInstance().level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
         FormatApplicationMode mode = Config.SCRIBE_MENU_FORMAT_APPLICATION_MODE.get();
         ColoringMode themeColoring = (mode == FormatApplicationMode.WIDGET || mode == FormatApplicationMode.ALL) ? Config.SCRIBE_MENU_THEME_COLORING.get() : ColoringMode.NONE;

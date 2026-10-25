@@ -93,7 +93,7 @@
     "minecraft:attributes": [
       {
         "id": "minecraft:enchantment.blast_protection",
-        "attribute": "minecraft:generic.explosion_knockback_resistance",
+        "attribute": "minecraft:explosion_knockback_resistance",
         "amount": {
           "id": "blast_protection.knockback_resistance",
           "value": {

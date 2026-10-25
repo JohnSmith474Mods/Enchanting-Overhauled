@@ -3,26 +3,28 @@ package johnsmith.enchantingoverhauled.entity;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.enchantment.school.MagicSchool;
 import johnsmith.enchantingoverhauled.api.enchantment.school.MagicSchools;
+import johnsmith.enchantingoverhauled.api.enchantment.spellfield.AiSpellField;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
+import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentThemes;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.EffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.ParticleEffectData;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.effect.SoundEffectData;
-import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentThemes;
 import johnsmith.enchantingoverhauled.api.item.ArcaneItemNamingUtil;
 import johnsmith.enchantingoverhauled.api.lib.EnchantmentLib;
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 import johnsmith.enchantingoverhauled.client.particle.SgaRuneParticle;
-import johnsmith.enchantingoverhauled.entity.ai.goal.TomeBarterGoal;
 import johnsmith.enchantingoverhauled.entity.ai.control.BookMoveControl;
-import johnsmith.enchantingoverhauled.api.enchantment.spellfield.AiSpellField;
+import johnsmith.enchantingoverhauled.entity.ai.goal.TomeBarterGoal;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
 import johnsmith.enchantingoverhauled.item.EnchantedPageItem;
 import johnsmith.enchantingoverhauled.item.Items;
 import johnsmith.enchantingoverhauled.particle.SimpleParticleTypes;
+
 import johnsmith.enchantmentcore.api.enchantment.spellfield.SpellFieldComponent;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
@@ -47,12 +49,19 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -69,7 +78,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -255,9 +263,11 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     public Optional<EnchantmentTheme> getTheme() {
-        var regOpt = this.level().registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+        var regOpt = this.level().registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (regOpt.isPresent()) {
-            return Optional.ofNullable(regOpt.get().get(this.getThemeKey()));
+            if (regOpt.get().get(this.getThemeKey()).isPresent()) {
+                return Optional.of(regOpt.get().get(this.getThemeKey()).get().value());
+            }
         }
         return Optional.empty();
     }
@@ -439,7 +449,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
                 this.setBarterFuel(single);
                 this.playSound(SoundEvents.ITEM_PICKUP, 0.7F, 1.2F);
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide());
+            return this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
         if (this.getBarterCatalyst().isEmpty()
                 && TomeBarterGoal.isValidBarterCatalyst(this.level().registryAccess(), held)) {
@@ -451,7 +461,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
                 this.setBarterCatalyst(single);
                 this.playSound(SoundEvents.ITEM_PICKUP, 0.7F, 1.2F);
             }
-            return InteractionResult.sidedSuccess(this.level().isClientSide());
+            return this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
         }
         return super.mobInteract(player, hand);
     }
@@ -512,34 +522,16 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     @Override
-    public boolean isAlliedTo(@NotNull Entity entity) {
+    public boolean considersEntityAsAlly(@NotNull Entity entity) {
         if (this.isBookAlly(entity)) {
             return true;
         }
-        return super.isAlliedTo(entity);
+        return super.considersEntityAsAlly(entity);
     }
 
-    public boolean isValidHostileTarget(LivingEntity entity) {
-        if (entity == null || !entity.isAlive() || entity == this) {
-            return false;
-        }
-        if (this.isBookAlly(entity) || this.isNeutralEntity(entity)) {
-            return false;
-        }
-        if (this.isAngryAt(entity)) {
-            return true;
-        }
-        if (entity instanceof Player player) {
-            if (player.isCreative() || player.isSpectator()) {
-                return false;
-            }
-            if (this instanceof EnchantedTomeEntity tome && tome.isInAltarDeceptionGracePeriod()) {
-                return false;
-            }
-            return !this.isPlayerPacified(player);
-        }
-        return entity instanceof Mob;
-    }
+    public abstract boolean isValidNPCTarget(LivingEntity entity);
+
+    public abstract boolean isValidPlayerTarget(LivingEntity entity);
 
     public void provoke(@Nullable LivingEntity attacker, int angerTicks) {
         if (attacker == null || this.isBookAlly(attacker) || this.isNeutralEntity(attacker)) {
@@ -622,10 +614,10 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     public SpawnGroupData finalizeSpawn(
             ServerLevelAccessor level,
             DifficultyInstance difficulty,
-            MobSpawnType spawnType,
+            EntitySpawnReason entitySpawnReason,
             @Nullable SpawnGroupData spawnGroupData
     ) {
-        SpawnGroupData data = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, entitySpawnReason, spawnGroupData);
         this.initializeBookIdentityAndStack(level.registryAccess(), level.getRandom());
         return data;
     }
@@ -690,7 +682,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     public static ResourceKey<EnchantmentTheme> rollRandomTheme(RegistryAccess registryAccess, RandomSource random) {
-        var regOpt = registryAccess.registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+        var regOpt = registryAccess.lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (regOpt.isPresent()) {
             List<ResourceKey<EnchantmentTheme>> keys = regOpt.get().registryKeySet().stream().toList();
             if (!keys.isEmpty()) {
@@ -712,7 +704,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     public static ResourceKey<MagicSchool> rollRandomSchool(RegistryAccess registryAccess, RandomSource random) {
-        var regOpt = registryAccess.registry(MagicSchools.REGISTRY_KEY);
+        var regOpt = registryAccess.lookup(MagicSchools.REGISTRY_KEY);
         if (regOpt.isPresent()) {
             List<ResourceKey<MagicSchool>> keys = regOpt.get().registryKeySet().stream()
                     .filter(k -> !MagicSchools.isAberration(k))
@@ -729,7 +721,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
             RandomSource random,
             @Nullable ResourceKey<MagicSchool> referenceSchool
     ) {
-        var regOpt = registryAccess.registry(MagicSchools.REGISTRY_KEY);
+        var regOpt = registryAccess.lookup(MagicSchools.REGISTRY_KEY);
         if (regOpt.isEmpty()) {
             return referenceSchool != null ? referenceSchool : MagicSchools.ABERRATION;
         }
@@ -847,8 +839,8 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (this.isInvulnerableTo(source)) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+        if (this.isInvulnerableTo(level, source)) {
             return false;
         }
 
@@ -883,7 +875,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
             );
         }
 
-        boolean damageApplied = super.hurt(source, amount);
+        boolean damageApplied = super.hurtServer(level, source, amount);
         if (damageApplied && !this.level().isClientSide && this.isAlive()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
 
@@ -901,8 +893,8 @@ public abstract class AbstractFlyingBookEntity extends Monster {
 
             float yield = amount * 0.05F;
             if (source.getEntity() instanceof LivingEntity attacker) {
-                var registry = this.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-                var looting = registry.getHolder(Enchantments.LOOTING);
+                Registry<Enchantment> registry = this.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                Optional<Holder.Reference<Enchantment>> looting = registry.get(Enchantments.LOOTING);
                 if (looting.isPresent()) {
                     int lootingLevel = EnchantmentHelper.getItemEnchantmentLevel(looting.get(), attacker.getMainHandItem());
                     yield += lootingLevel * 0.15F;
@@ -919,7 +911,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
                 for (int i = 0; i < totalDrops; i++) {
                     ItemStack pageDrop = this.createShedPageStack(serverLevel);
                     if (!pageDrop.isEmpty()) {
-                        this.spawnAtLocation(pageDrop);
+                        this.spawnAtLocation(level, pageDrop);
                     }
                 }
                 serverLevel.sendParticles(
@@ -965,17 +957,13 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     @Override
-    protected void dropFromLootTable(DamageSource damageSource, boolean hitByPlayer) {
-    }
-
-    @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean hitByPlayer) {
         super.dropCustomDeathLoot(level, damageSource, hitByPlayer);
         this.ejectBarterItems();
         int lootingLevel = 0;
         if (damageSource.getEntity() instanceof LivingEntity attacker) {
-            var registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-            var looting = registry.getHolder(Enchantments.LOOTING);
+            Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            Optional<Holder.Reference<Enchantment>> looting = registry.get(Enchantments.LOOTING);
             if (looting.isPresent()) {
                 lootingLevel = EnchantmentHelper.getItemEnchantmentLevel(looting.get(), attacker.getMainHandItem());
             }
@@ -984,7 +972,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
         for (int i = 0; i < totalDrops; i++) {
             ItemStack page = this.createShedPageStack(level);
             if (!page.isEmpty()) {
-                this.spawnAtLocation(page);
+                this.spawnAtLocation(level, page);
             }
         }
     }
@@ -1031,7 +1019,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
                 }
             }
             LivingEntity currentTarget = this.getTarget();
-            if (currentTarget != null && (this.isBookAlly(currentTarget) || this.isNeutralEntity(currentTarget))) {
+            if (currentTarget != null && (this.isBookAlly(currentTarget) || this.isNeutralEntity(currentTarget) || !this.canAttack(currentTarget))) {
                 this.setTarget(null);
             }
             if (!this.isRoosting() && state != BookAnimationState.DASHING) {
@@ -1454,6 +1442,20 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.BOOK_PAGE_TURN;
+    }
+
+    @Override
+    public boolean canAttack(@NotNull LivingEntity target) {
+        return super.canAttack(target) && (this.isValidPlayerTarget(target) || this.isValidNPCTarget(target));
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        if (target != null && !this.isValidPlayerTarget(target) && !this.isValidNPCTarget(target)) {
+            super.setTarget(null);
+            return;
+        }
+        super.setTarget(target);
     }
 
     protected abstract ResourceKey<LootTable> getHurtLootTable();

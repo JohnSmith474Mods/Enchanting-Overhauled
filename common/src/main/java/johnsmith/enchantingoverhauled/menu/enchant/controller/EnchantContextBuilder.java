@@ -17,6 +17,7 @@ import johnsmith.enchantingoverhauled.api.config.type.EnchantPowerHalvingType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
@@ -92,7 +93,7 @@ public class EnchantContextBuilder {
         this.originalTarget = target;
         this.source = source;
         this.power = power;
-        this.enchantability = Math.max(0, target.getItem().getEnchantmentValue());
+        this.enchantability = Math.max(0, target.isEnchantable() ? Objects.requireNonNull(target.getComponents().get(DataComponents.ENCHANTABLE)).value() : 0);
         this.maxEnchants = Config.MAX_ENCHANTMENT_AMOUNT.get();
     }
 
@@ -248,10 +249,9 @@ public class EnchantContextBuilder {
      * @return The builder instance for chaining.
      */
     public EnchantContextBuilder withTableEnchantments(Level world, BlockPos pos, RandomSource random) {
-        Item item = this.originalTarget.getItem();
         this.enchantability = EnchantRecipe.get(world.registryAccess(), this.originalTarget)
                 .map(EnchantRecipe::enchantability)
-                .orElse(item.getEnchantmentValue());
+                .orElse(originalTarget.isEnchantable() ? Objects.requireNonNull(originalTarget.getComponents().get(DataComponents.ENCHANTABLE)).value() : 0);
 
         if (this.occupiedCapSlots >= this.maxEnchants || this.enchantability <= 0) {
             return this;
@@ -499,8 +499,7 @@ public class EnchantContextBuilder {
      */
     public List<EnchantmentInstance> generateEnchantments(RandomSource random, ItemStack target, boolean treasureAllowed, Level level, BlockPos pos) {
         List<EnchantmentInstance> enchantments = Lists.newArrayList();
-        Item item = target.getItem();
-        int enchantability = item.getEnchantmentValue();
+        int enchantability = target.isEnchantable() ? Objects.requireNonNull(target.getComponents().get(DataComponents.ENCHANTABLE)).value() : 0;
 
         Optional<EnchantRecipe> recipe = EnchantRecipe.get(level.registryAccess(), target);
         if (recipe.isPresent()) {
@@ -526,9 +525,9 @@ public class EnchantContextBuilder {
         boolean hasRecipe = EnchantRecipe.get(level.registryAccess(), target).isPresent();
 
         // Use the registry from the level to iterate holders
-        Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
-        for (Holder<Enchantment> enchantmentHolder : registry.holders().toList()) {
+        for (Holder<Enchantment> enchantmentHolder : registry.listElements().toList()) {
             Enchantment enchantment = enchantmentHolder.value();
             ResourceKey<EnchantmentTheme> themeKey = EnchantmentThemes.getThemeKey(level.registryAccess(), enchantmentHolder);
 
@@ -566,7 +565,7 @@ public class EnchantContextBuilder {
             return false;
         }
 
-        Optional<Registry<EnchantmentTheme>> registryOpt = level.registryAccess().registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+        Optional<Registry<EnchantmentTheme>> registryOpt = level.registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
         if (registryOpt.isEmpty()) return false;
 
         Optional<EnchantmentTheme> themeOpt = registryOpt.get().getOptional(themeKey);

@@ -90,6 +90,7 @@ processResources {
             'java_version'                          : java_version,
             // Minecraft
             'minecraft_version'                     : minecraft_version,
+            'minecraft_version_forge'               : minecraft_version_forge,
             'minecraft_version_supremum'            : minecraft_version_supremum,
             'minecraft_version_upper_limit'         : minecraft_version_upper_limit,
             // Common

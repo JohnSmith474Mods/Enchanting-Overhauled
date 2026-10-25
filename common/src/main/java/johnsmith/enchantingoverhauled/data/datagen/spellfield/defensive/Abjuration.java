@@ -2,6 +2,7 @@ package johnsmith.enchantingoverhauled.data.datagen.spellfield.defensive;
 
 import johnsmith.enchantingoverhauled.api.enchantment.spellfield.*;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentThemes;
+import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantingoverhauled.data.datagen.spellfield.DefaultMagicSchools;
 import johnsmith.enchantingoverhauled.data.datagen.spellfield.DefaultSpellFields;
 import johnsmith.enchantingoverhauled.entity.Entities;
@@ -29,19 +30,18 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class Abjuration {
 
-    public static final Supplier<ContextAwarePredicate> DEFLECTABLE_PROJECTILE_FILTER = () -> ContextAwarePredicate.create(
+    public static final Function<BootstrapContext<AiSpellField>, ContextAwarePredicate> DEFLECTABLE_PROJECTILE_FILTER = context -> ContextAwarePredicate.create(
             LootItemEntityPropertyCondition.hasProperties(
                     LootContext.EntityTarget.THIS,
-                    EntityPredicate.Builder.entity().of(EntityTypeTags.IMPACT_PROJECTILES)
+                    EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.IMPACT_PROJECTILES)
             ).build(),
             InvertedLootItemCondition.invert(
                     LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
-                            EntityPredicate.Builder.entity().of(Entities.MAGIC_MISSILE.get())
+                            EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), Entities.MAGIC_MISSILE.get())
                     )
             ).build()
     );
@@ -55,7 +55,7 @@ public class Abjuration {
             Optional.empty()
     );
 
-    public static final SpellFieldComponent COMPONENT = new SpellFieldComponent(
+    public static final Function<BootstrapContext<AiSpellField>, SpellFieldComponent> COMPONENT = context -> new SpellFieldComponent(
             List.of(new SpellFieldVolume(
                     Optional.of(new CubeShape(LevelBasedValue.constant(6.0F))),
                     Optional.empty(),
@@ -74,7 +74,7 @@ public class Abjuration {
                     new ImpulseEffect(
                             LevelBasedValue.constant(2.0F),
                             Optional.of(FieldAxis.RADIAL),
-                            Optional.of(DEFLECTABLE_PROJECTILE_FILTER.get())
+                            Optional.of(DEFLECTABLE_PROJECTILE_FILTER.apply(context))
                     )
             ),
             List.of(),
@@ -100,6 +100,6 @@ public class Abjuration {
                     Optional.of(DefaultSpellFields.schoolSet(context, DefaultMagicSchools.ABJURATION)),
                     EnchantmentThemes.COMMON,
                     Optional.of(Abjuration.ANCHOR),
-                    Abjuration.COMPONENT
+                    Abjuration.COMPONENT.apply(context)
             );
 }

@@ -10,6 +10,7 @@ import johnsmith.enchantingoverhauled.api.item.ArcaneItemNamingUtil;
 
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -19,7 +20,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -33,18 +34,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A custom item representing an Enchanted Tome.
  * <p>
  * The Enchanted Tome is a special variant of an enchanted book used to activate
  * {@link johnsmith.enchantingoverhauled.block.DeactivatedEnchantingTableBlock}s.
- * It extends {@link EnchantedBookItem} to inherit standard enchantment storage
- * behaviors
- * and supports dynamic {@code "<Theme> <Item Name> of <School>"} attribution
- * and naming.
+ * Supports dynamic {@code "<Theme> <Item Name> of <School>"} attribution and naming.
  */
-public class EnchantedTomeItem extends EnchantedBookItem {
+public class EnchantedTomeItem extends Item {
 
     /**
      * Constructs a new EnchantedTomeItem.
@@ -62,7 +61,7 @@ public class EnchantedTomeItem extends EnchantedBookItem {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        Component baseName = Component.translatable(this.getDescriptionId(stack));
+        Component baseName = Component.translatable(this.getDescriptionId());
         return ArcaneItemNamingUtil.formatItemName(stack, baseName);
     }
 
@@ -111,8 +110,8 @@ public class EnchantedTomeItem extends EnchantedBookItem {
             return itemStack;
         }
 
-        Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
-        List<Holder<Enchantment>> allHolders = registry.holders()
+        Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
+        List<Holder<Enchantment>> allHolders = registry.listElements()
                 .map(h -> (Holder<Enchantment>) h)
                 .collect(Collectors.toList());
 
@@ -202,11 +201,15 @@ public class EnchantedTomeItem extends EnchantedBookItem {
             return itemStack;
         }
 
-        Registry<Enchantment> registry = world.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
-        List<Holder<Enchantment>> specialEnchants = registry.getOrCreateTag(specialTag).stream()
+        List<Holder<Enchantment>> specialEnchants = registry.get(specialTag)
+                .map(HolderSet.Named::stream)
+                .orElseGet(Stream::empty)
                 .collect(Collectors.toList());
-        List<Holder<Enchantment>> commonEnchants = registry.getOrCreateTag(commonTag).stream()
+        List<Holder<Enchantment>> commonEnchants = registry.get(commonTag)
+                .map(HolderSet.Named::stream)
+                .orElseGet(Stream::empty)
                 .collect(Collectors.toList());
 
         Util.shuffle(specialEnchants, random);
@@ -227,8 +230,10 @@ public class EnchantedTomeItem extends EnchantedBookItem {
         }
 
         if (selected.isEmpty()) {
-            List<Holder<Enchantment>> fallbackEnchants = registry.getOrCreateTag(EnchantmentTags.IN_ENCHANTING_TABLE)
-                    .stream().collect(Collectors.toList());
+            List<Holder<Enchantment>> fallbackEnchants = registry.get(EnchantmentTags.IN_ENCHANTING_TABLE)
+                    .map(HolderSet.Named::stream)
+                    .orElseGet(Stream::empty)
+                    .collect(Collectors.toList());
             if (fallbackEnchants.isEmpty()) {
                 Constants.LOG.error("Critical failure: No enchantments found in fallback tag for {}", itemStack);
                 return itemStack;
@@ -274,8 +279,8 @@ public class EnchantedTomeItem extends EnchantedBookItem {
             return itemStack;
         }
 
-        List<Holder<Enchantment>> enchantmentList = world.registryAccess().registryOrThrow(Registries.ENCHANTMENT)
-                .holders()
+        List<Holder<Enchantment>> enchantmentList = world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+                .listElements()
                 .map(h -> (Holder<Enchantment>) h)
                 .collect(Collectors.toList());
 
@@ -334,8 +339,9 @@ public class EnchantedTomeItem extends EnchantedBookItem {
     public static ItemStack withDefaultEnchantment(RegistryAccess registryAccess) {
         ItemStack tome = new ItemStack(Items.ENCHANTED_TOME.get());
         ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-        Registry<Enchantment> registry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
-        Holder<Enchantment> protection = registry.getHolderOrThrow(Enchantments.PROTECTION);
+        Registry<Enchantment> registry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
+        Holder<Enchantment> protection = registry.getOrThrow(Enchantments.PROTECTION);
+
         builder.set(protection, protection.value().getMaxLevel() + 1);
         tome.set(DataComponents.STORED_ENCHANTMENTS, builder.toImmutable());
         return tome;

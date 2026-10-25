@@ -1,14 +1,12 @@
 package johnsmith.enchantingoverhauled.api.item;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.enchantment.school.MagicSchool;
 import johnsmith.enchantingoverhauled.api.enchantment.school.MagicSchools;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentThemes;
 import johnsmith.enchantingoverhauled.api.lib.EnchantmentLib;
-
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -23,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -211,11 +208,9 @@ public final class ArcaneItemNamingUtil {
                     .max(Map.Entry.comparingByValue())
                     .map(Map.Entry::getKey);
         }
-
         if (commonWeight > 0) {
             return Optional.of(EnchantmentThemes.COMMON);
         }
-
         return Optional.empty();
     }
 
@@ -276,11 +271,9 @@ public final class ArcaneItemNamingUtil {
                     .max(Map.Entry.comparingByValue())
                     .map(Map.Entry::getKey);
         }
-
         if (aberrationWeight > 0) {
             return Optional.of(MagicSchools.ABERRATION);
         }
-
         return Optional.empty();
     }
 
@@ -381,10 +374,11 @@ public final class ArcaneItemNamingUtil {
         MutableComponent label = null;
 
         if (registryAccess != null) {
-            Optional<Registry<EnchantmentTheme>> regOpt = registryAccess.registry(EnchantmentThemes.THEME_REGISTRY_KEY);
+            Optional<Registry<EnchantmentTheme>> regOpt = registryAccess.lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
             if (regOpt.isPresent()) {
-                EnchantmentTheme theme = regOpt.get().get(themeKey);
-                if (theme != null) {
+                Optional<Holder.Reference<EnchantmentTheme>> themeOpt = regOpt.get().get(themeKey);
+                if (themeOpt.isPresent()) {
+                    EnchantmentTheme theme = themeOpt.get().value();
                     if (theme.colorCode().isPresent()) {
                         color = theme.colorCode().get();
                     }

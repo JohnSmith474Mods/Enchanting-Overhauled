@@ -18,6 +18,7 @@ import johnsmith.enchantingoverhauled.client.gui.sound.scribe.ScribeSoundEffectS
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -203,9 +204,9 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
 
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(RenderType::guiTextured, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
         ResourceLocation innerBg = this.menu.getGridData().isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
-        guiGraphics.blit(innerBg, this.leftPos + 4, this.topPos + 17, 0, 0, 165, 85, 165, 85);
+        guiGraphics.blit(RenderType::guiTextured, innerBg, this.leftPos + 4, this.topPos + 17, 0, 0, 165, 85, 165, 85);
 
         ScribeGameState state = this.menu.getGridData().getGameState();
 
@@ -224,10 +225,10 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
         }
 
         if (!this.menu.getSlot(0).hasItem()) {
-            guiGraphics.blit(EMPTY_SLOT_SOURCE_TEXTURE, this.leftPos + 8, this.topPos + 108, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(RenderType::guiTextured, EMPTY_SLOT_SOURCE_TEXTURE, this.leftPos + 8, this.topPos + 108, 0, 0, 16, 16, 16, 16);
         }
         if (!this.menu.getSlot(1).hasItem()) {
-            guiGraphics.blit(EMPTY_SLOT_FUEL_TEXTURE, this.leftPos + 26, this.topPos + 108, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(RenderType::guiTextured, EMPTY_SLOT_FUEL_TEXTURE, this.leftPos + 26, this.topPos + 108, 0, 0, 16, 16, 16, 16);
         }
 
         if (this.actionWidget != null) {

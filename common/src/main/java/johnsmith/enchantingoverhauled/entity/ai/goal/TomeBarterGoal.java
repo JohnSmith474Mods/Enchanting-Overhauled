@@ -383,7 +383,7 @@ public class TomeBarterGoal extends Goal {
             return true;
         }
 
-        Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        Registry<Enchantment> registry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         ResourceKey<EnchantmentTheme> themeKey = this.book.getThemeKey();
         ResourceKey<MagicSchool> schoolKey = this.book.getSchoolKey();
         boolean hasSpecificTheme = !EnchantmentThemes.isCommon(themeKey);
@@ -393,7 +393,7 @@ public class TomeBarterGoal extends Goal {
         List<Holder<Enchantment>> primaryMatches = new ArrayList<>();
         List<Holder<Enchantment>> wildcardMatches = new ArrayList<>();
 
-        for (Holder.Reference<Enchantment> holder : registry.holders().toList()) {
+        for (Holder.Reference<Enchantment> holder : registry.listElements().toList()) {
             if (!isEnchantmentApplicable(holder, target, existingTargetEnchants, stored)) {
                 continue;
             }

@@ -1,32 +1,38 @@
 package johnsmith.enchantingoverhauled.client.render.entity.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
-
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
-public class FlyingBookEntityModel<T extends AbstractFlyingBookEntity> extends EntityModel<T> {
+public class FlyingBookEntityModel<S extends FlyingBookEntityModel.RenderState> extends EntityModel<S> {
 
-    private static final float VANILLA_MODEL_ORIGIN_Y = 24.0F / 16.0F;
-    private static final float HITBOX_CENTER_Y = 0.3F;
-    private static final float DEFAULT_HITBOX_Y_OFFSET = VANILLA_MODEL_ORIGIN_Y - HITBOX_CENTER_Y;
+    public static class RenderState extends LivingEntityRenderState {
+        @Nullable
+        public AbstractFlyingBookEntity entity;
+        public float partialTick = 0.0F;
+        public BookAnimationState animationState = BookAnimationState.IDLE;
+        public float animX = 0.0F;
+        public float animY = 1.2F;
+        public float animZ = 0.0F;
+        public float openness = 1.0F;
+        public float flutterPhase = 0.0F;
+        public float rightPageFlip = 0.0F;
+        public float leftPageFlip = 0.0F;
+        public Quaternionf animRotation = new Quaternionf();
+    }
 
     private final BookModel internalModel;
-    private float currentX;
-    private float currentY = DEFAULT_HITBOX_Y_OFFSET;
-    private float currentZ;
-    private final Quaternionf renderRotation = new Quaternionf();
 
     public FlyingBookEntityModel(BookModel internalModel) {
+        super(internalModel.root(), RenderType::entityCutoutNoCull);
         this.internalModel = internalModel;
     }
 
@@ -34,114 +40,67 @@ public class FlyingBookEntityModel<T extends AbstractFlyingBookEntity> extends E
         return this.internalModel;
     }
 
-    @Override
-    public void setupAnim(
-            @NotNull T entity,
-            float limbSwing,
-            float limbSwingAmount,
-            float ageInTicks,
-            float netHeadYaw,
-            float headPitch
-    ) {
-        float partialTick = Mth.clamp(ageInTicks - (float) entity.tickCount, 0.0F, 1.0F);
-        BookAnimationState state = entity.getAnimationState();
+    public static void extractBookRenderState(AbstractFlyingBookEntity entity, RenderState state, float partialTick) {
+        state.entity = entity;
+        state.partialTick = partialTick;
+        BookAnimationState animState = entity.getAnimationState();
+        state.animationState = animState;
 
-        float baseX = Mth.lerp(partialTick, entity.animXO, entity.animX);
-        float baseY = Mth.lerp(partialTick, entity.animYO, entity.animY);
-        float baseZ = Mth.lerp(partialTick, entity.animZO, entity.animZ);
-        float currentOpenness = Mth.lerp(partialTick, entity.animOpennessO, entity.animOpenness);
+        state.animX = Mth.lerp(partialTick, entity.animXO, entity.animX);
+        float baseAnimY = Mth.lerp(partialTick, entity.animYO, entity.animY);
+        float flutter = entity.flutterPhase + animState.flutterSpeed * partialTick;
+        state.flutterPhase = flutter;
+        state.animY = baseAnimY + (animState.flutterSpeed > 0.0F ? Mth.sin(flutter) * 0.05F : 0.0F);
+        state.animZ = Mth.lerp(partialTick, entity.animZO, entity.animZ);
 
-        float phaseOffset = (entity.getId() * 1.37F);
-        float bobY = computeHoverBob(state, ageInTicks, phaseOffset);
-
-        float chantShakeX = 0.0F;
-        float chantShakeY = 0.0F;
-        if (state.isChanting()) {
-            float castProgress = Mth.clamp(((float) entity.getClientStateTicks() + partialTick) / 40.0F, 0.0F, 1.0F);
-            bobY -= Mth.sin(castProgress * (float) Math.PI * 0.5F) * 0.14F;
-            float tremorAmp = castProgress * castProgress * 0.025F;
-            chantShakeX = Mth.sin(ageInTicks * 2.4F) * tremorAmp;
-            chantShakeY = Mth.cos(ageInTicks * 3.1F) * tremorAmp;
-        }
-
-        float recoilZ = 0.0F;
-        float recoilPitch = 0.0F;
-        if (entity.hurtTime > 0) {
-            float hurtProgress = Math.max(0.0F, (float) entity.hurtTime - partialTick) / (float) Math.max(1, entity.hurtDuration);
-            float spring = Mth.sin(hurtProgress * (float) Math.PI * 2.5F) * hurtProgress;
-            recoilZ = -0.14F * spring;
-            recoilPitch = -22.0F * Mth.DEG_TO_RAD * spring;
-            currentOpenness = Mth.clamp(currentOpenness - 0.35F * hurtProgress, 0.0F, 1.0F);
-        }
-
-        this.currentX = baseX + chantShakeX;
-        this.currentY = baseY + bobY + chantShakeY;
-        this.currentZ = baseZ + recoilZ;
-
-        this.renderRotation.set(entity.animRotationO).slerp(entity.animRotation, partialTick);
-
-        if (state != BookAnimationState.RESTING
-                && state != BookAnimationState.LECTERN_ROOST
-                && state != BookAnimationState.ALTAR_VIGIL
-                && state != BookAnimationState.CHANTING_DEFENSIVE
-                && state != BookAnimationState.DASHING) {
-            Vec3 vel = entity.getDeltaMovement();
-            float bodyYawRad = Mth.lerp(partialTick, entity.yBodyRotO, entity.yBodyRot) * Mth.DEG_TO_RAD;
-            float sinYaw = Mth.sin(bodyYawRad);
-            float cosYaw = Mth.cos(bodyYawRad);
-
-            double forwardVel = -vel.x * sinYaw + vel.z * cosYaw;
-            double lateralVel = vel.x * cosYaw + vel.z * sinYaw;
-
-            float bankPitch = Mth.clamp((float) forwardVel * 0.55F, -0.35F, 0.35F);
-            float bankRoll = Mth.clamp((float) lateralVel * 0.55F, -0.35F, 0.35F);
-            float ambientSway = Mth.cos((ageInTicks + phaseOffset) * 0.08F) * 0.03F;
-
-            this.renderRotation.rotateLocalX(bankPitch + recoilPitch);
-            this.renderRotation.rotateLocalZ(bankRoll + ambientSway);
-        } else if (recoilPitch != 0.0F) {
-            this.renderRotation.rotateLocalX(recoilPitch);
-        }
-
+        state.openness = Mth.lerp(partialTick, entity.animOpennessO, entity.animOpenness);
         float flip = Mth.lerp(partialTick, entity.oPageFlip, entity.pageFlip);
-        float rightPageFlip = Mth.clamp(Mth.frac(flip + 0.25F) * 1.6F - 0.3F, 0.0F, 1.0F);
-        float leftPageFlip = Mth.clamp(Mth.frac(flip + 0.75F) * 1.6F - 0.3F, 0.0F, 1.0F);
+        state.rightPageFlip = Mth.clamp(Mth.frac(flip + 0.25F) * 1.6F - 0.3F, 0.0F, 1.0F);
+        state.leftPageFlip = Mth.clamp(Mth.frac(flip + 0.75F) * 1.6F - 0.3F, 0.0F, 1.0F);
 
-        if (state == BookAnimationState.DASHING || state == BookAnimationState.SCOUTING || state == BookAnimationState.RESTING) {
-            rightPageFlip = 0.0F;
-            leftPageFlip = 1.0F;
-        }
+        state.animRotation = new Quaternionf(entity.animRotationO)
+                .slerp(entity.animRotation, partialTick)
+                .normalize();
+    }
+
+    @Override
+    public void setupAnim(@NotNull S state) {
+        super.setupAnim(state);
 
         if (this.internalModel instanceof EnchantedBookModel enchantedBookModel) {
             enchantedBookModel.renderedOnLectern = false;
         }
-        this.internalModel.setupAnim(ageInTicks, rightPageFlip, leftPageFlip, currentOpenness);
-    }
 
-    private static float computeHoverBob(BookAnimationState state, float ageInTicks, float phaseOffset) {
-        if (state.isChanting()) {
-            return Mth.sin((ageInTicks + phaseOffset) * 0.2F) * 0.035F;
+        float bookTime = state.flutterPhase * 50.0F;
+        this.internalModel.setupAnim(bookTime, state.rightPageFlip, state.leftPageFlip, state.openness);
+
+        ModelPart root = this.root();
+        root.x = state.animX * 16.0F;
+        root.y = state.animY * 16.0F;
+        root.z = state.animZ * 16.0F;
+
+        // ModelPart#translateAndRotate reconstructs rotations via new Quaternionf().rotationZYX(zRot, yRot, xRot).
+        // JOML's getEulerAnglesZYX is the inverse of rotationXYZ (not rotationZYX) and lacks a gimbal-lock guard
+        // at yRot = +/-90 deg, which caused entityPitch in chanting/targeting/bartering/dashing states to tilt the book sideways.
+        Quaternionf q = state.animRotation;
+        float x = q.x();
+        float y = q.y();
+        float z = q.z();
+        float w = q.w();
+
+        float sinY = 2.0F * (y * w - x * z);
+        if (sinY >= 0.99999F) {
+            root.yRot = (float) (Math.PI * 0.5D);
+            root.zRot = 0.0F;
+            root.xRot = (float) Mth.atan2(2.0F * (x * y - z * w), 1.0F - 2.0F * (x * x + z * z));
+        } else if (sinY <= -0.99999F) {
+            root.yRot = (float) (-Math.PI * 0.5D);
+            root.zRot = 0.0F;
+            root.xRot = (float) Mth.atan2(-2.0F * (x * y - z * w), 1.0F - 2.0F * (x * x + z * z));
+        } else {
+            root.yRot = (float) Math.asin(sinY);
+            root.xRot = (float) Mth.atan2(2.0F * (y * z + x * w), 1.0F - 2.0F * (x * x + y * y));
+            root.zRot = (float) Mth.atan2(2.0F * (x * y + z * w), 1.0F - 2.0F * (y * y + z * z));
         }
-        return switch (state) {
-            case RESTING, LECTERN_ROOST, ALTAR_VIGIL, DASHING -> 0.0F;
-            case BARTERING -> Mth.sin((ageInTicks + phaseOffset) * 0.2F) * 0.035F;
-            case TARGET_ACQUISITION -> Mth.sin((ageInTicks + phaseOffset) * 0.15F) * 0.04F;
-            default -> Mth.sin((ageInTicks + phaseOffset) * 0.11F) * 0.055F;
-        };
-    }
-
-    @Override
-    public void renderToBuffer(
-            @NotNull PoseStack poseStack,
-            @NotNull VertexConsumer buffer,
-            int packedLight,
-            int packedOverlay,
-            int color
-    ) {
-        poseStack.pushPose();
-        poseStack.translate(this.currentX, this.currentY, this.currentZ);
-        poseStack.mulPose(this.renderRotation);
-        this.internalModel.renderToBuffer(poseStack, buffer, packedLight, packedOverlay, color);
-        poseStack.popPose();
     }
 }

@@ -21,6 +21,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -115,7 +116,7 @@ public sealed interface EnchantAction permits
      * @return The newly rolled level, guaranteed to be at least {@code currentLevel}.
      */
     private static int rollLevel(Player player, ItemStack target, Enchantment enchantment, int currentLevel) {
-        int enchantability = target.getItem().getEnchantmentValue();
+        int enchantability = target.isEnchantable() ? Objects.requireNonNull(target.getComponents().get(DataComponents.ENCHANTABLE)).value() : 0;
         Optional<EnchantRecipe> recipeOpt = EnchantRecipe.get(player.level().registryAccess(), target);
         if (recipeOpt.isPresent()) {
             enchantability = recipeOpt.get().enchantability();

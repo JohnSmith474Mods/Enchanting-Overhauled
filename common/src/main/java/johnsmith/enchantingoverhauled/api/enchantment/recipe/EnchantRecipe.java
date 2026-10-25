@@ -66,7 +66,7 @@ public record EnchantRecipe(
      * @return An {@link Optional} containing the matching {@link EnchantRecipe}, or empty if none matches.
      */
     public static Optional<EnchantRecipe> get(RegistryAccess registryAccess, ItemStack target) {
-        return registryAccess.registry(EnchantRecipes.RECIPE_REGISTRY_KEY).flatMap(registry -> {
+        return registryAccess.lookup(EnchantRecipes.RECIPE_REGISTRY_KEY).flatMap(registry -> {
             for (EnchantRecipe recipe : registry) {
                 if (recipe.input().contains(target.getItemHolder())) {
                     return Optional.of(recipe);
@@ -85,7 +85,7 @@ public record EnchantRecipe(
      * @return An {@link Optional} containing the matching {@link EnchantRecipe}, or empty if none matches.
      */
     public static Optional<EnchantRecipe> reverse(RegistryAccess registryAccess, ItemStack output) {
-        return registryAccess.registry(EnchantRecipes.RECIPE_REGISTRY_KEY).flatMap(registry -> {
+        return registryAccess.lookup(EnchantRecipes.RECIPE_REGISTRY_KEY).flatMap(registry -> {
             for (EnchantRecipe recipe : registry) {
                 if (recipe.output().value() == output.getItem()) {
                     return Optional.of(recipe);

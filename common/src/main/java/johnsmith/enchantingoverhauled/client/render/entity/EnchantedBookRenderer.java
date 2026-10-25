@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, FlyingBookEntityModel<EnchantedBookEntity>> {
+public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, FlyingBookEntityModel.RenderState, FlyingBookEntityModel<FlyingBookEntityModel.RenderState>> {
 
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/enchanted_book.png");
@@ -40,24 +40,35 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
     }
 
     @Override
+    public FlyingBookEntityModel.@NotNull RenderState createRenderState() {
+        return new FlyingBookEntityModel.RenderState();
+    }
+
+    @Override
+    public void extractRenderState(@NotNull EnchantedBookEntity entity, FlyingBookEntityModel.@NotNull RenderState state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        FlyingBookEntityModel.extractBookRenderState(entity, state, partialTick);
+    }
+
+    @Override
     public void render(
-            @NotNull EnchantedBookEntity entity,
-            float entityYaw,
-            float partialTicks,
+            FlyingBookEntityModel.@NotNull RenderState state,
             @NotNull PoseStack poseStack,
             @NotNull MultiBufferSource buffer,
             int packedLight
     ) {
-        if (RoostedBookRenderer.tryRenderRoosted(entity, this.bookModel, this.getTextureLocation(entity), partialTicks, poseStack, buffer, packedLight)) {
+        if (state.entity != null && RoostedBookRenderer.tryRenderRoosted(state.entity, this.bookModel, this.getTextureLocation(state), state.partialTick, poseStack, buffer, packedLight)) {
             this.shadowRadius = 0.0F;
-            if (this.shouldShowName(entity)) {
-                this.renderNameTag(entity, entity.getDisplayName(), poseStack, buffer, packedLight, partialTicks);
+            if (state.nameTag != null) {
+                this.renderNameTag(state, state.nameTag, poseStack, buffer, packedLight);
             }
         } else {
             this.shadowRadius = 0.3F;
-            super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
+            super.render(state, poseStack, buffer, packedLight);
         }
-        renderOrbitingBarterItems(entity, this.itemRenderer, partialTicks, poseStack, buffer, packedLight);
+        if (state.entity != null) {
+            renderOrbitingBarterItems(state.entity, this.itemRenderer, state.partialTick, poseStack, buffer, packedLight);
+        }
     }
 
     public static void renderOrbitingBarterItems(
@@ -125,12 +136,12 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
     }
 
     @Override
-    protected boolean shouldShowName(@NotNull EnchantedBookEntity entity) {
-        return super.shouldShowName(entity) && (entity.shouldShowName() || entity.hasCustomName() && entity == this.entityRenderDispatcher.crosshairPickEntity);
+    protected boolean shouldShowName(@NotNull EnchantedBookEntity entity, double distanceToCameraSq) {
+        return super.shouldShowName(entity, distanceToCameraSq) && (entity.shouldShowName() || entity.hasCustomName() && entity == this.entityRenderDispatcher.crosshairPickEntity);
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull EnchantedBookEntity entity) {
+    public @NotNull ResourceLocation getTextureLocation(FlyingBookEntityModel.@NotNull RenderState state) {
         return TEXTURE;
     }
 }

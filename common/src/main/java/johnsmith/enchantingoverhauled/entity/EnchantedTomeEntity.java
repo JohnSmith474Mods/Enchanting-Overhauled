@@ -21,15 +21,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -82,12 +79,12 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
     public SpawnGroupData finalizeSpawn(
             ServerLevelAccessor level,
             DifficultyInstance difficulty,
-            MobSpawnType spawnType,
+            EntitySpawnReason entitySpawnReason,
             @Nullable SpawnGroupData spawnGroupData
     ) {
         this.setUUID(UUID.randomUUID());
         this.setPersistenceRequired();
-        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+        return super.finalizeSpawn(level, difficulty, entitySpawnReason, spawnGroupData);
     }
 
     @Override
@@ -106,8 +103,8 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
     }
 
     @Override
-    public boolean isInvulnerableTo(@NotNull DamageSource source) {
-        return source.is(DamageTypeTags.IS_EXPLOSION) || super.isInvulnerableTo(source);
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource damageSource) {
+        return damageSource.is(DamageTypeTags.IS_EXPLOSION) || super.isInvulnerableTo(level, damageSource);
     }
 
     public int getBoredomTicks() {
@@ -164,15 +161,15 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
     }
 
     @Override
-    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType spawnType) {
-        if (spawnType == MobSpawnType.NATURAL) {
+    public boolean checkSpawnRules(LevelAccessor level, EntitySpawnReason spawnType) {
+        if (spawnType == EntitySpawnReason.NATURAL) {
             return false;
         }
         if (!super.checkSpawnRules(level, spawnType)) {
             return false;
         }
-        if (spawnType == MobSpawnType.STRUCTURE
-                || spawnType == MobSpawnType.CHUNK_GENERATION) {
+        if (spawnType == EntitySpawnReason.STRUCTURE
+                || spawnType == EntitySpawnReason.CHUNK_GENERATION) {
             AABB checkBox = this.getBoundingBox().inflate(LOCAL_TOME_SPAWN_CHECK_RADIUS, 32.0D, LOCAL_TOME_SPAWN_CHECK_RADIUS);
             List<EnchantedTomeEntity> nearbyUnnamedTomes = level.getEntitiesOfClass(
                     EnchantedTomeEntity.class,
@@ -204,9 +201,9 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, AbstractFlyingBookEntity.class).setAlertOthers());
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 15, true, false, this::isValidHostileTarget));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 20, true, false, this::isValidHostileTarget));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers(AbstractFlyingBookEntity.class));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 15, true, false, (e, s) -> this.isValidPlayerTarget(e)));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 20, true, false, (e, s) -> this.isValidNPCTarget(e)));
     }
 
     @Override
@@ -394,6 +391,37 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
         }
         this.altarDeceptionCountdownActive = compound.getBoolean("AltarDeceptionActive");
         this.altarAbandonCooldown = compound.getInt("AltarAbandonCooldown");
+    }
+
+    @Override
+    public boolean isValidNPCTarget(LivingEntity entity) {
+        if (entity == null || !entity.isAlive() || entity == this) {
+            return false;
+        }
+        if (this.isBookAlly(entity) || this.isNeutralEntity(entity)) {
+            return false;
+        }
+        if (this.isInAltarDeceptionGracePeriod()) {
+            return false;
+        }
+        if (this.isAngryAt(entity)) {
+            return true;
+        }
+        return entity instanceof Mob;
+    }
+
+    @Override
+    public boolean isValidPlayerTarget(LivingEntity entity) {
+        if (entity instanceof Player player) {
+            if (player.isCreative() || player.isSpectator()) {
+                return false;
+            }
+            if (this.isInAltarDeceptionGracePeriod()) {
+                return false;
+            }
+            return !this.isPlayerPacified(player);
+        }
+        return false;
     }
 
     @Override

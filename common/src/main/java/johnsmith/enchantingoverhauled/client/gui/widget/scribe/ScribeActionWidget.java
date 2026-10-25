@@ -7,6 +7,7 @@ import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -69,7 +70,7 @@ public class ScribeActionWidget {
         ResourceLocation texture = affordable ? (this.isHovered ? ScribeActionWidgetTheme.TEX_HIGHLIGHTED : ScribeActionWidgetTheme.TEX_ENABLED) : ScribeActionWidgetTheme.TEX_DISABLED;
 
         RenderSystem.enableBlend();
-        guiGraphics.blit(texture, x, y, 0, 0, width, height, width, height);
+        guiGraphics.blit(RenderType::guiTextured, texture, x, y, 0, 0, width, height, width, height);
         RenderSystem.disableBlend();
 
         Component text = this.theme.textProvider().apply(this.gridData);

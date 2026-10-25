@@ -20,7 +20,7 @@
             }
           }
         },
-        "attribute": "minecraft:generic.explosion_knockback_resistance",
+        "attribute": "minecraft:explosion_knockback_resistance",
         "id": "minecraft:enchantment.blast_protection",
         "operation": "add_value"
       }
