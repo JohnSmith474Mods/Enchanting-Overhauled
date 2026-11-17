@@ -1,0 +1,67 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.minecraft.fire_aspect"
+  },
+  "effects": {
+    "minecraft:post_attack": [
+      {
+        "affected": "victim",
+        "effect": {
+          "type": "minecraft:ignite",
+          "duration": {
+            "type": "enchanting_overhauled:config_aware",
+            "config": {
+              "mod_id": "enchanting_overhauled",
+              "tab_id": "enchantment",
+              "group_id": "general",
+              "resource_name": "enchantment_max_level"
+            },
+            "cases": {
+              "1": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 12.0,
+                "decrement": 6.00,
+                "minimum": 0.0
+              },
+              "2": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 9.0,
+                "decrement": 3.0,
+                "minimum": 0.0
+              }
+            },
+            "fallback": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 6.0,
+              "decrement": 2.0,
+              "minimum": 2.0
+            }
+          }
+        },
+        "enchanted": "attacker",
+        "requirements": {
+          "condition": "minecraft:damage_source_properties",
+          "predicate": {
+            "is_direct": true
+          }
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 60,
+    "per_level_above_first": 20
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 20
+  },
+  "primary_items": "#enchanting_overhauled:enchantable/all_melee",
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#enchanting_overhauled:enchantable/all_melee",
+  "weight": 2
+}

@@ -1,0 +1,49 @@
+{
+  "name": {
+    "text": "arthropod"
+  },
+  "color_code": 12829635,
+  "effects": {
+    "iterations": 24,
+    "chance": 40,
+    "particle": {
+      "effect": "minecraft:item_cobweb",
+      "velocity": [0.0, 0.05, 0.0],
+      "velocity_variance": [0.0, 0.05, 0.0],
+      "offset": [0.0, 0.0, 0.0],
+      "offset_variance": [0.5, 0.5, 0.5]
+    },
+    "sound": {
+      "effect": "minecraft:block.cobweb.step",
+      "volume": 0.1,
+      "volume_variance": 0.1,
+      "pitch": 1.2,
+      "pitch_variance": 0.4
+    }
+  },
+  "power_providers": [
+    {
+      "blocks": "minecraft:cobweb",
+      "power": 1
+    },
+    {
+      "blocks": [
+        "minecraft:infested_stone",
+        "minecraft:infested_cobblestone",
+        "minecraft:infested_stone_bricks",
+        "minecraft:infested_mossy_stone_bricks",
+        "minecraft:infested_cracked_stone_bricks",
+        "minecraft:infested_chiseled_stone_bricks",
+        "minecraft:infested_deepslate"
+      ],
+      "power": 2
+    },
+    {
+      "blocks": [
+        "minecraft:bee_nest",
+        "minecraft:honey_block"
+      ],
+      "power": 3
+    }
+  ]
+}

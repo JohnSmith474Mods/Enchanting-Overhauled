@@ -1,0 +1,41 @@
+{
+  "name": {
+    "text": "marine"
+  },
+  "color_code": 16711935,
+  "effects": {
+    "iterations": 24,
+    "chance": 40,
+    "particle": {
+      "effect": "minecraft:enchanted_hit",
+      "velocity": [0.0, 0.05, 0.0],
+      "velocity_variance": [0.0, 0.05, 0.0],
+      "offset": [0.0, 0.2, 0.0],
+      "offset_variance": [0.5, 0.5, 0.5]
+    },
+    "sound": {
+      "effect": "minecraft:block.respawn_anchor.charge",
+      "volume": 0.1,
+      "volume_variance": 0.2,
+      "pitch": 1.6,
+      "pitch_variance": 0.4
+    }
+  },
+  "power_providers": [
+    {
+      "blocks": "minecraft:brewing_stand",
+      "power": 2
+    },
+    {
+      "blocks": "minecraft:ender_chest",
+      "power": 3
+    },
+    {
+      "blocks": [
+        "enchanting_overhauled:deactivated_enchanting_table",
+        "enchanting_overhauled:disturbed_enchanting_table"
+      ],
+      "power": 1
+    }
+  ]
+}

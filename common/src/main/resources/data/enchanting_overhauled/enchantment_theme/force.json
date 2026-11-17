@@ -1,0 +1,37 @@
+{
+  "name": {
+    "text": "force"
+  },
+  "color_code": 6319233,
+  "effects": {
+    "iterations": 24,
+    "chance": 40,
+    "particle": {
+      "effect": "minecraft:explosion",
+      "velocity": [0.0, 0.05, 0.0],
+      "velocity_variance": [0.0, 0.05, 0.0],
+      "offset": [0.0, 0.2, 0.0],
+      "offset_variance": [0.5, 0.5, 0.5]
+    },
+    "sound": {
+      "effect": "minecraft:entity.generic.explode",
+      "volume": 0.1,
+      "volume_variance": 0.2,
+      "pitch": 1.0,
+      "pitch_variance": 0.5
+    }
+  },
+  "power_providers": [
+    {
+      "blocks": "minecraft:tnt",
+      "power": 2
+    },
+    {
+      "blocks": [
+        "minecraft:creeper_head",
+        "minecraft:creeper_wall_head"
+      ],
+      "power": 6
+    }
+  ]
+}

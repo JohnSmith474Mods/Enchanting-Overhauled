@@ -1,0 +1,30 @@
+{
+    "structures": [
+      {
+        "structure": "enchanting_overhauled:library_ruins_standard",
+        "weight": 1
+      },
+      {
+        "structure": "enchanting_overhauled:library_ruins_desert",
+        "weight": 1
+      },
+      {
+        "structure": "enchanting_overhauled:library_ruins_forest",
+        "weight": 1
+      },
+      {
+        "structure": "enchanting_overhauled:library_ruins_jungle",
+        "weight": 1
+      },
+      {
+        "structure": "enchanting_overhauled:library_ruins_swamp",
+        "weight": 1
+      }
+    ],
+    "placement": {
+      "salt": 65496815,
+      "spacing": 35,
+      "separation": 10,
+      "type": "minecraft:random_spread"
+    }
+  }

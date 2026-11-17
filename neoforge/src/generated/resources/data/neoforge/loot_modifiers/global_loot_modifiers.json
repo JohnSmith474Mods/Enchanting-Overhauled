@@ -1,0 +1,7 @@
+{
+  "entries": [
+    "enchanting_overhauled:inject_tome_uncommon",
+    "enchanting_overhauled:inject_tome_rare"
+  ],
+  "replace": false
+}

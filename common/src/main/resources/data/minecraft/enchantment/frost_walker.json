@@ -1,0 +1,134 @@
+{
+  "anvil_cost": 0,
+  "description": {
+    "translate": "enchantment.minecraft.frost_walker"
+  },
+  "effects": {
+    "minecraft:damage_immunity": [
+      {
+        "effect": {},
+        "requirements": {
+          "condition": "minecraft:damage_source_properties",
+          "predicate": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "minecraft:burn_from_stepping"
+              },
+              {
+                "expected": false,
+                "id": "minecraft:bypasses_invulnerability"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "minecraft:location_changed": [
+      {
+        "effect": {
+          "type": "minecraft:replace_disk",
+          "block_state": {
+            "type": "minecraft:simple_state_provider",
+            "state": {
+              "Name": "minecraft:frosted_ice",
+              "Properties": {
+                "age": "0"
+              }
+            }
+          },
+          "height": 1.0,
+          "offset": [
+            0,
+            -1,
+            0
+          ],
+          "predicate": {
+            "type": "minecraft:all_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_block_tag",
+                "offset": [
+                  0,
+                  1,
+                  0
+                ],
+                "tag": "minecraft:air"
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:water"
+              },
+              {
+                "type": "minecraft:matching_fluids",
+                "fluids": "minecraft:water"
+              },
+              {
+                "type": "minecraft:unobstructed"
+              }
+            ]
+          },
+          "radius": {
+            "type": "minecraft:clamped",
+            "max": 16.0,
+            "min": 0.0,
+            "value": {
+              "type": "enchanting_overhauled:config_aware",
+              "config": {
+                "mod_id": "enchanting_overhauled",
+                "tab_id": "enchantment",
+                "group_id": "general",
+                "resource_name": "enchantment_max_level"
+              },
+              "cases": {
+                "1": {
+                  "type": "enchanting_overhauled:diminishing_returns",
+                  "base": 4,
+                  "decrement": 2,
+                  "minimum": 1
+                },
+                "2": {
+                  "type": "enchanting_overhauled:diminishing_returns",
+                  "base": 4,
+                  "decrement": 2,
+                  "minimum": 1
+                }
+              },
+              "fallback": {
+                "type": "enchanting_overhauled:diminishing_returns",
+                "base": 3,
+                "decrement": 1,
+                "minimum": 1
+              }
+            }
+          },
+          "trigger_game_event": "minecraft:block_place"
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "flags": {
+              "is_on_ground": true
+            }
+          }
+        }
+      }
+    ],
+    "enchanting_overhauled:powder_snow_walkable": {}
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "feet"
+  ],
+  "supported_items": "#minecraft:enchantable/foot_armor",
+  "weight": 2
+}

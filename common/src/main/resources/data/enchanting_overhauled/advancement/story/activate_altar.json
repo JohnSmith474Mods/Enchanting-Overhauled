@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "id": "enchanting_overhauled:disturbed_enchanting_table"
+    },
+    "title": {
+      "translate": "advancement.enchanting_overhauled.activate_altar.title"
+    },
+    "description": {
+      "translate": "advancement.enchanting_overhauled.activate_altar.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "enchanting_overhauled:story/find_tome",
+  "criteria": {
+    "activated_table": {
+      "trigger": "enchanting_overhauled:activate_altar",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "activated_table"
+    ]
+  ]
+}

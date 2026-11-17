@@ -1,0 +1,51 @@
+{
+    "name": "enchanting_overhauled:root",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/desert/library_ruins_root_1",
+                "processors": "enchanting_overhauled:library_ruins/desert_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/desert/library_ruins_root_2",
+                "processors": "enchanting_overhauled:library_ruins/desert_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/desert/library_ruins_root_3",
+                "processors": "enchanting_overhauled:library_ruins/desert_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/desert/library_ruins_root_4",
+                "processors": "enchanting_overhauled:library_ruins/desert_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/desert/library_ruins_root_5",
+                "processors": "enchanting_overhauled:library_ruins/desert_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }
+    ]
+}

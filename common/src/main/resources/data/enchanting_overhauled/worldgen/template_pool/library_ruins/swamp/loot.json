@@ -1,0 +1,51 @@
+{
+    "name": "enchanting_overhauled:loot",
+    "fallback": "minecraft:empty",
+    "elements": [
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_loot_1",
+                "processors": "enchanting_overhauled:library_ruins/swamp_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_loot_2",
+                "processors": "enchanting_overhauled:library_ruins/swamp_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_loot_3",
+                "processors": "enchanting_overhauled:library_ruins/swamp_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_loot_4",
+                "processors": "enchanting_overhauled:library_ruins/swamp_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        },
+        {
+            "weight": 1,
+            "element": {
+                "location": "enchanting_overhauled:library_ruins/library_ruins_loot_5",
+                "processors": "enchanting_overhauled:library_ruins/swamp_processor",
+                "projection": "rigid",
+                "element_type": "minecraft:single_pool_element"
+            }
+        }
+    ]
+}

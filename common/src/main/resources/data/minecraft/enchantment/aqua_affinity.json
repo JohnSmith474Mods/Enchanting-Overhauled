@@ -1,0 +1,71 @@
+{
+  "anvil_cost": 0,
+  "description": {
+    "translate": "enchantment.minecraft.aqua_affinity"
+  },
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "enchanting_overhauled:config_aware",
+          "config": {
+            "mod_id": "enchanting_overhauled",
+            "tab_id": "enchantment",
+            "group_id": "general",
+            "resource_name": "enchantment_max_level"
+          },
+          "cases": {
+            "1": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 4.0,
+              "decrement": 3.0,
+              "minimum": 0.0
+            },
+            "2": {
+              "type": "enchanting_overhauled:diminishing_returns",
+              "base": 2.5,
+              "decrement": 1.0,
+              "minimum": 0.0
+            }
+          },
+          "fallback": {
+            "type": "enchanting_overhauled:diminishing_returns",
+            "base": 2.0,
+            "decrement": 1.0,
+            "minimum": 1.0
+          }
+        },
+        "attribute": "minecraft:player.submerged_mining_speed",
+        "id": "minecraft:enchantment.aqua_affinity",
+        "operation": "add_multiplied_total"
+      }
+    ],
+    "enchanting_overhauled:clear_fluid_vision": {
+      "fluids": "#minecraft:water",
+      "fog_start": {
+        "type": "minecraft:linear",
+        "base": -20.0,
+        "per_level_above_first": -40.0
+      },
+      "fog_end_multiplier": {
+        "type": "minecraft:linear",
+        "base": 0.5,
+        "per_level_above_first": 0.50
+      }
+    }
+  },
+  "max_cost": {
+    "base": 41,
+    "per_level_above_first": 0
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "head"
+  ],
+  "supported_items": "#minecraft:enchantable/head_armor",
+  "weight": 2
+}

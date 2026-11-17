@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "enchanting_overhauled:block/deactivated_enchanting_table"
+    }
+  }
+}

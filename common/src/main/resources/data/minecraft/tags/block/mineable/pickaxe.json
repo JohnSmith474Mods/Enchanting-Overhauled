@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "enchanting_overhauled:deactivated_enchanting_table",
+    "enchanting_overhauled:disturbed_enchanting_table"
+  ]
+}

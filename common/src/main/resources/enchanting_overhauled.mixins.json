@@ -1,0 +1,42 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "johnsmith.enchantingoverhauled.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_21",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
+  "mixins": [
+    "accessor.AbstractBlockSettingsAccessor",
+    "block.EnchantingTableBlockMixin",
+    "block.PowderSnowBlockMixin",
+    "block.entity.EnchantingTableBlockEntityMixin",
+    "component.type.ItemEnchantmentsMixin",
+    "enchantment.EnchantmentMixin",
+    "entity.CombatRulesMixin",
+    "entity.item.ItemEntityMixin",
+    "entity.player.CommonPlayerMixin",
+    "entity.player.InventoryMixin",
+    "entity.projectile.AbstractArrowMixin",
+    "item.BowItemMixin",
+    "item.ItemStackMixin",
+    "loot.EnchantRandomlyFunctionMixin",
+    "loot.MatchToolMixin",
+    "menu.AnvilMenuMixin",
+    "menu.ItemCombinerMenuMixin",
+    "server.level.ServerLevelMixin",
+    "server.level.ServerPlayerMixin"
+  ],
+  "client": [
+    "client.enchantment.EnchantmentMixin",
+    "client.item.ItemPropertiesMixin",
+    "client.render.FogRendererMixin",
+    "client.render.block.entity.EnchantTableRendererMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+

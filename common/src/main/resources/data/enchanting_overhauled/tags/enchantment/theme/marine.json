@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:aqua_affinity",
+    "minecraft:depth_strider",
+    "minecraft:respiration",
+    "minecraft:luck_of_the_sea",
+    "minecraft:lure",
+    "minecraft:loyalty",
+    "minecraft:impaling",
+    "minecraft:riptide",
+    "minecraft:channeling"
+  ]
+}

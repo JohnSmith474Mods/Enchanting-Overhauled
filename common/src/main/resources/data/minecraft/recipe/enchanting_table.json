@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "A#A",
+    "###"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:red_carpet"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "#": {
+      "item": "minecraft:crying_obsidian"
+    }
+  },
+  "result": {
+    "id": "enchanting_overhauled:disturbed_enchanting_table"
+  }
+}
