@@ -6,14 +6,14 @@ import com.mojang.math.Axis;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.AnchorVisualConfig;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.SpellFieldAnchorEntity;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +68,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
         int tint = config != null ? config.tint() : 0xFFFFFF;
         int frameCount = config != null ? Math.max(1, config.frameCount()) : 1;
         int ticksPerFrame = config != null ? Math.max(1, config.ticksPerFrame()) : 1;
-        ResourceLocation texture = config != null ? config.texture().orElse(null) : null;
+        Identifier texture = config != null ? config.texture().orElse(null) : null;
         String modelPath = config != null && config.modelId().isPresent()
                 ? config.modelId().get().getPath()
                 : "sigil_ring";
@@ -99,7 +99,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
     private static void renderTexturedGroundSigil(
             PoseStack poseStack,
             SubmitNodeCollector submitNodeCollector,
-            ResourceLocation texture,
+            Identifier texture,
             float ageInTicks,
             float v0,
             float v1,
@@ -112,7 +112,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
         poseStack.mulPose(Axis.YP.rotationDegrees(-ageInTicks * 2.5F));
 
         int light = LightTexture.FULL_BRIGHT;
-        submitNodeCollector.submitCustomGeometry(poseStack, RenderType.entityTranslucent(texture), (pose, consumer) -> {
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(texture), (pose, consumer) -> {
             consumer.addVertex(pose, -1.0F, 0.0F, -1.0F).setColor(r, g, b, 230).setUv(0.0F, v0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0.0F, 1.0F, 0.0F);
             consumer.addVertex(pose, -1.0F, 0.0F, 1.0F).setColor(r, g, b, 230).setUv(0.0F, v1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0.0F, 1.0F, 0.0F);
             consumer.addVertex(pose, 1.0F, 0.0F, 1.0F).setColor(r, g, b, 230).setUv(1.0F, v1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0.0F, 1.0F, 0.0F);
@@ -133,14 +133,14 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.05F, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(-ageInTicks * 3.0F));
-        submitNodeCollector.submitCustomGeometry(poseStack, RenderType.lightning(), (pose, consumer) ->
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) ->
                 drawRing(pose.pose(), consumer, 1.0F, 0.06F, 24, r, g, b, 180));
         poseStack.popPose();
 
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.08F, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(ageInTicks * 4.5F));
-        submitNodeCollector.submitCustomGeometry(poseStack, RenderType.lightning(), (pose, consumer) ->
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) ->
                 drawRing(pose.pose(), consumer, 0.65F, 0.045F, 20, 255, 255, 255, 210));
         poseStack.popPose();
     }
@@ -161,7 +161,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
             poseStack.scale(pulse, pulse, pulse);
             poseStack.mulPose(Axis.YP.rotationDegrees(ageInTicks * (2.5F + i) + i * 60.0F));
             poseStack.mulPose(Axis.XP.rotationDegrees(45.0F + i * 45.0F));
-            submitNodeCollector.submitCustomGeometry(poseStack, RenderType.lightning(), (pose, consumer) ->
+            submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) ->
                     drawRing(pose.pose(), consumer, 0.85F, 0.05F, 24, r, g, b, 160));
             poseStack.popPose();
         }
@@ -177,7 +177,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
     ) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(ageInTicks * 4.0F));
-        submitNodeCollector.submitCustomGeometry(poseStack, RenderType.lightning(), (pose, consumer) -> {
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) -> {
             Matrix4f matrix = pose.pose();
             int sides = 12;
             float radius = 0.45F;

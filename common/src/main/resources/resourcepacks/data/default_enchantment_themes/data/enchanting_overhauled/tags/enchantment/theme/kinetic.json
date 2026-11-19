@@ -3,6 +3,7 @@
   "values": [
     "minecraft:projectile_protection",
     "minecraft:piercing",
-    "minecraft:punch"
+    "minecraft:punch",
+    "minecraft:lunge"
   ]
 }

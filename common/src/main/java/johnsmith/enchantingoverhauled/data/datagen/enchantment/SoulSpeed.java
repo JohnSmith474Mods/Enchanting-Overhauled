@@ -4,12 +4,12 @@ import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.advancements.critereon.MinMaxBounds.Doubles;
+import net.minecraft.advancements.criterion.*;
+import net.minecraft.advancements.criterion.MinMaxBounds.Doubles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -49,14 +49,14 @@ public class SoulSpeed {
             .movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(RegistryLookup.BLOCK.apply(context), BlockTags.SOUL_SPEED_BLOCKS)));
 
     public static final EnchantmentAttributeEffect MOVEMENT_SPEED_EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.soul_speed"),
+            Identifier.withDefaultNamespace("enchantment.soul_speed"),
             Attributes.MOVEMENT_SPEED,
             new PointerValue("soul_speed.movement_speed", new DiminishingReturnsValue(0.03F, 0.01F, 0.01F)),
             AttributeModifier.Operation.ADD_VALUE
     );
 
     public static final EnchantmentAttributeEffect MOVEMENT_EFFICIENCY_EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.soul_speed"),
+            Identifier.withDefaultNamespace("enchantment.soul_speed"),
             Attributes.MOVEMENT_EFFICIENCY,
             new PointerValue("soul_speed.movement_efficiency", LevelBasedValue.constant(1.0F)),
             AttributeModifier.Operation.ADD_VALUE
@@ -105,11 +105,11 @@ public class SoulSpeed {
                     )
                     .withEffect(
                             EnchantmentEffectComponents.TICK,
-                            new PlaySoundEffect(SoundEvents.SOUL_ESCAPE, ConstantFloat.of(0.6F), UniformFloat.of(0.6F, 1.0F)),
+                            new PlaySoundEffect(java.util.List.of(SoundEvents.SOUL_ESCAPE), ConstantFloat.of(0.6F), UniformFloat.of(0.6F, 1.0F)),
                             AllOfCondition.allOf(
                                     LootItemRandomChanceCondition.randomChance(0.35F),
                                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, SoulSpeed.TICK_PREDICATE.apply(context))
                             )
                     )
-                    .build(AdaptedEnchantments.SOUL_SPEED.location());
+                    .build(AdaptedEnchantments.SOUL_SPEED.identifier());
 }

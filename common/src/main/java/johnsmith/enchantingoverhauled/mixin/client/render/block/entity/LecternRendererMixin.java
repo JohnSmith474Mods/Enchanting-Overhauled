@@ -8,14 +8,15 @@ import johnsmith.enchantingoverhauled.client.ClientConstants;
 import johnsmith.enchantingoverhauled.client.render.blockentity.LecternRenderStateAccessor;
 import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookModel;
 import johnsmith.enchantingoverhauled.item.Items;
-import net.minecraft.client.model.BookModel;
+import net.minecraft.client.model.object.book.BookModel;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.LecternRenderer;
 import net.minecraft.client.renderer.blockentity.state.LecternRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.MaterialSet;
@@ -83,7 +84,7 @@ public class LecternRendererMixin {
             method = "submit(Lnet/minecraft/client/renderer/blockentity/state/LecternRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
+                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
             )
     )
     @SuppressWarnings("unchecked")
@@ -119,7 +120,7 @@ public class LecternRendererMixin {
                 materialToUse = ClientConstants.ENCHANTED_BOOK_MATERIAL;
             }
             if (materialToUse != null) {
-                renderTypeToUse = materialToUse.renderType(RenderType::entityCutout);
+                renderTypeToUse = materialToUse.renderType(RenderTypes::entityCutout);
                 spriteToUse = this.materials.get(materialToUse);
             }
         }
@@ -127,7 +128,7 @@ public class LecternRendererMixin {
         original.call(collector, modelToUse, modelState, poseStack, renderTypeToUse, packedLight, packedOverlay, tintedColor, spriteToUse, outlineColor, crumblingOverlay);
 
         if (hasFoil) {
-            collector.order(1).submitModel(modelToUse, modelState, poseStack, RenderType.entityGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor, crumblingOverlay);
+            collector.order(1).submitModel(modelToUse, modelState, poseStack, RenderTypes.entityGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor, crumblingOverlay);
         }
     }
 }

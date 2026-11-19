@@ -12,7 +12,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
@@ -33,31 +33,31 @@ public record EnchantmentMenuSyncPayload(int containerId, List<EnchantContext> c
     /**
      * The unique identifier type for this custom payload.
      */
-    public static final Type<EnchantmentMenuSyncPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchantment_menu_sync"));
+    public static final Type<EnchantmentMenuSyncPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchantment_menu_sync"));
     // endregion
 
     // region Codecs
     /**
      * A stream codec for serializing and deserializing {@link EnchantmentInstance} objects.
      * <p>
-     * Safely unwraps the {@link Holder} into a {@link ResourceLocation} for network transit
+     * Safely unwraps the {@link Holder} into a {@link Identifier} for network transit
      * to prevent crashes associated with transmitting unbound direct holders.
      */
     public static final StreamCodec<RegistryFriendlyByteBuf, EnchantmentInstance> ENCHANTMENT_INSTANCE_CODEC = new StreamCodec<>() {
         @Override
         public void encode(RegistryFriendlyByteBuf buf, EnchantmentInstance instance) {
             // Safely unwrap the ResourceKey to prevent crashes from unbound Holder.Direct instances
-            ResourceLocation loc = instance.enchantment().unwrapKey()
-                    .map(ResourceKey::location)
-                    .orElseGet(() -> ResourceLocation.withDefaultNamespace("unknown"));
+            Identifier loc = instance.enchantment().unwrapKey()
+                    .map(ResourceKey::identifier)
+                    .orElseGet(() -> Identifier.withDefaultNamespace("unknown"));
 
-            ResourceLocation.STREAM_CODEC.encode(buf, loc);
+            Identifier.STREAM_CODEC.encode(buf, loc);
             buf.writeVarInt(instance.level());
         }
 
         @Override
         public EnchantmentInstance decode(RegistryFriendlyByteBuf buf) {
-            ResourceLocation loc = ResourceLocation.STREAM_CODEC.decode(buf);
+            Identifier loc = Identifier.STREAM_CODEC.decode(buf);
             int level = buf.readVarInt();
             Holder<Enchantment> holder = buf.registryAccess()
                     .lookupOrThrow(Registries.ENCHANTMENT)

@@ -28,5 +28,5 @@ public class Piercing {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Piercing.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.PROJECTILE_PIERCING, new AddValue(new PointerValue("piercing.projectile_piercing", LevelBasedValue.perLevel(1.5F))))
-                    .build(AdaptedEnchantments.PIERCING.location());
+                    .build(AdaptedEnchantments.PIERCING.identifier());
 }

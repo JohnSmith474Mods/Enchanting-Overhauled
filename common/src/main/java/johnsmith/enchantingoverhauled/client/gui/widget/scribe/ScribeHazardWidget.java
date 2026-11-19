@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Random;
  */
 public class ScribeHazardWidget {
 
-    private static final FontDescription SGA_FONT = new FontDescription.Resource(ResourceLocation.withDefaultNamespace("alt"));
+    private static final FontDescription SGA_FONT = new FontDescription.Resource(Identifier.withDefaultNamespace("alt"));
 
     private static final String[] HAZARDS = {
             "nothing cannot exist thus something must be",

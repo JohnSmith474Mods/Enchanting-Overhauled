@@ -27,5 +27,5 @@ public class Lure {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Lure.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.FISHING_TIME_REDUCTION, new AddValue(new PointerValue("lure.fishing_time_reduction", new DiminishingReturnsValue(7.5F, 1.5F, 1.5F))))
-                    .build(AdaptedEnchantments.LURE.location());
+                    .build(AdaptedEnchantments.LURE.identifier());
 }

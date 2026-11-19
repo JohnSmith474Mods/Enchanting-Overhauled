@@ -28,6 +28,7 @@ public class EnchantmentRegistryBootstrap {
         context.register(AdaptedEnchantments.LOOTING, Looting.ENCHANTMENT.apply(context));
         context.register(AdaptedEnchantments.LOYALTY, Loyalty.ENCHANTMENT.apply(context));
         context.register(AdaptedEnchantments.LUCK_OF_THE_SEA, LuckOfTheSea.ENCHANTMENT.apply(context));
+        context.register(AdaptedEnchantments.LUNGE, Lunge.ENCHANTMENT.apply(context));
         context.register(AdaptedEnchantments.LURE, Lure.ENCHANTMENT.apply(context));
         context.register(AdaptedEnchantments.MENDING, Mending.ENCHANTMENT.apply(context));
         context.register(AdaptedEnchantments.MULTISHOT, Multishot.ENCHANTMENT.apply(context));

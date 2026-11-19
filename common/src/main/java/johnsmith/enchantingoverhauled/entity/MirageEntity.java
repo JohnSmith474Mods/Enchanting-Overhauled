@@ -13,7 +13,7 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -407,7 +407,7 @@ public class MirageEntity extends Mob {
         this.setCasterEntityId(caster.getId());
         this.setCasterUuid(caster.getUUID());
 
-        ResourceLocation typeKey = BuiltInRegistries.ENTITY_TYPE.getKey(caster.getType());
+        Identifier typeKey = BuiltInRegistries.ENTITY_TYPE.getKey(caster.getType());
         this.entityData.set(DATA_CASTER_TYPE, typeKey.toString());
 
         this.entityData.set(DATA_CASTER_WIDTH, caster.getBbWidth());

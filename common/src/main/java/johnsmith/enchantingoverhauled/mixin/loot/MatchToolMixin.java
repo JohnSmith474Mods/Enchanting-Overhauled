@@ -2,7 +2,7 @@ package johnsmith.enchantingoverhauled.mixin.loot;
 
 import johnsmith.enchantingoverhauled.api.enchantment.effect.EnchantmentEffectComponents;
 import johnsmith.enchantingoverhauled.api.enchantment.effect.SilkTouchEffect;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;

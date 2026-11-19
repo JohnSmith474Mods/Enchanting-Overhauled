@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 public class Knockback {
     public static final Function<BootstrapContext<Enchantment>, Enchantment.EnchantmentDefinition> DEFINITION = (context) -> Enchantment.definition(
-            context.lookup(Registries.ITEM).getOrThrow(ItemTags.SWORD_ENCHANTABLE),
+            context.lookup(Registries.ITEM).getOrThrow(ItemTags.MELEE_WEAPON_ENCHANTABLE),
             5,
             AdaptedEnchantments.ENCHANTMENT_MAX_LEVEL,
             Enchantment.dynamicCost(5, 20),
@@ -27,5 +27,5 @@ public class Knockback {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Knockback.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.KNOCKBACK, new AddValue(new PointerValue("knockback.knockback", new DiminishingReturnsValue(1.5F, 0.5F, 0.5F))))
-                    .build(AdaptedEnchantments.KNOCKBACK.location());
+                    .build(AdaptedEnchantments.KNOCKBACK.identifier());
 }

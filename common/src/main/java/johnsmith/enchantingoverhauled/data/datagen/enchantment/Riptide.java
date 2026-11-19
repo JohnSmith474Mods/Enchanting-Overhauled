@@ -38,5 +38,5 @@ public class Riptide {
                             EnchantmentEffectComponents.TRIDENT_SOUND,
                             List.of(SoundEvents.TRIDENT_RIPTIDE_1, SoundEvents.TRIDENT_RIPTIDE_2, SoundEvents.TRIDENT_RIPTIDE_3)
                     )
-                    .build(AdaptedEnchantments.RIPTIDE.location());
+                    .build(AdaptedEnchantments.RIPTIDE.identifier());
 }

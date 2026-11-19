@@ -5,7 +5,7 @@ import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,7 +28,7 @@ public class SwiftSneak {
     );
 
     public static final EnchantmentAttributeEffect EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.swift_sneak"),
+            Identifier.withDefaultNamespace("enchantment.swift_sneak"),
             Attributes.SNEAKING_SPEED,
             new PointerValue("swift_sneak.sneaking_speed", new DiminishingReturnsValue(0.20F, 0.05F, 0.00F)),
             AttributeModifier.Operation.ADD_VALUE
@@ -37,5 +37,5 @@ public class SwiftSneak {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(SwiftSneak.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, SwiftSneak.EFFECT)
-                    .build(AdaptedEnchantments.SWIFT_SNEAK.location());
+                    .build(AdaptedEnchantments.SWIFT_SNEAK.identifier());
 }

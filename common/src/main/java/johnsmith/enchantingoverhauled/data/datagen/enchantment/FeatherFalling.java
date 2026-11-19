@@ -3,8 +3,8 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.DamageTypeTags;
@@ -35,5 +35,5 @@ public class FeatherFalling {
                             new AddValue(new PointerValue("feather_falling.damage_protection", new DiminishingReturnsValue(8.F, 2.F, 0.F))),
                             DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FALL)).tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
-                    .build(AdaptedEnchantments.FEATHER_FALLING.location());
+                    .build(AdaptedEnchantments.FEATHER_FALLING.identifier());
 }

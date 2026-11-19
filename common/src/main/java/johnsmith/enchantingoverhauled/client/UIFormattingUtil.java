@@ -12,7 +12,7 @@ import johnsmith.enchantmentcore.api.util.RomanNumeralConverter;
 import johnsmith.enchantmentcore.api.registry.EnchantmentEffectComponents;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
@@ -21,7 +21,7 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
@@ -36,7 +36,7 @@ import java.util.Map;
  * according to the mod's configuration standards.
  */
 public class UIFormattingUtil {
-    public static final ResourceLocation GALACTIC_FONT = ResourceLocation.fromNamespaceAndPath("minecraft", "alt");
+    public static final Identifier GALACTIC_FONT = Identifier.fromNamespaceAndPath("minecraft", "alt");
     public static final FontDescription GALACTIC_FONT_DESCRIPTION = new FontDescription.Resource(GALACTIC_FONT);
 
     /**
@@ -76,7 +76,7 @@ public class UIFormattingUtil {
     public static List<Component> formatEnchantmentDescription(Holder<Enchantment> enchantment, int level, boolean obfuscate, ColoringMode themeMode, ColoringMode levelMode) {
         if (!Config.ENABLE_DESCRIPTION.get()) return new ArrayList<>();
 
-        String baseKey = enchantment.unwrapKey().map(k -> Util.makeDescriptionId("enchantment", k.location())).orElse("");
+        String baseKey = enchantment.unwrapKey().map(k -> Util.makeDescriptionId("enchantment", k.identifier())).orElse("");
         if (baseKey.isEmpty()) return new ArrayList<>();
 
         String preciseKey = baseKey + ".description.precise";

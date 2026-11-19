@@ -7,7 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
@@ -54,7 +54,7 @@ public class UpdatingJigsawStructure extends Structure {
             instance.group(
                     settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
-                    ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
+                    Identifier.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.intRange(JigsawStructure.MIN_DEPTH, JigsawStructure.MAX_DEPTH).fieldOf("size").forGetter(structure -> structure.maxDepth),
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Codec.BOOL.fieldOf("use_expansion_hack").forGetter(structure -> structure.useExpansionHack),
@@ -79,7 +79,7 @@ public class UpdatingJigsawStructure extends Structure {
     /**
      * Optional target jigsaw block name to anchor the starting piece.
      */
-    private final Optional<ResourceLocation> startJigsawName;
+    private final Optional<Identifier> startJigsawName;
 
     /**
      * The maximum jigsaw recursion depth ({@code size}).
@@ -139,7 +139,7 @@ public class UpdatingJigsawStructure extends Structure {
     public UpdatingJigsawStructure(
             StructureSettings settings,
             Holder<StructureTemplatePool> startPool,
-            Optional<ResourceLocation> startJigsawName,
+            Optional<Identifier> startJigsawName,
             int maxDepth,
             HeightProvider startHeight,
             boolean useExpansionHack,

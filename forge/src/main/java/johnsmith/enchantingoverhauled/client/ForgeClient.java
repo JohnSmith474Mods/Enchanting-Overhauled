@@ -20,9 +20,9 @@ public class ForgeClient {
 
         // Platform init
         FMLClientSetupEvent.getBus(eventBus).addListener(ForgeMenuScreens::initialize);
-        RegisterParticleProvidersEvent.getBus(eventBus).addListener(ForgeSimpleParticleTypes::initialize);
-        EntityRenderersEvent.RegisterLayerDefinitions.getBus(eventBus).addListener(ForgeModelLayers::initialize);
-        EntityRenderersEvent.RegisterRenderers.getBus(eventBus).addListener(ForgeEntityRenderers::initialize);
+        RegisterParticleProvidersEvent.BUS.addListener(ForgeSimpleParticleTypes::initialize);
+        EntityRenderersEvent.RegisterLayerDefinitions.BUS.addListener(ForgeModelLayers::initialize);
+        EntityRenderersEvent.RegisterRenderers.BUS.addListener(ForgeEntityRenderers::initialize);
 
         context.registerExtensionPoint(
                 ConfigScreenHandler.ConfigScreenFactory.class,

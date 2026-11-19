@@ -27,5 +27,5 @@ public class LuckOfTheSea {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(LuckOfTheSea.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.FISHING_LUCK_BONUS, new AddValue(new PointerValue("luck_of_the_sea.fishing_luck_bonus", new DiminishingReturnsValue(1.5F, 0.5F, 0.5F))))
-                    .build(AdaptedEnchantments.LUCK_OF_THE_SEA.location());
+                    .build(AdaptedEnchantments.LUCK_OF_THE_SEA.identifier());
 }

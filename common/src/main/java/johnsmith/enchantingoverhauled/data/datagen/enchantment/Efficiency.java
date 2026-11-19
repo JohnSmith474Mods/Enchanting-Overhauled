@@ -5,7 +5,7 @@ import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,7 +28,7 @@ public class Efficiency {
     );
 
     public static final EnchantmentAttributeEffect EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.efficiency"),
+            Identifier.withDefaultNamespace("enchantment.efficiency"),
             Attributes.MINING_EFFICIENCY,
             new PointerValue("efficiency.mining_efficiency", new DiminishingReturnsValue(22.F, 4.F, 0.F)),
             AttributeModifier.Operation.ADD_VALUE
@@ -37,5 +37,5 @@ public class Efficiency {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Efficiency.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, Efficiency.EFFECT)
-                    .build(AdaptedEnchantments.EFFICIENCY.location());
+                    .build(AdaptedEnchantments.EFFICIENCY.identifier());
 }

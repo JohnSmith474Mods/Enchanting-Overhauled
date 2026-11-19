@@ -11,7 +11,7 @@ import johnsmith.enchantingoverhauled.entity.ai.goal.DashGoal;
 import johnsmith.enchantingoverhauled.entity.ai.goal.FlyingBookIdleGoal;
 import johnsmith.enchantingoverhauled.entity.ai.goal.MinionShelvingDespawnGoal;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -24,7 +24,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityReference;
@@ -323,7 +323,7 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
 
     @Override
     protected ResourceKey<LootTable> getHurtLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "entities/enchanted_book_hurt"));
+        return ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "entities/enchanted_book_hurt"));
     }
 
     @Override

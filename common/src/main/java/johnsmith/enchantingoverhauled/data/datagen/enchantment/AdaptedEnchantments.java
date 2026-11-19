@@ -6,7 +6,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -37,6 +37,7 @@ public class AdaptedEnchantments {
     public static final ResourceKey<Enchantment> LOOTING = key("looting");
     public static final ResourceKey<Enchantment> LOYALTY = key("loyalty");
     public static final ResourceKey<Enchantment> LUCK_OF_THE_SEA = key("luck_of_the_sea");
+    public static final ResourceKey<Enchantment> LUNGE = key("lunge");
     public static final ResourceKey<Enchantment> LURE = key("lure");
     public static final ResourceKey<Enchantment> MENDING = key("mending");
     public static final ResourceKey<Enchantment> MULTISHOT = key("multishot");
@@ -63,7 +64,7 @@ public class AdaptedEnchantments {
 
     private static ResourceKey<Enchantment> key(String key) {
         return ResourceKey.create(
-                Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, key)
+                Registries.ENCHANTMENT, Identifier.fromNamespaceAndPath(Constants.MOD_ID, key)
         );
     }
 }

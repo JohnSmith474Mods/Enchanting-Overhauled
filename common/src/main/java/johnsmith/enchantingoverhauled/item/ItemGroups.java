@@ -8,7 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -27,7 +27,7 @@ public class ItemGroups {
      */
     public static final ResourceKey<CreativeModeTab> ENCHANTING_GROUP_KEY = ResourceKey.create(
             Registries.CREATIVE_MODE_TAB,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanting_group")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchanting_group")
     );
 
     /**

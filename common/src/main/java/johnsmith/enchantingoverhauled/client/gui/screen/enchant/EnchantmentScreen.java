@@ -25,7 +25,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -41,15 +41,15 @@ import org.jetbrains.annotations.NotNull;
 public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> {
 
     // region Constants
-    private static final FontDescription GALACTIC_FONT = new FontDescription.Resource(ResourceLocation.fromNamespaceAndPath("minecraft", "alt"));
-    private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/background.png");
+    private static final FontDescription GALACTIC_FONT = new FontDescription.Resource(Identifier.fromNamespaceAndPath("minecraft", "alt"));
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/background.png");
 
-    private static final ResourceLocation EXPERIENCE_BAR_ACTIVE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/experience_bar/full.png");
-    private static final ResourceLocation EXPERIENCE_BAR_INACTIVE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/experience_bar/empty.png");
+    private static final Identifier EXPERIENCE_BAR_ACTIVE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/experience_bar/full.png");
+    private static final Identifier EXPERIENCE_BAR_INACTIVE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/experience_bar/empty.png");
 
-    private static final ResourceLocation EMPTY_SLOT_TARGET_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/slot/target.png");
-    private static final ResourceLocation EMPTY_SLOT_FUEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/slot/fuel.png");
-    private static final ResourceLocation EMPTY_SLOT_SOURCE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/slot/source.png");
+    private static final Identifier EMPTY_SLOT_TARGET_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/slot/target.png");
+    private static final Identifier EMPTY_SLOT_FUEL_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/slot/fuel.png");
+    private static final Identifier EMPTY_SLOT_SOURCE_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/slot/source.png");
 
     private static final int SCREEN_ORIGINAL_HEIGHT = 166;
     private static final int ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR = 0xFF80FF20;

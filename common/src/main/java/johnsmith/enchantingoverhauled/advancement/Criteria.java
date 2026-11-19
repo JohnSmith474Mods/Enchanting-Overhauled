@@ -1,6 +1,6 @@
 package johnsmith.enchantingoverhauled.advancement;
 
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.function.Supplier;

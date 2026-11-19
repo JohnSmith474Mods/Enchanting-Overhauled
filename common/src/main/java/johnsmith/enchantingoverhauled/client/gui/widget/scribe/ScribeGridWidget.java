@@ -7,29 +7,29 @@ import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Renders the dynamic Minesweeper grid and handles mouse interaction mapping.
  */
 public class ScribeGridWidget {
 
-    private static final ResourceLocation[] RUNE_TEXTURES = new ResourceLocation[]{
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_1.png"),
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_2.png"),
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_3.png"),
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_4.png"),
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_5.png"),
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_6.png"),
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_7.png"),
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_8.png")
+    private static final Identifier[] RUNE_TEXTURES = new Identifier[]{
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_1.png"),
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_2.png"),
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_3.png"),
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_4.png"),
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_5.png"),
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_6.png"),
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_7.png"),
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_8.png")
     };
 
-    private static final ResourceLocation RUNE_DEATH_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_death.png");
-    private static final ResourceLocation RUNE_SEAL_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_seal.png");
+    private static final Identifier RUNE_DEATH_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_death.png");
+    private static final Identifier RUNE_SEAL_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/game/rune_seal.png");
 
-    private static final ResourceLocation BOOK_BACKGROUND = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/book_background.png");
-    private static final ResourceLocation TOME_BACKGROUND = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/tome_background.png");
+    private static final Identifier BOOK_BACKGROUND = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/book_background.png");
+    private static final Identifier TOME_BACKGROUND = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/tome_background.png");
 
     private static final int GRID_START_X = 11;
     private static final int GRID_START_Y = 21;
@@ -127,7 +127,7 @@ public class ScribeGridWidget {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, Font font) {
         int renderStartX = this.leftPos + GRID_START_X;
         int renderStartY = this.topPos + GRID_START_Y;
-        ResourceLocation innerBg = this.gridData.isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
+        Identifier innerBg = this.gridData.isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
 
         int unrevealedColor = Config.UNREVEALED_GRID_COLOR.get();
         int revealedColor = Config.REVEALED_GRID_COLOR.get();

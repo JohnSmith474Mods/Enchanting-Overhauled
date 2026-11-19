@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -138,12 +138,12 @@ public final class ArcaneItemNamingUtil {
         CustomData customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         CompoundTag tag = customData.copyTag();
         if (themeKey != null) {
-            tag.putString(NBT_THEME_KEY, themeKey.location().toString());
+            tag.putString(NBT_THEME_KEY, themeKey.identifier().toString());
         } else {
             tag.remove(NBT_THEME_KEY);
         }
         if (schoolKey != null) {
-            tag.putString(NBT_SCHOOL_KEY, schoolKey.location().toString());
+            tag.putString(NBT_SCHOOL_KEY, schoolKey.identifier().toString());
         } else {
             tag.remove(NBT_SCHOOL_KEY);
         }
@@ -178,7 +178,7 @@ public final class ArcaneItemNamingUtil {
         if (customData != null && !customData.isEmpty()) {
             var tag = customData.copyTag();
             if (tag.contains(NBT_THEME_KEY)) {
-                ResourceLocation id = ResourceLocation.tryParse(tag.getStringOr(NBT_THEME_KEY, ""));
+                Identifier id = Identifier.tryParse(tag.getStringOr(NBT_THEME_KEY, ""));
                 if (id != null) {
                     ResourceKey<EnchantmentTheme> explicitKey = ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, id);
                     if (!EnchantmentThemes.isCommon(explicitKey) || enchantments.isEmpty()) {
@@ -244,7 +244,7 @@ public final class ArcaneItemNamingUtil {
         if (customData != null && !customData.isEmpty()) {
             var tag = customData.copyTag();
             if (tag.contains(NBT_SCHOOL_KEY)) {
-                ResourceLocation id = ResourceLocation.tryParse(tag.getStringOr(NBT_SCHOOL_KEY, ""));
+                Identifier id = Identifier.tryParse(tag.getStringOr(NBT_SCHOOL_KEY, ""));
                 if (id != null) {
                     ResourceKey<MagicSchool> explicitKey = ResourceKey.create(MagicSchools.REGISTRY_KEY, id);
                     if (!MagicSchools.isAberration(explicitKey) || enchantments.isEmpty()) {
@@ -378,7 +378,7 @@ public final class ArcaneItemNamingUtil {
      * @return A styled {@link MutableComponent} for the theme name.
      */
     public static MutableComponent getFormattedThemeComponent(ResourceKey<EnchantmentTheme> themeKey, @Nullable RegistryAccess registryAccess) {
-        ResourceLocation id = themeKey.location();
+        Identifier id = themeKey.identifier();
         String translationKey = "enchantment_theme." + id.getNamespace() + "." + id.getPath();
         int color = FALLBACK_THEME_COLORS.getOrDefault(id.getPath(), 0xFFFFFF);
         MutableComponent label = null;
@@ -430,7 +430,7 @@ public final class ArcaneItemNamingUtil {
         if (translationKey != null && !translationKey.isEmpty()) {
             label = Component.translatable(translationKey);
         } else {
-            ResourceLocation id = schoolKey.location();
+            Identifier id = schoolKey.identifier();
             label = Component.translatable("magic_school." + id.getNamespace() + "." + id.getPath());
         }
         return label.withStyle(Style.EMPTY.withColor(color));

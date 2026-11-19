@@ -3,7 +3,7 @@ package johnsmith.enchantingoverhauled.api.enchantment;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ByIdMap;
 
 import java.util.Arrays;
@@ -55,17 +55,17 @@ public enum EnchantmentSource {
     /**
      * The plain background texture used when the slot is enabled and affordable.
      */
-    public final ResourceLocation enabledTexture;
+    public final Identifier enabledTexture;
 
     /**
      * The plain background texture used when the slot is hovered by the cursor.
      */
-    public final ResourceLocation highlightedTexture;
+    public final Identifier highlightedTexture;
 
     /**
      * The plain background texture used when the slot is disabled or unaffordable.
      */
-    public final ResourceLocation disabledTexture;
+    public final Identifier disabledTexture;
 
     /**
      * The default text color when the slot is enabled.
@@ -100,15 +100,15 @@ public enum EnchantmentSource {
     ) {
         this.id = id;
         this.name = name;
-        this.enabledTexture = ResourceLocation.fromNamespaceAndPath(
+        this.enabledTexture = Identifier.fromNamespaceAndPath(
                 Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/enabled/" + name + "_plain.png"
         );
-        this.highlightedTexture = ResourceLocation.fromNamespaceAndPath(
+        this.highlightedTexture = Identifier.fromNamespaceAndPath(
                 Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/highlighted/" + name + "_plain.png"
         );
-        this.disabledTexture = ResourceLocation.fromNamespaceAndPath(
+        this.disabledTexture = Identifier.fromNamespaceAndPath(
                 Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/disabled/" + name + "_plain.png"
         );
@@ -121,10 +121,10 @@ public enum EnchantmentSource {
      * Resolves the numbered variant texture for an enabled enchantment button of this source type.
      *
      * @param variant The deterministic texture variant index (typically {@code 0} through {@code 9}).
-     * @return The {@link ResourceLocation} of the enabled button texture variant.
+     * @return The {@link Identifier} of the enabled button texture variant.
      */
-    public ResourceLocation getEnabledTexture(int variant) {
-        return ResourceLocation.fromNamespaceAndPath(
+    public Identifier getEnabledTexture(int variant) {
+        return Identifier.fromNamespaceAndPath(
                 Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/enabled/" + name + "_" + variant + ".png"
         );
@@ -134,10 +134,10 @@ public enum EnchantmentSource {
      * Resolves the numbered variant texture for a highlighted (hovered) enchantment button of this source type.
      *
      * @param variant The deterministic texture variant index (typically {@code 0} through {@code 9}).
-     * @return The {@link ResourceLocation} of the highlighted button texture variant.
+     * @return The {@link Identifier} of the highlighted button texture variant.
      */
-    public ResourceLocation getHighlightedTexture(int variant) {
-        return ResourceLocation.fromNamespaceAndPath(
+    public Identifier getHighlightedTexture(int variant) {
+        return Identifier.fromNamespaceAndPath(
                 Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/highlighted/" + name + "_" + variant + ".png"
         );
@@ -147,10 +147,10 @@ public enum EnchantmentSource {
      * Resolves the numbered variant texture for a disabled enchantment button of this source type.
      *
      * @param variant The deterministic texture variant index (typically {@code 0} through {@code 9}).
-     * @return The {@link ResourceLocation} of the disabled button texture variant.
+     * @return The {@link Identifier} of the disabled button texture variant.
      */
-    public ResourceLocation getDisabledTexture(int variant) {
-        return ResourceLocation.fromNamespaceAndPath(
+    public Identifier getDisabledTexture(int variant) {
+        return Identifier.fromNamespaceAndPath(
                 Constants.MOD_ID,
                 "textures/gui/container/enchanting_table/button/disabled/" + name + "_" + variant + ".png"
         );

@@ -4,7 +4,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGridData;
 import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
 
@@ -18,9 +18,9 @@ public record ScribeActionWidgetTheme(
         int actionPayload
 ) {
 
-    public static final ResourceLocation TEX_ENABLED = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/button/enabled.png");
-    public static final ResourceLocation TEX_HIGHLIGHTED = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/button/highlighted.png");
-    public static final ResourceLocation TEX_DISABLED = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/button/disabled.png");
+    public static final Identifier TEX_ENABLED = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/button/enabled.png");
+    public static final Identifier TEX_HIGHLIGHTED = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/button/highlighted.png");
+    public static final Identifier TEX_DISABLED = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/button/disabled.png");
 
     public static final ScribeActionWidgetTheme START = new ScribeActionWidgetTheme(
             data -> Component.translatable("gui.enchanting_overhauled.scribe.action.start"),

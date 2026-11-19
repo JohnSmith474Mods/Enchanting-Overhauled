@@ -6,7 +6,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +27,7 @@ public class EnchantmentThemes {
      * Note: The namespace is set to {@code minecraft} for compatibility with built-in data systems.
      */
     public static final ResourceKey<Registry<EnchantmentTheme>> THEME_REGISTRY_KEY = ResourceKey
-            .createRegistryKey(ResourceLocation.withDefaultNamespace("enchantment_theme"));
+            .createRegistryKey(Identifier.withDefaultNamespace("enchantment_theme"));
 
     /**
      * The {@link ResourceKey} for the fallback common theme, used when an enchantment does not belong
@@ -42,7 +42,7 @@ public class EnchantmentThemes {
      * @return The constructed {@link ResourceKey}.
      */
     private static ResourceKey<EnchantmentTheme> createKey(String path) {
-        return ResourceKey.create(THEME_REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, path));
+        return ResourceKey.create(THEME_REGISTRY_KEY, Identifier.fromNamespaceAndPath(Constants.MOD_ID, path));
     }
 
     /**
@@ -53,10 +53,10 @@ public class EnchantmentThemes {
      * @return The corresponding enchantment {@link TagKey}.
      */
     public static TagKey<Enchantment> getThemeTag(ResourceKey<EnchantmentTheme> themeKey) {
-        ResourceLocation id = themeKey.location();
+        Identifier id = themeKey.identifier();
         return TagKey.create(
                 Registries.ENCHANTMENT,
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "theme/" + id.getPath()));
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "theme/" + id.getPath()));
     }
 
     /**
@@ -70,7 +70,7 @@ public class EnchantmentThemes {
             return true;
         if (themeKey.equals(COMMON))
             return true;
-        String path = themeKey.location().getPath();
+        String path = themeKey.identifier().getPath();
         return "common".equals(path);
     }
 

@@ -8,7 +8,7 @@ import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentTheme;
 import johnsmith.enchantingoverhauled.api.enchantment.theme.EnchantmentThemes;
 import johnsmith.enchantingoverhauled.api.item.ArcaneItemNamingUtil;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;

@@ -40,7 +40,7 @@ public record EnchantRenderState(
      */
     @Override
     public String toString() {
-        String enchStr = enchantment.map(e -> e.unwrapKey().map(k -> k.location().toString()).orElse("unknown")).orElse("empty");
+        String enchStr = enchantment.map(e -> e.unwrapKey().map(k -> k.identifier().toString()).orElse("unknown")).orElse("empty");
         return "EnchantRenderState[source=" + visualSource + ", enchantment=" + enchStr + ", lvl=" + displayLevel + ", xpReq=" + xpRequirement + ", xpCost=" + xpCost + ", lapis=" + lapisCost + ", state=" + state + "]";
     }
     // endregion

@@ -4,7 +4,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.client.network.ClientPayloadHandler;
 import johnsmith.enchantingoverhauled.network.EnchantmentMenuSyncPayload;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
@@ -12,7 +12,7 @@ import net.minecraftforge.network.SimpleChannel;
 
 public final class ForgeNetworkRegistry {
     public static final SimpleChannel CHANNEL = ChannelBuilder
-            .named(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "main"))
+            .named(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "main"))
             .networkProtocolVersion(1)
             .simpleChannel();
 

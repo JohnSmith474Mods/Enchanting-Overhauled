@@ -23,6 +23,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.EnchantmentLevelProvider;
 
+import java.util.List;
 import java.util.function.Function;
 
 public class Channeling {
@@ -38,7 +39,7 @@ public class Channeling {
 
     public static final AllOf.EntityEffects EFFECTS = AllOf.entityEffects(
             new SummonEntityEffect(HolderSet.direct(EntityType.LIGHTNING_BOLT.builtInRegistryHolder()), false),
-            new PlaySoundEffect(SoundEvents.TRIDENT_THUNDER, ConstantFloat.of(5.0F), ConstantFloat.of(1.0F))
+            new PlaySoundEffect(List.of(SoundEvents.TRIDENT_THUNDER), ConstantFloat.of(5.0F), ConstantFloat.of(1.0F))
     );
 
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
@@ -46,7 +47,7 @@ public class Channeling {
                     .withEffect(EnchantmentEffectComponents.POST_ATTACK, EnchantmentTarget.ATTACKER, EnchantmentTarget.VICTIM,
                             AllOf.entityEffects(
                                     new SummonEntityEffect(HolderSet.direct(EntityType.LIGHTNING_BOLT.builtInRegistryHolder()), false),
-                                    new PlaySoundEffect(SoundEvents.TRIDENT_THUNDER, ConstantFloat.of(5.0F), ConstantFloat.of(1.0F))
+                                    new PlaySoundEffect(List.of(SoundEvents.TRIDENT_THUNDER), ConstantFloat.of(5.0F), ConstantFloat.of(1.0F))
                             ),
                             AllOfCondition.allOf(
                                     LootItemRandomChanceCondition.randomChance(
@@ -55,14 +56,14 @@ public class Channeling {
                                             )
                                     ),
                                     WeatherCheck.weather().setThundering(true),
-                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().located(net.minecraft.advancements.critereon.LocationPredicate.Builder.location().setCanSeeSky(true))),
-                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.TRIDENT))
+                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, net.minecraft.advancements.criterion.EntityPredicate.Builder.entity().located(net.minecraft.advancements.criterion.LocationPredicate.Builder.location().setCanSeeSky(true))),
+                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER, net.minecraft.advancements.criterion.EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.TRIDENT))
                             )
                     )
                     .withEffect(EnchantmentEffectComponents.HIT_BLOCK,
                             AllOf.entityEffects(
                                     new SummonEntityEffect(HolderSet.direct(EntityType.LIGHTNING_BOLT.builtInRegistryHolder()), false),
-                                    new PlaySoundEffect(SoundEvents.TRIDENT_THUNDER, ConstantFloat.of(5.0F), ConstantFloat.of(1.0F))
+                                    new PlaySoundEffect(List.of(SoundEvents.TRIDENT_THUNDER), ConstantFloat.of(5.0F), ConstantFloat.of(1.0F))
                             ),
                             AllOfCondition.allOf(
                                     LootItemRandomChanceCondition.randomChance(
@@ -71,10 +72,10 @@ public class Channeling {
                                             )
                                     ),
                                     WeatherCheck.weather().setThundering(true),
-                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, net.minecraft.advancements.critereon.EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.TRIDENT)),
-                                    LocationCheck.checkLocation(net.minecraft.advancements.critereon.LocationPredicate.Builder.location().setCanSeeSky(true)),
+                                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, net.minecraft.advancements.criterion.EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.TRIDENT)),
+                                    LocationCheck.checkLocation(net.minecraft.advancements.criterion.LocationPredicate.Builder.location().setCanSeeSky(true)),
                                     LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.LIGHTNING_ROD)
                             )
                     )
-                    .build(AdaptedEnchantments.CHANNELING.location());
+                    .build(AdaptedEnchantments.CHANNELING.identifier());
 }

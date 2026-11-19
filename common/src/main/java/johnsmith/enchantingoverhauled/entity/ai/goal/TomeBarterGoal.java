@@ -225,7 +225,7 @@ public class TomeBarterGoal extends Goal {
             } else {
                 Vec3 pullVel = toBook.normalize().scale(0.18D);
                 itemEntity.setDeltaMovement(itemEntity.getDeltaMovement().scale(0.5D).add(pullVel));
-                itemEntity.hasImpulse = true;
+                itemEntity.needsSync = true;
             }
         }
     }

@@ -7,7 +7,7 @@ import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 import johnsmith.enchantmentcore.api.enchantment.value.ProbabilisticValue;
 
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -35,5 +35,5 @@ public class Infinity {
                     .withEffect(EnchantmentEffectComponents.AMMO_USE,
                             new SetValue(new ProbabilisticValue(new PointerValue("infinity.ammo_use", new LevelBasedValue.Fraction(new DiminishingReturnsValue(4.F, 1.F, 1.F), new LevelBasedValue.Constant(10))))),
                             MatchTool.toolMatches(ItemPredicate.Builder.item().of(RegistryLookup.ITEM.apply(context), Tags.ALL_AMMUNITION)))
-                    .build(AdaptedEnchantments.INFINITY.location());
+                    .build(AdaptedEnchantments.INFINITY.identifier());
 }

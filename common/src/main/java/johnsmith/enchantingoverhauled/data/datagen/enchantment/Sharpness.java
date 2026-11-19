@@ -31,5 +31,5 @@ public class Sharpness {
                             EnchantmentEffectComponents.DAMAGE,
                             new AddValue(new PointerValue("sharpness.damage", new DiminishingReturnsValue(1.5F, 0.5F, 0.5F)))
                     )
-                    .build(AdaptedEnchantments.SHARPNESS.location());
+                    .build(AdaptedEnchantments.SHARPNESS.identifier());
 }

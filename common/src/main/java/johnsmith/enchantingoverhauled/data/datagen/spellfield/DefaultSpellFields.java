@@ -15,13 +15,13 @@ import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.Consta
 import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.LinearScalingFunction;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.SpellFieldVolume;
 
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DataComponentMatchers;
-import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.DataComponentMatchers;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.EntityEquipmentPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -30,7 +30,7 @@ import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -190,6 +190,6 @@ public class DefaultSpellFields {
     }
 
     private static ResourceKey<AiSpellField> spellKey(String name) {
-        return ResourceKey.create(AiSpellFields.REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));
+        return ResourceKey.create(AiSpellFields.REGISTRY_KEY, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
     }
 }

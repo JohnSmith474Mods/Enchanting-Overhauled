@@ -2,11 +2,11 @@ package johnsmith.enchantingoverhauled.client.render.entity.model;
 
 import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
-import net.minecraft.client.model.BookModel;
+import net.minecraft.client.model.object.book.BookModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ public class FlyingBookEntityModel<S extends FlyingBookEntityModel.RenderState> 
     private final BookModel internalModel;
 
     public FlyingBookEntityModel(BookModel internalModel) {
-        super(internalModel.root(), RenderType::entityCutoutNoCull);
+        super(internalModel.root(), RenderTypes::entityCutoutNoCull);
         this.internalModel = internalModel;
     }
 

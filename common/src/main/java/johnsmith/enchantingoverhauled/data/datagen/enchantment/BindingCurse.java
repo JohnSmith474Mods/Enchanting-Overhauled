@@ -32,5 +32,5 @@ public class BindingCurse {
                     .withEffect(net.minecraft.world.item.enchantment.EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)
                     .withSpecialEffect((DataComponentType<BindingCurseEffect>) EnchantmentEffectComponents.BINDING_CHANCE.get(),
                             new BindingCurseEffect(new PointerValue("binding_curse.binding_chance", new DiminishingReturnsValue(.4F, .1F, 0.0F)))
-                    ).build(AdaptedEnchantments.BINDING_CURSE.location());
+                    ).build(AdaptedEnchantments.BINDING_CURSE.identifier());
 }

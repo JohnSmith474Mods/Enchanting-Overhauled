@@ -1,6 +1,6 @@
 package johnsmith.enchantingoverhauled.client.render.entity.model;
 
-import net.minecraft.client.model.BookModel;
+import net.minecraft.client.model.object.book.BookModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;

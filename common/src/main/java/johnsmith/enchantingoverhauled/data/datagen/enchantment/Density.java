@@ -30,5 +30,5 @@ public class Density {
                     .exclusiveWith(context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.DAMAGE_EXCLUSIVE))
                     .withEffect(EnchantmentEffectComponents.SMASH_DAMAGE_PER_FALLEN_BLOCK,
                             new AddValue(new PointerValue("density.smash_damage_per_fallen_bock",new DiminishingReturnsValue(0.8F, 0.2F, 0.2F))))
-                    .build(AdaptedEnchantments.DENSITY.location());
+                    .build(AdaptedEnchantments.DENSITY.identifier());
 }

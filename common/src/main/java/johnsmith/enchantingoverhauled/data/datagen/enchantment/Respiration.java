@@ -5,7 +5,7 @@ import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,7 +28,7 @@ public class Respiration {
     );
 
     public static final EnchantmentAttributeEffect EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.respiration"),
+            Identifier.withDefaultNamespace("enchantment.respiration"),
             Attributes.OXYGEN_BONUS,
             new PointerValue("respiration.oxygen_bonus", new DiminishingReturnsValue(1.5F, 0.5F, 0.5F)),
             AttributeModifier.Operation.ADD_VALUE
@@ -37,5 +37,5 @@ public class Respiration {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Respiration.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, Respiration.EFFECT)
-                    .build(AdaptedEnchantments.RESPIRATION.location());
+                    .build(AdaptedEnchantments.RESPIRATION.identifier());
 }

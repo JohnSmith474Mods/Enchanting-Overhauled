@@ -33,5 +33,5 @@ public class VanishingCurse {
                     .withSpecialEffect(
                             (DataComponentType<VanishingCurseEffect>) EnchantmentEffectComponents.VANISHING_CHANCE.get(),
                             new VanishingCurseEffect(new PointerValue("vanishing_curse.vanishing_chance", new DiminishingReturnsValue(.4F, .1F, 0.0F)))
-                    ).build(AdaptedEnchantments.VANISHING_CURSE.location());
+                    ).build(AdaptedEnchantments.VANISHING_CURSE.identifier());
 }

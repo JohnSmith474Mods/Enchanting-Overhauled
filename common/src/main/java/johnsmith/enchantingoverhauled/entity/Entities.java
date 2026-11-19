@@ -5,7 +5,7 @@ import johnsmith.enchantingoverhauled.entity.projectile.MagicMissileEntity;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -59,7 +59,7 @@ public enum Entities implements StringRepresentable {
 
     public EntityType<?> build() {
         if (this.entity == null) {
-            this.entity = this.builder.build(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, key)));
+            this.entity = this.builder.build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, key)));
         }
         return this.entity;
     }

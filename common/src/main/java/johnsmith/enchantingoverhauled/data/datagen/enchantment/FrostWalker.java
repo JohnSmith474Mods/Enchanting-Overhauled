@@ -3,10 +3,10 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.EntityFlagsPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.EntityFlagsPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -68,5 +68,5 @@ public class FrostWalker {
                             ),
                             LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnGround(true)))
                     )
-                    .build(AdaptedEnchantments.FROST_WALKER.location());
+                    .build(AdaptedEnchantments.FROST_WALKER.identifier());
 }

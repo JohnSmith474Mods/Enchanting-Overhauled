@@ -27,5 +27,5 @@ public class Mending {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Mending.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.REPAIR_WITH_XP, new MultiplyValue(new PointerValue("mending.repair_with_xp", new DiminishingReturnsValue(4.5F, 1.5F, 1.5F))))
-                    .build(AdaptedEnchantments.MENDING.location());
+                    .build(AdaptedEnchantments.MENDING.identifier());
 }

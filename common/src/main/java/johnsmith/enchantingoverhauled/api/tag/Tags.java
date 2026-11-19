@@ -3,7 +3,7 @@ package johnsmith.enchantingoverhauled.api.tag;
 import johnsmith.enchantingoverhauled.Constants;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +25,7 @@ public class Tags {
      */
     public static final TagKey<Item> ENCHANTING_FUEL = TagKey.create(
             Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanting_fuel")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchanting_fuel")
     );
 
     /**
@@ -36,7 +36,7 @@ public class Tags {
      */
     public static final TagKey<Item> PERSISTENT_ENCHANTMENT_SOURCE = TagKey.create(
             Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchantment_source/persistent")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchantment_source/persistent")
     );
 
     /**
@@ -47,7 +47,7 @@ public class Tags {
      */
     public static final TagKey<Item> FLEETING_ENCHANTMENT_SOURCE = TagKey.create(
             Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchantment_source/fleeting")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchantment_source/fleeting")
     );
 
     /**
@@ -58,7 +58,7 @@ public class Tags {
      */
     public static final TagKey<Item> ALL_MELEE = TagKey.create(
             Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchantable/all_melee")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchantable/all_melee")
     );
 
     /**
@@ -69,7 +69,7 @@ public class Tags {
      */
     public static final TagKey<Item> ALL_RANGED = TagKey.create(
             Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchantable/all_ranged")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchantable/all_ranged")
     );
 
     /**
@@ -80,7 +80,7 @@ public class Tags {
      */
     public static final TagKey<Item> ALL_AMMUNITION = TagKey.create(
             Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "all_ammunition")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "all_ammunition")
     );
 
     /**
@@ -91,7 +91,7 @@ public class Tags {
      */
     public static final TagKey<Block> ENCHANTED_BOOK_IDLE_TARGET = TagKey.create(
             Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_book_idle_target")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_book_idle_target")
     );
 
     /**
@@ -102,7 +102,7 @@ public class Tags {
      */
     public static final TagKey<EntityType<?>> IMMUNE_TO_MAGIC_MISSILE = TagKey.create(
             Registries.ENTITY_TYPE,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "immune_to_magic_missile")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "immune_to_magic_missile")
     );
 
     /**
@@ -113,7 +113,7 @@ public class Tags {
      */
     public static final TagKey<EntityType<?>> ENCHANTED_TOME_ALLIES = TagKey.create(
             Registries.ENTITY_TYPE,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_tome_allies")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_tome_allies")
     );
 
     /**
@@ -124,7 +124,7 @@ public class Tags {
      */
     public static final TagKey<EntityType<?>> ENCHANTED_TOME_NEUTRAL = TagKey.create(
             Registries.ENTITY_TYPE,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_tome_neutral")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_tome_neutral")
     );
 
     /**
@@ -135,7 +135,7 @@ public class Tags {
      */
     public static final TagKey<EntityType<?>> ENCHANTED_TOME_AVOID_COLLATERAL = TagKey.create(
             Registries.ENTITY_TYPE,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_tome_avoid_collateral")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "enchanted_tome_avoid_collateral")
     );
 
     /**
@@ -146,7 +146,7 @@ public class Tags {
      */
     public static final TagKey<Biome> SPAWNS_ENCHANTED_BOOK = TagKey.create(
             Registries.BIOME,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "spawns_enchanted_book")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "spawns_enchanted_book")
     );
 
     /**
@@ -157,6 +157,6 @@ public class Tags {
      */
     public static final TagKey<DamageType> TOME_IMMUNE_DAMAGE_TYPE = TagKey.create(
             Registries.DAMAGE_TYPE,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item/enchanted_tome/immune_damage_type")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "item/enchanted_tome/immune_damage_type")
     );
 }

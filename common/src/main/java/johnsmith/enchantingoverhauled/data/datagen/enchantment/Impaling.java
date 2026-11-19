@@ -6,8 +6,8 @@ import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityTypePredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.EntityTypeTags;
@@ -38,5 +38,5 @@ public class Impaling {
                             new AddValue(new PointerValue("impaling.damage", new DiminishingReturnsValue(4.5F, 1.5F, 1.5F))),
                             LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.SENSITIVE_TO_IMPALING)))
                     )
-                    .build(AdaptedEnchantments.IMPALING.location());
+                    .build(AdaptedEnchantments.IMPALING.identifier());
 }

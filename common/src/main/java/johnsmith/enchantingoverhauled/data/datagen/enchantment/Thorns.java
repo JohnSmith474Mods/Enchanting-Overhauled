@@ -46,5 +46,5 @@ public class Thorns {
                             ),
                             LootItemRandomChanceCondition.randomChance(EnchantmentLevelProvider.forEnchantmentLevel(new PointerValue("thorns.random_chance", new DiminishingReturnsValue(0.20F, 0.05F, 0.00F))))
                     )
-                    .build(AdaptedEnchantments.THORNS.location());
+                    .build(AdaptedEnchantments.THORNS.identifier());
 }

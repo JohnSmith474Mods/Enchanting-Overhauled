@@ -8,7 +8,7 @@ import johnsmith.enchantmentcore.api.registry.EnchantmentCoreRegistries;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Handles Fabric-side registration of custom {@link SpellFieldEffect} codecs for Enchanting Overhauled.
@@ -34,7 +34,7 @@ public final class FabricSpellFieldEffects {
             return;
         }
 
-        ResourceLocation registryId = EnchantmentCoreRegistries.SPELL_FIELD_EFFECT_KEY.location();
+        Identifier registryId = EnchantmentCoreRegistries.SPELL_FIELD_EFFECT_KEY.identifier();
 
         // Enchantment Core's main entrypoint hasn't run yet; register as soon as it adds the registry
         RegistryEntryAddedCallback.event(BuiltInRegistries.REGISTRY).register((rawId, id, object) -> {
@@ -51,7 +51,7 @@ public final class FabricSpellFieldEffects {
         registered = true;
 
         for (SpellFieldEffects effect : SpellFieldEffects.values()) {
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, effect.getSerializedName());
+            Identifier id = Identifier.fromNamespaceAndPath(Constants.MOD_ID, effect.getSerializedName());
             if (!registry.containsKey(id)) {
                 Registry.register(registry, id, effect.codec());
             }

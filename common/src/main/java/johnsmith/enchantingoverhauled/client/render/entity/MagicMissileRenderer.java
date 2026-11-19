@@ -4,11 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import johnsmith.enchantingoverhauled.entity.projectile.MagicMissileEntity;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -74,7 +74,7 @@ public class MagicMissileRenderer extends EntityRenderer<MagicMissileEntity, Mag
         poseStack.mulPose(Axis.XP.rotationDegrees(ageInTicks * 24.0F));
         poseStack.scale(pulse, pulse, pulse);
 
-        submitNodeCollector.submitCustomGeometry(poseStack, RenderType.lightning(), (pose, consumer) -> {
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) -> {
             Matrix4f matrix = pose.pose();
             renderCrossedFins(matrix, consumer, 0.22F, 0.08F, sr, sg, sb, 165);
             renderCrossedFins(matrix, consumer, 0.14F, 0.045F, tr, tg, tb, 220);

@@ -4,7 +4,7 @@ import johnsmith.enchantingoverhauled.Constants;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageType;
 
 /**
@@ -24,7 +24,7 @@ public class DamageTypes {
      */
     public static final ResourceKey<DamageType> ARCANE_RETRIBUTION = ResourceKey.create(
             Registries.DAMAGE_TYPE,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "arcane_retribution")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "arcane_retribution")
     );
 
     /**
@@ -35,7 +35,7 @@ public class DamageTypes {
      */
     public static final ResourceKey<DamageType> MAGIC_MISSILE = ResourceKey.create(
             Registries.DAMAGE_TYPE,
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "magic_missile")
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "magic_missile")
     );
 
     /**

@@ -4,11 +4,11 @@ import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.NegateValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -36,7 +36,7 @@ public class FireProtection {
     );
 
     public static final EnchantmentAttributeEffect EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.fire_protection"),
+            Identifier.withDefaultNamespace("enchantment.fire_protection"),
             Attributes.BURNING_TIME,
             new PointerValue("fire_protection.burning_time", new NegateValue(
                     new LevelBasedValue.Fraction(
@@ -57,5 +57,5 @@ public class FireProtection {
                             )
                     )
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, FireProtection.EFFECT)
-                    .build(AdaptedEnchantments.FIRE_PROTECTION.location());
+                    .build(AdaptedEnchantments.FIRE_PROTECTION.identifier());
 }

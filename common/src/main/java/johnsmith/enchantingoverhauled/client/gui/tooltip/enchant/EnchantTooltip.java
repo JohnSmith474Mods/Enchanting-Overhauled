@@ -11,7 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public sealed interface EnchantTooltip permits
     /**
      * The resource location referencing the standard galactic alphabet font used for table generation obfuscation.
      */
-    ResourceLocation GALACTIC_FONT_ID = ResourceLocation.fromNamespaceAndPath("minecraft", "alt");
+    Identifier GALACTIC_FONT_ID = Identifier.fromNamespaceAndPath("minecraft", "alt");
 
     /**
      * Executes the tooltip rendering logic.

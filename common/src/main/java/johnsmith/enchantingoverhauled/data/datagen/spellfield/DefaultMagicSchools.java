@@ -5,7 +5,7 @@ import johnsmith.enchantingoverhauled.api.enchantment.school.MagicSchool;
 import johnsmith.enchantingoverhauled.api.enchantment.school.MagicSchools;
 
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class DefaultMagicSchools {
     public static final ResourceKey<MagicSchool> ABJURATION = schoolKey("abjuration");
@@ -19,6 +19,6 @@ public final class DefaultMagicSchools {
     public static final ResourceKey<MagicSchool> TRANSMUTATION = schoolKey("transmutation");
 
     private static ResourceKey<MagicSchool> schoolKey(String name) {
-        return ResourceKey.create(MagicSchools.REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));
+        return ResourceKey.create(MagicSchools.REGISTRY_KEY, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
     }
 }

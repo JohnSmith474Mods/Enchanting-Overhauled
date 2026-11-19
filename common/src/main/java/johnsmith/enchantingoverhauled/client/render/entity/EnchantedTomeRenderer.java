@@ -12,13 +12,13 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, FlyingBookEntityModel.RenderState, FlyingBookEntityModel<FlyingBookEntityModel.RenderState>> {
 
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/enchanted_tome.png");
+    private static final Identifier TEXTURE =
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/enchanted_tome.png");
 
     private final ItemModelResolver itemModelResolver;
     private final EnchantedBookModel bookModel;
@@ -75,7 +75,7 @@ public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, Flyi
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(FlyingBookEntityModel.@NotNull RenderState state) {
+    public @NotNull Identifier getTextureLocation(FlyingBookEntityModel.@NotNull RenderState state) {
         return TEXTURE;
     }
 }

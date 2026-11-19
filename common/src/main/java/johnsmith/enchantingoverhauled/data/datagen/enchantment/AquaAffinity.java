@@ -5,7 +5,7 @@ import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -28,7 +28,7 @@ public class AquaAffinity {
             );
 
     public static final EnchantmentAttributeEffect EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.aqua_affinity"),
+            Identifier.withDefaultNamespace("enchantment.aqua_affinity"),
             Attributes.SUBMERGED_MINING_SPEED,
             new PointerValue("aqua_affinity.submerged_mining_speed", new DiminishingReturnsValue(5F/3F, 1F/3F, 1.F)),
             AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
@@ -37,5 +37,5 @@ public class AquaAffinity {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(AquaAffinity.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, AquaAffinity.EFFECT)
-                    .build(AdaptedEnchantments.AQUA_AFFINITY.location());
+                    .build(AdaptedEnchantments.AQUA_AFFINITY.identifier());
 }

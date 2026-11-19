@@ -345,7 +345,7 @@ public class ScribePageWidget {
 
         if (textWidth > maxWidth) {
             int overflow = textWidth - maxWidth;
-            double time = (double) net.minecraft.Util.getMillis() / 1000.0D;
+            double time = (double) net.minecraft.util.Util.getMillis() / 1000.0D;
             double speed = Math.max((double) overflow * 0.5D, 3.0D);
             double scrollPos = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * time / speed)) / 2.0D + 0.5D;
             double offset = net.minecraft.util.Mth.lerp(scrollPos, 0.0D, (double) overflow);

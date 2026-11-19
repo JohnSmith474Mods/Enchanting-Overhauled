@@ -12,9 +12,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public final class AdminSchoolValidator {
     private AdminSchoolValidator() {}
 
     public record ValidationReport(
-            List<ResourceLocation> aberrantEnchantments,
-            Map<ResourceLocation, List<ResourceLocation>> multiSchoolEnchantments) {
+            List<Identifier> aberrantEnchantments,
+            Map<Identifier, List<Identifier>> multiSchoolEnchantments) {
         public boolean hasIssues() {
             return !this.aberrantEnchantments.isEmpty() || !this.multiSchoolEnchantments.isEmpty();
         }
@@ -51,8 +52,8 @@ public final class AdminSchoolValidator {
      * or multi-assigned enchantments.
      */
     public static ValidationReport evaluate(RegistryAccess registryAccess) {
-        List<ResourceLocation> aberrant = new ArrayList<>();
-        Map<ResourceLocation, List<ResourceLocation>> multiAssigned = new LinkedHashMap<>();
+        List<Identifier> aberrant = new ArrayList<>();
+        Map<Identifier, List<Identifier>> multiAssigned = new LinkedHashMap<>();
 
         var enchantmentRegistryOpt = registryAccess.lookup(Registries.ENCHANTMENT);
         if (enchantmentRegistryOpt.isEmpty()) {
@@ -61,14 +62,14 @@ public final class AdminSchoolValidator {
 
         Registry<Enchantment> enchantmentRegistry = enchantmentRegistryOpt.get();
         for (Holder.Reference<Enchantment> holder : enchantmentRegistry.listElements().toList()) {
-            ResourceLocation enchId = holder.key().location();
+            Identifier enchId = holder.key().identifier();
             List<ResourceKey<MagicSchool>> matchedSchools = MagicSchools.getMatchingSchools(registryAccess, holder);
 
             if (matchedSchools.isEmpty()) {
                 aberrant.add(enchId);
             } else if (matchedSchools.size() > 1) {
-                List<ResourceLocation> schoolIds = matchedSchools.stream()
-                        .map(ResourceKey::location)
+                List<Identifier> schoolIds = matchedSchools.stream()
+                        .map(ResourceKey::identifier)
                         .toList();
                 multiAssigned.put(enchId, schoolIds);
             }
@@ -94,7 +95,7 @@ public final class AdminSchoolValidator {
 
         if (!report.aberrantEnchantments().isEmpty()) {
             String listStr = report.aberrantEnchantments().stream()
-                    .map(ResourceLocation::toString)
+                    .map(Identifier::toString)
                     .collect(Collectors.joining(", "));
             Constants.LOG.warn(
                     "[Enchanting Overhauled] Detected {} unassigned (Aberration) enchantment(s): [{}]",
@@ -114,7 +115,7 @@ public final class AdminSchoolValidator {
 
         List<Component> messages = buildAlertMessages(report);
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (player.hasPermissions(2)) {
+            if (player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
                 for (Component msg : messages) {
                     player.sendSystemMessage(msg);
                 }
@@ -128,7 +129,7 @@ public final class AdminSchoolValidator {
      * the formatted chat alert if any datapack school assignment issues exist.
      */
     public static void validateAndAlertPlayer(ServerPlayer player) {
-        if (player == null || player.level().getServer() == null || !player.hasPermissions(2)) {
+        if (player == null || player.level().getServer() == null || !player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
             return;
         }
 
@@ -151,7 +152,7 @@ public final class AdminSchoolValidator {
 
         if (!report.aberrantEnchantments().isEmpty()) {
             String ids = report.aberrantEnchantments().stream()
-                    .map(ResourceLocation::toString)
+                    .map(Identifier::toString)
                     .collect(Collectors.joining(", "));
             MutableComponent aberrantMsg = Component.translatable(
                     "chat.enchanting_overhauled.school_validator.aberrant",
@@ -164,7 +165,7 @@ public final class AdminSchoolValidator {
         if (!report.multiSchoolEnchantments().isEmpty()) {
             String conflicts = report.multiSchoolEnchantments().entrySet().stream()
                     .map(e -> e.getKey() + " ("
-                            + e.getValue().stream().map(ResourceLocation::toString).collect(Collectors.joining(" & "))
+                            + e.getValue().stream().map(Identifier::toString).collect(Collectors.joining(" & "))
                             + ")")
                     .collect(Collectors.joining(", "));
             MutableComponent multiMsg = Component.translatable(

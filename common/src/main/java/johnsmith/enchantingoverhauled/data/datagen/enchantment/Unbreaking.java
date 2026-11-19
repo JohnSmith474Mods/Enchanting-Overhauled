@@ -28,5 +28,5 @@ public class Unbreaking {
             Enchantment.enchantment(Unbreaking.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.ITEM_DAMAGE,
                             new RemoveBinomial(new PointerValue("unbreaking.item_damage", new DiminishingReturnsValue(0.4F, 0.125F, 0.0F))))
-                    .build(AdaptedEnchantments.UNBREAKING.location());
+                    .build(AdaptedEnchantments.UNBREAKING.identifier());
 }

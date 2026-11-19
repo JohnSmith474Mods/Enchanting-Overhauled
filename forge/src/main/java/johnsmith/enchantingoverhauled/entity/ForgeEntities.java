@@ -19,7 +19,7 @@ public final class ForgeEntities {
             ENTITIES.register(entity.getSerializedName(), entity::build);
         }
         ENTITIES.register(eventBus);
-        SpawnPlacementRegisterEvent.getBus(eventBus).addListener(ForgeEntities::registerSpawnPlacements);
+        SpawnPlacementRegisterEvent.BUS.addListener(ForgeEntities::registerSpawnPlacements);
     }
 
     private static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {

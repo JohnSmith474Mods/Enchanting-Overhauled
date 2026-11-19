@@ -5,7 +5,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public enum SimpleParticleTypes implements StringRepresentable {
 
     public static void initialize() {
         for (SimpleParticleTypes particle : values()) {
-            ResourceLocation location = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, particle.id);
+            Identifier location = Identifier.fromNamespaceAndPath(Constants.MOD_ID, particle.id);
             if (!BuiltInRegistries.PARTICLE_TYPE.containsKey(location)) {
                 Registry.register(BuiltInRegistries.PARTICLE_TYPE, location, particle.type);
             }

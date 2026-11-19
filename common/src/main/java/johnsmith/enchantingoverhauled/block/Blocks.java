@@ -3,7 +3,7 @@ package johnsmith.enchantingoverhauled.block;
 import johnsmith.enchantingoverhauled.Constants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -54,7 +54,7 @@ public enum Blocks implements StringRepresentable {
                 properties.setId(
                         ResourceKey.create(
                                 Registries.BLOCK,
-                                ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, key)
+                                Identifier.fromNamespaceAndPath(Constants.MOD_ID, key)
                         )
                 )
         );

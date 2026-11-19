@@ -5,7 +5,7 @@ import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -29,7 +29,7 @@ public class DepthStrider {
     );
 
     public static final EnchantmentAttributeEffect EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.depth_strider"),
+            Identifier.withDefaultNamespace("enchantment.depth_strider"),
             Attributes.WATER_MOVEMENT_EFFICIENCY,
             new PointerValue("depth_strider.water_movement_efficiency",new DiminishingReturnsValue(0.4375F, 0.125F, 0.25F)),
             AttributeModifier.Operation.ADD_VALUE
@@ -39,5 +39,5 @@ public class DepthStrider {
             Enchantment.enchantment(DepthStrider.DEFINITION.apply(context))
                     .exclusiveWith(context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.BOOTS_EXCLUSIVE))
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, DepthStrider.EFFECT)
-                    .build(AdaptedEnchantments.DEPTH_STRIDER.location());
+                    .build(AdaptedEnchantments.DEPTH_STRIDER.identifier());
 }

@@ -35,5 +35,5 @@ public class SilkTouch {
                     .exclusiveWith(context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.MINING_EXCLUSIVE))
                     .withSpecialEffect((DataComponentType<SilkTouchEffect>) EnchantmentEffectComponents.SILK_TOUCH.get(), new SilkTouchEffect(new PointerValue("silk_touch.chance", new DiminishingReturnsValue(.4F, .1F, 0.F))))
                     .withEffect(net.minecraft.world.item.enchantment.EnchantmentEffectComponents.BLOCK_EXPERIENCE, new SetValue(LevelBasedValue.constant(0.0F)))
-                    .build(AdaptedEnchantments.SILK_TOUCH.location());
+                    .build(AdaptedEnchantments.SILK_TOUCH.identifier());
 }

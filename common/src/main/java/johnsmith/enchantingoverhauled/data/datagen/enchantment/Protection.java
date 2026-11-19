@@ -3,8 +3,8 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.DamageTypeTags;
@@ -35,5 +35,5 @@ public class Protection {
                             new AddValue(new PointerValue("protection.damage_protection", new DiminishingReturnsValue(3.F, 1.F, 1.F))),
                             DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
-                    .build(AdaptedEnchantments.PROTECTION.location());
+                    .build(AdaptedEnchantments.PROTECTION.identifier());
 }

@@ -78,7 +78,7 @@
       "group": "fire_aspect",
       "property": "primary_items"
     },
-    "fallback": "#minecraft:enchantable/sword"
+    "fallback": "#minecraft:enchantable/melee_weapon"
   },
   "weight": {
     "config": {

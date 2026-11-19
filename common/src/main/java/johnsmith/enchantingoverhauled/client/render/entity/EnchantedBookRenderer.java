@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, FlyingBookEntityModel.RenderState, FlyingBookEntityModel<FlyingBookEntityModel.RenderState>> {
 
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/enchanted_book.png");
+    private static final Identifier TEXTURE =
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/enchanted_book.png");
 
     private final ItemModelResolver itemModelResolver;
     private final EnchantedBookModel bookModel;
@@ -145,7 +145,7 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(FlyingBookEntityModel.@NotNull RenderState state) {
+    public @NotNull Identifier getTextureLocation(FlyingBookEntityModel.@NotNull RenderState state) {
         return TEXTURE;
     }
 }

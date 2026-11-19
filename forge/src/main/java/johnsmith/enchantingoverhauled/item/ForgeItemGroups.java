@@ -17,7 +17,7 @@ public final class ForgeItemGroups {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Constants.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> ENCHANTING_GROUP = CREATIVE_MODE_TABS.register(
-            ItemGroups.ENCHANTING_GROUP_KEY.location().getPath(),
+            ItemGroups.ENCHANTING_GROUP_KEY.identifier().getPath(),
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.enchanting_overhauled.enchanting_group"))
                     .icon(() -> new ItemStack(Items.ENCHANTED_TOME.get()))
@@ -39,7 +39,7 @@ public final class ForgeItemGroups {
 
     public static void initialize(BusGroup eventBus) {
         CREATIVE_MODE_TABS.register(eventBus);
-        BuildCreativeModeTabContentsEvent.getBus(eventBus).addListener(ForgeItemGroups::onBuildCreativeTabs);
+        BuildCreativeModeTabContentsEvent.BUS.addListener(ForgeItemGroups::onBuildCreativeTabs);
     }
 
     private ForgeItemGroups() {}

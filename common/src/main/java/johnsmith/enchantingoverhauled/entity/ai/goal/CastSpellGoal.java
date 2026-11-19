@@ -30,7 +30,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -322,7 +322,7 @@ public class CastSpellGoal extends Goal {
         if (this.selectedSpellField != null
                 && this.selectedSpellField.griefing()
                 && this.mob.level() instanceof ServerLevel serverLevel
-                && !serverLevel.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+                && !serverLevel.getGameRules().get(GameRules.MOB_GRIEFING)) {
             this.resetChargeState();
             this.mob.setAnimationState(BookAnimationState.TARGET_ACQUISITION);
             this.attackTime = 15;
@@ -572,7 +572,7 @@ public class CastSpellGoal extends Goal {
         var registryOpt = serverLevel.registryAccess().lookup(AiSpellFields.REGISTRY_KEY);
         ResourceKey<EnchantmentTheme> entityTheme = this.mob.getThemeKey();
         ResourceKey<MagicSchool> entitySchool = this.mob.getSchoolKey();
-        boolean canGrief = serverLevel.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+        boolean canGrief = serverLevel.getGameRules().get(GameRules.MOB_GRIEFING);
 
         List<AiSpellField> candidates = new ArrayList<>();
         List<LivingEntity> candidateTargets = new ArrayList<>();

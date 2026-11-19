@@ -28,5 +28,5 @@ public class Flame {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Flame.DEFINITION.apply(context))
                     .withEffect(EnchantmentEffectComponents.PROJECTILE_SPAWNED, new Ignite(new PointerValue("flame.projectile_spawned.ignite", new DiminishingReturnsValue(50F, 20F, 20F))))
-                    .build(AdaptedEnchantments.FLAME.location());
+                    .build(AdaptedEnchantments.FLAME.identifier());
 }

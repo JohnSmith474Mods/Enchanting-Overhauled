@@ -23,5 +23,5 @@ public class Fortune {
     public static final Function<BootstrapContext<Enchantment>, Enchantment> ENCHANTMENT = (context) ->
             Enchantment.enchantment(Fortune.DEFINITION.apply(context))
                     .exclusiveWith(context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.MINING_EXCLUSIVE))
-                    .build(AdaptedEnchantments.FORTUNE.location());
+                    .build(AdaptedEnchantments.FORTUNE.identifier());
 }

@@ -6,7 +6,7 @@ import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.EntityTypeTags;
@@ -37,5 +37,5 @@ public class Power {
                             new AddValue(new PointerValue("power.damage", new DiminishingReturnsValue(0.8F, 0.2F, 0.2F))),
                             LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.DIRECT_ATTACKER, EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.ARROWS))
                     )
-                    .build(AdaptedEnchantments.POWER.location());
+                    .build(AdaptedEnchantments.POWER.identifier());
 }

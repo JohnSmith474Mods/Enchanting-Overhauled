@@ -7,7 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -28,7 +28,7 @@ public class MagicSchools {
      * The {@link ResourceKey} identifying the custom dynamic registry for {@link MagicSchool} definitions.
      */
     public static final ResourceKey<Registry<MagicSchool>> REGISTRY_KEY =
-            ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("magic_school"));
+            ResourceKey.createRegistryKey(Identifier.withDefaultNamespace("magic_school"));
 
     /**
      * The fallback {@link ResourceKey} representing the unassigned "Aberration" school,
@@ -60,7 +60,7 @@ public class MagicSchools {
      * @return The constructed {@link ResourceKey}.
      */
     private static ResourceKey<MagicSchool> createKey(String name) {
-        return ResourceKey.create(REGISTRY_KEY, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name));
+        return ResourceKey.create(REGISTRY_KEY, Identifier.fromNamespaceAndPath(Constants.MOD_ID, name));
     }
 
     /**
@@ -71,10 +71,10 @@ public class MagicSchools {
      * @return The corresponding enchantment {@link TagKey}.
      */
     public static TagKey<Enchantment> getSchoolTag(ResourceKey<MagicSchool> schoolKey) {
-        ResourceLocation id = schoolKey.location();
+        Identifier id = schoolKey.identifier();
         return TagKey.create(
                 Registries.ENCHANTMENT,
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "school/" + id.getPath())
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "school/" + id.getPath())
         );
     }
 
@@ -82,13 +82,13 @@ public class MagicSchools {
      * Constructs a magic school cycle {@link TagKey} for the given cycle identifier
      * (formatted as {@code #<namespace>:cycle/<path>}).
      *
-     * @param cycleId The {@link ResourceLocation} of the cycle.
+     * @param cycleId The {@link Identifier} of the cycle.
      * @return The corresponding magic school {@link TagKey}.
      */
-    public static TagKey<MagicSchool> getCycleTag(ResourceLocation cycleId) {
+    public static TagKey<MagicSchool> getCycleTag(Identifier cycleId) {
         return TagKey.create(
                 REGISTRY_KEY,
-                ResourceLocation.fromNamespaceAndPath(cycleId.getNamespace(), "cycle/" + cycleId.getPath())
+                Identifier.fromNamespaceAndPath(cycleId.getNamespace(), "cycle/" + cycleId.getPath())
         );
     }
 
@@ -178,7 +178,7 @@ public class MagicSchools {
     public static boolean isAberration(@Nullable ResourceKey<MagicSchool> schoolKey) {
         return schoolKey == null
                 || schoolKey.equals(ABERRATION)
-                || schoolKey.location().getPath().equals("aberration");
+                || schoolKey.identifier().getPath().equals("aberration");
     }
 
     /**
@@ -199,7 +199,7 @@ public class MagicSchools {
                 }
             }
         }
-        ResourceLocation id = schoolKey.location();
+        Identifier id = schoolKey.identifier();
         return BUILTIN_FALLBACKS.getOrDefault(
                 schoolKey,
                 new MagicSchool(

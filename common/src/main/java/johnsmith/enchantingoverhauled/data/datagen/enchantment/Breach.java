@@ -30,5 +30,5 @@ public class Breach {
                     .exclusiveWith(context.lookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentTags.DAMAGE_EXCLUSIVE))
                     .withEffect(EnchantmentEffectComponents.ARMOR_EFFECTIVENESS,
                             new AddValue(new PointerValue("breach.armor_effectiveness", new DiminishingReturnsValue(0.20F, 0.05F, 0.00F)))
-                    ).build(AdaptedEnchantments.BREACH.location());
+                    ).build(AdaptedEnchantments.BREACH.identifier());
 }

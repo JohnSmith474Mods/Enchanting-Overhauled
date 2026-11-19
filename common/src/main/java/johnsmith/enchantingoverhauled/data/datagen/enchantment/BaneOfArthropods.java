@@ -6,9 +6,9 @@ import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityTypePredicate;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -59,5 +59,5 @@ public class BaneOfArthropods {
                             LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.SENSITIVE_TO_BANE_OF_ARTHROPODS)))
                                     .and(DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().isDirect(true)))
                     )
-                    .build(AdaptedEnchantments.BANE_OF_ARTHROPODS.location());
+                    .build(AdaptedEnchantments.BANE_OF_ARTHROPODS.identifier());
 }

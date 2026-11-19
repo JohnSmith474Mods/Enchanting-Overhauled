@@ -36,7 +36,7 @@ public record EnchantContext(
      */
     @Override
     public String toString() {
-        String appStr = applied.map(e -> e.enchantment().unwrapKey().map(k -> k.location().toString()).orElse("unknown") + " (Lvl " + e.level() + ")").orElse("empty");
+        String appStr = applied.map(e -> e.enchantment().unwrapKey().map(k -> k.identifier().toString()).orElse("unknown") + " (Lvl " + e.level() + ")").orElse("empty");
         return "EnchantContext[slot=" + slotIndex + ", applied=" + appStr + ", pending=" + pending + ", xpReq=" + xpRequirement + ", lapis=" + lapisCost + ", xpCost=" + xpCost + "]";
     }
     // endregion

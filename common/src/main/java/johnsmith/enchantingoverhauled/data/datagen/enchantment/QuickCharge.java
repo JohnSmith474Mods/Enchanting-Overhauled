@@ -49,5 +49,5 @@ public class QuickCharge {
                                     new CrossbowItem.ChargingSounds(Optional.of(SoundEvents.CROSSBOW_QUICK_CHARGE_3), Optional.empty(), Optional.of(SoundEvents.CROSSBOW_LOADING_END))
                             )
                     )
-                    .build(AdaptedEnchantments.QUICK_CHARGE.location());
+                    .build(AdaptedEnchantments.QUICK_CHARGE.identifier());
 }

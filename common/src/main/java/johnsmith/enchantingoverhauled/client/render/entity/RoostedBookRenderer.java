@@ -5,14 +5,14 @@ import com.mojang.math.Axis;
 import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookModel;
 import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
-import net.minecraft.client.model.BookModel;
+import net.minecraft.client.model.object.book.BookModel;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +25,7 @@ public final class RoostedBookRenderer {
             AbstractFlyingBookEntity entity,
             EnchantedBookModel altarBookModel,
             EnchantedBookModel lecternBookModel,
-            ResourceLocation texture,
+            Identifier texture,
             float partialTick,
             PoseStack poseStack,
             SubmitNodeCollector submitNodeCollector,
@@ -67,7 +67,7 @@ public final class RoostedBookRenderer {
     private static void renderOnAltar(
             AbstractFlyingBookEntity entity,
             EnchantedBookModel bookModel,
-            ResourceLocation texture,
+            Identifier texture,
             float partialTick,
             PoseStack poseStack,
             SubmitNodeCollector submitNodeCollector,
@@ -101,7 +101,7 @@ public final class RoostedBookRenderer {
                 bookModel,
                 bookState,
                 poseStack,
-                RenderType.entityCutoutNoCull(texture),
+                RenderTypes.entityCutoutNoCull(texture),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,
@@ -113,7 +113,7 @@ public final class RoostedBookRenderer {
                 bookModel,
                 bookState,
                 poseStack,
-                RenderType.entityGlint(),
+                RenderTypes.entityGlint(),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,
@@ -127,7 +127,7 @@ public final class RoostedBookRenderer {
             AbstractFlyingBookEntity entity,
             BlockPos roostPos,
             EnchantedBookModel bookModel,
-            ResourceLocation texture,
+            Identifier texture,
             PoseStack poseStack,
             SubmitNodeCollector submitNodeCollector,
             int packedLight,
@@ -150,7 +150,7 @@ public final class RoostedBookRenderer {
                 bookModel,
                 bookState,
                 poseStack,
-                RenderType.entityCutoutNoCull(texture),
+                RenderTypes.entityCutoutNoCull(texture),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,
@@ -162,7 +162,7 @@ public final class RoostedBookRenderer {
                 bookModel,
                 bookState,
                 poseStack,
-                RenderType.entityGlint(),
+                RenderTypes.entityGlint(),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,

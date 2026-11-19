@@ -3,10 +3,10 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.EntityFlagsPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds.Doubles;
-import net.minecraft.advancements.critereon.MovementPredicate;
+import net.minecraft.advancements.criterion.EntityFlagsPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds.Doubles;
+import net.minecraft.advancements.criterion.MovementPredicate;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -66,5 +66,5 @@ public class WindBurst {
                                             .moving(MovementPredicate.fallDistance(Doubles.atLeast(1.5F)))
                             )
                     )
-                    .build(AdaptedEnchantments.WIND_BURST.location());
+                    .build(AdaptedEnchantments.WIND_BURST.identifier());
 }

@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class ScribeActionWidget {
         this.isHovered = mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
         boolean affordable = this.isAffordable();
 
-        ResourceLocation texture = affordable ? (this.isHovered ? ScribeActionWidgetTheme.TEX_HIGHLIGHTED : ScribeActionWidgetTheme.TEX_ENABLED) : ScribeActionWidgetTheme.TEX_DISABLED;
+        Identifier texture = affordable ? (this.isHovered ? ScribeActionWidgetTheme.TEX_HIGHLIGHTED : ScribeActionWidgetTheme.TEX_ENABLED) : ScribeActionWidgetTheme.TEX_DISABLED;
 
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0, 0, width, height, width, height);
 

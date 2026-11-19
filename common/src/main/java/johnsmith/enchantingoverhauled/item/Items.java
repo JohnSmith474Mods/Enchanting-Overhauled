@@ -8,7 +8,7 @@ import johnsmith.enchantingoverhauled.entity.Entities;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -83,7 +83,7 @@ public enum Items implements StringRepresentable {
                 properties.setId(
                         ResourceKey.create(
                                 Registries.ITEM,
-                                ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, key)
+                                Identifier.fromNamespaceAndPath(Constants.MOD_ID, key)
                         )
                 )
         );

@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * The abstract base class representing a single row item (widget) in the Enchanting Altar's UI list.
@@ -38,13 +38,13 @@ public sealed abstract class EnchantWidget permits
 
     // region Constants
     /** The font identifier for the standard galactic alphabet used for obfuscation. */
-    protected static final ResourceLocation GALACTIC_FONT_ID = ResourceLocation.fromNamespaceAndPath("minecraft", "alt");
+    protected static final Identifier GALACTIC_FONT_ID = Identifier.fromNamespaceAndPath("minecraft", "alt");
 
     /** Cost indicator sprites for active, affordable enchantments. */
-    protected static final ResourceLocation[] ENABLED_LEVEL_SPRITES = new ResourceLocation[]{ResourceLocation.withDefaultNamespace("container/enchanting_table/level_1"), ResourceLocation.withDefaultNamespace("container/enchanting_table/level_2"), ResourceLocation.withDefaultNamespace("container/enchanting_table/level_3")};
+    protected static final Identifier[] ENABLED_LEVEL_SPRITES = new Identifier[]{Identifier.withDefaultNamespace("container/enchanting_table/level_1"), Identifier.withDefaultNamespace("container/enchanting_table/level_2"), Identifier.withDefaultNamespace("container/enchanting_table/level_3")};
 
     /** Cost indicator sprites for disabled, unaffordable, or locked enchantments. */
-    protected static final ResourceLocation[] DISABLED_LEVEL_SPRITES = new ResourceLocation[]{ResourceLocation.withDefaultNamespace("container/enchanting_table/level_1_disabled"), ResourceLocation.withDefaultNamespace("container/enchanting_table/level_2_disabled"), ResourceLocation.withDefaultNamespace("container/enchanting_table/level_3_disabled")};
+    protected static final Identifier[] DISABLED_LEVEL_SPRITES = new Identifier[]{Identifier.withDefaultNamespace("container/enchanting_table/level_1_disabled"), Identifier.withDefaultNamespace("container/enchanting_table/level_2_disabled"), Identifier.withDefaultNamespace("container/enchanting_table/level_3_disabled")};
     // endregion
 
     // region Fields
@@ -88,7 +88,7 @@ public sealed abstract class EnchantWidget permits
 
         if (textWidth > maxWidth) {
             int overflow = textWidth - maxWidth;
-            double time = (double) net.minecraft.Util.getMillis() / 1000.0D;
+            double time = (double) net.minecraft.util.Util.getMillis() / 1000.0D;
             double speed = Math.max((double) overflow * 0.5D, 3.0D);
             double scrollPos = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * time / speed)) / 2.0D + 0.5D;
             double offset = net.minecraft.util.Mth.lerp(scrollPos, 0.0D, (double) overflow);
@@ -263,7 +263,7 @@ public sealed abstract class EnchantWidget permits
         @Override
         protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
             // Fall back to the default table source texture to fill the blank space
-            ResourceLocation disabledTex = this.usePlainBackground ? EnchantmentSource.TABLE.disabledTexture : EnchantmentSource.TABLE.getDisabledTexture(this.texIndex);
+            Identifier disabledTex = this.usePlainBackground ? EnchantmentSource.TABLE.disabledTexture : EnchantmentSource.TABLE.getDisabledTexture(this.texIndex);
             context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
         }
         // endregion
@@ -365,8 +365,8 @@ public sealed abstract class EnchantWidget permits
             boolean affordable = this.isAffordable();
             int targetTextColor;
             int powerColor;
-            ResourceLocation textureToDraw;
-            ResourceLocation levelSprite;
+            Identifier textureToDraw;
+            Identifier levelSprite;
 
             // Apply disabled aesthetics dynamically if the requirements are not met
             if (!affordable) {
@@ -471,7 +471,7 @@ public sealed abstract class EnchantWidget permits
         @Override
         protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
             EnchantmentSource source = this.state.visualSource();
-            ResourceLocation disabledTex = this.usePlainBackground ? source.disabledTexture : source.getDisabledTexture(this.texIndex);
+            Identifier disabledTex = this.usePlainBackground ? source.disabledTexture : source.getDisabledTexture(this.texIndex);
             context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             if (this.state.enchantment().isEmpty()) {
@@ -524,7 +524,7 @@ public sealed abstract class EnchantWidget permits
     public static final class Maxed extends EnchantWidget {
 
         // region Constants
-        private static final ResourceLocation ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/maxed_out.png");
+        private static final Identifier ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/maxed_out.png");
         private static final int ENCHANTMENT_MAXED_OUT_TEXT_COLOR = 0xFFF2F09D;
         // endregion
 
@@ -604,7 +604,7 @@ public sealed abstract class EnchantWidget permits
     public static final class Overleveled extends EnchantWidget {
 
         // region Constants
-        private static final ResourceLocation ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/over_enchanted.png");
+        private static final Identifier ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/over_enchanted.png");
         private static final int ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR = 0xFF4D2299;
         // endregion
 

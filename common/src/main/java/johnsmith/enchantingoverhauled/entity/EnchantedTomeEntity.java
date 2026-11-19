@@ -20,7 +20,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
@@ -426,7 +426,7 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
 
     @Override
     protected ResourceKey<LootTable> getHurtLootTable() {
-        return ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "entities/enchanted_tome_hurt"));
+        return ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "entities/enchanted_tome_hurt"));
     }
 
     @Override

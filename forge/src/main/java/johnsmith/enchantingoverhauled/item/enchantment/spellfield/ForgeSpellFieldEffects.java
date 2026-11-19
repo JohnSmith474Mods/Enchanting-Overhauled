@@ -8,7 +8,7 @@ import johnsmith.enchantmentcore.api.registry.DataTransformerRegistry;
 import johnsmith.enchantmentcore.api.registry.EnchantmentCoreRegistries;
 
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.registries.RegisterEvent;
 
 public final class ForgeSpellFieldEffects {
@@ -21,7 +21,7 @@ public final class ForgeSpellFieldEffects {
                         DataTransformerRegistry.registerEffectProperty(key);
                     }
                 }
-                ResourceLocation location = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, effect.getSerializedName());
+                Identifier location = Identifier.fromNamespaceAndPath(Constants.MOD_ID, effect.getSerializedName());
                 if (registry == null || !registry.containsKey(location)) {
                     event.register(
                             EnchantmentCoreRegistries.SPELL_FIELD_EFFECT_KEY,

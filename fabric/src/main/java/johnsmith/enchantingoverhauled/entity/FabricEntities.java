@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -19,7 +19,7 @@ public class FabricEntities {
         for (Entities entity : Entities.values()) {
             Registry.register(
                     BuiltInRegistries.ENTITY_TYPE,
-                    ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, entity.getSerializedName()),
+                    Identifier.fromNamespaceAndPath(Constants.MOD_ID, entity.getSerializedName()),
                     entity.build()
             );
         }

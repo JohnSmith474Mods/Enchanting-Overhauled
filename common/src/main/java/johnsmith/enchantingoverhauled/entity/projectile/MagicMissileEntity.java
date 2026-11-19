@@ -19,7 +19,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -85,8 +85,8 @@ public class MagicMissileEntity extends ThrowableProjectile {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_THEME_ID, EnchantmentThemes.COMMON.location().toString());
-        builder.define(DATA_SCHOOL_ID, MagicSchools.ABERRATION.location().toString());
+        builder.define(DATA_THEME_ID, EnchantmentThemes.COMMON.identifier().toString());
+        builder.define(DATA_SCHOOL_ID, MagicSchools.ABERRATION.identifier().toString());
         builder.define(DATA_CRIT, false);
     }
 
@@ -104,25 +104,25 @@ public class MagicMissileEntity extends ThrowableProjectile {
     }
 
     public ResourceKey<EnchantmentTheme> getThemeKey() {
-        ResourceLocation loc = ResourceLocation.tryParse(this.entityData.get(DATA_THEME_ID));
+        Identifier loc = Identifier.tryParse(this.entityData.get(DATA_THEME_ID));
         return loc != null
                 ? ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, loc)
                 : EnchantmentThemes.COMMON;
     }
 
     public void setThemeKey(ResourceKey<EnchantmentTheme> themeKey) {
-        this.entityData.set(DATA_THEME_ID, (themeKey != null ? themeKey : EnchantmentThemes.COMMON).location().toString());
+        this.entityData.set(DATA_THEME_ID, (themeKey != null ? themeKey : EnchantmentThemes.COMMON).identifier().toString());
     }
 
     public ResourceKey<MagicSchool> getSchoolKey() {
-        ResourceLocation loc = ResourceLocation.tryParse(this.entityData.get(DATA_SCHOOL_ID));
+        Identifier loc = Identifier.tryParse(this.entityData.get(DATA_SCHOOL_ID));
         return loc != null
                 ? ResourceKey.create(MagicSchools.REGISTRY_KEY, loc)
                 : MagicSchools.ABERRATION;
     }
 
     public void setSchoolKey(ResourceKey<MagicSchool> schoolKey) {
-        this.entityData.set(DATA_SCHOOL_ID, (schoolKey != null ? schoolKey : MagicSchools.ABERRATION).location().toString());
+        this.entityData.set(DATA_SCHOOL_ID, (schoolKey != null ? schoolKey : MagicSchools.ABERRATION).identifier().toString());
     }
 
     public int getSchoolColor() {
@@ -143,8 +143,8 @@ public class MagicMissileEntity extends ThrowableProjectile {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
-        output.putString("Theme", this.getThemeKey().location().toString());
-        output.putString("School", this.getSchoolKey().location().toString());
+        output.putString("Theme", this.getThemeKey().identifier().toString());
+        output.putString("School", this.getSchoolKey().identifier().toString());
         output.putBoolean("Crit", this.isCrit());
         if (!this.weapon.isEmpty()) {
             output.store("Weapon", ItemStack.CODEC, this.weapon);
@@ -156,13 +156,13 @@ public class MagicMissileEntity extends ThrowableProjectile {
         super.readAdditionalSaveData(input);
         this.setNoGravity(true);
         input.getString("Theme").ifPresent(themeStr -> {
-            ResourceLocation loc = ResourceLocation.tryParse(themeStr);
+            Identifier loc = Identifier.tryParse(themeStr);
             if (loc != null) {
                 this.setThemeKey(ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, loc));
             }
         });
         input.getString("School").ifPresent(schoolStr -> {
-            ResourceLocation loc = ResourceLocation.tryParse(schoolStr);
+            Identifier loc = Identifier.tryParse(schoolStr);
             if (loc != null) {
                 this.setSchoolKey(ResourceKey.create(MagicSchools.REGISTRY_KEY, loc));
             }

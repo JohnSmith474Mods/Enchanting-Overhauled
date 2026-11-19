@@ -16,7 +16,7 @@ public final class NeoForgeItemGroups {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Constants.MOD_ID);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> ENCHANTING_GROUP = CREATIVE_MODE_TABS.register(
-            ItemGroups.ENCHANTING_GROUP_KEY.location().getPath(),
+            ItemGroups.ENCHANTING_GROUP_KEY.identifier().getPath(),
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.enchanting_overhauled.enchanting_group"))
                     .icon(() -> new ItemStack(Items.ENCHANTED_TOME.get()))

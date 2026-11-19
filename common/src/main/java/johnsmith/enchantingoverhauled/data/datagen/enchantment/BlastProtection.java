@@ -3,11 +3,11 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -34,7 +34,7 @@ public class BlastProtection {
     );
 
     public static final EnchantmentAttributeEffect EFFECT = new EnchantmentAttributeEffect(
-            ResourceLocation.withDefaultNamespace("enchantment.blast_protection"),
+            Identifier.withDefaultNamespace("enchantment.blast_protection"),
             Attributes.EXPLOSION_KNOCKBACK_RESISTANCE,
             new PointerValue("blast_protection.knockback_resistance", new LevelBasedValue.Fraction(
                     new DiminishingReturnsValue(4.F, 1.F, 0.F),
@@ -51,5 +51,5 @@ public class BlastProtection {
                             DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_EXPLOSION)).tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, BlastProtection.EFFECT)
-                    .build(AdaptedEnchantments.BLAST_PROTECTION.location());
+                    .build(AdaptedEnchantments.BLAST_PROTECTION.identifier());
 }

@@ -146,8 +146,8 @@ public class EnchantContextBuilder {
 
             if (isMaxedA != isMaxedB) return isMaxedA ? -1 : 1;
 
-            String idA = a.enchantment().unwrapKey().map(k -> k.location().toString()).orElse("");
-            String idB = b.enchantment().unwrapKey().map(k -> k.location().toString()).orElse("");
+            String idA = a.enchantment().unwrapKey().map(k -> k.identifier().toString()).orElse("");
+            String idB = b.enchantment().unwrapKey().map(k -> k.identifier().toString()).orElse("");
 
             return idA.compareTo(idB);
         });
@@ -371,7 +371,7 @@ public class EnchantContextBuilder {
      */
     private RandomSource createDeterministicSlotRandom(Holder<Enchantment> enchantment, int effectiveLevel, int slotIndex) {
         int enchHash = enchantment.unwrapKey()
-                .map(key -> key.location().hashCode())
+                .map(key -> key.identifier().hashCode())
                 .orElse(slotIndex);
         long mixedSeed = ((long) this.baseSeed << 32) ^ ((long) enchHash * 31L + effectiveLevel);
         return RandomSource.create(mixedSeed);

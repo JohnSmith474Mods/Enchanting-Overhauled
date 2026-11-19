@@ -3,7 +3,7 @@ package johnsmith.enchantingoverhauled.entity.npc;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.npc.villager.VillagerType;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public class VillagerTradeTags {

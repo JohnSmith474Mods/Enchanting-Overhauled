@@ -9,7 +9,7 @@ import johnsmith.enchantmentcore.api.registry.DataTransformerRegistry;
 import johnsmith.enchantmentcore.api.registry.EnchantmentCoreRegistries;
 
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 public final class NeoForgeSpellFieldEffects {
@@ -22,7 +22,7 @@ public final class NeoForgeSpellFieldEffects {
                         DataTransformerRegistry.registerEffectProperty(key);
                     }
                 }
-                ResourceLocation location = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, effect.getSerializedName());
+                Identifier location = Identifier.fromNamespaceAndPath(Constants.MOD_ID, effect.getSerializedName());
                 if (!registry.containsKey(location)) {
                     Registry.register(registry, location, effect.codec());
                 }

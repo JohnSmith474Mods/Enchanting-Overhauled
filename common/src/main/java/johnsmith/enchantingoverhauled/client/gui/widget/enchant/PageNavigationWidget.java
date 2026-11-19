@@ -8,7 +8,7 @@ import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 
 import java.util.function.IntConsumer;
@@ -24,12 +24,12 @@ import java.util.function.IntSupplier;
 public class PageNavigationWidget {
 
     // region Constants
-    private static final ResourceLocation PAGE_FORWARD_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/enabled/forward.png");
-    private static final ResourceLocation PAGE_FORWARD_HIGHLIGHTED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/highlighted/forward.png");
-    private static final ResourceLocation PAGE_FORWARD_DISABLED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/disabled/forward.png");
-    private static final ResourceLocation PAGE_BACKWARD_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/enabled/backward.png");
-    private static final ResourceLocation PAGE_BACKWARD_HIGHLIGHTED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/highlighted/backward.png");
-    private static final ResourceLocation PAGE_BACKWARD_DISABLED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/disabled/backward.png");
+    private static final Identifier PAGE_FORWARD_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/enabled/forward.png");
+    private static final Identifier PAGE_FORWARD_HIGHLIGHTED_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/highlighted/forward.png");
+    private static final Identifier PAGE_FORWARD_DISABLED_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/disabled/forward.png");
+    private static final Identifier PAGE_BACKWARD_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/enabled/backward.png");
+    private static final Identifier PAGE_BACKWARD_HIGHLIGHTED_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/highlighted/backward.png");
+    private static final Identifier PAGE_BACKWARD_DISABLED_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/disabled/backward.png");
     // endregion
 
     // region Fields
@@ -95,7 +95,7 @@ public class PageNavigationWidget {
         this.isPrevHovered = mouseX >= prevX && mouseY >= prevY && mouseX < prevX + layout.backwardButtonWidth() && mouseY < prevY + layout.backwardButtonHeight();
 
         boolean canGoBack = hasTargetItem && this.offsetSupplier.getAsInt() > 0;
-        ResourceLocation prevTex = PAGE_BACKWARD_DISABLED_TEXTURE;
+        Identifier prevTex = PAGE_BACKWARD_DISABLED_TEXTURE;
         if (canGoBack) {
             prevTex = this.isPrevHovered ? PAGE_BACKWARD_HIGHLIGHTED_TEXTURE : PAGE_BACKWARD_TEXTURE;
         }
@@ -107,7 +107,7 @@ public class PageNavigationWidget {
         this.isNextHovered = mouseX >= nextX && mouseY >= nextY && mouseX < nextX + layout.forwardButtonWidth() && mouseY < nextY + layout.forwardButtonHeight();
 
         boolean canGoForward = hasTargetItem && (this.offsetSupplier.getAsInt() + layout.pageSize() < totalEnchants);
-        ResourceLocation nextTex = PAGE_FORWARD_DISABLED_TEXTURE;
+        Identifier nextTex = PAGE_FORWARD_DISABLED_TEXTURE;
         if (canGoForward) {
             nextTex = this.isNextHovered ? PAGE_FORWARD_HIGHLIGHTED_TEXTURE : PAGE_FORWARD_TEXTURE;
         }

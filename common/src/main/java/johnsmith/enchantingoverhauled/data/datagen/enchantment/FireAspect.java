@@ -3,7 +3,7 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.ItemTags;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 public class FireAspect {
     public static final Function<BootstrapContext<Enchantment>, Enchantment.EnchantmentDefinition> DEFINITION = (context) -> Enchantment.definition(
             context.lookup(Registries.ITEM).getOrThrow(ItemTags.FIRE_ASPECT_ENCHANTABLE),
-            context.lookup(Registries.ITEM).getOrThrow(ItemTags.SWORD_ENCHANTABLE),
+            context.lookup(Registries.ITEM).getOrThrow(ItemTags.MELEE_WEAPON_ENCHANTABLE),
             2,
             AdaptedEnchantments.ENCHANTMENT_MAX_LEVEL,
             Enchantment.dynamicCost(10, 20),
@@ -37,5 +37,5 @@ public class FireAspect {
                             new Ignite(new PointerValue("fire_aspect.post_attack.ignite",new DiminishingReturnsValue(5.F, 1.F, 2.F))),
                             DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().isDirect(true))
                     )
-                    .build(AdaptedEnchantments.FIRE_ASPECT.location());
+                    .build(AdaptedEnchantments.FIRE_ASPECT.identifier());
 }

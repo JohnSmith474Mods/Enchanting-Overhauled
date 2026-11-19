@@ -21,7 +21,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -32,11 +32,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
 
-    private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/background.png");
-    private static final ResourceLocation BOOK_BACKGROUND = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/book_background.png");
-    private static final ResourceLocation TOME_BACKGROUND = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/tome_background.png");
-    private static final ResourceLocation EMPTY_SLOT_SOURCE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/empty_slot_enchanted_page.png");
-    private static final ResourceLocation EMPTY_SLOT_FUEL_TEXTURE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/container/slot/lapis_lazuli.png");
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/background.png");
+    private static final Identifier BOOK_BACKGROUND = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/book_background.png");
+    private static final Identifier TOME_BACKGROUND = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/tome_background.png");
+    private static final Identifier EMPTY_SLOT_SOURCE_TEXTURE = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/empty_slot_enchanted_page.png");
+    private static final Identifier EMPTY_SLOT_FUEL_TEXTURE = Identifier.withDefaultNamespace("textures/gui/sprites/container/slot/lapis_lazuli.png");
 
     private ScribeGridWidget gridWidget;
     private ScribeActionWidget actionWidget;
@@ -210,7 +210,7 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
-        ResourceLocation innerBg = this.menu.getGridData().isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
+        Identifier innerBg = this.menu.getGridData().isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, innerBg, this.leftPos + 4, this.topPos + 17, 0, 0, 165, 85, 165, 85);
 
         ScribeGameState state = this.menu.getGridData().getGameState();

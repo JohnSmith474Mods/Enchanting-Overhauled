@@ -36,7 +36,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -66,7 +66,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -114,8 +114,8 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     private static final EntityDataAccessor<Optional<BlockPos>> DATA_ROOST_POS =
             SynchedEntityData.defineId(AbstractFlyingBookEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
 
-    private static final ResourceLocation CLOSED_COVER_ARMOR_ID =
-            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "closed_cover_shield");
+    private static final Identifier CLOSED_COVER_ARMOR_ID =
+            Identifier.fromNamespaceAndPath(Constants.MOD_ID, "closed_cover_shield");
     private static final AttributeModifier CLOSED_COVER_ARMOR_MODIFIER =
             new AttributeModifier(CLOSED_COVER_ARMOR_ID, 8.0D, AttributeModifier.Operation.ADD_VALUE);
 
@@ -167,8 +167,8 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ANIMATION_STATE, (byte) BookAnimationState.IDLE.ordinal());
-        builder.define(DATA_THEME_ID, EnchantmentThemes.COMMON.location().toString());
-        builder.define(DATA_SCHOOL_ID, MagicSchools.ABERRATION.location().toString());
+        builder.define(DATA_THEME_ID, EnchantmentThemes.COMMON.identifier().toString());
+        builder.define(DATA_SCHOOL_ID, MagicSchools.ABERRATION.identifier().toString());
         builder.define(DATA_CAST_SCHOOL_ID, "");
         builder.define(DATA_BARTER_FUEL, ItemStack.EMPTY);
         builder.define(DATA_BARTER_CATALYST, ItemStack.EMPTY);
@@ -223,7 +223,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
 
     public ResourceKey<EnchantmentTheme> getThemeKey() {
         String raw = this.entityData.get(DATA_THEME_ID);
-        ResourceLocation id = ResourceLocation.tryParse(raw);
+        Identifier id = Identifier.tryParse(raw);
         if (id == null) {
             return EnchantmentThemes.COMMON;
         }
@@ -232,12 +232,12 @@ public abstract class AbstractFlyingBookEntity extends Monster {
 
     public void setThemeKey(@Nullable ResourceKey<EnchantmentTheme> themeKey) {
         ResourceKey<EnchantmentTheme> effective = themeKey != null ? themeKey : EnchantmentThemes.COMMON;
-        this.entityData.set(DATA_THEME_ID, effective.location().toString());
+        this.entityData.set(DATA_THEME_ID, effective.identifier().toString());
     }
 
     public ResourceKey<MagicSchool> getSchoolKey() {
         String raw = this.entityData.get(DATA_SCHOOL_ID);
-        ResourceLocation id = ResourceLocation.tryParse(raw);
+        Identifier id = Identifier.tryParse(raw);
         if (id == null) {
             return MagicSchools.ABERRATION;
         }
@@ -246,7 +246,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
 
     public void setSchoolKey(@Nullable ResourceKey<MagicSchool> schoolKey) {
         ResourceKey<MagicSchool> effective = schoolKey != null ? schoolKey : MagicSchools.ABERRATION;
-        this.entityData.set(DATA_SCHOOL_ID, effective.location().toString());
+        this.entityData.set(DATA_SCHOOL_ID, effective.identifier().toString());
     }
 
     public Optional<ResourceKey<MagicSchool>> getCastSchoolKey() {
@@ -254,7 +254,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
         if (raw == null || raw.isEmpty()) {
             return Optional.empty();
         }
-        ResourceLocation id = ResourceLocation.tryParse(raw);
+        Identifier id = Identifier.tryParse(raw);
         if (id == null) {
             return Optional.empty();
         }
@@ -262,7 +262,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     public void setCastSchoolKey(@Nullable ResourceKey<MagicSchool> schoolKey) {
-        this.entityData.set(DATA_CAST_SCHOOL_ID, schoolKey != null ? schoolKey.location().toString() : "");
+        this.entityData.set(DATA_CAST_SCHOOL_ID, schoolKey != null ? schoolKey.identifier().toString() : "");
     }
 
     public Optional<EnchantmentTheme> getTheme() {
@@ -782,8 +782,8 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
-        output.putString("Theme", this.getThemeKey().location().toString());
-        output.putString("School", this.getSchoolKey().location().toString());
+        output.putString("Theme", this.getThemeKey().identifier().toString());
+        output.putString("School", this.getSchoolKey().identifier().toString());
         output.putBoolean("BookInitialized", this.bookInitialized);
         output.putInt("AngerTime", this.getAngerTime());
         output.putInt("BarterCooldown", this.barterCooldown);
@@ -804,13 +804,13 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         input.getString("Theme").ifPresent(themeStr -> {
-            ResourceLocation themeLoc = ResourceLocation.tryParse(themeStr);
+            Identifier themeLoc = Identifier.tryParse(themeStr);
             if (themeLoc != null) {
                 this.setThemeKey(ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, themeLoc));
             }
         });
         input.getString("School").ifPresent(schoolStr -> {
-            ResourceLocation schoolLoc = ResourceLocation.tryParse(schoolStr);
+            Identifier schoolLoc = Identifier.tryParse(schoolStr);
             if (schoolLoc != null) {
                 this.setSchoolKey(ResourceKey.create(MagicSchools.REGISTRY_KEY, schoolLoc));
             }
