@@ -33,7 +33,7 @@ public record EnchantedPageTrade(
             return null;
         }
 
-        VillagerType type = villager.getVillagerData().getType();
+        Holder<VillagerType> type = villager.getVillagerData().type();
         TagKey<Enchantment> commonTag = VillagerTradeTags.getCommonTag(type);
         TagKey<Enchantment> specialTag = VillagerTradeTags.getSpecialTag(type);
 

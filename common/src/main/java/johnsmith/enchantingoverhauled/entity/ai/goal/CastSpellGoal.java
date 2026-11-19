@@ -697,7 +697,7 @@ public class CastSpellGoal extends Goal {
             return null;
         }
         allies.sort(Comparator
-                .<LivingEntity, Boolean>comparing(ally -> ally.hasEffect(MobEffects.DAMAGE_RESISTANCE) && ally.getHealth() >= ally.getMaxHealth() * 0.85F)
+                .<LivingEntity, Boolean>comparing(ally -> ally.hasEffect(MobEffects.RESISTANCE) && ally.getHealth() >= ally.getMaxHealth() * 0.85F)
                 .thenComparingDouble(ally -> (double) (ally.getHealth() / Math.max(1.0F, ally.getMaxHealth()))));
         return allies.getFirst();
     }
@@ -797,7 +797,7 @@ public class CastSpellGoal extends Goal {
 
         if (this.activeCastType == CastType.PROJECTILE && target != this.mob) {
             if (this.activeSpellTarget != SpellTarget.HOSTILE) {
-                target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, Config.RESISTANCE_CAST_DURATION_TICKS.get(), Config.RESISTANCE_CAST_LEVEL.get()), this.mob);
+                target.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, Config.RESISTANCE_CAST_DURATION_TICKS.get(), Config.RESISTANCE_CAST_LEVEL.get()), this.mob);
             }
             this.fireTrueFlightMissile(
                     serverLevel,
@@ -811,7 +811,7 @@ public class CastSpellGoal extends Goal {
         if (this.activeSpellTarget == SpellTarget.HOSTILE) {
             target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, Config.WEAKNESS_CAST_DURATION_TICKS.get(), Config.WEAKNESS_CAST_LEVEL.get()), this.mob);
         } else {
-            target.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, Config.RESISTANCE_CAST_DURATION_TICKS.get(), Config.RESISTANCE_CAST_LEVEL.get()), this.mob);
+            target.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, Config.RESISTANCE_CAST_DURATION_TICKS.get(), Config.RESISTANCE_CAST_LEVEL.get()), this.mob);
         }
 
         serverLevel.playSound(

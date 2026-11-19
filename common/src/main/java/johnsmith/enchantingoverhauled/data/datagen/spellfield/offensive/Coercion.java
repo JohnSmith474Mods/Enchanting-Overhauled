@@ -42,8 +42,8 @@ public class Coercion {
             List.of(DefaultSpellFields.linearSphereVolume(4.0F)),
             List.of(
                     new ApplyPotionEffect(List.of(
-                            new PotionPayload(MobEffects.MOVEMENT_SLOWDOWN, LevelBasedValue.constant(2), LevelBasedValue.constant(255)),
-                            new PotionPayload(MobEffects.DIG_SLOWDOWN, LevelBasedValue.constant(2), LevelBasedValue.constant(255)),
+                            new PotionPayload(MobEffects.SLOWNESS, LevelBasedValue.constant(2), LevelBasedValue.constant(255)),
+                            new PotionPayload(MobEffects.MINING_FATIGUE, LevelBasedValue.constant(2), LevelBasedValue.constant(255)),
                             new PotionPayload(MobEffects.WEAKNESS, LevelBasedValue.constant(2), LevelBasedValue.constant(255))
                     ), Optional.of(DefaultSpellFields.CAN_HARM.apply(context))),
                     new AbsoluteStasisEffect(Optional.of(DefaultSpellFields.CAN_HARM.apply(context))),

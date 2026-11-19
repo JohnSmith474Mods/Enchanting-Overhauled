@@ -5,6 +5,7 @@ import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
 import johnsmith.enchantingoverhauled.particle.SimpleParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -49,8 +50,8 @@ public class MirageEntity extends Mob {
 
     private static final EntityDataAccessor<Integer> DATA_CASTER_ID =
             SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Optional<UUID>> DATA_CASTER_UUID =
-            SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_CASTER_UUID =
+            SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     private static final EntityDataAccessor<String> DATA_CASTER_TYPE =
             SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<CompoundTag> DATA_CASTER_DATA =
@@ -164,7 +165,7 @@ public class MirageEntity extends Mob {
             }
             mirage.initializeFormationMember(caster, i, count, lifetimeTicks, orbitRadius);
             Vec3 initialPos = mirage.computeFormationTargetPos(caster);
-            mirage.moveTo(initialPos.x, initialPos.y, initialPos.z, caster.getYRot(), caster.getXRot());
+            mirage.snapTo(initialPos.x, initialPos.y, initialPos.z, caster.getYRot(), caster.getXRot());
             mirage.formationInitialized = true;
 
             if (serverLevel.addFreshEntity(mirage)) {
@@ -268,11 +269,11 @@ public class MirageEntity extends Mob {
     }
 
     public Optional<UUID> getCasterUuid() {
-        return this.entityData.get(DATA_CASTER_UUID);
+        return this.entityData.get(DATA_CASTER_UUID).map(EntityReference::getUUID);
     }
 
     public void setCasterUuid(@Nullable UUID uuid) {
-        this.entityData.set(DATA_CASTER_UUID, Optional.ofNullable(uuid));
+        this.entityData.set(DATA_CASTER_UUID, Optional.ofNullable(uuid).map(EntityReference::new));
     }
 
     public String getCasterTypeString() {
@@ -539,7 +540,7 @@ public class MirageEntity extends Mob {
             if (!this.formationInitialized) {
                 this.formationInitialized = true;
                 Vec3 initialPos = this.computeFormationTargetPos(caster);
-                this.moveTo(initialPos.x, initialPos.y, initialPos.z, caster.getYRot(), caster.getXRot());
+                this.snapTo(initialPos.x, initialPos.y, initialPos.z, caster.getYRot(), caster.getXRot());
                 this.spawnArrivalParticles(serverLevel);
             } else {
                 this.tickServerMotionFollow(caster);
@@ -575,7 +576,7 @@ public class MirageEntity extends Mob {
         Vec3 casterVel = caster.getDeltaMovement();
 
         if (toDesired.lengthSqr() > 64.0D) {
-            this.moveTo(desiredPos.x, desiredPos.y, desiredPos.z, caster.getYRot(), caster.getXRot());
+            this.snapTo(desiredPos.x, desiredPos.y, desiredPos.z, caster.getYRot(), caster.getXRot());
             this.setDeltaMovement(casterVel);
             return;
         }
@@ -885,7 +886,7 @@ public class MirageEntity extends Mob {
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float multiplier, @NotNull DamageSource source) {
+    public boolean causeFallDamage(double fallDistance, float multiplier, @NotNull DamageSource source) {
         return false;
     }
 
@@ -901,7 +902,7 @@ public class MirageEntity extends Mob {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        this.getCasterUuid().ifPresent(uuid -> compound.putUUID("CasterUUID", uuid));
+        compound.storeNullable("CasterUUID", UUIDUtil.CODEC, this.getCasterUuid().orElse(null));
         compound.putString("CasterType", this.getCasterTypeString());
         compound.put("CasterData", this.getCasterDataSnapshot().copy());
         compound.putInt("MirageIndex", this.getMirageIndex());
@@ -917,37 +918,17 @@ public class MirageEntity extends Mob {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.hasUUID("CasterUUID")) {
-            this.setCasterUuid(compound.getUUID("CasterUUID"));
-        }
-        if (compound.contains("CasterType")) {
-            this.entityData.set(DATA_CASTER_TYPE, compound.getString("CasterType"));
-        }
-        if (compound.contains("CasterData")) {
-            this.entityData.set(DATA_CASTER_DATA, compound.getCompound("CasterData"));
-        }
-        if (compound.contains("MirageIndex")) {
-            this.setMirageIndex(compound.getInt("MirageIndex"));
-        }
-        if (compound.contains("MirageTotal")) {
-            this.setMirageTotal(compound.getInt("MirageTotal"));
-        }
-        if (compound.contains("MaxLifetimeTicks")) {
-            this.maxLifetimeTicks = compound.getInt("MaxLifetimeTicks");
-        }
-        if (compound.contains("OrbitRadius")) {
-            this.setOrbitRadius(compound.getFloat("OrbitRadius"));
-        }
-        if (compound.contains("CasterWidth")) {
-            this.entityData.set(DATA_CASTER_WIDTH, compound.getFloat("CasterWidth"));
-        }
-        if (compound.contains("CasterHeight")) {
-            this.entityData.set(DATA_CASTER_HEIGHT, compound.getFloat("CasterHeight"));
-        }
-        if (compound.contains("CasterEyeHeight")) {
-            this.entityData.set(DATA_CASTER_EYE_HEIGHT, compound.getFloat("CasterEyeHeight"));
-        }
-        this.formationInitialized = compound.getBoolean("FormationInitialized");
+        compound.read("CasterUUID", UUIDUtil.CODEC).ifPresent(this::setCasterUuid);
+        compound.getString("CasterType").ifPresent(type -> this.entityData.set(DATA_CASTER_TYPE, type));
+        compound.getCompound("CasterData").ifPresent(data -> this.entityData.set(DATA_CASTER_DATA, data));
+        compound.getInt("MirageIndex").ifPresent(this::setMirageIndex);
+        compound.getInt("MirageTotal").ifPresent(this::setMirageTotal);
+        this.maxLifetimeTicks = compound.getIntOr("MaxLifetimeTicks", this.maxLifetimeTicks);
+        compound.getFloat("OrbitRadius").ifPresent(this::setOrbitRadius);
+        compound.getFloat("CasterWidth").ifPresent(width -> this.entityData.set(DATA_CASTER_WIDTH, width));
+        compound.getFloat("CasterHeight").ifPresent(height -> this.entityData.set(DATA_CASTER_HEIGHT, height));
+        compound.getFloat("CasterEyeHeight").ifPresent(eyeHeight -> this.entityData.set(DATA_CASTER_EYE_HEIGHT, eyeHeight));
+        this.formationInitialized = compound.getBooleanOr("FormationInitialized", false);
         this.refreshDimensions();
     }
 }

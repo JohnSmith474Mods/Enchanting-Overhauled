@@ -1,16 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "enchanting_overhauled:item/enchanted_book_spawn_egg",
-    "tints": [
-      {
-        "type": "minecraft:constant",
-        "value": -12311286
-      },
-      {
-        "type": "minecraft:constant",
-        "value": -3861703
-      }
-    ]
+    "model": "enchanting_overhauled:item/enchanted_book_spawn_egg"
   }
 }

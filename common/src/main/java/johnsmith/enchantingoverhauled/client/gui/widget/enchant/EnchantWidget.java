@@ -1,7 +1,5 @@
 package johnsmith.enchantingoverhauled.client.gui.widget.enchant;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.enchantment.EnchantmentSource;
@@ -266,9 +264,7 @@ public sealed abstract class EnchantWidget permits
         protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
             // Fall back to the default table source texture to fill the blank space
             ResourceLocation disabledTex = this.usePlainBackground ? EnchantmentSource.TABLE.disabledTexture : EnchantmentSource.TABLE.getDisabledTexture(this.texIndex);
-            RenderSystem.enableBlend();
             context.blit(RenderType::guiTextured, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
-            RenderSystem.disableBlend();
         }
         // endregion
     }
@@ -387,10 +383,8 @@ public sealed abstract class EnchantWidget permits
                 levelSprite = ENABLED_LEVEL_SPRITES[costIndex];
             }
 
-            RenderSystem.enableBlend();
             context.blit(RenderType::guiTextured, textureToDraw, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
             context.blitSprite(RenderType::guiTextured, levelSprite, this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
-            RenderSystem.disableBlend();
 
             MutableComponent displayComponent = this.getFormattedEnchantmentName(source);
 
@@ -478,17 +472,14 @@ public sealed abstract class EnchantWidget permits
         protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
             EnchantmentSource source = this.state.visualSource();
             ResourceLocation disabledTex = this.usePlainBackground ? source.disabledTexture : source.getDisabledTexture(this.texIndex);
-            RenderSystem.enableBlend();
             context.blit(RenderType::guiTextured, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             if (this.state.enchantment().isEmpty()) {
-                RenderSystem.disableBlend();
                 return;
             }
 
             int costIndex = Math.max(0, this.state.xpCost() - 1);
             context.blitSprite(RenderType::guiTextured, DISABLED_LEVEL_SPRITES[costIndex], this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
-            RenderSystem.disableBlend();
 
             Minecraft minecraft = Minecraft.getInstance();
             Font font = minecraft.font;

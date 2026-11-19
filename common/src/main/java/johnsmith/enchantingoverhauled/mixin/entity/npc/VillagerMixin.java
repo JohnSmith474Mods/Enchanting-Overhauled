@@ -27,10 +27,10 @@ public abstract class VillagerMixin {
     @Inject(method = "updateTrades", at = @At("TAIL"))
     private void enchanting_overhauled$modifyLibrarianTrades(CallbackInfo ci) {
         VillagerData data = this.getVillagerData();
-        if (data.getProfession() == VillagerProfession.LIBRARIAN) {
+        if (data.profession().is(VillagerProfession.LIBRARIAN)) {
             Villager villager = (Villager) (Object) this;
             MerchantOffers offers = villager.getOffers();
-            int level = data.getLevel();
+            int level = data.level();
             int index = Math.max(0, level - 1);
 
             if (Config.DISABLE_ENCHANTED_BOOK_TRADES.get() && Config.ENCHANTED_BOOK_TRADE_LEVELS.get().contains(level)) {

@@ -133,31 +133,31 @@ public class EnchantContextBuilder {
         }
 
         targetEnchantments.sort((a, b) -> {
-            int maxLevelA = a.enchantment.value().getMaxLevel();
-            int maxLevelB = b.enchantment.value().getMaxLevel();
+            int maxLevelA = a.enchantment().value().getMaxLevel();
+            int maxLevelB = b.enchantment().value().getMaxLevel();
 
-            boolean isOverleveledA = a.level > maxLevelA;
-            boolean isOverleveledB = b.level > maxLevelB;
+            boolean isOverleveledA = a.level() > maxLevelA;
+            boolean isOverleveledB = b.level() > maxLevelB;
 
             if (isOverleveledA != isOverleveledB) return isOverleveledA ? -1 : 1;
 
-            boolean isMaxedA = a.level == maxLevelA;
-            boolean isMaxedB = b.level == maxLevelB;
+            boolean isMaxedA = a.level() == maxLevelA;
+            boolean isMaxedB = b.level() == maxLevelB;
 
             if (isMaxedA != isMaxedB) return isMaxedA ? -1 : 1;
 
-            String idA = a.enchantment.unwrapKey().map(k -> k.location().toString()).orElse("");
-            String idB = b.enchantment.unwrapKey().map(k -> k.location().toString()).orElse("");
+            String idA = a.enchantment().unwrapKey().map(k -> k.location().toString()).orElse("");
+            String idB = b.enchantment().unwrapKey().map(k -> k.location().toString()).orElse("");
 
             return idA.compareTo(idB);
         });
 
         for (EnchantmentInstance inst : targetEnchantments) {
-            this.trueTargetEnchantments.put(inst.enchantment, inst);
-            this.addedEnchantments.add(inst.enchantment);
+            this.trueTargetEnchantments.put(inst.enchantment(), inst);
+            this.addedEnchantments.add(inst.enchantment());
 
-            boolean countsTowardCap = EnchantmentLib.countsTowardCap(inst.enchantment);
-            boolean concealedOnTarget = EnchantmentLib.isCurseConcealed(inst.enchantment, false);
+            boolean countsTowardCap = EnchantmentLib.countsTowardCap(inst.enchantment());
+            boolean concealedOnTarget = EnchantmentLib.isCurseConcealed(inst.enchantment(), false);
 
             if (concealedOnTarget) {
                 if (countsTowardCap) {
@@ -196,7 +196,7 @@ public class EnchantContextBuilder {
 
         for (EnchantmentInstance srcInst : sourceEnchants) {
             // Skip curses that are concealed on stored enchantment catalysts (STORED or ALL)
-            if (EnchantmentLib.isCurseConcealed(srcInst.enchantment, true)) {
+            if (EnchantmentLib.isCurseConcealed(srcInst.enchantment(), true)) {
                 continue;
             }
 
@@ -205,7 +205,7 @@ public class EnchantContextBuilder {
             // Try to overwrite existing visible target slots
             for (int i = 0; i < this.contexts.size(); i++) {
                 EnchantContext ctx = this.contexts.get(i);
-                if (ctx.applied().isPresent() && ctx.applied().get().enchantment.equals(srcInst.enchantment)) {
+                if (ctx.applied().isPresent() && ctx.applied().get().enchantment().equals(srcInst.enchantment())) {
                     this.contexts.set(i, this.updateContextWithSource(ctx, srcInst));
                     matched = true;
                     break;
@@ -213,8 +213,8 @@ public class EnchantContextBuilder {
             }
 
             // Check if the enchantment is already present on the target item but was concealed (e.g., APPLIED mode)
-            if (!matched && this.trueTargetEnchantments.containsKey(srcInst.enchantment)) {
-                EnchantmentInstance appliedInst = this.trueTargetEnchantments.get(srcInst.enchantment);
+            if (!matched && this.trueTargetEnchantments.containsKey(srcInst.enchantment())) {
+                EnchantmentInstance appliedInst = this.trueTargetEnchantments.get(srcInst.enchantment());
                 PendingEnchantment pending = new PendingEnchantment(Optional.of(srcInst), EnchantmentSource.SOURCE);
                 this.contexts.add(new EnchantContext(0, Optional.of(appliedInst), pending, 0, 0, 0));
                 matched = true;
@@ -222,12 +222,12 @@ public class EnchantContextBuilder {
 
             // Append as a new slot if not yet present on the target item, compatible, and within cap constraints
             if (!matched) {
-                boolean countsTowardCap = EnchantmentLib.countsTowardCap(srcInst.enchantment);
+                boolean countsTowardCap = EnchantmentLib.countsTowardCap(srcInst.enchantment());
                 boolean hasCapSpace = !countsTowardCap || this.occupiedCapSlots < this.maxEnchants;
 
-                if (hasCapSpace && srcInst.enchantment.value().canEnchant(this.originalTarget) && this.isCompatible(srcInst.enchantment)) {
+                if (hasCapSpace && srcInst.enchantment().value().canEnchant(this.originalTarget) && this.isCompatible(srcInst.enchantment())) {
                     this.contexts.add(this.createSourceOnlyContext(srcInst));
-                    this.addedEnchantments.add(srcInst.enchantment);
+                    this.addedEnchantments.add(srcInst.enchantment());
                     if (countsTowardCap) {
                         this.occupiedCapSlots++;
                     }
@@ -269,9 +269,9 @@ public class EnchantContextBuilder {
         while (this.occupiedCapSlots < this.maxEnchants && currentPower > 0) {
             final int activePower = currentPower;
             List<EnchantmentInstance> eligible = allPossible.stream()
-                    .filter(inst -> !this.addedEnchantments.contains(inst.enchantment))
-                    .filter(inst -> this.isCompatible(inst.enchantment))
-                    .filter(inst -> activePower >= inst.enchantment.value().getMinCost(inst.level))
+                    .filter(inst -> !this.addedEnchantments.contains(inst.enchantment()))
+                    .filter(inst -> this.isCompatible(inst.enchantment()))
+                    .filter(inst -> activePower >= inst.enchantment().value().getMinCost(inst.level()))
                     .collect(Collectors.toList());
 
             if (eligible.isEmpty()) {
@@ -280,13 +280,13 @@ public class EnchantContextBuilder {
 
             List<EnchantmentInstance> shuffled = WeightedSort.skewedShuffle(
                     eligible,
-                    entry -> entry.getWeight().asInt(),
+                    EnchantmentInstance::weight,
                     random
             );
 
             EnchantmentInstance chosen = shuffled.getFirst();
             this.contexts.add(this.createInitialContext(chosen, EnchantmentSource.TABLE));
-            this.addedEnchantments.add(chosen.enchantment);
+            this.addedEnchantments.add(chosen.enchantment());
             this.occupiedCapSlots++;
 
             // Halve the available power for the next generated slot
@@ -319,7 +319,7 @@ public class EnchantContextBuilder {
             int slotXpRequirement = (maxPower - Math.min(effectivePower, maxPower - 1)) * (i + 1);
             int enchantmentXpRequirement = this.calculateEnchantmentXpRequirement(ctx, i);
             int xpRequirement = slotXpRequirement + enchantmentXpRequirement;
-            int cost = ctx.pending().enchantment().map(e -> costCalculator.applyAsInt(e.enchantment.value())).orElse(1);
+            int cost = ctx.pending().enchantment().map(e -> costCalculator.applyAsInt(e.enchantment().value())).orElse(1);
 
             finalized.add(new EnchantContext(i, ctx.applied(), ctx.pending(), xpRequirement, cost, cost));
         }
@@ -340,11 +340,11 @@ public class EnchantContextBuilder {
         }
 
         EnchantmentInstance pendingInst = ctx.pending().enchantment().get();
-        Enchantment enchantment = pendingInst.enchantment.value();
+        Enchantment enchantment = pendingInst.enchantment().value();
 
         int effectiveLevel = ctx.applied()
-                .map(appliedInst -> Math.max(appliedInst.level + 1, pendingInst.level))
-                .orElse(pendingInst.level);
+                .map(appliedInst -> Math.max(appliedInst.level() + 1, pendingInst.level()))
+                .orElse(pendingInst.level());
 
         int globalMin = Config.GLOBAL_ENCHANTMENT_MIN_COST.get();
         int globalMax = Math.max(globalMin, Config.GLOBAL_ENCHANTMENT_MAX_COST.get());
@@ -356,7 +356,7 @@ public class EnchantContextBuilder {
             return 0;
         }
 
-        RandomSource slotRandom = this.createDeterministicSlotRandom(pendingInst.enchantment, effectiveLevel, slotIndex);
+        RandomSource slotRandom = this.createDeterministicSlotRandom(pendingInst.enchantment(), effectiveLevel, slotIndex);
         return Mth.clamp(
                 minCost + slotRandom.nextInt(maxCost),
                 minCost,
@@ -471,7 +471,7 @@ public class EnchantContextBuilder {
         }
         for (EnchantContext ctx : this.contexts) {
             if (ctx.pending().enchantment().isEmpty()) continue;
-            Holder<Enchantment> existing = ctx.pending().enchantment().get().enchantment;
+            Holder<Enchantment> existing = ctx.pending().enchantment().get().enchantment();
             if (existing.equals(candidate)) continue;
             if (!Enchantment.areCompatible(candidate, existing)) {
                 return false;
@@ -512,7 +512,7 @@ public class EnchantContextBuilder {
 
         List<EnchantmentInstance> possibleEntries = this.getPossibleEntries(target, treasureAllowed, level, pos);
         enchantments.addAll(possibleEntries);
-        enchantments = WeightedSort.skewedShuffle(enchantments, entry -> entry.getWeight().asInt(), random);
+        enchantments = WeightedSort.skewedShuffle(enchantments, EnchantmentInstance::weight, random);
         return enchantments;
     }
 

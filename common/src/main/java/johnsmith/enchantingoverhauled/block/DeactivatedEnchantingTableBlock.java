@@ -126,7 +126,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
 
                     LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(serverLevel, EntitySpawnReason.TRIGGERED);
                     if (lightningBolt != null) {
-                        lightningBolt.moveTo(Vec3.atBottomCenterOf(pos));
+                        lightningBolt.snapTo(Vec3.atBottomCenterOf(pos));
                         serverLevel.addFreshEntity(lightningBolt);
                     }
 

@@ -179,10 +179,10 @@ public sealed interface EnchantAction permits
                 return false;
             }
 
-            int newLevel = rollLevel(player, target, this.instance.enchantment.value(), this.currentLevel + 1);
+            int newLevel = rollLevel(player, target, this.instance.enchantment().value(), this.currentLevel + 1);
 
             ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(EnchantmentLib.getEnchantments(target));
-            builder.set(this.instance.enchantment, newLevel);
+            builder.set(this.instance.enchantment(), newLevel);
             target.set(DataComponents.ENCHANTMENTS, builder.toImmutable());
 
             if (isNotCreative) {
@@ -195,7 +195,7 @@ public sealed interface EnchantAction permits
 
                 // Consume the source selectively if it was utilized as a catalyst
                 if (this.usesSource && !source.isEmpty()) {
-                    consumeSourceEnchantment(player, inventory, this.instance.enchantment);
+                    consumeSourceEnchantment(player, inventory, this.instance.enchantment());
                 }
             }
 
@@ -226,7 +226,7 @@ public sealed interface EnchantAction permits
                 return false;
             }
 
-            int newLevel = this.instance.level;
+            int newLevel = this.instance.level();
             ItemStack targetCopy = target;
 
             Optional<EnchantRecipe> recipeOpt = EnchantRecipe.get(player.level().registryAccess(), target);
@@ -238,11 +238,11 @@ public sealed interface EnchantAction permits
 
                 DataComponentType<ItemEnchantments> comp = recipe.attachment() == EnchantmentAttachment.STORED ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS;
                 ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(targetCopy.getOrDefault(comp, ItemEnchantments.EMPTY));
-                mutable.set(this.instance.enchantment, newLevel);
+                mutable.set(this.instance.enchantment(), newLevel);
                 if (recipe.attachment() != EnchantmentAttachment.VOID)
                     targetCopy.set(comp, mutable.toImmutable());
             } else {
-                targetCopy.enchant(this.instance.enchantment, newLevel);
+                targetCopy.enchant(this.instance.enchantment(), newLevel);
             }
 
             if (isNotCreative) {
@@ -254,7 +254,7 @@ public sealed interface EnchantAction permits
                 }
 
                 if (!source.isEmpty()) {
-                    consumeSourceEnchantment(player, inventory, this.instance.enchantment);
+                    consumeSourceEnchantment(player, inventory, this.instance.enchantment());
                 }
             }
 
@@ -284,7 +284,7 @@ public sealed interface EnchantAction permits
                 return false;
             }
 
-            int newLevel = rollLevel(player, target, this.instance.enchantment.value(), this.instance.level);
+            int newLevel = rollLevel(player, target, this.instance.enchantment().value(), this.instance.level());
             ItemStack targetCopy = target;
 
             Optional<EnchantRecipe> recipeOpt = EnchantRecipe.get(player.level().registryAccess(), target);
@@ -296,11 +296,11 @@ public sealed interface EnchantAction permits
 
                 DataComponentType<ItemEnchantments> comp = recipe.attachment() == EnchantmentAttachment.STORED ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS;
                 ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(targetCopy.getOrDefault(comp, ItemEnchantments.EMPTY));
-                mutable.set(this.instance.enchantment, newLevel);
+                mutable.set(this.instance.enchantment(), newLevel);
                 if (recipe.attachment() != EnchantmentAttachment.VOID)
                     targetCopy.set(comp, mutable.toImmutable());
             } else {
-                targetCopy.enchant(this.instance.enchantment, newLevel);
+                targetCopy.enchant(this.instance.enchantment(), newLevel);
             }
 
             if (isNotCreative) {

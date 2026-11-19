@@ -97,7 +97,7 @@ public class TomeSummonMinionsGoal extends Goal {
         LivingEntity combatTarget = this.mob.getTarget();
         boolean inCombat = (combatTarget != null && combatTarget.isAlive()) || this.mob.isAngry();
         if (!inCombat) {
-            if (this.mob.level().isDay() || this.mob.isRoosting()) {
+            if (this.mob.level().isBrightOutside() || this.mob.isRoosting()) {
                 return false;
             }
             if (this.mob.getAnimationState() == BookAnimationState.BARTERING) {
@@ -280,7 +280,7 @@ public class TomeSummonMinionsGoal extends Goal {
                     double spawnY = shelfOrigin.y + (this.mob.getRandom().nextDouble() - 0.3D) * 1.6D;
                     double spawnZ = shelfOrigin.z + (this.mob.getRandom().nextDouble() - 0.5D) * 2.2D;
                     Vec3 candidatePos = new Vec3(spawnX, spawnY, spawnZ);
-                    book.moveTo(spawnX, spawnY, spawnZ, this.mob.getRandom().nextFloat() * 360.0F, 0.0F);
+                    book.snapTo(spawnX, spawnY, spawnZ, this.mob.getRandom().nextFloat() * 360.0F, 0.0F);
                     if (serverLevel.noCollision(book) && this.hasClearRay(serverLevel, shelfOrigin, candidatePos)) {
                         serverLevel.addFreshEntity(book);
                         serverLevel.sendParticles(ParticleTypes.POOF, spawnX, spawnY, spawnZ, 10, 0.2D, 0.2D, 0.2D, 0.05D);
@@ -555,7 +555,7 @@ public class TomeSummonMinionsGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (!this.combatSummon && this.mob.level().isDay() && this.mob.getTarget() == null && !this.mob.isAngry()) {
+        if (!this.combatSummon && this.mob.level().isBrightOutside() && this.mob.getTarget() == null && !this.mob.isAngry()) {
             return false;
         }
         return !this.finished

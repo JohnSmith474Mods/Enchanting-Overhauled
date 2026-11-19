@@ -16,16 +16,17 @@ import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.Linear
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.SpellFieldVolume;
 
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DataComponentMatchers;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.predicates.DataComponentPredicates;
+import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -115,11 +116,15 @@ public class DefaultSpellFields {
 
     public static LootItemCondition hasEnchantedArmor() {
         ItemPredicate.Builder enchantedItem = ItemPredicate.Builder.item()
-                .withSubPredicate(
-                        ItemSubPredicates.ENCHANTMENTS,
-                        ItemEnchantmentsPredicate.enchantments(
-                                List.of(new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1)))
-                        )
+                .withComponents(
+                        DataComponentMatchers.Builder.components()
+                                .partial(
+                                        DataComponentPredicates.ENCHANTMENTS,
+                                        EnchantmentsPredicate.enchantments(
+                                                List.of(new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1)))
+                                        )
+                                )
+                                .build()
                 );
         return AnyOfCondition.anyOf(
                 LootItemEntityPropertyCondition.hasProperties(

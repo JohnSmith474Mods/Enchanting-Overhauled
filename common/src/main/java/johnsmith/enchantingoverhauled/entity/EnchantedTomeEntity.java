@@ -217,7 +217,7 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
                     && this.getRoostPos() == null
                     && this.getTarget() == null
                     && !this.isAngry()
-                    && this.level().isDay()
+                    && this.level().isBrightOutside()
                     && this.getAnimationState() == BookAnimationState.IDLE) {
                 this.boredomTicks++;
             }
@@ -302,7 +302,7 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
             return;
         }
 
-        boolean tomeSecure = this.level().isDay()
+        boolean tomeSecure = this.level().isBrightOutside()
                 || this.isRoosting()
                 || this.getAnimationState() == BookAnimationState.BARTERING;
 
@@ -385,12 +385,10 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setPersistenceRequired();
-        this.boredomTicks = compound.getInt("BoredomTicks");
-        if (compound.contains("AltarDeceptionTicks")) {
-            this.altarDeceptionTicks = compound.getInt("AltarDeceptionTicks");
-        }
-        this.altarDeceptionCountdownActive = compound.getBoolean("AltarDeceptionActive");
-        this.altarAbandonCooldown = compound.getInt("AltarAbandonCooldown");
+        this.boredomTicks = compound.getIntOr("BoredomTicks", 0);
+        this.altarDeceptionTicks = compound.getIntOr("AltarDeceptionTicks", this.altarDeceptionTicks);
+        this.altarDeceptionCountdownActive = compound.getBooleanOr("AltarDeceptionActive", false);
+        this.altarAbandonCooldown = compound.getIntOr("AltarAbandonCooldown", 0);
     }
 
     @Override

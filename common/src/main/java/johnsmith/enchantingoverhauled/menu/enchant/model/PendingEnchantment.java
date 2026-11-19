@@ -30,7 +30,7 @@ public record PendingEnchantment(
      */
     @Override
     public String toString() {
-        String enchStr = enchantment.map(e -> e.enchantment.unwrapKey().map(k -> k.location().toString()).orElse("unknown") + " (Lvl " + e.level + ")").orElse("empty");
+        String enchStr = enchantment.map(e -> e.enchantment().unwrapKey().map(k -> k.location().toString()).orElse("unknown") + " (Lvl " + e.level() + ")").orElse("empty");
         return "PendingEnchantment[enchantment=" + enchStr + ", source=" + source + "]";
     }
     // endregion

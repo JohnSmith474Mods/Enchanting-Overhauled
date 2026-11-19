@@ -147,7 +147,7 @@ public class MagicMissileEntity extends ThrowableProjectile {
         compound.putString("School", this.getSchoolKey().location().toString());
         compound.putBoolean("Crit", this.isCrit());
         if (!this.weapon.isEmpty()) {
-            compound.put("Weapon", this.weapon.saveOptional(this.registryAccess()));
+            compound.put("Weapon", this.weapon.save(this.registryAccess()));
         }
     }
 
@@ -155,24 +155,22 @@ public class MagicMissileEntity extends ThrowableProjectile {
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setNoGravity(true);
-        if (compound.contains("Theme")) {
-            ResourceLocation loc = ResourceLocation.tryParse(compound.getString("Theme"));
+        compound.getString("Theme").ifPresent(themeStr -> {
+            ResourceLocation loc = ResourceLocation.tryParse(themeStr);
             if (loc != null) {
                 this.setThemeKey(ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, loc));
             }
-        }
-        if (compound.contains("School")) {
-            ResourceLocation loc = ResourceLocation.tryParse(compound.getString("School"));
+        });
+        compound.getString("School").ifPresent(schoolStr -> {
+            ResourceLocation loc = ResourceLocation.tryParse(schoolStr);
             if (loc != null) {
                 this.setSchoolKey(ResourceKey.create(MagicSchools.REGISTRY_KEY, loc));
             }
-        }
-        if (compound.contains("Crit")) {
-            this.setCrit(compound.getBoolean("Crit"));
-        }
-        if (compound.contains("Weapon")) {
-            this.weapon = ItemStack.parseOptional(this.registryAccess(), compound.getCompound("Weapon"));
-        }
+        });
+        compound.getBoolean("Crit").ifPresent(this::setCrit);
+        compound.getCompound("Weapon").ifPresent(tag ->
+                this.weapon = ItemStack.parse(this.registryAccess(), tag).orElse(ItemStack.EMPTY)
+        );
     }
 
     public boolean isHeadshot(Entity target, EntityHitResult result) {

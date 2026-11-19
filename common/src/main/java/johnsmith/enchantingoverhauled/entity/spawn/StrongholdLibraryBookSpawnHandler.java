@@ -6,7 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -22,28 +23,32 @@ import java.util.Optional;
 
 public final class StrongholdLibraryBookSpawnHandler {
 
-    private static final MobSpawnSettings.SpawnerData TOME_SPAWNER = new MobSpawnSettings.SpawnerData(
-            Entities.ENCHANTED_TOME.get(),
-            2,
-            1,
-            1
+    private static final Weighted<MobSpawnSettings.SpawnerData> TOME_SPAWNER = new Weighted<>(
+            new MobSpawnSettings.SpawnerData(
+                    Entities.ENCHANTED_TOME.get(),
+                    1,
+                    1
+            ),
+            2
     );
 
-    private static final MobSpawnSettings.SpawnerData BOOK_SPAWNER = new MobSpawnSettings.SpawnerData(
-            Entities.ENCHANTED_BOOK.get(),
-            12,
-            1,
-            3
+    private static final Weighted<MobSpawnSettings.SpawnerData> BOOK_SPAWNER = new Weighted<>(
+            new MobSpawnSettings.SpawnerData(
+                    Entities.ENCHANTED_BOOK.get(),
+                    1,
+                    3
+            ),
+            12
     );
 
     private StrongholdLibraryBookSpawnHandler() {}
 
-    public static WeightedRandomList<MobSpawnSettings.SpawnerData> appendIfInStrongholdLibrary(
+    public static WeightedList<MobSpawnSettings.SpawnerData> appendIfInStrongholdLibrary(
             ServerLevel level,
             StructureManager structureManager,
             MobCategory category,
             BlockPos pos,
-            WeightedRandomList<MobSpawnSettings.SpawnerData> original
+            WeightedList<MobSpawnSettings.SpawnerData> original
     ) {
         if (category != MobCategory.MONSTER) {
             return original;
@@ -52,10 +57,10 @@ public final class StrongholdLibraryBookSpawnHandler {
             return original;
         }
 
-        List<MobSpawnSettings.SpawnerData> combined = new ArrayList<>(original.unwrap());
+        List<Weighted<MobSpawnSettings.SpawnerData>> combined = new ArrayList<>(original.unwrap());
         combined.add(TOME_SPAWNER);
         combined.add(BOOK_SPAWNER);
-        return WeightedRandomList.create(combined);
+        return WeightedList.of(combined);
     }
 
     public static boolean isInsideStrongholdLibrary(

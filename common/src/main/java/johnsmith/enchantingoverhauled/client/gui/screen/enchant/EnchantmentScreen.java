@@ -412,7 +412,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
                 int realIndex = this.currentScrollOffset + i;
                 int pendingLevel = state.displayLevel();
                 if (realIndex < contexts.size()) {
-                    pendingLevel = contexts.get(realIndex).pending().enchantment().map(e -> e.level).orElse(state.displayLevel());
+                    pendingLevel = contexts.get(realIndex).pending().enchantment().map(e -> e.level()).orElse(state.displayLevel());
                 }
 
                 int levelContext = switch (state.state()) {

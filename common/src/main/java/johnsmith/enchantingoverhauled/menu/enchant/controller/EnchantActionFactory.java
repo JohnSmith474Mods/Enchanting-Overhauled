@@ -30,8 +30,8 @@ public class EnchantActionFactory {
     }
 
     private static EnchantAction evaluateTargetUpgrade(EnchantContext context, EnchantmentInstance pending) {
-        int targetLevel = context.applied().map(e -> e.level).orElse(0);
-        int maxLevel = pending.enchantment.value().getMaxLevel();
+        int targetLevel = context.applied().map(EnchantmentInstance::level).orElse(0);
+        int maxLevel = pending.enchantment().value().getMaxLevel();
         UpgradeSourceType sourceType = Config.UPGRADE_SOURCE_TYPE.get();
 
         // Pure upgrades (without a catalyst) are exclusively permitted if configured to NONE
@@ -44,9 +44,9 @@ public class EnchantActionFactory {
     }
 
     private static EnchantAction resolveConflict(EnchantContext context, EnchantmentInstance pending) {
-        int targetLevel = context.applied().map(e -> e.level).orElse(0);
-        int sourceLevel = pending.level;
-        int maxLevel = pending.enchantment.value().getMaxLevel();
+        int targetLevel = context.applied().map(EnchantmentInstance::level).orElse(0);
+        int sourceLevel = pending.level();
+        int maxLevel = pending.enchantment().value().getMaxLevel();
 
         // An enchantment completely absent from the target strictly mandates a transfer
         if (targetLevel == 0) {
@@ -59,7 +59,7 @@ public class EnchantActionFactory {
         if (targetLevel >= maxLevel) {
             // Overleveling is exclusively permitted ONCE and strictly requires a GREATER source
             if (targetLevel == maxLevel && sourceLevel > targetLevel) {
-                EnchantmentInstance overleveledInstance = new EnchantmentInstance(pending.enchantment, maxLevel + 1);
+                EnchantmentInstance overleveledInstance = new EnchantmentInstance(pending.enchantment(), maxLevel + 1);
                 return new EnchantAction.Transfer(overleveledInstance, context.xpCost(), context.lapisCost(), context.slotIndex());
             }
             return new EnchantAction.None();

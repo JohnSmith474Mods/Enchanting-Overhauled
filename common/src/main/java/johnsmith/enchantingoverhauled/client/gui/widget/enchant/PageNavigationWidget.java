@@ -1,7 +1,5 @@
 package johnsmith.enchantingoverhauled.client.gui.widget.enchant;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.client.gui.screen.enchant.MenuLayoutConfig;
@@ -89,7 +87,6 @@ public class PageNavigationWidget {
         int totalEnchants = this.menu.getActiveContexts().size();
         if (totalEnchants <= layout.pageSize()) return;
 
-        RenderSystem.enableBlend();
         boolean hasTargetItem = !this.menu.getEnchantmentTarget().isEmpty();
 
         // --- Backward Button (<) ---
@@ -115,8 +112,6 @@ public class PageNavigationWidget {
             nextTex = this.isNextHovered ? PAGE_FORWARD_HIGHLIGHTED_TEXTURE : PAGE_FORWARD_TEXTURE;
         }
         context.blit(RenderType::guiTextured, nextTex, nextX, nextY, 0, 0, layout.forwardButtonWidth(), layout.forwardButtonHeight(), layout.forwardButtonWidth(), layout.forwardButtonHeight());
-
-        RenderSystem.disableBlend();
     }
 
     /**

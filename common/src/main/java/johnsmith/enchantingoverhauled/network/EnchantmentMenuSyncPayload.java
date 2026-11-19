@@ -47,12 +47,12 @@ public record EnchantmentMenuSyncPayload(int containerId, List<EnchantContext> c
         @Override
         public void encode(RegistryFriendlyByteBuf buf, EnchantmentInstance instance) {
             // Safely unwrap the ResourceKey to prevent crashes from unbound Holder.Direct instances
-            ResourceLocation loc = instance.enchantment.unwrapKey()
+            ResourceLocation loc = instance.enchantment().unwrapKey()
                     .map(ResourceKey::location)
                     .orElseGet(() -> ResourceLocation.withDefaultNamespace("unknown"));
 
             ResourceLocation.STREAM_CODEC.encode(buf, loc);
-            buf.writeVarInt(instance.level);
+            buf.writeVarInt(instance.level());
         }
 
         @Override

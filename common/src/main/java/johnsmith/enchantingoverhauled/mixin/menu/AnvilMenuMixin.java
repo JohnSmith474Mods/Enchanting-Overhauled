@@ -173,12 +173,12 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
         return itemStack;
     }
 
-    // Prevent Creative mode (instabuild) from bypassing canEnchant on raw unenchantable items (like plain books).
+    // Prevent Creative mode (hasInfiniteMaterials) from bypassing canEnchant on raw unenchantable items (like plain books).
     @ModifyExpressionValue(
             method = "createResult",
             at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/world/entity/player/Abilities;instabuild:Z",
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/player/Player;hasInfiniteMaterials()Z",
                     ordinal = 0
             )
     )

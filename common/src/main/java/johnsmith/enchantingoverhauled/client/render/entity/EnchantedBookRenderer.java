@@ -115,7 +115,7 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
             int packedLight
     ) {
         ItemStackRenderState itemRenderState = new ItemStackRenderState();
-        itemModelResolver.updateForLiving(itemRenderState, stack, ItemDisplayContext.FIXED, false, entity);
+        itemModelResolver.updateForLiving(itemRenderState, stack, ItemDisplayContext.FIXED, entity);
         if (itemRenderState.isEmpty()) {
             return;
         }

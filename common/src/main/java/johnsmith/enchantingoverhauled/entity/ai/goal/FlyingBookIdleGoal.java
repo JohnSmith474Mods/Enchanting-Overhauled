@@ -600,7 +600,7 @@ public class FlyingBookIdleGoal extends Goal {
     }
 
     private void tickDaytimeBoredom(EnchantedTomeEntity tome) {
-        if (this.book.level().isDay() && this.book.level().getNearestPlayer(this.book, 16.0D) == null) {
+        if (this.book.level().isBrightOutside() && this.book.level().getNearestPlayer(this.book, 16.0D) == null) {
             tome.setBoredomTicks(tome.getBoredomTicks() + 1);
         } else {
             tome.setBoredomTicks(0);
@@ -609,13 +609,13 @@ public class FlyingBookIdleGoal extends Goal {
 
     private boolean shouldPerformScouting() {
         if (this.book instanceof EnchantedTomeEntity tome) {
-            return this.book.level().isDay() && tome.getBoredomTicks() >= BOREDOM_THRESHOLD_TICKS;
+            return this.book.level().isBrightOutside() && tome.getBoredomTicks() >= BOREDOM_THRESHOLD_TICKS;
         }
         if (this.book instanceof EnchantedBookEntity minion) {
             if (minion.getCommanderUuid().isPresent()) {
                 return true;
             }
-            return !this.book.level().isDay();
+            return !this.book.level().isBrightOutside();
         }
         return false;
     }

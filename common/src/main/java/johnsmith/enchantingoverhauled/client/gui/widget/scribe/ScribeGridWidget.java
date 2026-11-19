@@ -1,6 +1,5 @@
 package johnsmith.enchantingoverhauled.client.gui.widget.scribe;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGridData;
@@ -126,7 +125,6 @@ public class ScribeGridWidget {
     }
 
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, Font font) {
-        RenderSystem.enableBlend();
         int renderStartX = this.leftPos + GRID_START_X;
         int renderStartY = this.topPos + GRID_START_Y;
         ResourceLocation innerBg = this.gridData.isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
@@ -171,6 +169,5 @@ public class ScribeGridWidget {
                 }
             }
         }
-        RenderSystem.disableBlend();
     }
 }

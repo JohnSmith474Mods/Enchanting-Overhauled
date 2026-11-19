@@ -5,7 +5,7 @@ import johnsmith.enchantingoverhauled.entity.spawn.StrongholdLibraryBookSpawnHan
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.StructureManager;
@@ -29,9 +29,9 @@ public class NaturalSpawnerMixin {
             MobCategory category,
             BlockPos pos,
             Holder<Biome> biome,
-            CallbackInfoReturnable<WeightedRandomList<MobSpawnSettings.SpawnerData>> cir
+            CallbackInfoReturnable<WeightedList<MobSpawnSettings.SpawnerData>> cir
     ) {
-        WeightedRandomList<MobSpawnSettings.SpawnerData> modified =
+        WeightedList<MobSpawnSettings.SpawnerData> modified =
                 StrongholdLibraryBookSpawnHandler.appendIfInStrongholdLibrary(
                         level,
                         structureManager,

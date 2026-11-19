@@ -5,25 +5,25 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
 /**
  * A {@link RuleOutput} implementation that randomly selects a {@link BlockState} from a weighted
- * list of candidates ({@link SimpleWeightedRandomList}).
+ * list of candidates ({@link WeightedList}).
  *
- * @param outputs A {@link SimpleWeightedRandomList} of candidate {@link BlockState}s and their integer weights.
+ * @param outputs A {@link WeightedList} of candidate {@link BlockState}s and their integer weights.
  */
-public record WeightedOutput(SimpleWeightedRandomList<BlockState> outputs) implements RuleOutput {
+public record WeightedOutput(WeightedList<BlockState> outputs) implements RuleOutput {
 
     /**
      * The {@link MapCodec} for serializing and deserializing a {@link WeightedOutput} from JSON.
      */
     public static final MapCodec<WeightedOutput> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
-                    SimpleWeightedRandomList.wrappedCodec(BlockState.CODEC).fieldOf("outputs").forGetter(WeightedOutput::outputs)
+                    WeightedList.codec(BlockState.CODEC).fieldOf("outputs").forGetter(WeightedOutput::outputs)
             ).apply(instance, WeightedOutput::new)
     );
 
@@ -49,6 +49,6 @@ public record WeightedOutput(SimpleWeightedRandomList<BlockState> outputs) imple
      */
     @Override
     public BlockState getOutput(RandomSource random, BlockPos localPos, BlockPos absolutePos, StructurePlaceSettings settings) {
-        return this.outputs.getRandomValue(random).orElse(Blocks.AIR.defaultBlockState());
+        return this.outputs.getRandom(random).orElse(Blocks.AIR.defaultBlockState());
     }
 }

@@ -1,6 +1,5 @@
 package johnsmith.enchantingoverhauled.client.gui.widget.scribe;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGameState;
 import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGridData;
 import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
@@ -69,9 +68,7 @@ public class ScribeActionWidget {
 
         ResourceLocation texture = affordable ? (this.isHovered ? ScribeActionWidgetTheme.TEX_HIGHLIGHTED : ScribeActionWidgetTheme.TEX_ENABLED) : ScribeActionWidgetTheme.TEX_DISABLED;
 
-        RenderSystem.enableBlend();
         guiGraphics.blit(RenderType::guiTextured, texture, x, y, 0, 0, width, height, width, height);
-        RenderSystem.disableBlend();
 
         Component text = this.theme.textProvider().apply(this.gridData);
 

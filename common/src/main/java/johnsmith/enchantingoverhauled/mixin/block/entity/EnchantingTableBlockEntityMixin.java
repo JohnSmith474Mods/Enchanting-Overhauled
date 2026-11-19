@@ -83,7 +83,7 @@ public abstract class EnchantingTableBlockEntityMixin extends BlockEntity implem
     @Inject(method = "saveAdditional", at = @At("TAIL"))
     private void serializeTomeStack(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
         if (!this.enchanting_overhauled$tomeStack.isEmpty()) {
-            tag.put("enchanting_overhauled:tome_stack", this.enchanting_overhauled$tomeStack.saveOptional(registries));
+            tag.put("enchanting_overhauled:tome_stack", this.enchanting_overhauled$tomeStack.save(registries));
         }
     }
 
@@ -96,11 +96,9 @@ public abstract class EnchantingTableBlockEntityMixin extends BlockEntity implem
      */
     @Inject(method = "loadAdditional", at = @At("TAIL"))
     private void deserializeTomeStack(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
-        if (tag.contains("enchanting_overhauled:tome_stack")) {
-            this.enchanting_overhauled$tomeStack = ItemStack.parseOptional(registries, tag.getCompound("enchanting_overhauled:tome_stack"));
-        } else {
-            this.enchanting_overhauled$tomeStack = ItemStack.EMPTY;
-        }
+        this.enchanting_overhauled$tomeStack = tag.getCompound("enchanting_overhauled:tome_stack")
+                .flatMap(tomeTag -> ItemStack.parse(registries, tomeTag))
+                .orElse(ItemStack.EMPTY);
     }
 
     /**

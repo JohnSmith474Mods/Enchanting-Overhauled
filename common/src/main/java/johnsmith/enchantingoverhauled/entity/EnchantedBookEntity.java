@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +27,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -69,8 +71,8 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
     public static final int NATURAL_SPAWN_MIN_GROUP = 1;
     public static final int NATURAL_SPAWN_MAX_GROUP = 4;
 
-    private static final EntityDataAccessor<Optional<UUID>> DATA_COMMANDER_UUID =
-            SynchedEntityData.defineId(EnchantedBookEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_COMMANDER_UUID =
+            SynchedEntityData.defineId(EnchantedBookEntity.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
 
     private int deescalationTimer = MinionShelvingDespawnGoal.DEESCALATION_DURATION_TICKS;
     private boolean engagedInCombat = false;
@@ -113,11 +115,11 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
     }
 
     public Optional<UUID> getCommanderUuid() {
-        return this.entityData.get(DATA_COMMANDER_UUID);
+        return this.entityData.get(DATA_COMMANDER_UUID).map(EntityReference::getUUID);
     }
 
     public void setCommanderUuid(@Nullable UUID uuid) {
-        this.entityData.set(DATA_COMMANDER_UUID, Optional.ofNullable(uuid));
+        this.entityData.set(DATA_COMMANDER_UUID, Optional.ofNullable(uuid).map(EntityReference::new));
     }
 
     public int getDeescalationTimer() {
@@ -275,7 +277,7 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        this.getCommanderUuid().ifPresent(uuid -> compound.putUUID("CommanderUUID", uuid));
+        compound.storeNullable("CommanderUUID", UUIDUtil.CODEC, this.getCommanderUuid().orElse(null));
         compound.putInt("DeescalationTimer", this.deescalationTimer);
         compound.putBoolean("EngagedInCombat", this.engagedInCombat);
         if (this.homeShelfPos != null) {
@@ -286,20 +288,10 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.hasUUID("CommanderUUID")) {
-            this.setCommanderUuid(compound.getUUID("CommanderUUID"));
-        } else {
-            this.setCommanderUuid(null);
-        }
-        if (compound.contains("DeescalationTimer")) {
-            this.deescalationTimer = compound.getInt("DeescalationTimer");
-        }
-        this.engagedInCombat = compound.getBoolean("EngagedInCombat");
-        if (compound.contains("HomeShelfPos")) {
-            this.homeShelfPos = BlockPos.of(compound.getLong("HomeShelfPos"));
-        } else {
-            this.homeShelfPos = null;
-        }
+        this.setCommanderUuid(compound.read("CommanderUUID", UUIDUtil.CODEC).orElse(null));
+        this.deescalationTimer = compound.getIntOr("DeescalationTimer", this.deescalationTimer);
+        this.engagedInCombat = compound.getBooleanOr("EngagedInCombat", false);
+        this.homeShelfPos = compound.getLong("HomeShelfPos").map(BlockPos::of).orElse(null);
     }
 
     @Override

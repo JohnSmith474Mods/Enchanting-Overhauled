@@ -37,8 +37,8 @@ public class EnchantRenderStateFactory {
     private static EnchantRenderState buildState(EnchantContext context, EnchantmentInstance pending) {
         EnchantAction action = EnchantActionFactory.createFrom(context);
 
-        int currentLevel = context.applied().map(e -> e.level).orElse(0);
-        int maxLevel = pending.enchantment.value().getMaxLevel();
+        int currentLevel = context.applied().map(EnchantmentInstance::level).orElse(0);
+        int maxLevel = pending.enchantment().value().getMaxLevel();
 
         EnchantmentSource visualSource = context.pending().source();
 
@@ -51,13 +51,13 @@ public class EnchantRenderStateFactory {
             visualSource = EnchantmentSource.TABLE;
         }
 
-        int displayLevel = currentLevel > 0 ? currentLevel : pending.level;
+        int displayLevel = currentLevel > 0 ? currentLevel : pending.level();
 
         EnchantState state = evaluateState(action, currentLevel, maxLevel);
 
         EnchantRenderState finalState = new EnchantRenderState(
                 visualSource,
-                Optional.of(pending.enchantment),
+                Optional.of(pending.enchantment()),
                 displayLevel,
                 context.xpRequirement(),
                 context.xpCost(),

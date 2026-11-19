@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
@@ -495,9 +496,12 @@ public abstract class AbstractFlyingBookEntity extends Monster {
 
     public static boolean isPlayerWearingEnchantedArmor(Player player) {
         if (player == null) return false;
-        for (ItemStack armorStack : player.getArmorSlots()) {
-            if (!armorStack.isEmpty() && armorStack.isEnchanted()) {
-                return true;
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+                ItemStack armorStack = player.getItemBySlot(slot);
+                if (!armorStack.isEmpty() && armorStack.isEnchanted()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -781,59 +785,49 @@ public abstract class AbstractFlyingBookEntity extends Monster {
         compound.putBoolean("BookInitialized", this.bookInitialized);
         compound.putInt("AngerTime", this.getAngerTime());
         compound.putInt("BarterCooldown", this.barterCooldown);
-        if (this.angryAt != null) {
-            compound.putUUID("AngryAt", this.angryAt);
-        }
+        compound.storeNullable("AngryAt", UUIDUtil.CODEC, this.angryAt);
         BlockPos roost = this.getRoostPos();
         if (roost != null) {
             compound.putLong("RoostPos", roost.asLong());
         }
         if (!this.getBarterFuel().isEmpty()) {
-            compound.put("BarterFuel", this.getBarterFuel().saveOptional(this.registryAccess()));
+            compound.put("BarterFuel", this.getBarterFuel().save(this.registryAccess()));
         }
         if (!this.getBarterCatalyst().isEmpty()) {
-            compound.put("BarterCatalyst", this.getBarterCatalyst().saveOptional(this.registryAccess()));
+            compound.put("BarterCatalyst", this.getBarterCatalyst().save(this.registryAccess()));
         }
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("Theme")) {
-            ResourceLocation themeLoc = ResourceLocation.tryParse(compound.getString("Theme"));
+        compound.getString("Theme").ifPresent(themeStr -> {
+            ResourceLocation themeLoc = ResourceLocation.tryParse(themeStr);
             if (themeLoc != null) {
                 this.setThemeKey(ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, themeLoc));
             }
-        }
-        if (compound.contains("School")) {
-            ResourceLocation schoolLoc = ResourceLocation.tryParse(compound.getString("School"));
+        });
+        compound.getString("School").ifPresent(schoolStr -> {
+            ResourceLocation schoolLoc = ResourceLocation.tryParse(schoolStr);
             if (schoolLoc != null) {
                 this.setSchoolKey(ResourceKey.create(MagicSchools.REGISTRY_KEY, schoolLoc));
             }
-        }
-        this.bookInitialized = compound.getBoolean("BookInitialized");
-        this.setAngerTime(compound.getInt("AngerTime"));
-        this.barterCooldown = compound.getInt("BarterCooldown");
-        if (compound.hasUUID("AngryAt")) {
-            this.angryAt = compound.getUUID("AngryAt");
-        } else {
-            this.angryAt = null;
-        }
-        if (compound.contains("RoostPos")) {
-            this.setRoostPos(BlockPos.of(compound.getLong("RoostPos")));
-        } else {
-            this.setRoostPos(null);
-        }
-        if (compound.contains("BarterFuel")) {
-            this.setBarterFuel(ItemStack.parseOptional(this.registryAccess(), compound.getCompound("BarterFuel")));
-        } else {
-            this.setBarterFuel(ItemStack.EMPTY);
-        }
-        if (compound.contains("BarterCatalyst")) {
-            this.setBarterCatalyst(ItemStack.parseOptional(this.registryAccess(), compound.getCompound("BarterCatalyst")));
-        } else {
-            this.setBarterCatalyst(ItemStack.EMPTY);
-        }
+        });
+        this.bookInitialized = compound.getBooleanOr("BookInitialized", false);
+        this.setAngerTime(compound.getIntOr("AngerTime", 0));
+        this.barterCooldown = compound.getIntOr("BarterCooldown", 0);
+        this.angryAt = compound.read("AngryAt", UUIDUtil.CODEC).orElse(null);
+        this.setRoostPos(compound.getLong("RoostPos").map(BlockPos::of).orElse(null));
+        this.setBarterFuel(
+                compound.getCompound("BarterFuel")
+                        .flatMap(tag -> ItemStack.parse(this.registryAccess(), tag))
+                        .orElse(ItemStack.EMPTY)
+        );
+        this.setBarterCatalyst(
+                compound.getCompound("BarterCatalyst")
+                        .flatMap(tag -> ItemStack.parse(this.registryAccess(), tag))
+                        .orElse(ItemStack.EMPTY)
+        );
         this.setDropChance(EquipmentSlot.MAINHAND, this.getMainHandDropChance());
     }
 
@@ -1389,7 +1383,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     @Override
-    public boolean causeFallDamage(float distance, float multiplier, DamageSource source) {
+    public boolean causeFallDamage(double distance, float multiplier, DamageSource source) {
         return false;
     }
 

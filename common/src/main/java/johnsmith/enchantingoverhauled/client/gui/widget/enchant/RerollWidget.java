@@ -1,7 +1,5 @@
 package johnsmith.enchantingoverhauled.client.gui.widget.enchant;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.api.enchantment.EnchantmentSource;
@@ -104,8 +102,6 @@ public class RerollWidget {
         int costIndex = Math.max(0, rerollCost - 1);
         boolean canReroll = occupiedSlots < Config.MAX_ENCHANTMENT_AMOUNT.get() && !targetIsSourceEnchantable && targetIsEnchantable && hasTableSource;
 
-        RenderSystem.enableBlend();
-
         boolean isCreative = minecraft.player != null && minecraft.player.isCreative();
         int playerXp = minecraft.player != null ? minecraft.player.experienceLevel : 0;
         boolean cannotAfford = (lapisCount < rerollCost || playerXp < rerollCost) && !isCreative;
@@ -128,7 +124,6 @@ public class RerollWidget {
                 context.blitSprite(RenderType::guiTextured, DISABLED_LEVEL_SPRITES[costIndex], x + layout.rerollCostXOffset(), y + layout.rerollCostYOffset(), layout.rerollCostWidth(), layout.rerollCostHeight());
             }
         }
-        RenderSystem.disableBlend();
     }
 
     /**

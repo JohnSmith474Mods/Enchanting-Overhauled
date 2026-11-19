@@ -40,8 +40,8 @@ public class Divination {
             List.of(
                     new ApplyPotionEffect(
                             List.of(
-                                    new PotionPayload(MobEffects.MOVEMENT_SPEED, LevelBasedValue.constant(100.0F), LevelBasedValue.constant(0.0F)),
-                                    new PotionPayload(MobEffects.DAMAGE_BOOST, LevelBasedValue.constant(80.0F), LevelBasedValue.constant(0.0F))
+                                    new PotionPayload(MobEffects.SPEED, LevelBasedValue.constant(100.0F), LevelBasedValue.constant(0.0F)),
+                                    new PotionPayload(MobEffects.STRENGTH, LevelBasedValue.constant(80.0F), LevelBasedValue.constant(0.0F))
                             ),
                             Optional.of(DefaultSpellFields.DO_NOT_HARM.apply(context))
                     )

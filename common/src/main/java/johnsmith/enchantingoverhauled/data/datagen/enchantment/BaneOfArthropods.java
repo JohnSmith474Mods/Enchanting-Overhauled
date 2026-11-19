@@ -50,7 +50,7 @@ public class BaneOfArthropods {
                             EnchantmentTarget.ATTACKER,
                             EnchantmentTarget.VICTIM,
                             new ApplyMobEffect(
-                                    HolderSet.direct(MobEffects.MOVEMENT_SLOWDOWN),
+                                    HolderSet.direct(MobEffects.SLOWNESS),
                                     new PointerValue("bane_of_arthropods.slowness.min_duration", new DiminishingReturnsValue(1.5F, 0.5F, 0.5F)),
                                     new PointerValue("bane_of_arthropods.slowness.max_duration", new DiminishingReturnsValue(6.0F, 2.0F, 2.0F)),
                                     new PointerValue("bane_of_arthropods.slowness.min_amplifier", LevelBasedValue.constant(0.0F)),
