@@ -9,11 +9,12 @@ import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookMo
 import johnsmith.enchantingoverhauled.client.render.entity.model.FlyingBookEntityModel;
 import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
 import johnsmith.enchantingoverhauled.entity.EnchantedBookEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -28,6 +29,7 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
 
     private final ItemModelResolver itemModelResolver;
     private final EnchantedBookModel bookModel;
+    private final EnchantedBookModel lecternBookModel;
 
     public EnchantedBookRenderer(EntityRendererProvider.Context context) {
         super(
@@ -37,6 +39,8 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
         );
         this.itemModelResolver = context.getItemModelResolver();
         this.bookModel = (EnchantedBookModel) this.model.getInternalModel();
+        this.lecternBookModel = new EnchantedBookModel(context.bakeLayer(ClientConstants.ENCHANTED_BOOK_LAYER));
+        this.lecternBookModel.renderedOnLectern = true;
         this.addLayer(new EntityGlintLayer<>(this));
     }
 
@@ -52,23 +56,23 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
     }
 
     @Override
-    public void render(
+    public void submit(
             FlyingBookEntityModel.@NotNull RenderState state,
             @NotNull PoseStack poseStack,
-            @NotNull MultiBufferSource buffer,
-            int packedLight
+            @NotNull SubmitNodeCollector submitNodeCollector,
+            @NotNull CameraRenderState cameraRenderState
     ) {
-        if (state.entity != null && RoostedBookRenderer.tryRenderRoosted(state.entity, this.bookModel, this.getTextureLocation(state), state.partialTick, poseStack, buffer, packedLight)) {
+        if (state.entity != null && RoostedBookRenderer.tryRenderRoosted(state.entity, this.bookModel, this.lecternBookModel, this.getTextureLocation(state), state.partialTick, poseStack, submitNodeCollector, state.outlineColor)) {
             this.shadowRadius = 0.0F;
             if (state.nameTag != null) {
-                this.renderNameTag(state, state.nameTag, poseStack, buffer, packedLight);
+                this.submitNameTag(state, poseStack, submitNodeCollector, cameraRenderState);
             }
         } else {
             this.shadowRadius = 0.3F;
-            super.render(state, poseStack, buffer, packedLight);
+            super.submit(state, poseStack, submitNodeCollector, cameraRenderState);
         }
         if (state.entity != null) {
-            renderOrbitingBarterItems(state.entity, this.itemModelResolver, state.partialTick, poseStack, buffer, packedLight);
+            renderOrbitingBarterItems(state.entity, this.itemModelResolver, state.partialTick, poseStack, submitNodeCollector, state.lightCoords, state.outlineColor);
         }
     }
 
@@ -77,8 +81,9 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
             ItemModelResolver itemModelResolver,
             float partialTicks,
             PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight
+            SubmitNodeCollector submitNodeCollector,
+            int packedLight,
+            int outlineColor
     ) {
         ItemStack fuel = entity.getBarterFuel();
         ItemStack catalyst = entity.getBarterCatalyst();
@@ -94,11 +99,11 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
         float centerY = entity.getBbHeight() * 0.55F;
 
         if (!fuel.isEmpty()) {
-            renderSingleOrbitingItem(entity, itemModelResolver, fuel, baseAngle, radius, centerY, ageInTicks, poseStack, buffer, packedLight);
+            renderSingleOrbitingItem(entity, itemModelResolver, fuel, baseAngle, radius, centerY, ageInTicks, poseStack, submitNodeCollector, packedLight, outlineColor);
         }
         if (!catalyst.isEmpty()) {
             float offsetAngle = baseAngle + (float) Math.PI;
-            renderSingleOrbitingItem(entity, itemModelResolver, catalyst, offsetAngle, radius, centerY, ageInTicks + 15.0F, poseStack, buffer, packedLight);
+            renderSingleOrbitingItem(entity, itemModelResolver, catalyst, offsetAngle, radius, centerY, ageInTicks + 15.0F, poseStack, submitNodeCollector, packedLight, outlineColor);
         }
     }
 
@@ -111,8 +116,9 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
             float centerY,
             float bobTicks,
             PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight
+            SubmitNodeCollector submitNodeCollector,
+            int packedLight,
+            int outlineColor
     ) {
         ItemStackRenderState itemRenderState = new ItemStackRenderState();
         itemModelResolver.updateForLiving(itemRenderState, stack, ItemDisplayContext.FIXED, entity);
@@ -129,7 +135,7 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
         poseStack.mulPose(Axis.YP.rotation(-angle + (float) (Math.PI * 0.5D)));
         poseStack.scale(0.45F, 0.45F, 0.45F);
 
-        itemRenderState.render(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY);
+        itemRenderState.submit(poseStack, submitNodeCollector, packedLight, OverlayTexture.NO_OVERLAY, outlineColor);
         poseStack.popPose();
     }
 

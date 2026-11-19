@@ -3,8 +3,10 @@
     "pack_format": 34,
     "supported_formats": {
       "min_inclusive": 34,
-      "max_inclusive": 64
+      "max_inclusive": 70
     },
+    "min_format": 34,
+    "max_format": 70,
     "description": "The Enchanting Altar textures of Enchanting Overhauled."
   }
 }

@@ -72,7 +72,7 @@ public class FlyingBookEntityModel<S extends FlyingBookEntityModel.RenderState> 
         }
 
         float bookTime = state.flutterPhase * 50.0F;
-        this.internalModel.setupAnim(bookTime, state.rightPageFlip, state.leftPageFlip, state.openness);
+        this.internalModel.setupAnim(new BookModel.State(bookTime, state.rightPageFlip, state.leftPageFlip, state.openness));
 
         ModelPart root = this.root();
         root.x = state.animX * 16.0F;

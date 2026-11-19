@@ -538,7 +538,7 @@ public record AiSpellField(
                     && living.isAlive()
                     && !(living instanceof Player)
                     && (owner == null || living == owner || (owner instanceof AbstractFlyingBookEntity book && !book.isValidNPCTarget(living) && !book.isValidPlayerTarget(living)))) {
-                anchor.startRiding(living, true);
+                anchor.startRiding(living, true, true);
             }
         } else {
             // Prefer the actual caster (owner) over the spatial target so CasterHostileCondition resolves the caster

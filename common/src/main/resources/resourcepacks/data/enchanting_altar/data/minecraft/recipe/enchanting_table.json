@@ -6,15 +6,9 @@
     "###"
   ],
   "key": {
-    "C": {
-      "item": "minecraft:red_carpet"
-    },
-    "A": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "#": {
-      "item": "minecraft:crying_obsidian"
-    }
+    "C": "minecraft:red_carpet",
+    "A": "minecraft:amethyst_shard",
+    "#": "minecraft:crying_obsidian"
   },
   "result": {
     "id": "enchanting_overhauled:disturbed_enchanting_table"

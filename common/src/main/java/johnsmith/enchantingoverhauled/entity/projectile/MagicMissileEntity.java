@@ -201,7 +201,7 @@ public class MagicMissileEntity extends ThrowableProjectile {
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             Entity target = result.getEntity();
             if (!(target instanceof Creeper) && !target.getType().is(Tags.IMMUNE_TO_MAGIC_MISSILE)) {
                 int difficulty = this.level().getDifficulty().getId();
@@ -250,7 +250,7 @@ public class MagicMissileEntity extends ThrowableProjectile {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.deploySpellField(result.getLocation());
             this.discard();
         }

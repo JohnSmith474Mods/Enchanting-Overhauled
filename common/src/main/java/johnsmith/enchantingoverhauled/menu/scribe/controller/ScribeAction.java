@@ -206,7 +206,7 @@ public sealed interface ScribeAction permits
         private void triggerLossPenalty(Level level, BlockPos pos, Player player) {
             boolean isArcaneRetributionActivate = Config.LETHAL_SCRIBING.get();
             if (isArcaneRetributionActivate) {
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     ServerLevel serverLevel = (ServerLevel) level;
 
                     // Vex sounds + Soul particles for catastrophic explosion

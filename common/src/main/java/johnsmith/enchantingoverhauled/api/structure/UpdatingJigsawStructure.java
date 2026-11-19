@@ -59,7 +59,7 @@ public class UpdatingJigsawStructure extends Structure {
                     HeightProvider.CODEC.fieldOf("start_height").forGetter(structure -> structure.startHeight),
                     Codec.BOOL.fieldOf("use_expansion_hack").forGetter(structure -> structure.useExpansionHack),
                     Heightmap.Types.CODEC.optionalFieldOf("project_start_to_heightmap").forGetter(structure -> structure.projectStartToHeightmap),
-                    Codec.intRange(1, JigsawStructure.MAX_TOTAL_STRUCTURE_RANGE).fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
+                    JigsawStructure.MaxDistance.CODEC.fieldOf("max_distance_from_center").forGetter(structure -> structure.maxDistanceFromCenter),
                     Codec.list(PoolAliasBinding.CODEC).optionalFieldOf("pool_aliases", List.of()).forGetter(structure -> structure.poolAliases),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
                     LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
@@ -104,7 +104,7 @@ public class UpdatingJigsawStructure extends Structure {
     /**
      * Maximum allowed block distance from the structure's starting center.
      */
-    private final int maxDistanceFromCenter;
+    private final JigsawStructure.MaxDistance maxDistanceFromCenter;
 
     /**
      * List of template pool alias bindings for remapping pools during generation.
@@ -144,7 +144,7 @@ public class UpdatingJigsawStructure extends Structure {
             HeightProvider startHeight,
             boolean useExpansionHack,
             Optional<Heightmap.Types> projectStartToHeightmap,
-            int maxDistanceFromCenter,
+            JigsawStructure.MaxDistance maxDistanceFromCenter,
             List<PoolAliasBinding> poolAliases,
             DimensionPadding dimensionPadding,
             LiquidSettings liquidSettings
@@ -174,7 +174,7 @@ public class UpdatingJigsawStructure extends Structure {
             case NONE -> 0;
             case BURY, BEARD_THIN, BEARD_BOX, ENCAPSULATE -> 12;
         };
-        return structure.maxDistanceFromCenter + padding > 128
+        return structure.maxDistanceFromCenter.horizontal() + padding > 128
                 ? DataResult.error(() -> "Structure size including terrain adaptation must not exceed 128")
                 : DataResult.success(structure);
     }

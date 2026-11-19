@@ -101,7 +101,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
 
         // 1. Check if the player is right-clicking with an Enchanted Tome
         if (itemStack.is(Items.ENCHANTED_TOME.get())) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 ServerLevel serverLevel = (ServerLevel) level;
                 // Replace this block with a vanilla Enchanting Table
                 serverLevel.setBlock(pos, Blocks.ENCHANTING_TABLE.defaultBlockState(), 3);
@@ -151,7 +151,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
             }
 
             // Trigger the activation advancement
-            if (!level.isClientSide && player instanceof ServerPlayer) {
+            if (!level.isClientSide() && player instanceof ServerPlayer) {
                 Constants.LOG.info("Attempting to trigger advancement for " + player.getName().getString());
                 ((ActivateAltarTrigger) Criteria.ACTIVATE_ALTAR.get()).trigger((ServerPlayer) player);
             }
@@ -168,7 +168,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
         if (isWrongBook) {
             boolean isArcaneRetributionActivate = Config.ENABLE_ARCANE_RETRIBUTION.get();
             if (isArcaneRetributionActivate) {
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     ServerLevel serverLevel = (ServerLevel) level;
 
                     // Consume the item

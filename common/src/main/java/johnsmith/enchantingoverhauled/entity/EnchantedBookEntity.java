@@ -121,7 +121,7 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
     }
 
     public void setCommanderUuid(@Nullable UUID uuid) {
-        this.entityData.set(DATA_COMMANDER_UUID, Optional.ofNullable(uuid).map(EntityReference::new));
+        this.entityData.set(DATA_COMMANDER_UUID, Optional.ofNullable(uuid).map(EntityReference::of));
     }
 
     public int getDeescalationTimer() {

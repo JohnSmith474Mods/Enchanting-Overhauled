@@ -6,15 +6,9 @@
     "###"
   ],
   "key": {
-    "C": {
-      "item": "minecraft:red_carpet"
-    },
-    "A": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "#": {
-      "item": "minecraft:obsidian"
-    }
+    "C": "minecraft:red_carpet",
+    "A": "minecraft:amethyst_shard",
+    "#": "minecraft:obsidian"
   },
   "result": {
     "id": "enchanting_overhauled:deactivated_enchanting_table",

@@ -6,15 +6,9 @@
     "###"
   ],
   "key": {
-    "T": {
-      "item": "enchanting_overhauled:enchanted_tome"
-    },
-    "D": {
-      "item": "minecraft:diamond"
-    },
-    "#": {
-      "item": "minecraft:obsidian"
-    }
+    "T": "enchanting_overhauled:enchanted_tome",
+    "D": "minecraft:diamond",
+    "#": "minecraft:obsidian"
   },
   "result": {
     "id": "minecraft:enchanting_table"

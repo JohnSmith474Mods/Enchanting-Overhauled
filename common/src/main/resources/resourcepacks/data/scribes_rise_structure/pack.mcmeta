@@ -3,8 +3,10 @@
     "pack_format": 48,
     "supported_formats": {
       "min_inclusive": 48,
-      "max_inclusive": 81
+      "max_inclusive": 89
     },
+    "min_format": 48,
+    "max_format": 89,
     "description": "The Scribe's Rise structure of Enchanting Overhauled."
   }
 }

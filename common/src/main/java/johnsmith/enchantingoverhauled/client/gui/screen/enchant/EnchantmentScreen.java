@@ -20,8 +20,10 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -39,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> {
 
     // region Constants
-    private static final ResourceLocation GALACTIC_FONT_ID = ResourceLocation.fromNamespaceAndPath("minecraft", "alt");
+    private static final FontDescription GALACTIC_FONT = new FontDescription.Resource(ResourceLocation.fromNamespaceAndPath("minecraft", "alt"));
     private static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/background.png");
 
     private static final ResourceLocation EXPERIENCE_BAR_ACTIVE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/experience_bar/full.png");
@@ -84,7 +86,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      */
     private static Component modifyTitle(Component originalTitle) {
         if (originalTitle != null) {
-            Style galacticStyle = originalTitle.getStyle().withFont(GALACTIC_FONT_ID);
+            Style galacticStyle = originalTitle.getStyle().withFont(GALACTIC_FONT);
             return originalTitle.copy().setStyle(galacticStyle).withStyle(ChatFormatting.YELLOW);
         }
         return Component.empty();
@@ -310,7 +312,11 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      * @return true if the event was consumed, false otherwise.
      */
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+
         if (this.rerollWidget.mouseClicked(mouseX, mouseY, button)) {
             return true;
         }
@@ -325,7 +331,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     /**

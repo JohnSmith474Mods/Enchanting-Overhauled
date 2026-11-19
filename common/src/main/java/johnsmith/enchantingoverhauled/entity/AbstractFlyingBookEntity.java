@@ -869,7 +869,7 @@ public abstract class AbstractFlyingBookEntity extends Monster {
         }
 
         boolean damageApplied = super.hurtServer(level, source, amount);
-        if (damageApplied && !this.level().isClientSide && this.isAlive()) {
+        if (damageApplied && !this.level().isClientSide() && this.isAlive()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
 
             if (source.getEntity() instanceof LivingEntity attacker) {

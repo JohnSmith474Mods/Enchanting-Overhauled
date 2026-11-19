@@ -7,10 +7,11 @@ import johnsmith.enchantingoverhauled.client.render.entity.layer.EntityGlintLaye
 import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookModel;
 import johnsmith.enchantingoverhauled.client.render.entity.model.FlyingBookEntityModel;
 import johnsmith.enchantingoverhauled.entity.EnchantedTomeEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +22,7 @@ public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, Flyi
 
     private final ItemModelResolver itemModelResolver;
     private final EnchantedBookModel bookModel;
+    private final EnchantedBookModel lecternBookModel;
 
     public EnchantedTomeRenderer(EntityRendererProvider.Context context) {
         super(
@@ -30,6 +32,8 @@ public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, Flyi
         );
         this.itemModelResolver = context.getItemModelResolver();
         this.bookModel = (EnchantedBookModel) this.model.getInternalModel();
+        this.lecternBookModel = new EnchantedBookModel(context.bakeLayer(ClientConstants.ENCHANTED_TOME_LAYER));
+        this.lecternBookModel.renderedOnLectern = true;
         this.addLayer(new EntityGlintLayer<>(this));
     }
 
@@ -45,23 +49,23 @@ public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, Flyi
     }
 
     @Override
-    public void render(
+    public void submit(
             FlyingBookEntityModel.@NotNull RenderState state,
             @NotNull PoseStack poseStack,
-            @NotNull MultiBufferSource buffer,
-            int packedLight
+            @NotNull SubmitNodeCollector submitNodeCollector,
+            @NotNull CameraRenderState cameraRenderState
     ) {
-        if (state.entity != null && RoostedBookRenderer.tryRenderRoosted(state.entity, this.bookModel, this.getTextureLocation(state), state.partialTick, poseStack, buffer, packedLight)) {
+        if (state.entity != null && RoostedBookRenderer.tryRenderRoosted(state.entity, this.bookModel, this.lecternBookModel, this.getTextureLocation(state), state.partialTick, poseStack, submitNodeCollector, state.outlineColor)) {
             this.shadowRadius = 0.0F;
             if (state.nameTag != null) {
-                this.renderNameTag(state, state.nameTag, poseStack, buffer, packedLight);
+                this.submitNameTag(state, poseStack, submitNodeCollector, cameraRenderState);
             }
         } else {
             this.shadowRadius = 0.3F;
-            super.render(state, poseStack, buffer, packedLight);
+            super.submit(state, poseStack, submitNodeCollector, cameraRenderState);
         }
         if (state.entity != null) {
-            EnchantedBookRenderer.renderOrbitingBarterItems(state.entity, this.itemModelResolver, state.partialTick, poseStack, buffer, packedLight);
+            EnchantedBookRenderer.renderOrbitingBarterItems(state.entity, this.itemModelResolver, state.partialTick, poseStack, submitNodeCollector, state.lightCoords, state.outlineColor);
         }
     }
 

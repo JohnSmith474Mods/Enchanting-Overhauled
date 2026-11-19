@@ -48,7 +48,7 @@ public abstract class LecternBlockEntityMixin extends BlockEntity {
      */
     @Inject(method = "setBook", at = @At("TAIL"))
     private void enchanting_overhauled$syncBookToClient(ItemStack stack, CallbackInfo ci) {
-        if (this.level != null && !this.level.isClientSide) {
+        if (this.level != null && !this.level.isClientSide()) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
         }
     }

@@ -4,11 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import johnsmith.enchantingoverhauled.entity.projectile.MagicMissileEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -47,11 +48,11 @@ public class MagicMissileRenderer extends EntityRenderer<MagicMissileEntity, Mag
     }
 
     @Override
-    public void render(
+    public void submit(
             @NotNull RenderState state,
             @NotNull PoseStack poseStack,
-            @NotNull MultiBufferSource buffer,
-            int packedLight
+            @NotNull SubmitNodeCollector submitNodeCollector,
+            @NotNull CameraRenderState cameraRenderState
     ) {
         float ageInTicks = state.ageInTicks;
         float pulse = 0.9F + Mth.sin(ageInTicks * 0.6F) * 0.15F;
@@ -73,16 +74,16 @@ public class MagicMissileRenderer extends EntityRenderer<MagicMissileEntity, Mag
         poseStack.mulPose(Axis.XP.rotationDegrees(ageInTicks * 24.0F));
         poseStack.scale(pulse, pulse, pulse);
 
-        VertexConsumer consumer = buffer.getBuffer(RenderType.lightning());
-        Matrix4f matrix = poseStack.last().pose();
-
-        renderCrossedFins(matrix, consumer, 0.22F, 0.08F, sr, sg, sb, 165);
-        renderCrossedFins(matrix, consumer, 0.14F, 0.045F, tr, tg, tb, 220);
-        renderCrossedFins(matrix, consumer, 0.09F, 0.025F, 255, 255, 255, 255);
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderType.lightning(), (pose, consumer) -> {
+            Matrix4f matrix = pose.pose();
+            renderCrossedFins(matrix, consumer, 0.22F, 0.08F, sr, sg, sb, 165);
+            renderCrossedFins(matrix, consumer, 0.14F, 0.045F, tr, tg, tb, 220);
+            renderCrossedFins(matrix, consumer, 0.09F, 0.025F, 255, 255, 255, 255);
+        });
 
         poseStack.popPose();
 
-        super.render(state, poseStack, buffer, packedLight);
+        super.submit(state, poseStack, submitNodeCollector, cameraRenderState);
     }
 
     private static void renderCrossedFins(

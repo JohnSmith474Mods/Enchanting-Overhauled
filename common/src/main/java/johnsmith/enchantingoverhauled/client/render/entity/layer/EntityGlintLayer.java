@@ -1,10 +1,9 @@
 package johnsmith.enchantingoverhauled.client.render.entity.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -18,15 +17,25 @@ public class EntityGlintLayer<S extends LivingEntityRenderState, M extends Entit
     }
 
     @Override
-    public void render(
+    public void submit(
             @NotNull PoseStack poseStack,
-            @NotNull MultiBufferSource buffer,
+            @NotNull SubmitNodeCollector submitNodeCollector,
             int packedLight,
             @NotNull S renderState,
             float yRot,
             float xRot
     ) {
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityGlint());
-        this.getParentModel().renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        submitNodeCollector.order(1).submitModel(
+                this.getParentModel(),
+                renderState,
+                poseStack,
+                RenderType.entityGlint(),
+                packedLight,
+                OverlayTexture.NO_OVERLAY,
+                0xFFFFFFFF,
+                null,
+                renderState.outlineColor,
+                null
+        );
     }
 }

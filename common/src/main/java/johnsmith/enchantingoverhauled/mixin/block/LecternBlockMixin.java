@@ -29,7 +29,7 @@ public class LecternBlockMixin {
         if (blockEntity instanceof LecternBlockEntity lecternBlockEntity) {
             ItemStack book = lecternBlockEntity.getBook();
             if (book.is(net.minecraft.world.item.Items.ENCHANTED_BOOK) || book.is(Items.ENCHANTED_TOME.get())) {
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     player.openMenu(new SimpleMenuProvider(
                             (containerId, playerInventory, playerEntity) -> new ScribeMenu(
                                     containerId,

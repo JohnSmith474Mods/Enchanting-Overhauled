@@ -35,6 +35,7 @@
   "client": [
     "client.OptionsMixin",
     "client.render.block.entity.EnchantTableRendererMixin",
+    "client.render.block.entity.LecternRenderStateMixin",
     "client.render.block.entity.LecternRendererMixin"
   ],
   "server": [],

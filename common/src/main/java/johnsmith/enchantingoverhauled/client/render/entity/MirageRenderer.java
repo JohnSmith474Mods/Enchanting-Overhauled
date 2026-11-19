@@ -5,10 +5,11 @@ import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
 import johnsmith.enchantingoverhauled.entity.MirageEntity;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -44,11 +45,11 @@ public class MirageRenderer extends EntityRenderer<MirageEntity, MirageRenderer.
     }
 
     @Override
-    public void render(
+    public void submit(
             @NotNull RenderState state,
             @NotNull PoseStack poseStack,
-            @NotNull MultiBufferSource buffer,
-            int packedLight
+            @NotNull SubmitNodeCollector submitNodeCollector,
+            @NotNull CameraRenderState cameraRenderState
     ) {
         MirageEntity entity = state.entity;
         if (entity == null || !(entity.level() instanceof ClientLevel clientLevel)) {
@@ -105,7 +106,7 @@ public class MirageRenderer extends EntityRenderer<MirageEntity, MirageRenderer.
         poseStack.pushPose();
         try {
             if (savedBookState == null) {
-                renderCaster(casterRenderer, visualCaster, state.partialTick, poseStack, buffer, packedLight);
+                renderCaster(casterRenderer, visualCaster, state.partialTick, state.lightCoords, poseStack, submitNodeCollector, cameraRenderState);
             }
         } catch (Throwable ignored) {
         } finally {
@@ -132,12 +133,14 @@ public class MirageRenderer extends EntityRenderer<MirageEntity, MirageRenderer.
             EntityRenderer<E, S> renderer,
             Entity visualCaster,
             float partialTick,
+            int lightCoords,
             PoseStack poseStack,
-            MultiBufferSource buffer,
-            int packedLight
+            SubmitNodeCollector submitNodeCollector,
+            CameraRenderState cameraRenderState
     ) {
         E castEntity = (E) visualCaster;
         S casterState = renderer.createRenderState(castEntity, partialTick);
-        renderer.render(casterState, poseStack, buffer, packedLight);
+        casterState.lightCoords = lightCoords;
+        renderer.submit(casterState, poseStack, submitNodeCollector, cameraRenderState);
     }
 }

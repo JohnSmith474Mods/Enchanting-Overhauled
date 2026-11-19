@@ -5,25 +5,23 @@ import johnsmith.enchantingoverhauled.particle.SimpleParticleTypes;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 
-public class SgaRuneParticle extends TextureSheetParticle {
+public class SgaRuneParticle extends SingleQuadParticle {
 
     private static final ThreadLocal<Integer> PENDING_TINT_COLOR = new ThreadLocal<>();
     private static final ThreadLocal<Integer> PENDING_LIFETIME = new ThreadLocal<>();
 
-    private final SpriteSet sprites;
-
-    protected SgaRuneParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet sprites) {
-        super(level, x, y, z, xSpeed, ySpeed, zSpeed);
-        this.sprites = sprites;
+    protected SgaRuneParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite sprite) {
+        super(level, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
         this.xd = xSpeed;
         this.yd = ySpeed;
         this.zd = zSpeed;
@@ -36,7 +34,6 @@ public class SgaRuneParticle extends TextureSheetParticle {
             this.lifetime = (int) (Math.random() * 20.0D) + 20;
         }
         this.gravity = 0.0F;
-        this.pickSprite(sprites);
         this.quadSize *= 0.5F;
 
         int resolvedColor = resolveTintColor(level, x, y, z);
@@ -108,8 +105,8 @@ public class SgaRuneParticle extends TextureSheetParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public SingleQuadParticle.Layer getLayer() {
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
@@ -120,8 +117,8 @@ public class SgaRuneParticle extends TextureSheetParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new SgaRuneParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprites);
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
+            return new SgaRuneParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, this.sprites.get(random));
         }
     }
 }

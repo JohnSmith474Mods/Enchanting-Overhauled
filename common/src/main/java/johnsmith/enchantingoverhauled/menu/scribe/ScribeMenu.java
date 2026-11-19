@@ -230,10 +230,10 @@ public class ScribeMenu extends AbstractContainerMenu {
             };
 
             // Execute safely on the main tick loop, or immediately if on the client
-            if (player.level().isClientSide) {
+            if (player.level().isClientSide()) {
                 future.thenRun(evaluateState);
             } else {
-                future.thenRunAsync(evaluateState, player.getServer());
+                future.thenRunAsync(evaluateState, player.level().getServer());
             }
         }
 

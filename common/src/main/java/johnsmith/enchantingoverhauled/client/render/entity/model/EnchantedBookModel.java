@@ -67,11 +67,11 @@ public class EnchantedBookModel extends BookModel {
     }
 
     @Override
-    public void setupAnim(float time, float rightPageFlip, float leftPageFlip, float pageFlip) {
+    public void setupAnim(BookModel.State state) {
         this.root.resetPose();
-        super.setupAnim(time, rightPageFlip, leftPageFlip, pageFlip);
+        super.setupAnim(state);
 
-        float targetRot = (float) (Math.PI / 2F) - (pageFlip * (float) Math.PI);
+        float targetRot = (float) (Math.PI / 2F) - (state.open() * (float) Math.PI);
         if (this.renderedOnLectern) {
             targetRot = Math.max(targetRot, -0.7F);
         }

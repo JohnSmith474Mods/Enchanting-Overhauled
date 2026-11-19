@@ -175,12 +175,15 @@ public final class ArcaneItemNamingUtil {
         }
 
         CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData != null && customData.contains(NBT_THEME_KEY)) {
-            ResourceLocation id = ResourceLocation.tryParse(customData.copyTag().getStringOr(NBT_THEME_KEY, ""));
-            if (id != null) {
-                ResourceKey<EnchantmentTheme> explicitKey = ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, id);
-                if (!EnchantmentThemes.isCommon(explicitKey) || enchantments.isEmpty()) {
-                    return Optional.of(explicitKey);
+        if (customData != null && !customData.isEmpty()) {
+            var tag = customData.copyTag();
+            if (tag.contains(NBT_THEME_KEY)) {
+                ResourceLocation id = ResourceLocation.tryParse(tag.getStringOr(NBT_THEME_KEY, ""));
+                if (id != null) {
+                    ResourceKey<EnchantmentTheme> explicitKey = ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, id);
+                    if (!EnchantmentThemes.isCommon(explicitKey) || enchantments.isEmpty()) {
+                        return Optional.of(explicitKey);
+                    }
                 }
             }
         }
@@ -238,12 +241,15 @@ public final class ArcaneItemNamingUtil {
         }
 
         CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData != null && customData.contains(NBT_SCHOOL_KEY)) {
-            ResourceLocation id = ResourceLocation.tryParse(customData.copyTag().getStringOr(NBT_SCHOOL_KEY, ""));
-            if (id != null) {
-                ResourceKey<MagicSchool> explicitKey = ResourceKey.create(MagicSchools.REGISTRY_KEY, id);
-                if (!MagicSchools.isAberration(explicitKey) || enchantments.isEmpty()) {
-                    return Optional.of(explicitKey);
+        if (customData != null && !customData.isEmpty()) {
+            var tag = customData.copyTag();
+            if (tag.contains(NBT_SCHOOL_KEY)) {
+                ResourceLocation id = ResourceLocation.tryParse(tag.getStringOr(NBT_SCHOOL_KEY, ""));
+                if (id != null) {
+                    ResourceKey<MagicSchool> explicitKey = ResourceKey.create(MagicSchools.REGISTRY_KEY, id);
+                    if (!MagicSchools.isAberration(explicitKey) || enchantments.isEmpty()) {
+                        return Optional.of(explicitKey);
+                    }
                 }
             }
         }
@@ -301,7 +307,11 @@ public final class ArcaneItemNamingUtil {
 
         ItemEnchantments stored = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
         CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        boolean hasExplicit = customData != null && (customData.contains(NBT_THEME_KEY) || customData.contains(NBT_SCHOOL_KEY));
+        boolean hasExplicit = false;
+        if (customData != null && !customData.isEmpty()) {
+            var tag = customData.copyTag();
+            hasExplicit = tag.contains(NBT_THEME_KEY) || tag.contains(NBT_SCHOOL_KEY);
+        }
         if (stored.isEmpty() && !hasExplicit) {
             return baseItemName;
         }

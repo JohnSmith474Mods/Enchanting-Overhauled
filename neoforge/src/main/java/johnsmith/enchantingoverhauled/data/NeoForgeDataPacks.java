@@ -7,16 +7,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.PathPackResources;
+import net.minecraft.server.packs.repository.BuiltInPackSource;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.jarcontents.JarContents;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.resource.JarContentsPackResources;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
 
 public final class NeoForgeDataPacks {
@@ -44,8 +44,9 @@ public final class NeoForgeDataPacks {
             String name,
             PackInclusionType inclusionType
     ) {
-        Path path = ModList.get().getModFileById(Constants.MOD_ID).getFile().findResource("resourcepacks", directory);
-        if (Files.exists(path)) {
+        JarContents contents = ModList.get().getModFileById(Constants.MOD_ID).getFile().getContents();
+        String prefix = "resourcepacks/" + directory;
+        if (contents.containsFile(prefix + "/pack.mcmeta")) {
             boolean isRequired = inclusionType == PackInclusionType.REQUIRED;
             boolean isDefaultActive = inclusionType != PackInclusionType.OPTIONAL;
 
@@ -63,7 +64,9 @@ public final class NeoForgeDataPacks {
                 }
             };
 
-            Pack.ResourcesSupplier resourcesSupplier = new PathPackResources.PathResourcesSupplier(path);
+            Pack.ResourcesSupplier resourcesSupplier = BuiltInPackSource.fromName(
+                    locationInfo -> new JarContentsPackResources(locationInfo, contents, prefix)
+            );
             PackLocationInfo info = new PackLocationInfo(
                     namespace + ":" + directory,
                     Component.literal(name),

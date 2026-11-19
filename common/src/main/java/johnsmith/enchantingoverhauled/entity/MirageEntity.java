@@ -9,6 +9,7 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -59,8 +60,8 @@ public class MirageEntity extends Mob {
             SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     private static final EntityDataAccessor<String> DATA_CASTER_TYPE =
             SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<CompoundTag> DATA_CASTER_DATA =
-            SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    private static final EntityDataAccessor<String> DATA_CASTER_DATA =
+            SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> DATA_MIRAGE_INDEX =
             SynchedEntityData.defineId(MirageEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_MIRAGE_TOTAL =
@@ -251,7 +252,7 @@ public class MirageEntity extends Mob {
         builder.define(DATA_CASTER_ID, -1);
         builder.define(DATA_CASTER_UUID, Optional.empty());
         builder.define(DATA_CASTER_TYPE, "");
-        builder.define(DATA_CASTER_DATA, new CompoundTag());
+        builder.define(DATA_CASTER_DATA, "");
         builder.define(DATA_MIRAGE_INDEX, 0);
         builder.define(DATA_MIRAGE_TOTAL, 3);
         builder.define(DATA_CASTER_WIDTH, 0.6F);
@@ -278,7 +279,7 @@ public class MirageEntity extends Mob {
     }
 
     public void setCasterUuid(@Nullable UUID uuid) {
-        this.entityData.set(DATA_CASTER_UUID, Optional.ofNullable(uuid).map(EntityReference::new));
+        this.entityData.set(DATA_CASTER_UUID, Optional.ofNullable(uuid).map(EntityReference::of));
     }
 
     public String getCasterTypeString() {
@@ -286,7 +287,24 @@ public class MirageEntity extends Mob {
     }
 
     public CompoundTag getCasterDataSnapshot() {
-        return this.entityData.get(DATA_CASTER_DATA);
+        String snbt = this.entityData.get(DATA_CASTER_DATA);
+        if (snbt == null || snbt.isEmpty()) {
+            return new CompoundTag();
+        }
+        try {
+            return TagParser.parseCompoundFully(snbt);
+        } catch (Exception ignored) {
+            return new CompoundTag();
+        }
+    }
+
+    private void setCasterDataSnapshot(@Nullable CompoundTag tag) {
+        if (tag == null || tag.isEmpty()) {
+            this.entityData.set(DATA_CASTER_DATA, "");
+            return;
+        }
+        String snbt = tag.toString();
+        this.entityData.set(DATA_CASTER_DATA, snbt.length() <= 30000 ? snbt : "");
     }
 
     public int getMirageIndex() {
@@ -429,7 +447,7 @@ public class MirageEntity extends Mob {
             tag.remove("Inventory");
             tag.remove("EnderItems");
             tag.remove("recipeBook");
-            this.entityData.set(DATA_CASTER_DATA, tag);
+            this.setCasterDataSnapshot(tag);
         } catch (Exception ignored) {
         }
     }
@@ -887,7 +905,7 @@ public class MirageEntity extends Mob {
     }
 
     @Override
-    protected boolean shouldDropLoot() {
+    protected boolean shouldDropLoot(@NotNull ServerLevel level) {
         return false;
     }
 
@@ -926,7 +944,7 @@ public class MirageEntity extends Mob {
         super.readAdditionalSaveData(input);
         input.read("CasterUUID", UUIDUtil.CODEC).ifPresent(this::setCasterUuid);
         input.getString("CasterType").ifPresent(type -> this.entityData.set(DATA_CASTER_TYPE, type));
-        input.read("CasterData", CompoundTag.CODEC).ifPresent(data -> this.entityData.set(DATA_CASTER_DATA, data));
+        input.read("CasterData", CompoundTag.CODEC).ifPresent(this::setCasterDataSnapshot);
         input.getInt("MirageIndex").ifPresent(this::setMirageIndex);
         input.getInt("MirageTotal").ifPresent(this::setMirageTotal);
         this.maxLifetimeTicks = input.getIntOr("MaxLifetimeTicks", this.maxLifetimeTicks);

@@ -13,6 +13,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -55,6 +56,7 @@ public class WindBurst {
                                     ExplosionInteraction.TRIGGER,
                                     ParticleTypes.GUST_EMITTER_SMALL,
                                     ParticleTypes.GUST_EMITTER_LARGE,
+                                    WeightedList.of(),
                                     SoundEvents.WIND_CHARGE_BURST
                             ),
                             LootItemEntityPropertyCondition.hasProperties(

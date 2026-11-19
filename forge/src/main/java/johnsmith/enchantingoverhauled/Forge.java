@@ -57,20 +57,20 @@ public class Forge {
         ForgeLootInjector.initialize();
         ForgeNetworkRegistry.initialize();
         ForgeServer.initialize();
-        EntityAttributeCreationEvent.getBus(eventBus).addListener(ForgeAttributes::initialize);
+        EntityAttributeCreationEvent.BUS.addListener(ForgeAttributes::initialize);
         RegisterEvent.getBus(eventBus).addListener(ForgeLootItemConditionTypes::initialize);
         RegisterEvent.getBus(eventBus).addListener(ForgeLootItemFunctionTypes::initialize);
         RegisterEvent.getBus(eventBus).addListener(ForgeLevelBasedValues::initialize);
         RegisterEvent.getBus(eventBus).addListener(ForgeEnchantmentEffectComponents::initialize);
         RegisterEvent.getBus(eventBus).addListener(ForgeSpellFieldEffects::initialize);
         RegisterEvent.getBus(eventBus).addListener(ForgeSimpleParticleTypes::initialize);
-        DataPackRegistryEvent.NewRegistry.getBus(eventBus).addListener(ForgeRegistries::initialize);
+        DataPackRegistryEvent.NewRegistry.BUS.addListener(ForgeRegistries::initialize);
 
         // Register data packs
-        AddPackFindersEvent.getBus(eventBus).addListener(ForgeDataPacks::registerBuiltInDataPacks);
+        AddPackFindersEvent.BUS.addListener(ForgeDataPacks::registerBuiltInDataPacks);
 
         // Register resource packs
-        AddPackFindersEvent.getBus(eventBus).addListener(ForgeResourcePacks::registerBuiltInResourcePacks);
+        AddPackFindersEvent.BUS.addListener(ForgeResourcePacks::registerBuiltInResourcePacks);
 
         // Client init
         if (FMLEnvironment.dist == Dist.CLIENT) {

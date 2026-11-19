@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
@@ -36,6 +37,7 @@ import java.util.Map;
  */
 public class UIFormattingUtil {
     public static final ResourceLocation GALACTIC_FONT = ResourceLocation.fromNamespaceAndPath("minecraft", "alt");
+    public static final FontDescription GALACTIC_FONT_DESCRIPTION = new FontDescription.Resource(GALACTIC_FONT);
 
     /**
      * Formats an enchantment name and level into a single Component, applying obfuscation and theme colors.
@@ -46,8 +48,8 @@ public class UIFormattingUtil {
         Style levelStyle = Style.EMPTY;
 
         if (obfuscate) {
-            nameStyle = nameStyle.withFont(GALACTIC_FONT);
-            levelStyle = levelStyle.withFont(GALACTIC_FONT);
+            nameStyle = nameStyle.withFont(GALACTIC_FONT_DESCRIPTION);
+            levelStyle = levelStyle.withFont(GALACTIC_FONT_DESCRIPTION);
         }
 
         if (themeMode != ColoringMode.NONE) {
@@ -94,7 +96,7 @@ public class UIFormattingUtil {
 
         Style descStyle = Style.EMPTY.withColor(Config.DESCRIPTION_COLOR.get());
         if (obfuscate) {
-            descStyle = descStyle.withFont(GALACTIC_FONT);
+            descStyle = descStyle.withFont(GALACTIC_FONT_DESCRIPTION);
         }
 
         Map<String, StyleModifier> contextStyles = new HashMap<>();

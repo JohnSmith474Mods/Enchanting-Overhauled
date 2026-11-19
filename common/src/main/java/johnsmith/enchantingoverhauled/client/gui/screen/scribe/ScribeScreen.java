@@ -18,6 +18,7 @@ import johnsmith.enchantingoverhauled.client.gui.sound.scribe.ScribeSoundEffectS
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -108,7 +109,11 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+
         ScribeGameState state = this.menu.getGridData().getGameState();
         int payload = -1;
 
@@ -156,7 +161,7 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override

@@ -67,7 +67,7 @@ public class NeoForge {
         eventBus.addListener(NeoForgeResourcePacks::registerBuiltInResourcePacks);
 
         // Client init
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             NeoForgeClient.initialize(eventBus, container);
         }
     }

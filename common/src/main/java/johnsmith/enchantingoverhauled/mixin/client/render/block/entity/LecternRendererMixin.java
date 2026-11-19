@@ -2,27 +2,33 @@ package johnsmith.enchantingoverhauled.mixin.client.render.block.entity;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import johnsmith.enchantingoverhauled.client.ClientConstants;
+import johnsmith.enchantingoverhauled.client.render.blockentity.LecternRenderStateAccessor;
 import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookModel;
 import johnsmith.enchantingoverhauled.item.Items;
 import net.minecraft.client.model.BookModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.LecternRenderer;
+import net.minecraft.client.renderer.blockentity.state.LecternRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.model.MaterialSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.function.Function;
 
 /**
  * Mixin to dynamically swap the rendered book model and texture on Lecterns
@@ -30,6 +36,9 @@ import java.util.function.Function;
  */
 @Mixin(LecternRenderer.class)
 public class LecternRendererMixin {
+
+    @Shadow @Final
+    private MaterialSet materials;
 
     @Unique
     private EnchantedBookModel enchanting_overhauled$enchantedBookModel;
@@ -45,63 +54,80 @@ public class LecternRendererMixin {
         this.enchanting_overhauled$enchantedTomeModel.renderedOnLectern = true;
     }
 
-    /**
-     * Resolves the appropriate model variant to render.
-     */
-    @Unique
-    private BookModel enchanting_overhauled$getModel(LecternBlockEntity blockEntity, BookModel defaultModel) {
-        ItemStack stack = blockEntity.getBook();
-        if (stack.is(Items.ENCHANTED_TOME.get())) {
-            return this.enchanting_overhauled$enchantedTomeModel;
-        } else if (stack.is(net.minecraft.world.item.Items.ENCHANTED_BOOK) || stack.is(Items.ENCHANTED_PAGE.get())) {
-            return this.enchanting_overhauled$enchantedBookModel;
-        }
-        return defaultModel;
-    }
-
-    /**
-     * Resolves the appropriate material/texture variant to render.
-     */
-    @Unique
-    private Material enchanting_overhauled$getMaterial(LecternBlockEntity blockEntity, Material defaultMaterial) {
-        ItemStack stack = blockEntity.getBook();
-        if (stack.is(Items.ENCHANTED_TOME.get())) {
-            return ClientConstants.ENCHANTED_TOME_MATERIAL;
-        } else if (stack.is(net.minecraft.world.item.Items.ENCHANTED_BOOK) || stack.is(Items.ENCHANTED_PAGE.get())) {
-            return ClientConstants.ENCHANTED_BOOK_MATERIAL;
-        }
-        return defaultMaterial;
-    }
-
-    @WrapOperation(
-            method = "render",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/BookModel;setupAnim(FFFF)V")
+    @Inject(
+            method = "extractRenderState(Lnet/minecraft/world/level/block/entity/LecternBlockEntity;Lnet/minecraft/client/renderer/blockentity/state/LecternRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+            at = @At("TAIL")
     )
-    private void wrapSetupAnim(BookModel instance, float f1, float f2, float f3, float f4, Operation<Void> original, LecternBlockEntity blockEntity) {
-        BookModel modelToUse = this.enchanting_overhauled$getModel(blockEntity, instance);
-        modelToUse.setupAnim(f1, f2, f3, f4);
-    }
-
-    @WrapOperation(
-            method = "render",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/BookModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V")
-    )
-    private void wrapRender(BookModel instance, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, Operation<Void> original, LecternBlockEntity blockEntity, float partialTick, PoseStack poseStackParam, MultiBufferSource bufferSource) {
-        BookModel modelToUse = this.enchanting_overhauled$getModel(blockEntity, instance);
-        modelToUse.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay);
-
-        if (blockEntity.getBook().hasFoil()) {
-            VertexConsumer glintBuffer = bufferSource.getBuffer(RenderType.entityGlint());
-            modelToUse.renderToBuffer(poseStack, glintBuffer, packedLight, packedOverlay);
+    private void enchanting_overhauled$extractBookMetadata(
+            LecternBlockEntity blockEntity,
+            LecternRenderState state,
+            float partialTick,
+            Vec3 cameraPosition,
+            ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
+            CallbackInfo ci
+    ) {
+        if (state instanceof LecternRenderStateAccessor accessor) {
+            ItemStack stack = blockEntity.getBook();
+            int bookKind = LecternRenderStateAccessor.BOOK_KIND_DEFAULT;
+            if (stack.is(Items.ENCHANTED_TOME.get())) {
+                bookKind = LecternRenderStateAccessor.BOOK_KIND_ENCHANTED_TOME;
+            } else if (stack.is(net.minecraft.world.item.Items.ENCHANTED_BOOK) || stack.is(Items.ENCHANTED_PAGE.get())) {
+                bookKind = LecternRenderStateAccessor.BOOK_KIND_ENCHANTED_BOOK;
+            }
+            accessor.enchanting_overhauled$setBookKind(bookKind);
+            accessor.enchanting_overhauled$setHasFoil(stack.hasFoil());
         }
     }
 
     @WrapOperation(
-            method = "render",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/Material;buffer(Lnet/minecraft/client/renderer/MultiBufferSource;Ljava/util/function/Function;)Lcom/mojang/blaze3d/vertex/VertexConsumer;")
+            method = "submit(Lnet/minecraft/client/renderer/blockentity/state/LecternRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
+            )
     )
-    private VertexConsumer wrapBuffer(Material instance, MultiBufferSource bufferSource, Function<ResourceLocation, RenderType> renderType, Operation<VertexConsumer> original, LecternBlockEntity blockEntity) {
-        Material materialToUse = this.enchanting_overhauled$getMaterial(blockEntity, instance);
-        return materialToUse.buffer(bufferSource, RenderType::entityCutout);
+    @SuppressWarnings("unchecked")
+    private <S> void enchanting_overhauled$wrapSubmitModel(
+            SubmitNodeCollector collector,
+            Model<? super S> model,
+            S modelState,
+            PoseStack poseStack,
+            RenderType renderType,
+            int packedLight,
+            int packedOverlay,
+            int tintedColor,
+            TextureAtlasSprite sprite,
+            int outlineColor,
+            ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
+            Operation<Void> original,
+            @Local(argsOnly = true) LecternRenderState renderState
+    ) {
+        Model<? super S> modelToUse = model;
+        RenderType renderTypeToUse = renderType;
+        TextureAtlasSprite spriteToUse = sprite;
+        boolean hasFoil = false;
+
+        if (renderState instanceof LecternRenderStateAccessor accessor) {
+            int bookKind = accessor.enchanting_overhauled$getBookKind();
+            hasFoil = accessor.enchanting_overhauled$hasFoil();
+            Material materialToUse = null;
+            if (bookKind == LecternRenderStateAccessor.BOOK_KIND_ENCHANTED_TOME) {
+                modelToUse = (Model<? super S>) (BookModel) this.enchanting_overhauled$enchantedTomeModel;
+                materialToUse = ClientConstants.ENCHANTED_TOME_MATERIAL;
+            } else if (bookKind == LecternRenderStateAccessor.BOOK_KIND_ENCHANTED_BOOK) {
+                modelToUse = (Model<? super S>) (BookModel) this.enchanting_overhauled$enchantedBookModel;
+                materialToUse = ClientConstants.ENCHANTED_BOOK_MATERIAL;
+            }
+            if (materialToUse != null) {
+                renderTypeToUse = materialToUse.renderType(RenderType::entityCutout);
+                spriteToUse = this.materials.get(materialToUse);
+            }
+        }
+
+        original.call(collector, modelToUse, modelState, poseStack, renderTypeToUse, packedLight, packedOverlay, tintedColor, spriteToUse, outlineColor, crumblingOverlay);
+
+        if (hasFoil) {
+            collector.order(1).submitModel(modelToUse, modelState, poseStack, RenderType.entityGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor, crumblingOverlay);
+        }
     }
 }
