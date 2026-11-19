@@ -8,14 +8,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 
 public final class ForgeMenuTypes {
     private static final DeferredRegister<MenuType<?>> MENU_TYPES =
             DeferredRegister.create(Registries.MENU, Constants.MOD_ID);
 
-    public static void initialize(IEventBus eventBus) {
+    public static void initialize(BusGroup eventBus) {
         MENU_TYPES.register(
                 MenuTypes.ENCHANT.getSerializedName(),
                 () -> MenuTypes.ENCHANT.build(new MenuType<>(EnchantmentMenu::new, FeatureFlags.DEFAULT_FLAGS))

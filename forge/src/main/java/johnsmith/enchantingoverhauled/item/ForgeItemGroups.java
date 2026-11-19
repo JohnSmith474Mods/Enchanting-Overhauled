@@ -7,7 +7,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -37,9 +37,9 @@ public final class ForgeItemGroups {
         }
     }
 
-    public static void initialize(IEventBus eventBus) {
+    public static void initialize(BusGroup eventBus) {
         CREATIVE_MODE_TABS.register(eventBus);
-        eventBus.addListener(ForgeItemGroups::onBuildCreativeTabs);
+        BuildCreativeModeTabContentsEvent.getBus(eventBus).addListener(ForgeItemGroups::onBuildCreativeTabs);
     }
 
     private ForgeItemGroups() {}

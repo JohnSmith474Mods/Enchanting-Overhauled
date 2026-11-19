@@ -18,7 +18,7 @@ import johnsmith.enchantingoverhauled.client.gui.sound.scribe.ScribeSoundEffectS
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -178,9 +178,9 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
         ScribeGameState state = this.menu.getGridData().getGameState();
 
         if (state == ScribeGameState.LOST || state == ScribeGameState.WON) {
-            Component msg = state == ScribeGameState.WON ? Component.translatable("gui.enchanting_overhauled.scribe.success").withColor(0x00FF00) : Component.translatable("gui.enchanting_overhauled.scribe.failed").withColor(0xFF0000);
+            Component msg = state == ScribeGameState.WON ? Component.translatable("gui.enchanting_overhauled.scribe.success").withColor(0xFF00FF00) : Component.translatable("gui.enchanting_overhauled.scribe.failed").withColor(0xFFFF0000);
             int textWidth = this.font.width(msg);
-            guiGraphics.drawString(this.font, msg, this.leftPos + (this.imageWidth / 2) - (textWidth / 2), this.topPos + 5, 0xFFFFFF, true);
+            guiGraphics.drawString(this.font, msg, this.leftPos + (this.imageWidth / 2) - (textWidth / 2), this.topPos + 5, 0xFFFFFFFF, true);
         }
 
         // Render hovered enchantment tooltip
@@ -204,9 +204,9 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
 
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderType::guiTextured, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
         ResourceLocation innerBg = this.menu.getGridData().isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
-        guiGraphics.blit(RenderType::guiTextured, innerBg, this.leftPos + 4, this.topPos + 17, 0, 0, 165, 85, 165, 85);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, innerBg, this.leftPos + 4, this.topPos + 17, 0, 0, 165, 85, 165, 85);
 
         ScribeGameState state = this.menu.getGridData().getGameState();
 
@@ -225,10 +225,10 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
         }
 
         if (!this.menu.getSlot(0).hasItem()) {
-            guiGraphics.blit(RenderType::guiTextured, EMPTY_SLOT_SOURCE_TEXTURE, this.leftPos + 8, this.topPos + 108, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, EMPTY_SLOT_SOURCE_TEXTURE, this.leftPos + 8, this.topPos + 108, 0, 0, 16, 16, 16, 16);
         }
         if (!this.menu.getSlot(1).hasItem()) {
-            guiGraphics.blit(RenderType::guiTextured, EMPTY_SLOT_FUEL_TEXTURE, this.leftPos + 26, this.topPos + 108, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, EMPTY_SLOT_FUEL_TEXTURE, this.leftPos + 26, this.topPos + 108, 0, 0, 16, 16, 16, 16);
         }
 
         if (this.actionWidget != null) {

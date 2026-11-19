@@ -6,7 +6,7 @@ import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +68,7 @@ public class ScribeActionWidget {
 
         ResourceLocation texture = affordable ? (this.isHovered ? ScribeActionWidgetTheme.TEX_HIGHLIGHTED : ScribeActionWidgetTheme.TEX_ENABLED) : ScribeActionWidgetTheme.TEX_DISABLED;
 
-        guiGraphics.blit(RenderType::guiTextured, texture, x, y, 0, 0, width, height, width, height);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0, 0, width, height, width, height);
 
         Component text = this.theme.textProvider().apply(this.gridData);
 
@@ -93,7 +93,7 @@ public class ScribeActionWidget {
             MutableComponent lapisText = cost == 1 ? Component.translatable("container.enchant.lapis.one") : Component.translatable("container.enchant.lapis.many", cost);
             tooltip.add(lapisText.withStyle(canAfford ? ChatFormatting.GRAY : ChatFormatting.RED).getVisualOrderText());
 
-            guiGraphics.renderTooltip(font, tooltip, mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(font, tooltip, mouseX, mouseY);
         }
     }
 }

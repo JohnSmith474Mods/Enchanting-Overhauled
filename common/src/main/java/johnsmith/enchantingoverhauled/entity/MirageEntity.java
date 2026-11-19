@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -24,6 +25,10 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkSource;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -159,7 +164,7 @@ public class MirageEntity extends Mob {
 
         List<MirageEntity> spawnedMirages = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            MirageEntity mirage = Entities.MIRAGE.<MirageEntity>get().create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
+            MirageEntity mirage = johnsmith.enchantingoverhauled.entity.Entities.MIRAGE.<MirageEntity>get().create(serverLevel, EntitySpawnReason.MOB_SUMMONED);
             if (mirage == null) {
                 continue;
             }
@@ -404,8 +409,9 @@ public class MirageEntity extends Mob {
 
     private void updateCasterVisualSnapshot(Entity caster) {
         try {
-            CompoundTag tag = new CompoundTag();
-            caster.saveWithoutId(tag);
+            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, caster.registryAccess());
+            caster.saveWithoutId(output);
+            CompoundTag tag = output.buildResult();
             tag.remove("Pos");
             tag.remove("Motion");
             tag.remove("Rotation");
@@ -775,13 +781,13 @@ public class MirageEntity extends Mob {
         if (this.clientVisualProxy == null || !rawType.equals(this.clientVisualProxyType)) {
             this.clientVisualProxyType = rawType;
             Optional<EntityType<?>> typeOpt = EntityType.byString(rawType);
-            if (typeOpt.isPresent() && typeOpt.get() != Entities.MIRAGE.get()) {
+            if (typeOpt.isPresent() && typeOpt.get() != johnsmith.enchantingoverhauled.entity.Entities.MIRAGE.get()) {
                 Entity created = typeOpt.get().create(level, EntitySpawnReason.MOB_SUMMONED);
                 if (created != null && !(created instanceof MirageEntity)) {
                     CompoundTag snapshot = this.getCasterDataSnapshot();
                     if (!snapshot.isEmpty()) {
                         try {
-                            created.load(snapshot);
+                            created.load(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), snapshot));
                         } catch (Exception ignored) {
                         }
                     }
@@ -900,35 +906,35 @@ public class MirageEntity extends Mob {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.storeNullable("CasterUUID", UUIDUtil.CODEC, this.getCasterUuid().orElse(null));
-        compound.putString("CasterType", this.getCasterTypeString());
-        compound.put("CasterData", this.getCasterDataSnapshot().copy());
-        compound.putInt("MirageIndex", this.getMirageIndex());
-        compound.putInt("MirageTotal", this.getMirageTotal());
-        compound.putInt("MaxLifetimeTicks", this.maxLifetimeTicks);
-        compound.putFloat("OrbitRadius", this.getOrbitRadius());
-        compound.putFloat("CasterWidth", this.getSyncedWidth());
-        compound.putFloat("CasterHeight", this.getSyncedHeight());
-        compound.putFloat("CasterEyeHeight", this.getSyncedEyeHeight());
-        compound.putBoolean("FormationInitialized", this.formationInitialized);
+    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.storeNullable("CasterUUID", UUIDUtil.CODEC, this.getCasterUuid().orElse(null));
+        output.putString("CasterType", this.getCasterTypeString());
+        output.store("CasterData", CompoundTag.CODEC, this.getCasterDataSnapshot().copy());
+        output.putInt("MirageIndex", this.getMirageIndex());
+        output.putInt("MirageTotal", this.getMirageTotal());
+        output.putInt("MaxLifetimeTicks", this.maxLifetimeTicks);
+        output.putFloat("OrbitRadius", this.getOrbitRadius());
+        output.putFloat("CasterWidth", this.getSyncedWidth());
+        output.putFloat("CasterHeight", this.getSyncedHeight());
+        output.putFloat("CasterEyeHeight", this.getSyncedEyeHeight());
+        output.putBoolean("FormationInitialized", this.formationInitialized);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        compound.read("CasterUUID", UUIDUtil.CODEC).ifPresent(this::setCasterUuid);
-        compound.getString("CasterType").ifPresent(type -> this.entityData.set(DATA_CASTER_TYPE, type));
-        compound.getCompound("CasterData").ifPresent(data -> this.entityData.set(DATA_CASTER_DATA, data));
-        compound.getInt("MirageIndex").ifPresent(this::setMirageIndex);
-        compound.getInt("MirageTotal").ifPresent(this::setMirageTotal);
-        this.maxLifetimeTicks = compound.getIntOr("MaxLifetimeTicks", this.maxLifetimeTicks);
-        compound.getFloat("OrbitRadius").ifPresent(this::setOrbitRadius);
-        compound.getFloat("CasterWidth").ifPresent(width -> this.entityData.set(DATA_CASTER_WIDTH, width));
-        compound.getFloat("CasterHeight").ifPresent(height -> this.entityData.set(DATA_CASTER_HEIGHT, height));
-        compound.getFloat("CasterEyeHeight").ifPresent(eyeHeight -> this.entityData.set(DATA_CASTER_EYE_HEIGHT, eyeHeight));
-        this.formationInitialized = compound.getBooleanOr("FormationInitialized", false);
+    protected void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.read("CasterUUID", UUIDUtil.CODEC).ifPresent(this::setCasterUuid);
+        input.getString("CasterType").ifPresent(type -> this.entityData.set(DATA_CASTER_TYPE, type));
+        input.read("CasterData", CompoundTag.CODEC).ifPresent(data -> this.entityData.set(DATA_CASTER_DATA, data));
+        input.getInt("MirageIndex").ifPresent(this::setMirageIndex);
+        input.getInt("MirageTotal").ifPresent(this::setMirageTotal);
+        this.maxLifetimeTicks = input.getIntOr("MaxLifetimeTicks", this.maxLifetimeTicks);
+        this.setOrbitRadius(input.getFloatOr("OrbitRadius", this.getOrbitRadius()));
+        this.entityData.set(DATA_CASTER_WIDTH, input.getFloatOr("CasterWidth", this.getSyncedWidth()));
+        this.entityData.set(DATA_CASTER_HEIGHT, input.getFloatOr("CasterHeight", this.getSyncedHeight()));
+        this.entityData.set(DATA_CASTER_EYE_HEIGHT, input.getFloatOr("CasterEyeHeight", this.getSyncedEyeHeight()));
+        this.formationInitialized = input.getBooleanOr("FormationInitialized", false);
         this.refreshDimensions();
     }
 }

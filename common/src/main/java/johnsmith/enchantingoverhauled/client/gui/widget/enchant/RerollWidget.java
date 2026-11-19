@@ -12,7 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -110,18 +110,18 @@ public class RerollWidget {
 
         if (rerollEnabled) {
             if (this.isHovered) {
-                context.blit(RenderType::guiTextured, REROLL_HIGHLIGHTED_TEXTURE, x, y, 0, 0, layout.rerollButtonWidth(), layout.rerollButtonHeight(), layout.rerollButtonWidth(), layout.rerollButtonHeight());
+                context.blit(RenderPipelines.GUI_TEXTURED, REROLL_HIGHLIGHTED_TEXTURE, x, y, 0, 0, layout.rerollButtonWidth(), layout.rerollButtonHeight(), layout.rerollButtonWidth(), layout.rerollButtonHeight());
             } else {
-                context.blit(RenderType::guiTextured, REROLL_TEXTURE, x, y, 0, 0, layout.rerollButtonWidth(), layout.rerollButtonHeight(), layout.rerollButtonWidth(), layout.rerollButtonHeight());
+                context.blit(RenderPipelines.GUI_TEXTURED, REROLL_TEXTURE, x, y, 0, 0, layout.rerollButtonWidth(), layout.rerollButtonHeight(), layout.rerollButtonWidth(), layout.rerollButtonHeight());
             }
             if (costIndex < ENABLED_LEVEL_SPRITES.length) {
-                context.blitSprite(RenderType::guiTextured, ENABLED_LEVEL_SPRITES[costIndex], x + layout.rerollCostXOffset(), y + layout.rerollCostYOffset(), layout.rerollCostWidth(), layout.rerollCostHeight());
+                context.blitSprite(RenderPipelines.GUI_TEXTURED, ENABLED_LEVEL_SPRITES[costIndex], x + layout.rerollCostXOffset(), y + layout.rerollCostYOffset(), layout.rerollCostWidth(), layout.rerollCostHeight());
             }
         } else {
-            context.blit(RenderType::guiTextured, REROLL_DISABLED_TEXTURE, x, y, 0, 0, layout.rerollButtonWidth(), layout.rerollButtonHeight(), layout.rerollButtonWidth(), layout.rerollButtonHeight());
+            context.blit(RenderPipelines.GUI_TEXTURED, REROLL_DISABLED_TEXTURE, x, y, 0, 0, layout.rerollButtonWidth(), layout.rerollButtonHeight(), layout.rerollButtonWidth(), layout.rerollButtonHeight());
             boolean showDisabledCost = !targetIsEmpty && targetIsEnchantable && canReroll;
             if (showDisabledCost && costIndex < DISABLED_LEVEL_SPRITES.length) {
-                context.blitSprite(RenderType::guiTextured, DISABLED_LEVEL_SPRITES[costIndex], x + layout.rerollCostXOffset(), y + layout.rerollCostYOffset(), layout.rerollCostWidth(), layout.rerollCostHeight());
+                context.blitSprite(RenderPipelines.GUI_TEXTURED, DISABLED_LEVEL_SPRITES[costIndex], x + layout.rerollCostXOffset(), y + layout.rerollCostYOffset(), layout.rerollCostWidth(), layout.rerollCostHeight());
             }
         }
     }
@@ -173,7 +173,7 @@ public class RerollWidget {
                     }
                 }
             }
-            context.renderTooltip(font, list, mouseX, mouseY);
+            context.setTooltipForNextFrame(font, list, mouseX, mouseY);
             return true;
         }
         return false;

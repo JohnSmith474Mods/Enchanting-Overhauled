@@ -128,11 +128,11 @@ public final class AdminSchoolValidator {
      * the formatted chat alert if any datapack school assignment issues exist.
      */
     public static void validateAndAlertPlayer(ServerPlayer player) {
-        if (player == null || !player.hasPermissions(2)) {
+        if (player == null || player.getServer() == null || !player.hasPermissions(2)) {
             return;
         }
 
-        ValidationReport report = evaluate(player.server.registryAccess());
+        ValidationReport report = evaluate(player.getServer().registryAccess());
         if (!report.hasIssues()) {
             return;
         }

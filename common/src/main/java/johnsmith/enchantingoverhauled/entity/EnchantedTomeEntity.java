@@ -43,6 +43,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -373,22 +375,22 @@ public class EnchantedTomeEntity extends AbstractFlyingBookEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("BoredomTicks", this.boredomTicks);
-        compound.putInt("AltarDeceptionTicks", this.altarDeceptionTicks);
-        compound.putBoolean("AltarDeceptionActive", this.altarDeceptionCountdownActive);
-        compound.putInt("AltarAbandonCooldown", this.altarAbandonCooldown);
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putInt("BoredomTicks", this.boredomTicks);
+        output.putInt("AltarDeceptionTicks", this.altarDeceptionTicks);
+        output.putBoolean("AltarDeceptionActive", this.altarDeceptionCountdownActive);
+        output.putInt("AltarAbandonCooldown", this.altarAbandonCooldown);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
         this.setPersistenceRequired();
-        this.boredomTicks = compound.getIntOr("BoredomTicks", 0);
-        this.altarDeceptionTicks = compound.getIntOr("AltarDeceptionTicks", this.altarDeceptionTicks);
-        this.altarDeceptionCountdownActive = compound.getBooleanOr("AltarDeceptionActive", false);
-        this.altarAbandonCooldown = compound.getIntOr("AltarAbandonCooldown", 0);
+        this.boredomTicks = input.getIntOr("BoredomTicks", 0);
+        this.altarDeceptionTicks = input.getIntOr("AltarDeceptionTicks", this.altarDeceptionTicks);
+        this.altarDeceptionCountdownActive = input.getBooleanOr("AltarDeceptionActive", false);
+        this.altarAbandonCooldown = input.getIntOr("AltarAbandonCooldown", 0);
     }
 
     @Override

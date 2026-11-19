@@ -1,14 +1,13 @@
 package johnsmith.enchantingoverhauled.loot;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 
 public final class ForgeLootInjector {
 
     public static void initialize() {
-        MinecraftForge.EVENT_BUS.addListener(ForgeLootInjector::onServerStarted);
-        MinecraftForge.EVENT_BUS.addListener(ForgeLootInjector::onDatapackSync);
+        ServerStartedEvent.BUS.addListener(ForgeLootInjector::onServerStarted);
+        OnDatapackSyncEvent.BUS.addListener(ForgeLootInjector::onDatapackSync);
     }
 
     private static void onServerStarted(ServerStartedEvent event) {

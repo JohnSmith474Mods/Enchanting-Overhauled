@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.EnchantingTableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -74,30 +76,27 @@ public abstract class EnchantingTableBlockEntityMixin extends BlockEntity implem
     }
 
     /**
-     * Writes the stored tome item stack to the NBT compound tag.
+     * Writes the stored tome item stack to the value output stream.
      *
-     * @param tag        The NBT compound tag.
-     * @param registries The registry access provider.
-     * @param ci         The callback info.
+     * @param output The value output stream.
+     * @param ci     The callback info.
      */
     @Inject(method = "saveAdditional", at = @At("TAIL"))
-    private void serializeTomeStack(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
+    private void serializeTomeStack(ValueOutput output, CallbackInfo ci) {
         if (!this.enchanting_overhauled$tomeStack.isEmpty()) {
-            tag.put("enchanting_overhauled:tome_stack", this.enchanting_overhauled$tomeStack.save(registries));
+            output.store("enchanting_overhauled:tome_stack", ItemStack.CODEC, this.enchanting_overhauled$tomeStack);
         }
     }
 
     /**
-     * Reads the stored tome item stack from the NBT compound tag.
+     * Reads the stored tome item stack from the value input stream.
      *
-     * @param tag        The NBT compound tag.
-     * @param registries The registry access provider.
-     * @param ci         The callback info.
+     * @param input The value input stream.
+     * @param ci    The callback info.
      */
     @Inject(method = "loadAdditional", at = @At("TAIL"))
-    private void deserializeTomeStack(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
-        this.enchanting_overhauled$tomeStack = tag.getCompound("enchanting_overhauled:tome_stack")
-                .flatMap(tomeTag -> ItemStack.parse(registries, tomeTag))
+    private void deserializeTomeStack(ValueInput input, CallbackInfo ci) {
+        this.enchanting_overhauled$tomeStack = input.read("enchanting_overhauled:tome_stack", ItemStack.CODEC)
                 .orElse(ItemStack.EMPTY);
     }
 

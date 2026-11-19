@@ -49,6 +49,8 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import org.jetbrains.annotations.Nullable;
@@ -275,23 +277,23 @@ public class EnchantedBookEntity extends AbstractFlyingBookEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.storeNullable("CommanderUUID", UUIDUtil.CODEC, this.getCommanderUuid().orElse(null));
-        compound.putInt("DeescalationTimer", this.deescalationTimer);
-        compound.putBoolean("EngagedInCombat", this.engagedInCombat);
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.storeNullable("CommanderUUID", UUIDUtil.CODEC, this.getCommanderUuid().orElse(null));
+        output.putInt("DeescalationTimer", this.deescalationTimer);
+        output.putBoolean("EngagedInCombat", this.engagedInCombat);
         if (this.homeShelfPos != null) {
-            compound.putLong("HomeShelfPos", this.homeShelfPos.asLong());
+            output.putLong("HomeShelfPos", this.homeShelfPos.asLong());
         }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.setCommanderUuid(compound.read("CommanderUUID", UUIDUtil.CODEC).orElse(null));
-        this.deescalationTimer = compound.getIntOr("DeescalationTimer", this.deescalationTimer);
-        this.engagedInCombat = compound.getBooleanOr("EngagedInCombat", false);
-        this.homeShelfPos = compound.getLong("HomeShelfPos").map(BlockPos::of).orElse(null);
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.setCommanderUuid(input.read("CommanderUUID", UUIDUtil.CODEC).orElse(null));
+        this.deescalationTimer = input.getIntOr("DeescalationTimer", this.deescalationTimer);
+        this.engagedInCombat = input.getBooleanOr("EngagedInCombat", false);
+        this.homeShelfPos = input.getLong("HomeShelfPos").map(BlockPos::of).orElse(null);
     }
 
     @Override

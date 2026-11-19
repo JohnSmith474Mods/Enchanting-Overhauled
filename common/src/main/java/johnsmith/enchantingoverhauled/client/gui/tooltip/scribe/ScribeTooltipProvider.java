@@ -57,6 +57,6 @@ public class ScribeTooltipProvider {
             }
         };
 
-        guiGraphics.renderTooltip(font, tooltip, positioner, mouseX, mouseY);
+        guiGraphics.setTooltipForNextFrame(font, tooltip, positioner, mouseX, mouseY, false);
     }
 }

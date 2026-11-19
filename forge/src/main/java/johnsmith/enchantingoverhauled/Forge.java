@@ -24,16 +24,20 @@ import johnsmith.enchantingoverhauled.structure.ForgeStructureTypes;
 import johnsmith.enchantingoverhauled.structure.processor.ForgeStructureProcessors;
 
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.AddPackFindersEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.DataPackRegistryEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 @Mod(Constants.MOD_ID)
 public class Forge {
     public Forge(FMLJavaModLoadingContext context) {
-        IEventBus eventBus = context.getModEventBus();
+        BusGroup eventBus = context.getModBusGroup();
 
         // Config init
         Config.MANAGER.init(FMLPaths.CONFIGDIR.get());
@@ -53,20 +57,20 @@ public class Forge {
         ForgeLootInjector.initialize();
         ForgeNetworkRegistry.initialize();
         ForgeServer.initialize();
-        eventBus.addListener(ForgeAttributes::initialize);
-        eventBus.addListener(ForgeLootItemConditionTypes::initialize);
-        eventBus.addListener(ForgeLootItemFunctionTypes::initialize);
-        eventBus.addListener(ForgeLevelBasedValues::initialize);
-        eventBus.addListener(ForgeEnchantmentEffectComponents::initialize);
-        eventBus.addListener(ForgeSpellFieldEffects::initialize);
-        eventBus.addListener(ForgeSimpleParticleTypes::initialize);
-        eventBus.addListener(ForgeRegistries::initialize);
+        EntityAttributeCreationEvent.getBus(eventBus).addListener(ForgeAttributes::initialize);
+        RegisterEvent.getBus(eventBus).addListener(ForgeLootItemConditionTypes::initialize);
+        RegisterEvent.getBus(eventBus).addListener(ForgeLootItemFunctionTypes::initialize);
+        RegisterEvent.getBus(eventBus).addListener(ForgeLevelBasedValues::initialize);
+        RegisterEvent.getBus(eventBus).addListener(ForgeEnchantmentEffectComponents::initialize);
+        RegisterEvent.getBus(eventBus).addListener(ForgeSpellFieldEffects::initialize);
+        RegisterEvent.getBus(eventBus).addListener(ForgeSimpleParticleTypes::initialize);
+        DataPackRegistryEvent.NewRegistry.getBus(eventBus).addListener(ForgeRegistries::initialize);
 
         // Register data packs
-        eventBus.addListener(ForgeDataPacks::registerBuiltInDataPacks);
+        AddPackFindersEvent.getBus(eventBus).addListener(ForgeDataPacks::registerBuiltInDataPacks);
 
         // Register resource packs
-        eventBus.addListener(ForgeResourcePacks::registerBuiltInResourcePacks);
+        AddPackFindersEvent.getBus(eventBus).addListener(ForgeResourcePacks::registerBuiltInResourcePacks);
 
         // Client init
         if (FMLEnvironment.dist == Dist.CLIENT) {

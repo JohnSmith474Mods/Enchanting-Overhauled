@@ -85,7 +85,7 @@ public class ScribePageWidget {
         boolean obfuscate = this.shouldObfuscate();
 
         Component title = Component.translatable(this.isSource ? "gui.enchanting_overhauled.scribe.source" : (this.menu.getGridData().isTome() ? "gui.enchanting_overhauled.scribe.contents" : "gui.enchanting_overhauled.scribe.index"));
-        guiGraphics.drawString(font, title.copy().withStyle(Style.EMPTY.withColor(0x555555)), this.leftX, this.topY - 11, 0, false);
+        guiGraphics.drawString(font, title.copy().withStyle(Style.EMPTY.withColor(0xFF555555)), this.leftX, this.topY - 11, 0xFF000000, false);
 
         List<Map.Entry<Holder<Enchantment>, Integer>> list = this.getDisplayEnchantments();
         List<PageLine> lines = this.buildPageLines(list, obfuscate);
@@ -118,12 +118,12 @@ public class ScribePageWidget {
 
             if (i == 0 && canScrollUp) {
                 Component dots = Component.literal("\u2022 ").withColor(0xFF555555);
-                guiGraphics.drawString(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0, false);
+                guiGraphics.drawString(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0xFF000000, false);
                 continue;
             }
             if (i == visibleLines - 1 && canScrollDown) {
                 Component dots = Component.literal("\u2022 ").withColor(0xFF555555);
-                guiGraphics.drawString(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0, false);
+                guiGraphics.drawString(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0xFF000000, false);
                 continue;
             }
 
@@ -149,7 +149,7 @@ public class ScribePageWidget {
             }
 
             int bulletWidth = font.width(line.bullet());
-            guiGraphics.drawString(font, line.bullet(), this.leftX, y, 0xFFFFFF, false);
+            guiGraphics.drawString(font, line.bullet(), this.leftX, y, 0xFFFFFFFF, false);
 
             this.drawScrollingString(guiGraphics, font, line.name(), this.leftX + bulletWidth, y, this.leftX + maxWidth, y + itemHeight);
         }
@@ -298,7 +298,7 @@ public class ScribePageWidget {
             MutableComponent name = UIFormattingUtil.formatEnchantmentName(entry.getKey(), entry.getValue(), obfuscate, themeColoring, levelColoring, showFirstLevel);
             boolean available = !this.isSource || this.isEnchantmentAvailable(entry.getKey(), entry.getValue());
 
-            Style baseStyle = Style.EMPTY.withColor(available ? 0x333333 : 0xAA0000);
+            Style baseStyle = Style.EMPTY.withColor(available ? 0xFF333333 : 0xFFAA0000);
             Component bullet = Component.literal("  ").withStyle(baseStyle);
 
             if (!available) {
@@ -351,10 +351,10 @@ public class ScribePageWidget {
             double offset = net.minecraft.util.Mth.lerp(scrollPos, 0.0D, (double) overflow);
 
             guiGraphics.enableScissor(minX, minY, maxX, maxY);
-            guiGraphics.drawString(font, text, minX - (int) offset, minY, 0xFFFFFF, false);
+            guiGraphics.drawString(font, text, minX - (int) offset, minY, 0xFFFFFFFF, false);
             guiGraphics.disableScissor();
         } else {
-            guiGraphics.drawString(font, text, minX, minY, 0xFFFFFF, false);
+            guiGraphics.drawString(font, text, minX, minY, 0xFFFFFFFF, false);
         }
     }
 }

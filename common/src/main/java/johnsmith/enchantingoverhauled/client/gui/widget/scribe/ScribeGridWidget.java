@@ -6,7 +6,7 @@ import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGridData;
 import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -146,20 +146,20 @@ public class ScribeGridWidget {
                     // Mask the text underneath by cleanly redrawing the pristine background snippet
                     int u = 7 + (x * CELL_SIZE);
                     int v = 4 + (y * CELL_SIZE);
-                    guiGraphics.blit(RenderType::guiTextured, innerBg, screenX, screenY, u, v, CELL_SIZE, CELL_SIZE, 165, 85);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, innerBg, screenX, screenY, u, v, CELL_SIZE, CELL_SIZE, 165, 85);
 
                     this.drawCellBorder(guiGraphics, screenX, screenY, unrevealedColor);
 
                     if (isFlagged) {
-                        guiGraphics.blit(RenderType::guiTextured, RUNE_SEAL_TEXTURE, screenX, screenY, 0, 0, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, RUNE_SEAL_TEXTURE, screenX, screenY, 0, 0, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     }
                 } else {
                     this.drawCellBorder(guiGraphics, screenX, screenY, revealedColor);
 
                     if (hasMine) {
-                        guiGraphics.blit(RenderType::guiTextured, RUNE_DEATH_TEXTURE, screenX, screenY, 0, 0, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, RUNE_DEATH_TEXTURE, screenX, screenY, 0, 0, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     } else if (adj > 0 && adj <= 8) {
-                        guiGraphics.blit(RenderType::guiTextured, RUNE_TEXTURES[adj - 1], screenX, screenY, 0, 0, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, RUNE_TEXTURES[adj - 1], screenX, screenY, 0, 0, CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     }
                 }
 

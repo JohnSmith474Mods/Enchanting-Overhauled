@@ -105,7 +105,7 @@ public sealed interface EnchantTooltip permits
             list.add(UIFormattingUtil.formatEnchantmentName(ctx.enchantment(), ctx.level(), false, getThemeColoring(), getLevelColoring(), getShowFirstLevel()).getVisualOrderText());
             list.addAll(UIFormattingUtil.formatEnchantmentDescription(ctx.enchantment(), ctx.level(), false, getThemeColoring(), getLevelColoring()).stream().map(Component::getVisualOrderText).toList());
 
-            context.renderTooltip(ctx.font(), list, mouseX, mouseY);
+            context.setTooltipForNextFrame(ctx.font(), list, mouseX, mouseY);
             return true;
         }
     }
@@ -126,7 +126,7 @@ public sealed interface EnchantTooltip permits
             list.addAll(UIFormattingUtil.formatEnchantmentDescription(ctx.enchantment(), ctx.level() + 1, false, getThemeColoring(), getLevelColoring()).stream().map(Component::getVisualOrderText).toList());
             drawTooltipCost(list, ctx);
 
-            context.renderTooltip(ctx.font(), list, mouseX, mouseY);
+            context.setTooltipForNextFrame(ctx.font(), list, mouseX, mouseY);
             return true;
         }
     }
@@ -147,7 +147,7 @@ public sealed interface EnchantTooltip permits
             list.addAll(UIFormattingUtil.formatEnchantmentDescription(ctx.enchantment(), ctx.level(), false, getThemeColoring(), getLevelColoring()).stream().map(Component::getVisualOrderText).toList());
             drawTooltipCost(list, ctx);
 
-            context.renderTooltip(ctx.font(), list, mouseX, mouseY);
+            context.setTooltipForNextFrame(ctx.font(), list, mouseX, mouseY);
             return true;
         }
     }
@@ -172,7 +172,7 @@ public sealed interface EnchantTooltip permits
             list.addAll(UIFormattingUtil.formatEnchantmentDescription(ctx.enchantment(), ctx.level(), obfuscate, getThemeColoring(), getLevelColoring()).stream().map(Component::getVisualOrderText).toList());
 
             drawTooltipCost(list, ctx);
-            context.renderTooltip(ctx.font(), list, mouseX, mouseY);
+            context.setTooltipForNextFrame(ctx.font(), list, mouseX, mouseY);
             return true;
         }
     }
@@ -209,7 +209,7 @@ public sealed interface EnchantTooltip permits
             }
 
             list.addAll(ctx.font().split(missingSourceText, 200));
-            context.renderTooltip(ctx.font(), list, mouseX, mouseY);
+            context.setTooltipForNextFrame(ctx.font(), list, mouseX, mouseY);
 
             return true;
         }

@@ -1,9 +1,7 @@
 package johnsmith.enchantingoverhauled.mixin.menu;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.api.accessor.AnvilMenuAccessor;
@@ -28,11 +26,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collections;
@@ -40,6 +34,15 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ * Loader-agnostic part of the anvil overhaul.
+ * <p>
+ * This mixin only contains injections whose targets are identical on every loader ({@code mayPickup},
+ * {@code getCost}, {@code onTake}) plus the hook implementations from {@link AnvilMenuAccessor}.
+ * Injections into the vanilla {@code createResult} body are declared per loader because NeoForge moves that body
+ * into {@code createResultInternal}: see {@link AnvilMenuCreateResultMixin} (Fabric/Forge) and
+ * {@code NeoForgeAnvilMenuMixin}.
+ */
 @Mixin(AnvilMenu.class)
 public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAccessor {
 
@@ -81,42 +84,29 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
         }
     }
 
-    // Modify amount of eligible repair items required for item repair (Default is 4).
-    @ModifyConstant(method = "createResult", constant = @Constant(intValue = 4))
-    private int enchanting_overhauled$maxItemCost(int value) {
-        return Config.ANVIL_MAX_ITEM_COST.get();
-    }
-
-    // Modify the repair bonus applied when repairing items (Default is 12).
-    @ModifyConstant(method = "createResult", constant = @Constant(intValue = 12))
-    private int enchanting_overhauled$repairBonus(int value) {
-        return Config.ANVIL_REPAIR_BONUS.get();
-    }
-
-    // Modify the "Too Expensive!" xp cost when repairing items (Default is 40).
-    @ModifyConstant(method = "createResult", constant = @Constant(intValue = 40))
-    private int enchanting_overhauled$modifyTooExpensiveXpCost(int value) {
-        return Config.ANVIL_MAX_XP_COST.get();
-    }
-
-    // Modify the max xp cost when repairing items (Default is 39).
-    @ModifyConstant(method = "createResult", constant = @Constant(intValue = 39))
-    private int enchanting_overhauled$modifyMaxXpCost(int value) {
-        return Config.ANVIL_MAX_XP_COST.get() - 1;
+    // Prevent persistent Enchantment Storage from being consumed.
+    @WrapOperation(
+            method = "onTake",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V"
+            )
+    )
+    private void enchanting_overhauled$preservePersistentEnchantmentStorage(
+            Container container,
+            int slot,
+            ItemStack itemStack,
+            Operation<Void> operation
+    ) {
+        if ((slot == 1 && itemStack.isEmpty() && !this.inputSlots.getItem(slot).is(Tags.PERSISTENT_ENCHANTMENT_SOURCE))
+                || slot == 0) {
+            operation.call(container, slot, itemStack);
+        }
     }
 
     // Allow items with STORED_ENCHANTMENTS or a valid EnchantRecipe to enter the anvil evaluation pipeline.
-    @ModifyExpressionValue(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;canStoreEnchantments(Lnet/minecraft/world/item/ItemStack;)Z"
-            )
-    )
-    private boolean enchanting_overhauled$canStoreOrTransmuteEnchantments(
-            boolean original,
-            @Local(ordinal = 0) ItemStack target
-    ) {
+    @Override
+    public boolean enchanting_overhauled$canStoreOrTransmuteEnchantments(boolean original, ItemStack target) {
         this.enchanting_overhauled$activeRecipe = null;
         if (target.isEmpty()) {
             return false;
@@ -137,12 +127,8 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
     }
 
     // Transmute the working result copy (itemstack1) when an EnchantRecipe is active.
-    @ModifyVariable(
-            method = "createResult",
-            at = @At(value = "STORE", ordinal = 0),
-            ordinal = 1
-    )
-    private ItemStack enchanting_overhauled$applyEnchantRecipeTarget(ItemStack itemstack1) {
+    @Override
+    public ItemStack enchanting_overhauled$applyEnchantRecipeTarget(ItemStack itemstack1) {
         EnchantRecipe recipe = this.enchanting_overhauled$activeRecipe;
         if (recipe == null) {
             return itemstack1;
@@ -165,8 +151,8 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
     }
 
     // Disallow using stored enchantment sources (books/pages/tomes) when ENABLE_ANVIL_ENCHANTING is false.
-    @ModifyVariable(method = "createResult", at = @At("STORE"), ordinal = 2)
-    private ItemStack enchanting_overhauled$disallowEnchantedBooks(ItemStack itemStack) {
+    @Override
+    public ItemStack enchanting_overhauled$disallowEnchantedBooks(ItemStack itemStack) {
         if (this.inputSlots.getItem(1).has(DataComponents.STORED_ENCHANTMENTS) && !Config.ENABLE_ANVIL_ENCHANTING.get()) {
             return ItemStack.EMPTY;
         }
@@ -174,18 +160,8 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
     }
 
     // Prevent Creative mode (hasInfiniteMaterials) from bypassing canEnchant on raw unenchantable items (like plain books).
-    @ModifyExpressionValue(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/player/Player;hasInfiniteMaterials()Z",
-                    ordinal = 0
-            )
-    )
-    private boolean enchanting_overhauled$restrictInstabuildArbitraryEnchanting(
-            boolean instabuild,
-            @Local(ordinal = 1) ItemStack workingStack
-    ) {
+    @Override
+    public boolean enchanting_overhauled$restrictInstabuildArbitraryEnchanting(boolean instabuild, ItemStack workingStack) {
         if (!instabuild) {
             return false;
         }
@@ -196,66 +172,19 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
         return workingStack.has(DataComponents.STORED_ENCHANTMENTS) || workingStack.isEnchantable();
     }
 
-    // Prevent persistent Enchantment Storage from being consumed.
-    @WrapOperation(
-            method = "onTake",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V"
-            )
-    )
-    private void enchanting_overhauled$preservePersistentEnchantmentStorage(
-            Container container,
-            int slot,
-            ItemStack itemStack,
-            Operation<Void> operation
-    ) {
-        if ((slot == 1 && itemStack.isEmpty() && !this.inputSlots.getItem(slot).is(Tags.PERSISTENT_ENCHANTMENT_SOURCE))
-                || slot == 0) {
-            operation.call(container, slot, itemStack);
-        }
-    }
-
-    @ModifyExpressionValue(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentsForCrafting(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/enchantment/ItemEnchantments;",
-                    ordinal = 0
-            )
-    )
-    private ItemEnchantments enchanting_overhauled$allowTargetEnchantmentLib(
-            ItemEnchantments original,
-            @Local(ordinal = 1) ItemStack workingStack
-    ) {
+    @Override
+    public ItemEnchantments enchanting_overhauled$allowTargetEnchantmentLib(ItemStack workingStack) {
         return EnchantmentLib.getEnchantments(workingStack);
     }
 
-    @ModifyExpressionValue(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentsForCrafting(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/enchantment/ItemEnchantments;",
-                    ordinal = 1
-            )
-    )
-    private ItemEnchantments enchanting_overhauled$allowEnchantRecipeInput(ItemEnchantments original) {
+    @Override
+    public ItemEnchantments enchanting_overhauled$allowEnchantRecipeInput() {
         return EnchantmentLib.getEnchantments(this.inputSlots.getItem(1));
     }
 
     // Preserve overleveled enchantments from either target or source without allowing further level increments above maxLevel.
-    @ModifyExpressionValue(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/enchantment/Enchantment;getMaxLevel()I"
-            )
-    )
-    private int enchanting_overhauled$allowExceededMaxLevel(
-            int original,
-            @Local Holder<Enchantment> holder,
-            @Local(ordinal = 1) ItemStack workingStack
-    ) {
+    @Override
+    public int enchanting_overhauled$allowExceededMaxLevel(int original, Holder<Enchantment> holder, ItemStack workingStack) {
         ItemStack sourceItem = this.inputSlots.getItem(1);
         int sourceLevel = EnchantmentLib.getEnchantments(sourceItem).getLevel(holder);
         int targetLevel = EnchantmentLib.getEnchantments(workingStack).getLevel(holder);
@@ -264,14 +193,8 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
 
     // Write merged enchantments to STORED_ENCHANTMENTS for Tomes, Pages, Enchanted Books, and STORED recipes,
     // or strip them for VOID recipes, avoiding duplicate STORED_ENCHANTMENTS + ENCHANTMENTS components.
-    @WrapOperation(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;setEnchantments(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/enchantment/ItemEnchantments;)V"
-            )
-    )
-    private void enchanting_overhauled$setEnchantmentsInCorrectComponent(
+    @Override
+    public void enchanting_overhauled$setEnchantmentsInCorrectComponent(
             ItemStack stack,
             ItemEnchantments enchantments,
             Operation<Void> original
@@ -292,14 +215,8 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
     }
 
     // Cancel no-op / redundant anvil combinations (e.g., when both target and source are already at or above maxLevel).
-    @Inject(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/inventory/AnvilMenu;broadcastChanges()V"
-            )
-    )
-    private void enchanting_overhauled$preventRedundantEnchanting(CallbackInfo ci) {
+    @Override
+    public void enchanting_overhauled$preventRedundantEnchanting() {
         this.enchanting_overhauled$activeRecipe = null;
         ItemStack target = this.inputSlots.getItem(0);
         ItemStack source = this.inputSlots.getItem(1);
@@ -337,8 +254,8 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAc
     }
 
     // Disallow combining enchantments from the second input item when ENABLE_ANVIL_ENCHANTING is false.
-    @ModifyVariable(method = "createResult", at = @At("STORE"), ordinal = 0)
-    private Iterator<?> enchanting_overhauled$disallowEnchantmentCombination(Iterator<?> iterator) {
+    @Override
+    public Iterator<?> enchanting_overhauled$disallowEnchantmentCombination(Iterator<?> iterator) {
         if (!Config.ENABLE_ANVIL_ENCHANTING.get()) {
             return Collections.emptyIterator();
         }

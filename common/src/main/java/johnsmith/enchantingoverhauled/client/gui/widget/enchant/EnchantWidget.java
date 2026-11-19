@@ -13,7 +13,7 @@ import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -264,7 +264,7 @@ public sealed abstract class EnchantWidget permits
         protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
             // Fall back to the default table source texture to fill the blank space
             ResourceLocation disabledTex = this.usePlainBackground ? EnchantmentSource.TABLE.disabledTexture : EnchantmentSource.TABLE.getDisabledTexture(this.texIndex);
-            context.blit(RenderType::guiTextured, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
         }
         // endregion
     }
@@ -282,8 +282,8 @@ public sealed abstract class EnchantWidget permits
     public static final class Available extends EnchantWidget {
 
         // region Constants
-        private static final int ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR = 0x80FF20;
-        private static final int ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR = 0x408000;
+        private static final int ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR = 0xFF80FF20;
+        private static final int ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR = 0xFF408000;
         // endregion
 
         // region Initialization
@@ -383,8 +383,8 @@ public sealed abstract class EnchantWidget permits
                 levelSprite = ENABLED_LEVEL_SPRITES[costIndex];
             }
 
-            context.blit(RenderType::guiTextured, textureToDraw, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
-            context.blitSprite(RenderType::guiTextured, levelSprite, this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
+            context.blit(RenderPipelines.GUI_TEXTURED, textureToDraw, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blitSprite(RenderPipelines.GUI_TEXTURED, levelSprite, this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
 
             MutableComponent displayComponent = this.getFormattedEnchantmentName(source);
 
@@ -404,10 +404,10 @@ public sealed abstract class EnchantWidget permits
             int powerTextX = textX + this.layout.powerXOffset() - font.width(powerString);
             int powerTextY = this.y + this.layout.powerYOffset();
 
-            context.drawString(font, powerString, powerTextX + 1, powerTextY, 0, false);
-            context.drawString(font, powerString, powerTextX - 1, powerTextY, 0, false);
-            context.drawString(font, powerString, powerTextX, powerTextY + 1, 0, false);
-            context.drawString(font, powerString, powerTextX, powerTextY - 1, 0, false);
+            context.drawString(font, powerString, powerTextX + 1, powerTextY, 0xFF000000, false);
+            context.drawString(font, powerString, powerTextX - 1, powerTextY, 0xFF000000, false);
+            context.drawString(font, powerString, powerTextX, powerTextY + 1, 0xFF000000, false);
+            context.drawString(font, powerString, powerTextX, powerTextY - 1, 0xFF000000, false);
             context.drawString(font, powerString, powerTextX, powerTextY, powerColor, false);
             context.drawString(font, powerString, powerTextX, powerTextY, powerColor, true);
         }
@@ -427,7 +427,7 @@ public sealed abstract class EnchantWidget permits
     public static final class Locked extends EnchantWidget {
 
         // region Constants
-        private static final int ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR = 0x408000;
+        private static final int ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR = 0xFF408000;
         // endregion
 
         // region Initialization
@@ -472,14 +472,14 @@ public sealed abstract class EnchantWidget permits
         protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
             EnchantmentSource source = this.state.visualSource();
             ResourceLocation disabledTex = this.usePlainBackground ? source.disabledTexture : source.getDisabledTexture(this.texIndex);
-            context.blit(RenderType::guiTextured, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             if (this.state.enchantment().isEmpty()) {
                 return;
             }
 
             int costIndex = Math.max(0, this.state.xpCost() - 1);
-            context.blitSprite(RenderType::guiTextured, DISABLED_LEVEL_SPRITES[costIndex], this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
+            context.blitSprite(RenderPipelines.GUI_TEXTURED, DISABLED_LEVEL_SPRITES[costIndex], this.x + this.layout.costXOffset(), this.y + this.layout.costYOffset(), this.layout.costWidth(), this.layout.costHeight());
 
             Minecraft minecraft = Minecraft.getInstance();
             Font font = minecraft.font;
@@ -502,10 +502,10 @@ public sealed abstract class EnchantWidget permits
             int powerTextX = textX + this.layout.powerXOffset() - font.width(powerString);
             int powerTextY = this.y + this.layout.powerYOffset();
 
-            context.drawString(font, powerString, powerTextX + 1, powerTextY, 0, false);
-            context.drawString(font, powerString, powerTextX - 1, powerTextY, 0, false);
-            context.drawString(font, powerString, powerTextX, powerTextY + 1, 0, false);
-            context.drawString(font, powerString, powerTextX, powerTextY - 1, 0, false);
+            context.drawString(font, powerString, powerTextX + 1, powerTextY, 0xFF000000, false);
+            context.drawString(font, powerString, powerTextX - 1, powerTextY, 0xFF000000, false);
+            context.drawString(font, powerString, powerTextX, powerTextY + 1, 0xFF000000, false);
+            context.drawString(font, powerString, powerTextX, powerTextY - 1, 0xFF000000, false);
             context.drawString(font, powerString, powerTextX, powerTextY, ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR, false);
             context.drawString(font, powerString, powerTextX, powerTextY, ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR, true);
         }
@@ -525,7 +525,7 @@ public sealed abstract class EnchantWidget permits
 
         // region Constants
         private static final ResourceLocation ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/maxed_out.png");
-        private static final int ENCHANTMENT_MAXED_OUT_TEXT_COLOR = 0xF2F09D;
+        private static final int ENCHANTMENT_MAXED_OUT_TEXT_COLOR = 0xFFF2F09D;
         // endregion
 
         // region Initialization
@@ -571,7 +571,7 @@ public sealed abstract class EnchantWidget permits
             if (this.state.enchantment().isEmpty()) {
                 return;
             }
-            context.blit(RenderType::guiTextured, ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_SLOT_MAXED_OUT_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             MutableComponent displayComponent = this.getFormattedEnchantmentName(EnchantmentSource.NONE);
             Style maxedStyle = Style.EMPTY.withColor(ENCHANTMENT_MAXED_OUT_TEXT_COLOR);
@@ -605,7 +605,7 @@ public sealed abstract class EnchantWidget permits
 
         // region Constants
         private static final ResourceLocation ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/button/over_enchanted.png");
-        private static final int ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR = 0x4D2299;
+        private static final int ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR = 0xFF4D2299;
         // endregion
 
         // region Initialization
@@ -651,7 +651,7 @@ public sealed abstract class EnchantWidget permits
             if (this.state.enchantment().isEmpty()) {
                 return;
             }
-            context.blit(RenderType::guiTextured, ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
+            context.blit(RenderPipelines.GUI_TEXTURED, ENCHANTMENT_SLOT_OVER_ENCHANTED_TEXTURE, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
 
             MutableComponent displayComponent = this.getFormattedEnchantmentName(EnchantmentSource.NONE);
             Style overleveledStyle = Style.EMPTY.withColor(ENCHANTMENT_OVER_ENCHANTED_TEXT_COLOR);

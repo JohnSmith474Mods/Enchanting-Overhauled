@@ -22,8 +22,8 @@ public class PlayerListMixin {
 
     @Inject(method = "placeNewPlayer", at = @At("TAIL"))
     private void enchanting_overhauled$onPlayerLogin(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
-        if (player != null && player.server != null) {
-            ArcaneItemNamingUtil.setServerRegistryAccess(player.server.registryAccess());
+        if (player != null && player.getServer() != null) {
+            ArcaneItemNamingUtil.setServerRegistryAccess(player.getServer().registryAccess());
             AdminSchoolValidator.validateAndAlertPlayer(player);
         }
     }

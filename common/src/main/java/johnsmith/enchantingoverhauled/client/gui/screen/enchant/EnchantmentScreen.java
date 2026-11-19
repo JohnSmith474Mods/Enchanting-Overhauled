@@ -20,7 +20,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -50,7 +50,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
     private static final ResourceLocation EMPTY_SLOT_SOURCE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/enchanting_table/slot/source.png");
 
     private static final int SCREEN_ORIGINAL_HEIGHT = 166;
-    private static final int ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR = 0x80FF20;
+    private static final int ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR = 0xFF80FF20;
     // endregion
 
     // region Fields
@@ -234,16 +234,16 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
         int alignX = this.leftPos;
         int alignY = this.topPos;
 
-        context.blit(RenderType::guiTextured, BACKGROUND_TEXTURE, alignX, alignY, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        context.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, alignX, alignY, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
         if (!this.menu.getSlot(0).hasItem()) {
-            context.blit(RenderType::guiTextured, EMPTY_SLOT_TARGET_TEXTURE, alignX + this.menu.getSlot(0).x, alignY + this.menu.getSlot(0).y, 0, 0, 16, 16, 16, 16);
+            context.blit(RenderPipelines.GUI_TEXTURED, EMPTY_SLOT_TARGET_TEXTURE, alignX + this.menu.getSlot(0).x, alignY + this.menu.getSlot(0).y, 0, 0, 16, 16, 16, 16);
         }
         if (!this.menu.getSlot(1).hasItem()) {
-            context.blit(RenderType::guiTextured, EMPTY_SLOT_FUEL_TEXTURE, alignX + this.menu.getSlot(1).x, alignY + this.menu.getSlot(1).y, 0, 0, 16, 16, 16, 16);
+            context.blit(RenderPipelines.GUI_TEXTURED, EMPTY_SLOT_FUEL_TEXTURE, alignX + this.menu.getSlot(1).x, alignY + this.menu.getSlot(1).y, 0, 0, 16, 16, 16, 16);
         }
         if (!this.menu.getSlot(2).hasItem()) {
-            context.blit(RenderType::guiTextured, EMPTY_SLOT_SOURCE_TEXTURE, alignX + this.menu.getSlot(2).x, alignY + this.menu.getSlot(2).y, 0, 0, 16, 16, 16, 16);
+            context.blit(RenderPipelines.GUI_TEXTURED, EMPTY_SLOT_SOURCE_TEXTURE, alignX + this.menu.getSlot(2).x, alignY + this.menu.getSlot(2).y, 0, 0, 16, 16, 16, 16);
         }
 
         for (EnchantWidget widget : this.enchantmentWidgets) {
@@ -270,8 +270,8 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      */
     @Override
     protected void renderLabels(final GuiGraphics graphics, final int mouseX, final int mouseY) {
-        graphics.drawString(font, title, titleLabelX, titleLabelY, 4210752, false);
-        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + this.layout.screenHeightAdjustment(), 4210752, false);
+        graphics.drawString(font, title, titleLabelX, titleLabelY, 0xFF404040, false);
+        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + this.layout.screenHeightAdjustment(), 0xFF404040, false);
     }
 
     /**
@@ -363,13 +363,13 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
         int barX = alignX + this.layout.experienceBarXOffset();
         int barY = alignY + this.layout.experienceBarYOffset();
 
-        context.blit(RenderType::guiTextured, EXPERIENCE_BAR_INACTIVE, barX, barY, 0, 0, this.layout.experienceBarWidth(), this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
+        context.blit(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_INACTIVE, barX, barY, 0, 0, this.layout.experienceBarWidth(), this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
 
         float progress = this.minecraft.player.experienceProgress;
         int activeWidth = (int) (progress * (float) this.layout.experienceBarWidth());
 
         if (activeWidth > 0) {
-            context.blit(RenderType::guiTextured, EXPERIENCE_BAR_ACTIVE, barX, barY, 0, 0, activeWidth, this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
+            context.blit(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_ACTIVE, barX, barY, 0, 0, activeWidth, this.layout.experienceBarHeight(), this.layout.experienceBarWidth(), this.layout.experienceBarHeight());
         }
 
         int playerLevel = this.minecraft.player.experienceLevel;
@@ -377,7 +377,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
             String levelString = "" + playerLevel;
             int textX = barX + (this.layout.experienceBarWidth() / 2) - (this.font.width(levelString) / 2);
             int textY = alignY + this.layout.experienceBarYOffset() - 6;
-            int outlineColor = 0;
+            int outlineColor = 0xFF000000;
 
             context.drawString(this.font, levelString, textX + 1, textY, outlineColor, false);
             context.drawString(this.font, levelString, textX - 1, textY, outlineColor, false);

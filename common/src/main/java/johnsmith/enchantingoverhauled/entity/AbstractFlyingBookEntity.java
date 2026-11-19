@@ -76,6 +76,8 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -778,54 +780,52 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putString("Theme", this.getThemeKey().location().toString());
-        compound.putString("School", this.getSchoolKey().location().toString());
-        compound.putBoolean("BookInitialized", this.bookInitialized);
-        compound.putInt("AngerTime", this.getAngerTime());
-        compound.putInt("BarterCooldown", this.barterCooldown);
-        compound.storeNullable("AngryAt", UUIDUtil.CODEC, this.angryAt);
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putString("Theme", this.getThemeKey().location().toString());
+        output.putString("School", this.getSchoolKey().location().toString());
+        output.putBoolean("BookInitialized", this.bookInitialized);
+        output.putInt("AngerTime", this.getAngerTime());
+        output.putInt("BarterCooldown", this.barterCooldown);
+        output.storeNullable("AngryAt", UUIDUtil.CODEC, this.angryAt);
         BlockPos roost = this.getRoostPos();
         if (roost != null) {
-            compound.putLong("RoostPos", roost.asLong());
+            output.putLong("RoostPos", roost.asLong());
         }
         if (!this.getBarterFuel().isEmpty()) {
-            compound.put("BarterFuel", this.getBarterFuel().save(this.registryAccess()));
+            output.store("BarterFuel", ItemStack.CODEC, this.getBarterFuel());
         }
         if (!this.getBarterCatalyst().isEmpty()) {
-            compound.put("BarterCatalyst", this.getBarterCatalyst().save(this.registryAccess()));
+            output.store("BarterCatalyst", ItemStack.CODEC, this.getBarterCatalyst());
         }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        compound.getString("Theme").ifPresent(themeStr -> {
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.getString("Theme").ifPresent(themeStr -> {
             ResourceLocation themeLoc = ResourceLocation.tryParse(themeStr);
             if (themeLoc != null) {
                 this.setThemeKey(ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, themeLoc));
             }
         });
-        compound.getString("School").ifPresent(schoolStr -> {
+        input.getString("School").ifPresent(schoolStr -> {
             ResourceLocation schoolLoc = ResourceLocation.tryParse(schoolStr);
             if (schoolLoc != null) {
                 this.setSchoolKey(ResourceKey.create(MagicSchools.REGISTRY_KEY, schoolLoc));
             }
         });
-        this.bookInitialized = compound.getBooleanOr("BookInitialized", false);
-        this.setAngerTime(compound.getIntOr("AngerTime", 0));
-        this.barterCooldown = compound.getIntOr("BarterCooldown", 0);
-        this.angryAt = compound.read("AngryAt", UUIDUtil.CODEC).orElse(null);
-        this.setRoostPos(compound.getLong("RoostPos").map(BlockPos::of).orElse(null));
+        this.bookInitialized = input.getBooleanOr("BookInitialized", false);
+        this.setAngerTime(input.getIntOr("AngerTime", 0));
+        this.barterCooldown = input.getIntOr("BarterCooldown", 0);
+        this.angryAt = input.read("AngryAt", UUIDUtil.CODEC).orElse(null);
+        this.setRoostPos(input.getLong("RoostPos").map(BlockPos::of).orElse(null));
         this.setBarterFuel(
-                compound.getCompound("BarterFuel")
-                        .flatMap(tag -> ItemStack.parse(this.registryAccess(), tag))
+                input.read("BarterFuel", ItemStack.CODEC)
                         .orElse(ItemStack.EMPTY)
         );
         this.setBarterCatalyst(
-                compound.getCompound("BarterCatalyst")
-                        .flatMap(tag -> ItemStack.parse(this.registryAccess(), tag))
+                input.read("BarterCatalyst", ItemStack.CODEC)
                         .orElse(ItemStack.EMPTY)
         );
         this.setDropChance(EquipmentSlot.MAINHAND, this.getMainHandDropChance());

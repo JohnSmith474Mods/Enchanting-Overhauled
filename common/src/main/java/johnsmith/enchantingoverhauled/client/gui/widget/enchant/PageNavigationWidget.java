@@ -7,7 +7,7 @@ import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 
@@ -99,7 +99,7 @@ public class PageNavigationWidget {
         if (canGoBack) {
             prevTex = this.isPrevHovered ? PAGE_BACKWARD_HIGHLIGHTED_TEXTURE : PAGE_BACKWARD_TEXTURE;
         }
-        context.blit(RenderType::guiTextured, prevTex, prevX, prevY, 0, 0, layout.backwardButtonWidth(), layout.backwardButtonHeight(), layout.backwardButtonWidth(), layout.backwardButtonHeight());
+        context.blit(RenderPipelines.GUI_TEXTURED, prevTex, prevX, prevY, 0, 0, layout.backwardButtonWidth(), layout.backwardButtonHeight(), layout.backwardButtonWidth(), layout.backwardButtonHeight());
 
         // --- Forward Button (>) ---
         int nextX = alignX + layout.forwardXOffset();
@@ -111,7 +111,7 @@ public class PageNavigationWidget {
         if (canGoForward) {
             nextTex = this.isNextHovered ? PAGE_FORWARD_HIGHLIGHTED_TEXTURE : PAGE_FORWARD_TEXTURE;
         }
-        context.blit(RenderType::guiTextured, nextTex, nextX, nextY, 0, 0, layout.forwardButtonWidth(), layout.forwardButtonHeight(), layout.forwardButtonWidth(), layout.forwardButtonHeight());
+        context.blit(RenderPipelines.GUI_TEXTURED, nextTex, nextX, nextY, 0, 0, layout.forwardButtonWidth(), layout.forwardButtonHeight(), layout.forwardButtonWidth(), layout.forwardButtonHeight());
     }
 
     /**

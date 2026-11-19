@@ -9,14 +9,12 @@ import johnsmith.enchantingoverhauled.api.tag.Tags;
 import johnsmith.enchantingoverhauled.api.damagesource.DamageTypes;
 import johnsmith.enchantingoverhauled.api.enchantment.spellfield.AiSpellField;
 import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
-import johnsmith.enchantingoverhauled.entity.Entities;
 import johnsmith.enchantingoverhauled.entity.MirageEntity;
 
 import johnsmith.enchantmentcore.api.enchantment.spellfield.SpellFieldComponent;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -33,6 +31,8 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -68,7 +68,7 @@ public class MagicMissileEntity extends ThrowableProjectile {
             Optional<AiSpellField.AnchorPayload> anchorPayload,
             ItemStack weapon
     ) {
-        super(Entities.MAGIC_MISSILE.get(), level);
+        super(johnsmith.enchantingoverhauled.entity.Entities.MAGIC_MISSILE.get(), level);
         this.setNoGravity(true);
         this.spellField = spellField;
         this.anchorPayload = anchorPayload != null ? anchorPayload : Optional.empty();
@@ -141,36 +141,34 @@ public class MagicMissileEntity extends ThrowableProjectile {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putString("Theme", this.getThemeKey().location().toString());
-        compound.putString("School", this.getSchoolKey().location().toString());
-        compound.putBoolean("Crit", this.isCrit());
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putString("Theme", this.getThemeKey().location().toString());
+        output.putString("School", this.getSchoolKey().location().toString());
+        output.putBoolean("Crit", this.isCrit());
         if (!this.weapon.isEmpty()) {
-            compound.put("Weapon", this.weapon.save(this.registryAccess()));
+            output.store("Weapon", ItemStack.CODEC, this.weapon);
         }
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
         this.setNoGravity(true);
-        compound.getString("Theme").ifPresent(themeStr -> {
+        input.getString("Theme").ifPresent(themeStr -> {
             ResourceLocation loc = ResourceLocation.tryParse(themeStr);
             if (loc != null) {
                 this.setThemeKey(ResourceKey.create(EnchantmentThemes.THEME_REGISTRY_KEY, loc));
             }
         });
-        compound.getString("School").ifPresent(schoolStr -> {
+        input.getString("School").ifPresent(schoolStr -> {
             ResourceLocation loc = ResourceLocation.tryParse(schoolStr);
             if (loc != null) {
                 this.setSchoolKey(ResourceKey.create(MagicSchools.REGISTRY_KEY, loc));
             }
         });
-        compound.getBoolean("Crit").ifPresent(this::setCrit);
-        compound.getCompound("Weapon").ifPresent(tag ->
-                this.weapon = ItemStack.parse(this.registryAccess(), tag).orElse(ItemStack.EMPTY)
-        );
+        this.setCrit(input.getBooleanOr("Crit", false));
+        this.weapon = input.read("Weapon", ItemStack.CODEC).orElse(ItemStack.EMPTY);
     }
 
     public boolean isHeadshot(Entity target, EntityHitResult result) {

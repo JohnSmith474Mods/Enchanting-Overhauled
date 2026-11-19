@@ -112,7 +112,7 @@ public class UIFormattingUtil {
     public static int getColor(Holder<Enchantment> enchantment, ColoringMode mode) {
         if (enchantment.is(EnchantmentTags.CURSE) && mode == ColoringMode.ENCHANTMENT) {
             Integer color = ChatFormatting.RED.getColor();
-            return color != null ? color : 0xFF0000;
+            return color != null ? color : 0xFFFF0000;
         }
 
         Minecraft client = Minecraft.getInstance();
@@ -123,7 +123,7 @@ public class UIFormattingUtil {
             if (themeRegistry.isPresent()) {
                 var theme = themeRegistry.get().get(themeKey);
                 if (theme.isPresent() && theme.get().value().colorCode().isPresent()) {
-                    return theme.get().value().colorCode().get();
+                    return theme.get().value().colorCode().get() | 0xFF000000;
                 }
             }
         }
@@ -142,7 +142,7 @@ public class UIFormattingUtil {
         }
 
         Integer color = getFormattingForLevel(level, enchantment.value().definition()).getColor();
-        return color != null ? color : 0xFFAAAAAA;
+        return color != null ? color | 0xFF000000 : 0xFFAAAAAA;
     }
 
     /**
