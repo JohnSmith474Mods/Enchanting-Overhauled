@@ -376,9 +376,9 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
     }
 
     @Override
-    public @NotNull ItemStack getCloneItemStack(LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+    protected @NotNull ItemStack getCloneItemStack(LevelReader levelReader, @NotNull BlockPos blockPos, @NotNull BlockState blockState, boolean includeData) {
         if (Config.ENABLE_MINEABLE_ENCHANTING_TABLE.get()) {
-            return super.getCloneItemStack(levelReader, blockPos, blockState);
+            return super.getCloneItemStack(levelReader, blockPos, blockState, includeData);
         }
 
         BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);

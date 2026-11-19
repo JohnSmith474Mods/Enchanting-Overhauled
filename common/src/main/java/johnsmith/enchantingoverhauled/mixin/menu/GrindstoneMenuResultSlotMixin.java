@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(targets = "net.minecraft.world.inventory.GrindstoneMenu$4")
 public class GrindstoneMenuResultSlotMixin {
 
-    @Inject(method = "getExperienceFromItem", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getExperienceFromItem(Lnet/minecraft/world/item/ItemStack;)I", at = @At("HEAD"), cancellable = true)
     private void enchanting_overhauled$calculateCustomXp(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         // Interfere only if the item uses STORED_ENCHANTMENTS but isn't a vanilla book
         if (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.is(Items.ENCHANTED_BOOK)) {

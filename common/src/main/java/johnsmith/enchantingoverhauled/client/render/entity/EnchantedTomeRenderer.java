@@ -9,8 +9,8 @@ import johnsmith.enchantingoverhauled.client.render.entity.model.FlyingBookEntit
 import johnsmith.enchantingoverhauled.entity.EnchantedTomeEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +19,7 @@ public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, Flyi
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/entity/enchanted_tome.png");
 
-    private final ItemRenderer itemRenderer;
+    private final ItemModelResolver itemModelResolver;
     private final EnchantedBookModel bookModel;
 
     public EnchantedTomeRenderer(EntityRendererProvider.Context context) {
@@ -28,7 +28,7 @@ public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, Flyi
                 new FlyingBookEntityModel<>(new EnchantedBookModel(context.bakeLayer(ClientConstants.ENCHANTED_TOME_LAYER))),
                 0.3F
         );
-        this.itemRenderer = context.getItemRenderer();
+        this.itemModelResolver = context.getItemModelResolver();
         this.bookModel = (EnchantedBookModel) this.model.getInternalModel();
         this.addLayer(new EntityGlintLayer<>(this));
     }
@@ -61,7 +61,7 @@ public class EnchantedTomeRenderer extends MobRenderer<EnchantedTomeEntity, Flyi
             super.render(state, poseStack, buffer, packedLight);
         }
         if (state.entity != null) {
-            EnchantedBookRenderer.renderOrbitingBarterItems(state.entity, this.itemRenderer, state.partialTick, poseStack, buffer, packedLight);
+            EnchantedBookRenderer.renderOrbitingBarterItems(state.entity, this.itemModelResolver, state.partialTick, poseStack, buffer, packedLight);
         }
     }
 

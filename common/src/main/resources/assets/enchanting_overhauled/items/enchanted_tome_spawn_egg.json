@@ -1,0 +1,16 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "enchanting_overhauled:item/enchanted_tome_spawn_egg",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -13295058
+      },
+      {
+        "type": "minecraft:constant",
+        "value": -11722087
+      }
+    ]
+  }
+}

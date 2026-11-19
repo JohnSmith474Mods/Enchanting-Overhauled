@@ -4,7 +4,7 @@ Enchanting Overhauled is a comprehensive magic progression overhaul for Minecraf
 
 While primarily a gameplay overhaul rather than a standalone library, Enchanting Overhauled exposes a suite of **data-driven mod registries** alongside **reusable general-purpose worldgen and loot utilities** (such as spatial gradient structure processors, neighbor-updating jigsaw structures, and cross-platform loot table injection). All registries and extensions are governed by [DataFixerUpper](https://github.com/Mojang/DataFixerUpper) (DFU) codecs and can be extended via standard Minecraft datapacks without writing Java code.
 
-## Quickstart Guide 1.21.2 - 1.21.3
+## Quickstart Guide 1.21.4
 
 Welcome to the Enchanting Overhauled Quickstart Guide for add-on and modpack developers!
 

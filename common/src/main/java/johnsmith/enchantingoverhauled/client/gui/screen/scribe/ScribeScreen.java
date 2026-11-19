@@ -35,7 +35,7 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
     private static final ResourceLocation BOOK_BACKGROUND = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/book_background.png");
     private static final ResourceLocation TOME_BACKGROUND = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/tome_background.png");
     private static final ResourceLocation EMPTY_SLOT_SOURCE_TEXTURE = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "textures/gui/container/scribe/empty_slot_enchanted_page.png");
-    private static final ResourceLocation EMPTY_SLOT_FUEL_TEXTURE = ResourceLocation.withDefaultNamespace("textures/item/empty_slot_lapis_lazuli.png");
+    private static final ResourceLocation EMPTY_SLOT_FUEL_TEXTURE = ResourceLocation.withDefaultNamespace("textures/gui/sprites/container/slot/lapis_lazuli.png");
 
     private ScribeGridWidget gridWidget;
     private ScribeActionWidget actionWidget;

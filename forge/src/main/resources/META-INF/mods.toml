@@ -24,7 +24,7 @@ side = "BOTH"
 modId = "minecraft"
 type = "required"
 mandatory = true
-versionRange = "[${minecraft_version_forge},${minecraft_version_upper_limit})"
+versionRange = "[${minecraft_version},${minecraft_version_upper_limit})"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]

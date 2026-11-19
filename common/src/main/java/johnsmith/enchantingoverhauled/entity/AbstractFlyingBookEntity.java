@@ -768,7 +768,6 @@ public abstract class AbstractFlyingBookEntity extends Monster {
         FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);
         navigation.setCanOpenDoors(false);
         navigation.setCanFloat(true);
-        navigation.setCanPassDoors(true);
         // Cap 3D A* node expansion to 25% of vanilla's FOLLOW_RANGE*16 budget
         navigation.setMaxVisitedNodesMultiplier(0.25F);
         return navigation;

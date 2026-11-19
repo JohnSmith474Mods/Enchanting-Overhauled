@@ -9,14 +9,8 @@ mixin {
     config("${mod_id}.forge.mixins.json")
 }
 
-// Forge does not have a version for 1.21.2, so we are forced to accomodate their version jump to 1.21.3
-base {
-    archivesName = project.mod_name_normalized
-    version = "${rootProject.version}+${project.minecraft_version_forge}-${project.name}"
-}
-
 minecraft {
-    mappings channel: 'official', version: minecraft_version_forge
+    mappings channel: 'official', version: minecraft_version
 
     copyIdeResources = true
     reobf = false
@@ -67,7 +61,7 @@ minecraft {
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version_forge}-${forge_version}"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
     // Add MixinExtras to resolve @WrapOperation and @Local
@@ -78,8 +72,8 @@ dependencies {
 
     // Forge's hack fix
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
-    implementation fg.deobf("maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version_forge}-forge")
-    implementation fg.deobf("johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version_forge}-forge")
+    implementation fg.deobf("maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-forge")
+    implementation fg.deobf("johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-forge")
 }
 
 tasks.named('jar', Jar).configure {

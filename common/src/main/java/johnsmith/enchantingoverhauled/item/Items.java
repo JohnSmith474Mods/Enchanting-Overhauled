@@ -56,8 +56,6 @@ public enum Items implements StringRepresentable {
             Entities.ENCHANTED_TOME.getSerializedName() + "_spawn_egg",
             properties -> new SpawnEggItem(
                     Entities.ENCHANTED_TOME.get(),
-                    0x35222E,
-                    0x4D2299,
                     properties
             ),
             new Item.Properties()
@@ -66,8 +64,6 @@ public enum Items implements StringRepresentable {
             Entities.ENCHANTED_BOOK.getSerializedName() + "_spawn_egg",
             properties -> new SpawnEggItem(
                     Entities.ENCHANTED_BOOK.get(),
-                    0x44250A,
-                    0xC51339,
                     properties
             ),
             new Item.Properties()
