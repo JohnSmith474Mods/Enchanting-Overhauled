@@ -10,7 +10,7 @@ public final class FabricLootItemConditionTypes {
         for (LootItemConditionTypes conditionType : LootItemConditionTypes.values()) {
             Identifier location = Identifier.fromNamespaceAndPath(Constants.MOD_ID, conditionType.getSerializedName());
             if (!BuiltInRegistries.LOOT_CONDITION_TYPE.containsKey(location)) {
-                Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, location, conditionType.type());
+                Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, location, conditionType.codec());
             }
         }
     }

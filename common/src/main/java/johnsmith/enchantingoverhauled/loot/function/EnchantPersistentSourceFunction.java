@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.List;
@@ -55,7 +54,7 @@ public class EnchantPersistentSourceFunction extends LootItemConditionalFunction
     }
 
     @Override
-    public LootItemFunctionType<EnchantPersistentSourceFunction> getType() {
-        return LootItemFunctionTypes.ENCHANT_PERSISTENT_SOURCE.type();
+    public MapCodec<EnchantPersistentSourceFunction> codec() {
+        return CODEC;
     }
 }

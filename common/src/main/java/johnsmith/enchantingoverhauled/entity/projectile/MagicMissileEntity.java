@@ -203,7 +203,7 @@ public class MagicMissileEntity extends ThrowableProjectile {
         super.onHitEntity(result);
         if (!this.level().isClientSide()) {
             Entity target = result.getEntity();
-            if (!(target instanceof Creeper) && !target.getType().is(Tags.IMMUNE_TO_MAGIC_MISSILE)) {
+            if (!(target instanceof Creeper) && !target.typeHolder().is(Tags.IMMUNE_TO_MAGIC_MISSILE)) {
                 int difficulty = this.level().getDifficulty().getId();
                 if (difficulty > 0) {
                     boolean crit = this.isCrit() || this.isHeadshot(target, result);
@@ -275,7 +275,7 @@ public class MagicMissileEntity extends ThrowableProjectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        if (target.getType().is(Tags.IMMUNE_TO_MAGIC_MISSILE) || target instanceof Creeper) {
+        if (target.typeHolder().is(Tags.IMMUNE_TO_MAGIC_MISSILE) || target instanceof Creeper) {
             return false;
         }
         if (target instanceof MirageEntity mirage && mirage.isCasterOrAlly(this.getOwner())) {

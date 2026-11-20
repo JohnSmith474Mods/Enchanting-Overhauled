@@ -5,7 +5,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGridData;
 import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 
@@ -47,7 +47,7 @@ public class ScribeGridWidget {
         this.topPos = topPos;
     }
 
-    private void drawCellBorder(GuiGraphics guiGraphics, int screenX, int screenY, int color) {
+    private void drawCellBorder(GuiGraphicsExtractor guiGraphics, int screenX, int screenY, int color) {
         // Skip drawing if the color is fully transparent
         if ((color & 0xFF000000) == 0) return;
 
@@ -124,7 +124,7 @@ public class ScribeGridWidget {
         return -1; // Out of bounds
     }
 
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, Font font) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, Font font) {
         int renderStartX = this.leftPos + GRID_START_X;
         int renderStartY = this.topPos + GRID_START_Y;
         Identifier innerBg = this.gridData.isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;

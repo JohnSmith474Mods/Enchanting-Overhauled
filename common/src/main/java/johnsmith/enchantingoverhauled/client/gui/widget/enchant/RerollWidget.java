@@ -11,7 +11,7 @@ import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -85,7 +85,7 @@ public class RerollWidget {
      * @param lapisCount  The available lapis lazuli in the container.
      * @param minecraft   The Minecraft client instance.
      */
-    public void render(GuiGraphics context, int mouseX, int mouseY, float partialTick, int lapisCount, Minecraft minecraft) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick, int lapisCount, Minecraft minecraft) {
         this.isHovered = mouseX >= x && mouseY >= y && mouseX < x + layout.rerollButtonWidth() && mouseY < y + layout.rerollButtonHeight();
         ItemStack target = this.menu.getEnchantmentTarget();
         boolean targetIsEmpty = target.isEmpty();
@@ -137,7 +137,7 @@ public class RerollWidget {
      * @param minecraft  The Minecraft client instance.
      * @return true if the tooltip was drawn, false otherwise.
      */
-    public boolean renderTooltip(GuiGraphics context, int mouseX, int mouseY, Font font, int lapisCount, Minecraft minecraft) {
+    public boolean renderTooltip(GuiGraphicsExtractor context, int mouseX, int mouseY, Font font, int lapisCount, Minecraft minecraft) {
         if (this.isHovered) {
             boolean isCreative = minecraft.player != null && minecraft.player.isCreative();
             ItemStack target = this.menu.getEnchantmentTarget();

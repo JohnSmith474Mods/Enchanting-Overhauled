@@ -20,19 +20,19 @@ public final class NeoForgeItemGroups {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.enchanting_overhauled.enchanting_group"))
                     .icon(() -> new ItemStack(Items.ENCHANTED_TOME.get()))
-                    .displayItems(ItemGroups::displayItems)
+                    .displayItems((params, output) -> ItemGroups.displayItems(params, output::accept))
                     .build()
     );
 
     public static void onBuildCreativeTabs(final BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            ItemGroups.populateIngredients(event.getParameters(), event);
+            ItemGroups.populateIngredients(event.getParameters(), event::accept);
         }
         if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
-            ItemGroups.populateSpawnEggs(event);
+            ItemGroups.populateSpawnEggs(event::accept);
         }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            ItemGroups.populateFunctional(event);
+            ItemGroups.populateFunctional(event::accept);
         }
     }
 

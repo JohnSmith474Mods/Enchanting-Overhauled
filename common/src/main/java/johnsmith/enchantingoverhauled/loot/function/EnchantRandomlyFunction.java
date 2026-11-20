@@ -21,7 +21,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.List;
@@ -95,7 +94,7 @@ public class EnchantRandomlyFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<EnchantRandomlyFunction> getType() {
-        return LootItemFunctionTypes.ENCHANT_RANDOMLY.type();
+    public MapCodec<EnchantRandomlyFunction> codec() {
+        return CODEC;
     }
 }

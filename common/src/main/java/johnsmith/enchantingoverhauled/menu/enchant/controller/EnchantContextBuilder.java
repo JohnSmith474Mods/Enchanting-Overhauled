@@ -586,7 +586,7 @@ public class EnchantContextBuilder {
                     return true;
                 }
 
-                Holder<Block> blockEntry = providerState.getBlockHolder();
+                Holder<Block> blockEntry = providerState.typeHolder();
 
                 for (PowerProvider provider : theme.powerProviders()) {
                     if (provider.blocks().contains(blockEntry)) {

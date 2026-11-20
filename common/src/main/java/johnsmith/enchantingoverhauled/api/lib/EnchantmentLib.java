@@ -79,7 +79,7 @@ public class EnchantmentLib {
             return Config.MAX_ENCHANTING_POWER.get();
         }
 
-        Holder<Block> blockEntry = state.getBlockHolder();
+        Holder<Block> blockEntry = state.typeHolder();
         int maxPower = 0;
 
         Optional<Registry<EnchantmentTheme>> registryOpt = level.registryAccess().lookup(EnchantmentThemes.THEME_REGISTRY_KEY);
@@ -143,7 +143,7 @@ public class EnchantmentLib {
                     if (be instanceof Container inventory) {
                         for (int i = 0; i < inventory.getContainerSize(); i++) {
                             ItemStack stack = inventory.getItem(i);
-                            if (items.contains(stack.getItemHolder())) {
+                            if (items.contains(stack.typeHolder())) {
                                 itemCount += stack.getCount();
                             }
                         }

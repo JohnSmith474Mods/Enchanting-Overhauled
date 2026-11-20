@@ -492,7 +492,11 @@ public abstract class AbstractFlyingBookEntity extends Monster {
 
     public boolean isAngryAt(LivingEntity entity) {
         if (entity == null) return false;
-        if (this.getTarget() == entity) return true;
+        if (this.getTargetUnchecked() == entity
+                && entity.isAlive()
+                && !(entity instanceof Player player && (player.isCreative() || player.isSpectator()))) {
+            return true;
+        }
         return this.isAngry() && entity.getUUID().equals(this.angryAt);
     }
 
@@ -516,15 +520,15 @@ public abstract class AbstractFlyingBookEntity extends Monster {
     }
 
     public boolean isBookAlly(@Nullable Entity entity) {
-        return entity != null && entity.getType().is(Tags.ENCHANTED_TOME_ALLIES);
+        return entity != null && entity.typeHolder().is(Tags.ENCHANTED_TOME_ALLIES);
     }
 
     public boolean isAvoidCollateralEntity(@Nullable Entity entity) {
-        return entity != null && entity.getType().is(Tags.ENCHANTED_TOME_AVOID_COLLATERAL);
+        return entity != null && entity.typeHolder().is(Tags.ENCHANTED_TOME_AVOID_COLLATERAL);
     }
 
     public boolean isNeutralEntity(@Nullable Entity entity) {
-        return entity != null && (entity.getType().is(Tags.ENCHANTED_TOME_NEUTRAL) || this.isAvoidCollateralEntity(entity));
+        return entity != null && (entity.typeHolder().is(Tags.ENCHANTED_TOME_NEUTRAL) || this.isAvoidCollateralEntity(entity));
     }
 
     @Override
@@ -1011,8 +1015,8 @@ public abstract class AbstractFlyingBookEntity extends Monster {
                     this.angryAt = null;
                 }
             }
-            LivingEntity currentTarget = this.getTarget();
-            if (currentTarget != null && (this.isBookAlly(currentTarget) || this.isNeutralEntity(currentTarget) || !this.canAttack(currentTarget))) {
+            LivingEntity currentTarget = this.getTargetUnchecked();
+            if (currentTarget != null && (!currentTarget.isAlive() || this.getTarget() != currentTarget || this.isBookAlly(currentTarget) || this.isNeutralEntity(currentTarget))) {
                 this.setTarget(null);
             }
             if (!this.isRoosting() && state != BookAnimationState.DASHING) {

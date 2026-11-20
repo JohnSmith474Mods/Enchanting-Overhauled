@@ -6,7 +6,7 @@ import johnsmith.enchantingoverhauled.api.config.type.ColoringMode;
 import johnsmith.enchantingoverhauled.api.config.type.FormatApplicationMode;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -26,7 +26,7 @@ public class ScribeTooltipProvider {
     /**
      * Renders the tooltip for a hovered enchantment.
      */
-    public static void renderTooltip(GuiGraphics guiGraphics, Font font, ScribeTooltipContext ctx, int mouseX, int mouseY) {
+    public static void renderTooltip(GuiGraphicsExtractor guiGraphics, Font font, ScribeTooltipContext ctx, int mouseX, int mouseY) {
         List<FormattedCharSequence> tooltip = new ArrayList<>();
 
         FormatApplicationMode mode = Config.SCRIBE_MENU_FORMAT_APPLICATION_MODE.get();

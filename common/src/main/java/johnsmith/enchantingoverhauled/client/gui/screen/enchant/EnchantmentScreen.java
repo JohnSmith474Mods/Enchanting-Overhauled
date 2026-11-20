@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -75,7 +75,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      * @param title           The title component of the screen (typically modified to use the galactic font).
      */
     public EnchantmentScreen(EnchantmentMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, modifyTitle(title));
+        super(menu, playerInventory, modifyTitle(title), 176, SCREEN_ORIGINAL_HEIGHT + MenuLayoutConfig.DEFAULT.screenHeightAdjustment());
     }
 
     /**
@@ -101,7 +101,6 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
     @Override
     protected void init() {
         super.init();
-        this.imageHeight = SCREEN_ORIGINAL_HEIGHT + this.layout.screenHeightAdjustment();
 
         this.rerollWidget = new RerollWidget(this.menu, this.layout, () -> {
             if (this.minecraft != null && this.minecraft.gameMode != null && this.minecraft.player != null) {
@@ -232,7 +231,8 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      * @param mouseY      The current mouse Y coordinate.
      */
     @Override
-    protected void renderBg(GuiGraphics context, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(context, mouseX, mouseY, partialTick);
         int alignX = this.leftPos;
         int alignY = this.topPos;
 
@@ -271,9 +271,9 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      * @param mouseY   The current mouse Y coordinate.
      */
     @Override
-    protected void renderLabels(final GuiGraphics graphics, final int mouseX, final int mouseY) {
-        graphics.drawString(font, title, titleLabelX, titleLabelY, 0xFF404040, false);
-        graphics.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY + this.layout.screenHeightAdjustment(), 0xFF404040, false);
+    protected void extractLabels(final @NotNull GuiGraphicsExtractor graphics, final int mouseX, final int mouseY) {
+        graphics.text(font, title, titleLabelX, titleLabelY, 0xFF404040, false);
+        graphics.text(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0xFF404040, false);
     }
 
     /**
@@ -286,9 +286,8 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      * @param partialTick The partial tick time for animations.
      */
     @Override
-    public void render(@NotNull GuiGraphics context, int mouseX, int mouseY, float partialTick) {
-        super.render(context, mouseX, mouseY, partialTick);
-        this.renderTooltip(context, mouseX, mouseY);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(context, mouseX, mouseY, partialTick);
 
         boolean isCreative = this.minecraft != null && this.minecraft.player != null && this.minecraft.player.isCreative();
         int lapisCount = this.menu.getSlot(1).getItem().getCount();
@@ -363,7 +362,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      * @param alignX  The left screen alignment offset.
      * @param alignY  The top screen alignment offset.
      */
-    private void drawExperienceBar(GuiGraphics context, int alignX, int alignY) {
+    private void drawExperienceBar(GuiGraphicsExtractor context, int alignX, int alignY) {
         if (this.minecraft == null || this.minecraft.player == null) return;
 
         int barX = alignX + this.layout.experienceBarXOffset();
@@ -385,11 +384,11 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
             int textY = alignY + this.layout.experienceBarYOffset() - 6;
             int outlineColor = 0xFF000000;
 
-            context.drawString(this.font, levelString, textX + 1, textY, outlineColor, false);
-            context.drawString(this.font, levelString, textX - 1, textY, outlineColor, false);
-            context.drawString(this.font, levelString, textX, textY + 1, outlineColor, false);
-            context.drawString(this.font, levelString, textX, textY - 1, outlineColor, false);
-            context.drawString(this.font, levelString, textX, textY, ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR, false);
+            context.text(this.font, levelString, textX + 1, textY, outlineColor, false);
+            context.text(this.font, levelString, textX - 1, textY, outlineColor, false);
+            context.text(this.font, levelString, textX, textY + 1, outlineColor, false);
+            context.text(this.font, levelString, textX, textY - 1, outlineColor, false);
+            context.text(this.font, levelString, textX, textY, ENCHANTMENT_ENCHANTMENT_POWER_ENABLED_COLOR, false);
         }
     }
 
@@ -404,7 +403,7 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
      * @param isCreative True if the player is in creative mode (bypasses costs).
      * @return true if a tooltip was successfully drawn, false otherwise.
      */
-    private boolean drawEnchantmentSlotTooltips(GuiGraphics context, int mouseX, int mouseY, int lapisCount, boolean isCreative) {
+    private boolean drawEnchantmentSlotTooltips(GuiGraphicsExtractor context, int mouseX, int mouseY, int lapisCount, boolean isCreative) {
         List<EnchantContext> contexts = this.menu.getActiveContexts();
 
         for (int i = 0; i < this.enchantmentWidgets.size(); i++) {

@@ -4,14 +4,11 @@ import com.mojang.serialization.MapCodec;
 
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Central registry for the custom {@link LootItemFunctionType}s introduced by Enchanting Overhauled.
- * <p>
- * Instantiates each {@link LootItemFunctionType} without eager registration.
+ * Central registry for the custom {@link LootItemFunction} codecs introduced by Enchanting Overhauled.
  */
 public enum LootItemFunctionTypes implements StringRepresentable {
     ENCHANT_RANDOMLY("enchant_randomly", EnchantRandomlyFunction.CODEC),
@@ -21,17 +18,10 @@ public enum LootItemFunctionTypes implements StringRepresentable {
 
     private final String id;
     private final MapCodec<? extends LootItemFunction> codec;
-    private final LootItemFunctionType<? extends LootItemFunction> type;
 
     <T extends LootItemFunction> LootItemFunctionTypes(String id, MapCodec<T> codec) {
         this.id = id;
         this.codec = codec;
-        this.type = new LootItemFunctionType<>(codec);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends LootItemFunction> LootItemFunctionType<T> type() {
-        return (LootItemFunctionType<T>) this.type;
     }
 
     @SuppressWarnings("unchecked")

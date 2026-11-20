@@ -1,24 +1,24 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
 }
 
 repositories {
     maven {
-        url "https://maven.terraformersmc.com/releases/"
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
     }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    modApi "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-fabric"
-    modImplementation "johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-fabric"
+    api "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-fabric"
+    implementation "johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-fabric"
 
-    modImplementation "com.terraformersmc:modmenu:17.0.0"
+    implementation "maven.modrinth:modmenu:18.0.1"
 
     // Explicitly add Night Config for the development environment runtime
     implementation "com.electronwill.night-config:toml:3.8.3"
@@ -29,9 +29,6 @@ loom {
     def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
-    }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
     }
     runs {
         client {
@@ -57,6 +54,21 @@ loom {
     }
 }
 
-publishMods {
-    file = remapJar.archiveFile
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
+    configurations.named("$variant") {
+        attributes {
+            attribute(loaderAttribute, 'fabric')
+        }
+    }
+}
+
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
+        configurations.named("$variant") {
+            attributes {
+                attribute(loaderAttribute, 'fabric')
+            }
+        }
+    }
 }

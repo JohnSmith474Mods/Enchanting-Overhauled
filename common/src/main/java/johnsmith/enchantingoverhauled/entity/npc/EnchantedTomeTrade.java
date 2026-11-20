@@ -12,7 +12,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.entity.npc.villager.VillagerType;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +26,7 @@ import java.util.Optional;
 
 public record EnchantedTomeTrade(
         int xp
-) implements VillagerTrades.ItemListing {
-    @Override
+) {
     public @Nullable MerchantOffer getOffer(ServerLevel level, Entity trader, RandomSource random) {
         if (!(trader instanceof Villager villager)) {
             return null;

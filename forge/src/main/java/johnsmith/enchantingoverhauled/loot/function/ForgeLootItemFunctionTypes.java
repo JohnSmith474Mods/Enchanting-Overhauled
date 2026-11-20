@@ -15,7 +15,7 @@ public final class ForgeLootItemFunctionTypes {
                     event.register(
                             BuiltInRegistries.LOOT_FUNCTION_TYPE.key(),
                             location,
-                            lootFunction::type
+                            lootFunction::codec
                     );
                 }
             }

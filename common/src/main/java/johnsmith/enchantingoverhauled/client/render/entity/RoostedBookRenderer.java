@@ -44,7 +44,7 @@ public final class RoostedBookRenderer {
         double entityY = Mth.lerp(partialTick, entity.yOld, entity.getY());
         double entityZ = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 
-        int blockLight = LevelRenderer.getLightColor(entity.level(), roostPos.above());
+        int blockLight = LevelRenderer.getLightCoords(entity.level(), roostPos.above());
         int overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(entity.hurtTime > 0 || entity.deathTime > 0));
 
         poseStack.pushPose();
@@ -96,12 +96,12 @@ public final class RoostedBookRenderer {
         float leftPageFlip = Mth.clamp(Mth.frac(flip + 0.75F) * 1.6F - 0.3F, 0.0F, 1.0F);
         float openness = Mth.lerp(partialTick, entity.altarOOpen, entity.altarOpen);
 
-        BookModel.State bookState = new BookModel.State(time, rightPageFlip, leftPageFlip, openness);
+        BookModel.State bookState = BookModel.State.forAnimation(time, rightPageFlip, leftPageFlip, openness);
         submitNodeCollector.submitModel(
                 bookModel,
                 bookState,
                 poseStack,
-                RenderTypes.entityCutoutNoCull(texture),
+                RenderTypes.entityCutout(texture),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,
@@ -145,12 +145,12 @@ public final class RoostedBookRenderer {
         poseStack.mulPose(Axis.ZP.rotationDegrees(67.5F));
         poseStack.translate(0.0F, -0.125F, 0.0F);
 
-        BookModel.State bookState = new BookModel.State(0.0F, 0.1F, 0.9F, 1.2F);
+        BookModel.State bookState = BookModel.State.forAnimation(0.0F, 0.1F, 0.9F, 1.2F);
         submitNodeCollector.submitModel(
                 bookModel,
                 bookState,
                 poseStack,
-                RenderTypes.entityCutoutNoCull(texture),
+                RenderTypes.entityCutout(texture),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,

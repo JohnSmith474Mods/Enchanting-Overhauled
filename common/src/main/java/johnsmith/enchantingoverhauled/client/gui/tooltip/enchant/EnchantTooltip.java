@@ -8,7 +8,7 @@ import johnsmith.enchantingoverhauled.api.config.type.ObfuscationLevel;
 import johnsmith.enchantingoverhauled.api.config.type.UpgradeSourceType;
 import johnsmith.enchantmentcore.api.util.RomanNumeralConverter;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -47,7 +47,7 @@ public sealed interface EnchantTooltip permits
      * @param mouseY  The current Y position of the mouse pointer.
      * @return true if the tooltip was rendered, false if this command is empty.
      */
-    boolean render(GuiGraphics context, int mouseX, int mouseY);
+    boolean render(GuiGraphicsExtractor context, int mouseX, int mouseY);
 
     /**
      * Appends standard cost indicators (Lapis and XP level requirements) to the provided formatted sequence list.
@@ -99,7 +99,7 @@ public sealed interface EnchantTooltip permits
      */
     record Maxed(EnchantTooltipContext ctx) implements EnchantTooltip {
         @Override
-        public boolean render(GuiGraphics context, int mouseX, int mouseY) {
+        public boolean render(GuiGraphicsExtractor context, int mouseX, int mouseY) {
             List<FormattedCharSequence> list = new ArrayList<>();
 
             list.add(UIFormattingUtil.formatEnchantmentName(ctx.enchantment(), ctx.level(), false, getThemeColoring(), getLevelColoring(), getShowFirstLevel()).getVisualOrderText());
@@ -118,7 +118,7 @@ public sealed interface EnchantTooltip permits
      */
     record Upgrade(EnchantTooltipContext ctx) implements EnchantTooltip {
         @Override
-        public boolean render(GuiGraphics context, int mouseX, int mouseY) {
+        public boolean render(GuiGraphicsExtractor context, int mouseX, int mouseY) {
             List<FormattedCharSequence> list = new ArrayList<>();
 
             list.add(Component.translatable("gui.enchanting_overhauled.upgrade").withColor(Config.HEADER_COLOR_VALUE.get()).getVisualOrderText());
@@ -139,7 +139,7 @@ public sealed interface EnchantTooltip permits
      */
     record Transfer(EnchantTooltipContext ctx) implements EnchantTooltip {
         @Override
-        public boolean render(GuiGraphics context, int mouseX, int mouseY) {
+        public boolean render(GuiGraphicsExtractor context, int mouseX, int mouseY) {
             List<FormattedCharSequence> list = new ArrayList<>();
 
             list.add(Component.translatable("gui.enchanting_overhauled.transfer").withColor(Config.HEADER_COLOR_VALUE.get()).getVisualOrderText());
@@ -161,7 +161,7 @@ public sealed interface EnchantTooltip permits
      */
     record Apply(EnchantTooltipContext ctx) implements EnchantTooltip {
         @Override
-        public boolean render(GuiGraphics context, int mouseX, int mouseY) {
+        public boolean render(GuiGraphicsExtractor context, int mouseX, int mouseY) {
             List<FormattedCharSequence> list = new ArrayList<>();
             list.add(Component.translatable("gui.enchanting_overhauled.apply").withColor(Config.HEADER_COLOR_VALUE.get()).getVisualOrderText());
 
@@ -186,7 +186,7 @@ public sealed interface EnchantTooltip permits
      */
     record MissingSource(EnchantTooltipContext ctx) implements EnchantTooltip {
         @Override
-        public boolean render(GuiGraphics context, int mouseX, int mouseY) {
+        public boolean render(GuiGraphicsExtractor context, int mouseX, int mouseY) {
             List<FormattedCharSequence> list = new ArrayList<>();
 
             list.add(Component.translatable("gui.enchanting_overhauled.upgrade").withColor(Config.HEADER_COLOR_VALUE.get()).getVisualOrderText());
@@ -222,7 +222,7 @@ public sealed interface EnchantTooltip permits
      */
     record Empty() implements EnchantTooltip {
         @Override
-        public boolean render(GuiGraphics context, int mouseX, int mouseY) {
+        public boolean render(GuiGraphicsExtractor context, int mouseX, int mouseY) {
             return false;
         }
     }

@@ -5,15 +5,15 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.AnchorVisualConfig;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.SpellFieldAnchorEntity;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,7 +111,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
         poseStack.translate(0.0F, 0.02F, 0.0F);
         poseStack.mulPose(Axis.YP.rotationDegrees(-ageInTicks * 2.5F));
 
-        int light = LightTexture.FULL_BRIGHT;
+        int light = LightCoordsUtil.FULL_BRIGHT;
         submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(texture), (pose, consumer) -> {
             consumer.addVertex(pose, -1.0F, 0.0F, -1.0F).setColor(r, g, b, 230).setUv(0.0F, v0).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0.0F, 1.0F, 0.0F);
             consumer.addVertex(pose, -1.0F, 0.0F, 1.0F).setColor(r, g, b, 230).setUv(0.0F, v1).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose, 0.0F, 1.0F, 0.0F);

@@ -10,7 +10,7 @@ public final class FabricLootItemFunctionTypes {
         for (LootItemFunctionTypes lootFunction : LootItemFunctionTypes.values()) {
             Identifier location = Identifier.fromNamespaceAndPath(Constants.MOD_ID, lootFunction.getSerializedName());
             if (!BuiltInRegistries.LOOT_FUNCTION_TYPE.containsKey(location)) {
-                Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, location, lootFunction.type());
+                Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, location, lootFunction.codec());
             }
         }
     }

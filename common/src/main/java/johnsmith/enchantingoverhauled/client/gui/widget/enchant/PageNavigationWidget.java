@@ -6,7 +6,7 @@ import johnsmith.enchantingoverhauled.client.gui.screen.enchant.MenuLayoutConfig
 import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
@@ -83,7 +83,7 @@ public class PageNavigationWidget {
      * @param mouseY      The current mouse Y coordinate.
      * @param partialTick The partial tick time.
      */
-    public void render(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
         int totalEnchants = this.menu.getActiveContexts().size();
         if (totalEnchants <= layout.pageSize()) return;
 

@@ -1,7 +1,7 @@
 package johnsmith.enchantingoverhauled.client.gui.widget.scribe;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
@@ -40,7 +40,7 @@ public class ScribeHazardWidget {
     private List<List<String>> cachedHazardLines = null;
     private int currentSeed = -1;
 
-    public void render(GuiGraphics guiGraphics, Font font, int leftPos, int topPos, int seed) {
+    public void render(GuiGraphicsExtractor guiGraphics, Font font, int leftPos, int topPos, int seed) {
         if (cachedHazardLines == null || currentSeed != seed) {
             generateHazardText(font, seed);
         }
@@ -114,11 +114,11 @@ public class ScribeHazardWidget {
         }
     }
 
-    private void drawJustifiedLine(GuiGraphics guiGraphics, Font font, List<String> words, int x, int y, int maxWidth, int color, Style style) {
+    private void drawJustifiedLine(GuiGraphicsExtractor guiGraphics, Font font, List<String> words, int x, int y, int maxWidth, int color, Style style) {
         if (words.isEmpty()) return;
 
         if (words.size() == 1) {
-            guiGraphics.drawString(font, Component.literal(words.get(0)).withStyle(style), x, y, color, false);
+            guiGraphics.text(font, Component.literal(words.get(0)).withStyle(style), x, y, color, false);
             return;
         }
 
@@ -133,7 +133,7 @@ public class ScribeHazardWidget {
 
         for (int i = 0; i < words.size(); i++) {
             Component wordComp = Component.literal(words.get(i)).withStyle(style);
-            guiGraphics.drawString(font, wordComp, Math.round(currentX), y, color, false);
+            guiGraphics.text(font, wordComp, Math.round(currentX), y, color, false);
             currentX += font.width(wordComp) + spaceWidth;
         }
     }

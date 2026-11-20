@@ -2,7 +2,8 @@ package johnsmith.enchantingoverhauled.item;
 
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
-import johnsmith.enchantingoverhauled.block.Blocks;
+
+import java.util.function.Consumer;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -33,10 +34,10 @@ public class ItemGroups {
     /**
      * Populates the custom "Enchanting Overhauled" creative tab.
      */
-    public static void displayItems(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    public static void displayItems(CreativeModeTab.ItemDisplayParameters parameters, Consumer<ItemStack> output) {
         // 1. Add the tables
-        output.accept(Blocks.DEACTIVATED_ENCHANTING_TABLE.get());
-        output.accept(Blocks.DISTURBED_ENCHANTING_TABLE.get());
+        output.accept(new ItemStack(Items.DEACTIVATED_ENCHANTING_ALTAR.get()));
+        output.accept(new ItemStack(Items.DISTURBED_ENCHANTING_ALTAR.get()));
 
         // 2. Add all enchantments with custom levels
         generateTomes(parameters, output);
@@ -49,7 +50,7 @@ public class ItemGroups {
     /**
      * Populates the vanilla "Ingredients" tab with Enchanted Tomes.
      */
-    public static void populateIngredients(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    public static void populateIngredients(CreativeModeTab.ItemDisplayParameters parameters, Consumer<ItemStack> output) {
         generateTomes(parameters, output);
         generatePages(parameters, output);
     }
@@ -57,24 +58,24 @@ public class ItemGroups {
     /**
      * Populates the vanilla "Functional Blocks" tab with the mod's tables.
      */
-    public static void populateFunctional(CreativeModeTab.Output output) {
-        output.accept(Items.DEACTIVATED_ENCHANTING_ALTAR.get());
-        output.accept(Items.DISTURBED_ENCHANTING_ALTAR.get());
+    public static void populateFunctional(Consumer<ItemStack> output) {
+        output.accept(new ItemStack(Items.DEACTIVATED_ENCHANTING_ALTAR.get()));
+        output.accept(new ItemStack(Items.DISTURBED_ENCHANTING_ALTAR.get()));
     }
 
-    public static void populateSpawnEggs(CreativeModeTab.Output output) {
-        output.accept(Items.ENCHANTED_TOME_SPAWN_EGG.get());
-        output.accept(Items.ENCHANTED_BOOK_SPAWN_EGG.get());
+    public static void populateSpawnEggs(Consumer<ItemStack> output) {
+        output.accept(new ItemStack(Items.ENCHANTED_TOME_SPAWN_EGG.get()));
+        output.accept(new ItemStack(Items.ENCHANTED_BOOK_SPAWN_EGG.get()));
     }
 
     /**
      * Helper method to iterate all enchantments and generate "Over-Leveled" Tomes.
      * <p>
-     * In 1.21, we iterate the dynamic registry from the display parameters.
+     * In 1.21+, we iterate the dynamic registry from the display parameters.
      * We do not need to check feature flags explicitly; the registry provided
      * by the parameters only contains enabled enchantments.
      */
-    private static void generateTomes(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    private static void generateTomes(CreativeModeTab.ItemDisplayParameters parameters, Consumer<ItemStack> output) {
         HolderLookup.RegistryLookup<Enchantment> registry = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
 
         registry.listElements().forEach(holder -> {
@@ -94,7 +95,7 @@ public class ItemGroups {
         });
     }
 
-    private static void generatePages(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+    private static void generatePages(CreativeModeTab.ItemDisplayParameters parameters, Consumer<ItemStack> output) {
         HolderLookup.RegistryLookup<Enchantment> registry = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
 
         registry.listElements().forEach(holder -> {

@@ -71,7 +71,8 @@ public class EnchantedBookModel extends BookModel {
         this.root.resetPose();
         super.setupAnim(state);
 
-        float targetRot = (float) (Math.PI / 2F) - (state.open() * (float) Math.PI);
+        float open = state.openness() / 1.25F;
+        float targetRot = (float) (Math.PI / 2F) - (open * (float) Math.PI);
         if (this.renderedOnLectern) {
             targetRot = Math.max(targetRot, -0.7F);
         }

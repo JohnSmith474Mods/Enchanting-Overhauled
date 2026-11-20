@@ -273,7 +273,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             BlockPos providerPos = blockPos.offset(providerOffset);
             BlockState providerState = level.getBlockState(providerPos);
             boolean isStructureVoid = providerState.is(net.minecraft.world.level.block.Blocks.STRUCTURE_VOID);
-            Holder<Block> blockEntry = providerState.getBlockHolder();
+            Holder<Block> blockEntry = providerState.typeHolder();
 
             for (EnchantmentTheme theme : themeRegistry) {
                 if (theme.effects().isEmpty()) {
@@ -365,7 +365,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
         if (state.is(net.minecraft.world.level.block.Blocks.STRUCTURE_VOID)) {
             return Config.MAX_ENCHANTING_POWER.get();
         }
-        Holder<Block> blockEntry = state.getBlockHolder();
+        Holder<Block> blockEntry = state.typeHolder();
 
         for (PowerProvider provider : theme.powerProviders()) {
             if (provider.blocks().contains(blockEntry)) {

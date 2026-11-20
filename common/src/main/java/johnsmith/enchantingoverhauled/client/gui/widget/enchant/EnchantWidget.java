@@ -12,7 +12,7 @@ import johnsmith.enchantingoverhauled.menu.enchant.model.EnchantRenderState;
 import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -82,7 +82,7 @@ public sealed abstract class EnchantWidget permits
     /**
      * Renders a marquee scrolling string if the text width exceeds the available max width bounding box.
      */
-    protected void drawScrollingString(GuiGraphics guiGraphics, Font font, Component text, int minX, int minY, int maxX, int color) {
+    protected void drawScrollingString(GuiGraphicsExtractor guiGraphics, Font font, Component text, int minX, int minY, int maxX, int color) {
         int textWidth = font.width(text);
         int maxWidth = maxX - minX;
 
@@ -94,10 +94,10 @@ public sealed abstract class EnchantWidget permits
             double offset = net.minecraft.util.Mth.lerp(scrollPos, 0.0D, (double) overflow);
 
             guiGraphics.enableScissor(minX, minY - 2, maxX, minY + font.lineHeight + 2);
-            guiGraphics.drawString(font, text, minX - (int) offset, minY, color, false);
+            guiGraphics.text(font, text, minX - (int) offset, minY, color, false);
             guiGraphics.disableScissor();
         } else {
-            guiGraphics.drawString(font, text, minX, minY, color, false);
+            guiGraphics.text(font, text, minX, minY, color, false);
         }
     }
     // endregion
@@ -181,7 +181,7 @@ public sealed abstract class EnchantWidget permits
      * @param mouseY      The current mouse Y coordinate.
      * @param partialTick The partial tick time for animations.
      */
-    public void render(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
         this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.layout.buttonWidth() && mouseY < this.y + this.layout.buttonHeight();
         this.renderWidget(context, mouseX, mouseY, partialTick);
     }
@@ -194,7 +194,7 @@ public sealed abstract class EnchantWidget permits
      * @param mouseY      The mouse Y coordinate.
      * @param partialTick The partial tick time.
      */
-    protected abstract void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick);
+    protected abstract void renderWidget(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick);
 
     /**
      * Evaluates click events. Triggers the assigned action callback if the widget is hovered
@@ -261,7 +261,7 @@ public sealed abstract class EnchantWidget permits
          * @param partialTick The partial tick time for animations.
          */
         @Override
-        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+        protected void renderWidget(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
             // Fall back to the default table source texture to fill the blank space
             Identifier disabledTex = this.usePlainBackground ? EnchantmentSource.TABLE.disabledTexture : EnchantmentSource.TABLE.getDisabledTexture(this.texIndex);
             context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
@@ -349,7 +349,7 @@ public sealed abstract class EnchantWidget permits
          * @param partialTick The partial tick time for animations.
          */
         @Override
-        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+        protected void renderWidget(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
             if (this.state.enchantment().isEmpty()) {
                 return;
             }
@@ -404,12 +404,12 @@ public sealed abstract class EnchantWidget permits
             int powerTextX = textX + this.layout.powerXOffset() - font.width(powerString);
             int powerTextY = this.y + this.layout.powerYOffset();
 
-            context.drawString(font, powerString, powerTextX + 1, powerTextY, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX - 1, powerTextY, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX, powerTextY + 1, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX, powerTextY - 1, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX, powerTextY, powerColor, false);
-            context.drawString(font, powerString, powerTextX, powerTextY, powerColor, true);
+            context.text(font, powerString, powerTextX + 1, powerTextY, 0xFF000000, false);
+            context.text(font, powerString, powerTextX - 1, powerTextY, 0xFF000000, false);
+            context.text(font, powerString, powerTextX, powerTextY + 1, 0xFF000000, false);
+            context.text(font, powerString, powerTextX, powerTextY - 1, 0xFF000000, false);
+            context.text(font, powerString, powerTextX, powerTextY, powerColor, false);
+            context.text(font, powerString, powerTextX, powerTextY, powerColor, true);
         }
         // endregion
     }
@@ -469,7 +469,7 @@ public sealed abstract class EnchantWidget permits
          * @param partialTick The partial tick time for animations.
          */
         @Override
-        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+        protected void renderWidget(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
             EnchantmentSource source = this.state.visualSource();
             Identifier disabledTex = this.usePlainBackground ? source.disabledTexture : source.getDisabledTexture(this.texIndex);
             context.blit(RenderPipelines.GUI_TEXTURED, disabledTex, this.x, this.y, 0, 0, this.layout.buttonWidth(), this.layout.buttonHeight(), this.layout.buttonWidth(), this.layout.buttonHeight());
@@ -502,12 +502,12 @@ public sealed abstract class EnchantWidget permits
             int powerTextX = textX + this.layout.powerXOffset() - font.width(powerString);
             int powerTextY = this.y + this.layout.powerYOffset();
 
-            context.drawString(font, powerString, powerTextX + 1, powerTextY, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX - 1, powerTextY, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX, powerTextY + 1, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX, powerTextY - 1, 0xFF000000, false);
-            context.drawString(font, powerString, powerTextX, powerTextY, ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR, false);
-            context.drawString(font, powerString, powerTextX, powerTextY, ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR, true);
+            context.text(font, powerString, powerTextX + 1, powerTextY, 0xFF000000, false);
+            context.text(font, powerString, powerTextX - 1, powerTextY, 0xFF000000, false);
+            context.text(font, powerString, powerTextX, powerTextY + 1, 0xFF000000, false);
+            context.text(font, powerString, powerTextX, powerTextY - 1, 0xFF000000, false);
+            context.text(font, powerString, powerTextX, powerTextY, ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR, false);
+            context.text(font, powerString, powerTextX, powerTextY, ENCHANTMENT_ENCHANTMENT_POWER_DISABLED_COLOR, true);
         }
         // endregion
     }
@@ -567,7 +567,7 @@ public sealed abstract class EnchantWidget permits
          * @param partialTick The partial tick time for animations.
          */
         @Override
-        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+        protected void renderWidget(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
             if (this.state.enchantment().isEmpty()) {
                 return;
             }
@@ -647,7 +647,7 @@ public sealed abstract class EnchantWidget permits
          * @param partialTick The partial tick time.
          */
         @Override
-        protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
+        protected void renderWidget(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
             if (this.state.enchantment().isEmpty()) {
                 return;
             }

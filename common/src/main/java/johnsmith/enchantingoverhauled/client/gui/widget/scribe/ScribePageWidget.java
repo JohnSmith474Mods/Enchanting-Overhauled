@@ -15,7 +15,7 @@ import johnsmith.enchantingoverhauled.client.gui.sound.SoundEffectDataFactory;
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -76,7 +76,7 @@ public class ScribePageWidget {
         return false;
     }
 
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, Font font) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, Font font) {
         this.hoveredTooltip = null;
 
         ItemStack stack = this.isSource ? this.menu.getSlot(0).getItem() : this.menu.getSlot(2).getItem();
@@ -85,7 +85,7 @@ public class ScribePageWidget {
         boolean obfuscate = this.shouldObfuscate();
 
         Component title = Component.translatable(this.isSource ? "gui.enchanting_overhauled.scribe.source" : (this.menu.getGridData().isTome() ? "gui.enchanting_overhauled.scribe.contents" : "gui.enchanting_overhauled.scribe.index"));
-        guiGraphics.drawString(font, title.copy().withStyle(Style.EMPTY.withColor(0xFF555555)), this.leftX, this.topY - 11, 0xFF000000, false);
+        guiGraphics.text(font, title.copy().withStyle(Style.EMPTY.withColor(0xFF555555)), this.leftX, this.topY - 11, 0xFF000000, false);
 
         List<Map.Entry<Holder<Enchantment>, Integer>> list = this.getDisplayEnchantments();
         List<PageLine> lines = this.buildPageLines(list, obfuscate);
@@ -118,12 +118,12 @@ public class ScribePageWidget {
 
             if (i == 0 && canScrollUp) {
                 Component dots = Component.literal("\u2022 ").withColor(0xFF555555);
-                guiGraphics.drawString(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0xFF000000, false);
+                guiGraphics.text(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0xFF000000, false);
                 continue;
             }
             if (i == visibleLines - 1 && canScrollDown) {
                 Component dots = Component.literal("\u2022 ").withColor(0xFF555555);
-                guiGraphics.drawString(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0xFF000000, false);
+                guiGraphics.text(font, dots, this.leftX + (maxWidth / 2) - (font.width(dots) / 2), y, 0xFF000000, false);
                 continue;
             }
 
@@ -149,7 +149,7 @@ public class ScribePageWidget {
             }
 
             int bulletWidth = font.width(line.bullet());
-            guiGraphics.drawString(font, line.bullet(), this.leftX, y, 0xFFFFFFFF, false);
+            guiGraphics.text(font, line.bullet(), this.leftX, y, 0xFFFFFFFF, false);
 
             this.drawScrollingString(guiGraphics, font, line.name(), this.leftX + bulletWidth, y, this.leftX + maxWidth, y + itemHeight);
         }
@@ -339,7 +339,7 @@ public class ScribePageWidget {
         }
     }
 
-    private void drawScrollingString(GuiGraphics guiGraphics, Font font, Component text, int minX, int minY, int maxX, int maxY) {
+    private void drawScrollingString(GuiGraphicsExtractor guiGraphics, Font font, Component text, int minX, int minY, int maxX, int maxY) {
         int textWidth = font.width(text);
         int maxWidth = maxX - minX;
 
@@ -351,10 +351,10 @@ public class ScribePageWidget {
             double offset = net.minecraft.util.Mth.lerp(scrollPos, 0.0D, (double) overflow);
 
             guiGraphics.enableScissor(minX, minY, maxX, maxY);
-            guiGraphics.drawString(font, text, minX - (int) offset, minY, 0xFFFFFFFF, false);
+            guiGraphics.text(font, text, minX - (int) offset, minY, 0xFFFFFFFF, false);
             guiGraphics.disableScissor();
         } else {
-            guiGraphics.drawString(font, text, minX, minY, 0xFFFFFFFF, false);
+            guiGraphics.text(font, text, minX, minY, 0xFFFFFFFF, false);
         }
     }
 }

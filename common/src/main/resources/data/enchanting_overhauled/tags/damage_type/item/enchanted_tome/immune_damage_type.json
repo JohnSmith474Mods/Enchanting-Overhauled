@@ -49,6 +49,7 @@
     "minecraft:bad_respawn_point",
     "minecraft:outside_border",
     "minecraft:generic_kill",
-    "minecraft:mace_smash"
+    "minecraft:mace_smash",
+    "minecraft:spear"
   ]
 }

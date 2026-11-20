@@ -33,7 +33,7 @@ import java.util.Iterator;
 @Mixin(AnvilMenu.class)
 public abstract class NeoForgeAnvilMenuMixin implements AnvilMenuAccessor {
     @ModifyExpressionValue(
-            method = "lambda$onTake$2",
+            method = "lambda$onTake$0",
             at = @At(
                     value = "CONSTANT",
                     args = "floatValue=0.12"

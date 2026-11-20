@@ -16,7 +16,7 @@ import johnsmith.enchantingoverhauled.client.gui.sound.SoundEffectData;
 import johnsmith.enchantingoverhauled.client.gui.sound.SoundEffectDataFactory;
 import johnsmith.enchantingoverhauled.client.gui.sound.scribe.ScribeSoundEffectSpecification;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -48,8 +48,7 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
     private ScribeGameState lastKnownState = ScribeGameState.MISSING_SOURCE;
 
     public ScribeScreen(ScribeMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        this.imageHeight = 228;
+        super(menu, playerInventory, title, 176, 228);
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
@@ -176,16 +175,15 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         ScribeGameState state = this.menu.getGridData().getGameState();
 
         if (state == ScribeGameState.LOST || state == ScribeGameState.WON) {
             Component msg = state == ScribeGameState.WON ? Component.translatable("gui.enchanting_overhauled.scribe.success").withColor(0xFF00FF00) : Component.translatable("gui.enchanting_overhauled.scribe.failed").withColor(0xFFFF0000);
             int textWidth = this.font.width(msg);
-            guiGraphics.drawString(this.font, msg, this.leftPos + (this.imageWidth / 2) - (textWidth / 2), this.topPos + 5, 0xFFFFFFFF, true);
+            guiGraphics.text(this.font, msg, this.leftPos + (this.imageWidth / 2) - (textWidth / 2), this.topPos + 5, 0xFFFFFFFF, true);
         }
 
         // Render hovered enchantment tooltip
@@ -208,7 +206,8 @@ public class ScribeScreen extends AbstractContainerScreen<ScribeMenu> {
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
         Identifier innerBg = this.menu.getGridData().isTome() ? TOME_BACKGROUND : BOOK_BACKGROUND;
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, innerBg, this.leftPos + 4, this.topPos + 17, 0, 0, 165, 85, 165, 85);

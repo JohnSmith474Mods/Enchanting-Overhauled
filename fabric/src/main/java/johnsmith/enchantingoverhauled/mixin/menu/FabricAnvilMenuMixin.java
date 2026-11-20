@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(AnvilMenu.class)
 public abstract class FabricAnvilMenuMixin implements AnvilMenuAccessor {
     @ModifyExpressionValue(
-            method = "method_24922",
+            method = "lambda$onTake$0",
             at = @At(
                     value = "CONSTANT",
                     args = "floatValue=0.12"

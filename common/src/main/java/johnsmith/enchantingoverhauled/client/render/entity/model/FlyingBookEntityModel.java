@@ -32,7 +32,7 @@ public class FlyingBookEntityModel<S extends FlyingBookEntityModel.RenderState> 
     private final BookModel internalModel;
 
     public FlyingBookEntityModel(BookModel internalModel) {
-        super(internalModel.root(), RenderTypes::entityCutoutNoCull);
+        super(internalModel.root(), RenderTypes::entityCutout);
         this.internalModel = internalModel;
     }
 
@@ -72,7 +72,7 @@ public class FlyingBookEntityModel<S extends FlyingBookEntityModel.RenderState> 
         }
 
         float bookTime = state.flutterPhase * 50.0F;
-        this.internalModel.setupAnim(new BookModel.State(bookTime, state.rightPageFlip, state.leftPageFlip, state.openness));
+        this.internalModel.setupAnim(BookModel.State.forAnimation(bookTime, state.rightPageFlip, state.leftPageFlip, state.openness));
 
         ModelPart root = this.root();
         root.x = state.animX * 16.0F;

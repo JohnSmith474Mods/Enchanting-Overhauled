@@ -15,7 +15,7 @@ public final class ForgeLootItemConditionTypes {
                     event.register(
                             BuiltInRegistries.LOOT_CONDITION_TYPE.key(),
                             location,
-                            conditionType::type
+                            conditionType::codec
                     );
                 }
             }

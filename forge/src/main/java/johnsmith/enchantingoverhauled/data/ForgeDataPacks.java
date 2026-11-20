@@ -43,7 +43,7 @@ public final class ForgeDataPacks {
             String name,
             PackInclusionType inclusionType
     ) {
-        Path path = ModList.get().getModFileById(Constants.MOD_ID).getFile().findResource("resourcepacks", directory);
+        Path path = ModList.getModFileById(Constants.MOD_ID).getFile().findResource("resourcepacks", directory);
         if (Files.exists(path)) {
             boolean isRequired = inclusionType == PackInclusionType.REQUIRED;
             boolean isDefaultActive = inclusionType != PackInclusionType.OPTIONAL;

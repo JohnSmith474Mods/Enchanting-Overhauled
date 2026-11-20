@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public class FabricNetworkRegistry {
     public static void initialize() {
-        PayloadTypeRegistry.playS2C().register(EnchantmentMenuSyncPayload.TYPE, EnchantmentMenuSyncPayload.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(EnchantmentMenuSyncPayload.TYPE, EnchantmentMenuSyncPayload.STREAM_CODEC);
     }
 
     @Environment(EnvType.CLIENT)

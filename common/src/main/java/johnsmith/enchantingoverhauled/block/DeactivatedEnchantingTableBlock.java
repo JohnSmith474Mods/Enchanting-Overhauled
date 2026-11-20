@@ -215,7 +215,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
                 return InteractionResult.CONSUME;
 
             } else {
-                player.displayClientMessage(Component.translatable("block.enchanting_overhauled.deactivated_enchanting_table.wrong_catalyst"), true);
+                player.sendOverlayMessage(Component.translatable("block.enchanting_overhauled.deactivated_enchanting_table.wrong_catalyst"));
             }
         }
 

@@ -1,59 +1,56 @@
 plugins {
     id 'multiloader-loader'
-    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
-    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+    id 'net.minecraftforge.gradle' version '[7.0.17,8)'
+    // id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
-mixin {
-    config("${mod_id}.mixins.json")
-    config("${mod_id}.forge.mixins.json")
+def parentProps = new Properties()
+file('../gradle.properties').withInputStream { parentProps.load(it) }
+
+jar {
+    manifest {
+        attributes([
+                "MixinConfigs": "${project.findProperty('mod_id')}.mixins.json,${project.findProperty('mod_id')}.forge.mixins.json"
+        ])
+    }
+}
+
+repositories {
+    maven minecraft.mavenizer
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+    mavenLocal()
 }
 
 minecraft {
     mappings channel: 'official', version: minecraft_version
 
-    copyIdeResources = true
-    reobf = false
-
-    // Automatically enable forge AccessTransformers if the file exists
-    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
-    if (at.exists()) {
-        accessTransformer = at
-    }
-
     runs {
-        client {
-            workingDirectory file('runs/client')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Client'
-            mods {
-                modClientRun {
-                    source sourceSets.main
-                }
-            }
+        configureEach {
+            workingDir.convention layout.projectDirectory.dir('run')
+            systemProperty 'forge.logging.console.level', 'debug'
+            systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
+            args "-mixin.config=${mod_id}.mixins.json", "-mixin.config=${mod_id}.forge.mixins.json"
         }
 
-        server {
-            workingDirectory file('runs/server')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Server'
-            mods {
-                modServerRun {
-                    source sourceSets.main
-                }
-            }
+        register('client') {
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
         }
 
-        data {
-            workingDirectory file('runs/data')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            taskName 'Data'
-            mods {
-                modDataRun {
-                    source sourceSets.main
-                }
-            }
+        register('server') {
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        register('gameTestServer') {
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        register('data') {
+            workingDir = layout.projectDirectory.dir('run-data')
+
+            args '--mod', mod_id, '--all', '--output', layout.projectDirectory.dir('src/generated/resources'), '--existing', layout.projectDirectory.dir('src/main/resources')
         }
     }
 }
@@ -61,43 +58,40 @@ minecraft {
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+    implementation minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
 
     // Add MixinExtras to resolve @WrapOperation and @Local
     compileOnly "io.github.llamalad7:mixinextras-common:0.3.5"
-    annotationProcessor "io.github.llamalad7:mixinextras-common:0.3.5"
     // Forge requires the platform-specific implementation at runtime
     implementation "io.github.llamalad7:mixinextras-forge:0.3.5"
 
     // Forge's hack fix
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
-    implementation fg.deobf("maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-forge")
-    implementation fg.deobf("johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-forge")
-}
-
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'MixinConfigs': "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
-        ])
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            fg.component(it)
-        }
-    }
-}
-
-publishMods {
-    file = jar.archiveFile
+    implementation "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-forge"
+    implementation "johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-forge"
 }
 
 sourceSets.each {
     def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
     it.output.resourcesDir = dir
     it.java.destinationDirectory = dir
+}
+
+// Implement mcgradleconventions loader attribute
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
+    configurations.named("$variant") {
+        attributes {
+            attribute(loaderAttribute, 'forge')
+        }
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
+        configurations.named("$variant") {
+            attributes {
+                attribute(loaderAttribute, 'forge')
+            }
+        }
+    }
 }

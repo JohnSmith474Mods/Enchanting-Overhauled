@@ -434,7 +434,7 @@ public class MinionShelvingDespawnGoal extends Goal {
     private static boolean isAirAtLoaded(ChunkSource chunkSource, LevelChunk referenceChunk, BlockPos pos) {
         int cx = SectionPos.blockToSectionCoord(pos.getX());
         int cz = SectionPos.blockToSectionCoord(pos.getZ());
-        LevelChunk targetChunk = (cx == referenceChunk.getPos().x && cz == referenceChunk.getPos().z)
+        LevelChunk targetChunk = (cx == referenceChunk.getPos().x() && cz == referenceChunk.getPos().z())
                 ? referenceChunk
                 : chunkSource.getChunkNow(cx, cz);
         return targetChunk != null && targetChunk.getBlockState(pos).isAir();

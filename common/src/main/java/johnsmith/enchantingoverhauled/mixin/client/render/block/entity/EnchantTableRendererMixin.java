@@ -15,7 +15,8 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.MaterialSet;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -26,9 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EnchantTableRenderer.class)
 public class EnchantTableRendererMixin {
-
-    @Shadow @Final
-    private MaterialSet materials;
 
     @Shadow @Final @Mutable
     private BookModel bookModel; // Yarn: book, MojMap: bookModel
@@ -47,29 +45,29 @@ public class EnchantTableRendererMixin {
     }
 
     @WrapOperation(
-            method = "submit(Lnet/minecraft/client/renderer/blockentity/state/EnchantTableRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+            method = "submit(Lnet/minecraft/client/renderer/blockentity/state/EnchantTableRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/texture/TextureAtlasSprite;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
+                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;IIILnet/minecraft/client/resources/model/sprite/SpriteId;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
             )
     )
     private <S> void wrapSubmitModel(
             SubmitNodeCollector collector,
-            Model<? super S> model,
+            Model<S> model,
             S modelState,
             PoseStack poseStack,
-            RenderType renderType,
             int packedLight,
             int packedOverlay,
             int tintedColor,
-            TextureAtlasSprite sprite,
+            SpriteId spriteId,
+            SpriteGetter sprites,
             int outlineColor,
             ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
             Operation<Void> original
     ) {
         RenderType tomeRenderType = ClientConstants.ENCHANTED_TOME_MATERIAL.renderType(RenderTypes::entityCutout);
-        TextureAtlasSprite tomeSprite = this.materials.get(ClientConstants.ENCHANTED_TOME_MATERIAL);
-        original.call(collector, model, modelState, poseStack, tomeRenderType, packedLight, packedOverlay, tintedColor, tomeSprite, outlineColor, crumblingOverlay);
+        TextureAtlasSprite tomeSprite = sprites.get(ClientConstants.ENCHANTED_TOME_MATERIAL);
+        collector.submitModel(model, modelState, poseStack, tomeRenderType, packedLight, packedOverlay, tintedColor, tomeSprite, outlineColor, crumblingOverlay);
 
         collector.order(1).submitModel(model, modelState, poseStack, RenderTypes.entityGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor, crumblingOverlay);
     }

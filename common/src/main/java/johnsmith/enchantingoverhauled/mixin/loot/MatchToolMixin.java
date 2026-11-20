@@ -6,7 +6,9 @@ import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -34,8 +36,8 @@ public class MatchToolMixin {
         // 1. If vanilla check failed, or we have no predicate, do nothing.
         if (!cir.getReturnValue() || this.predicate.isEmpty()) return;
 
-        ItemStack tool = context.getOptionalParameter(LootContextParams.TOOL);
-        if (tool == null || tool.isEmpty()) return;
+        ItemInstance tool = context.getOptionalParameter(LootContextParams.TOOL);
+        if (tool == null || tool.count() <= 0) return;
 
         // 2. Check for Silk Touch Effect
         var effectOpt = this.enchanting_overhauled$getSilkTouchEffect(tool);
@@ -45,7 +47,7 @@ public class MatchToolMixin {
         int level = effectOpt.get().getValue();
 
         // 3. Verify this predicate actually requires Silk Touch to pass
-        if (!enchanting_overhauled$doesPredicateRequireSilkTouch(this.predicate.get(), context)) return;
+        if (!enchanting_overhauled$doesPredicateRequireSilkTouch(this.predicate.get(), tool)) return;
 
         // 4. Calculate Probability
         float chance = effect.chance().calculate(level);
@@ -62,7 +64,7 @@ public class MatchToolMixin {
      */
     @Unique
     @SuppressWarnings("unchecked")
-    private Optional<Map.Entry<SilkTouchEffect, Integer>> enchanting_overhauled$getSilkTouchEffect(ItemStack stack) {
+    private Optional<Map.Entry<SilkTouchEffect, Integer>> enchanting_overhauled$getSilkTouchEffect(ItemInstance stack) {
         ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         if (enchantments.isEmpty()) return Optional.empty();
 
@@ -79,9 +81,16 @@ public class MatchToolMixin {
     }
 
     @Unique
-    private boolean enchanting_overhauled$doesPredicateRequireSilkTouch(ItemPredicate predicate, LootContext context) {
+    private boolean enchanting_overhauled$doesPredicateRequireSilkTouch(ItemPredicate predicate, ItemInstance tool) {
         // Create a dummy tool with NO enchantments
-        ItemStack dummy = context.getOptionalParameter(LootContextParams.TOOL).copy();
+        ItemStack dummy;
+        if (tool instanceof ItemStack stack) {
+            dummy = stack.copy();
+        } else if (tool instanceof ItemStackTemplate template) {
+            dummy = template.create();
+        } else {
+            dummy = new ItemStack(tool.typeHolder(), tool.count());
+        }
         EnchantmentHelper.setEnchantments(dummy, ItemEnchantments.EMPTY);
 
         // If the predicate fails on the dummy tool, it implies the predicate REQUIRED the enchantments to pass.

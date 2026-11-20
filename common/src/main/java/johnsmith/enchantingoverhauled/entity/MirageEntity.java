@@ -189,7 +189,7 @@ public class MirageEntity extends Mob {
                     SoundEvents.ILLUSIONER_MIRROR_MOVE,
                     caster.getSoundSource(),
                     0.95F,
-                    1.0F + (serverLevel.random.nextFloat() - 0.5F) * 0.15F
+                    1.0F + (serverLevel.getRandom().nextFloat() - 0.5F) * 0.15F
             );
             if (redirectAggro) {
                 redirectHostileAggroToFormation(serverLevel, caster, spawnedMirages);
@@ -218,7 +218,7 @@ public class MirageEntity extends Mob {
         );
         for (int i = 0; i < nearbyMobs.size(); i++) {
             Mob attacker = nearbyMobs.get(i);
-            MirageEntity decoy = mirages.get((i + serverLevel.random.nextInt(mirages.size())) % mirages.size());
+            MirageEntity decoy = mirages.get((i + serverLevel.getRandom().nextInt(mirages.size())) % mirages.size());
             attacker.setTarget(decoy);
         }
     }

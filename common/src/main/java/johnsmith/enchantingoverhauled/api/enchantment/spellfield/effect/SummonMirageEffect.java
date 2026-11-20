@@ -212,7 +212,7 @@ public record SummonMirageEffect(
         }
         float calculatedCount = this.count.calculate(enchantmentLevel) * scalar;
         int spawnAmount = (int) calculatedCount;
-        if (level.random.nextFloat() < (calculatedCount - spawnAmount)) {
+        if (level.getRandom().nextFloat() < (calculatedCount - spawnAmount)) {
             spawnAmount++;
         }
         if (spawnAmount <= 0) {

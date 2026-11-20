@@ -3,6 +3,11 @@ plugins {
     id 'me.modmuss50.mod-publish-plugin'
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 configurations {
     commonJava{
         canBeResolved = true
@@ -14,13 +19,13 @@ configurations {
 
 dependencies {
     compileOnly(project(':common')) {
-        capabilities {
-            requireCapability "$group:$mod_id"
+        def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+        attributes {
+            attribute(loaderAttribute, 'common')
         }
     }
-    // Extract source directories into explicit file collections
-    commonJava files(project(":common").sourceSets.main.java.srcDirs)
-    commonResources files(project(":common").sourceSets.main.resources.srcDirs)
+    commonJava project(path: ':common', configuration: 'commonJava')
+    commonResources project(path: ':common', configuration: 'commonResources')
 }
 
 tasks.named('compileJava', JavaCompile) {
@@ -46,6 +51,7 @@ tasks.named("sourcesJar", Jar) {
 }
 
 publishMods {
+    file = jar.archiveFile
     changelog = rootProject.file("CHANGELOG.md").text
     type = STABLE
     dryRun = gradle.startParameter.taskNames.contains("dryRunPublish")

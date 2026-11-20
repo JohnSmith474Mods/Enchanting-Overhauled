@@ -41,7 +41,10 @@ public enum Items implements StringRepresentable {
                     .rarity(Rarity.EPIC)
                     .component(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
-                    .component(DataComponents.DAMAGE_RESISTANT, new DamageResistant(Tags.TOME_IMMUNE_DAMAGE_TYPE))
+                    .delayedComponent(
+                            DataComponents.DAMAGE_RESISTANT,
+                            registries -> new DamageResistant(registries.getOrThrow(Tags.TOME_IMMUNE_DAMAGE_TYPE))
+                    )
     ),
     ENCHANTED_PAGE(
             "enchanted_page",

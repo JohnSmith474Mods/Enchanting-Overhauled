@@ -17,7 +17,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.phys.AABB;
 
 import org.jetbrains.annotations.NotNull;
@@ -61,13 +60,13 @@ public record CasterHostileCondition() implements LootItemCondition {
     }
 
     /**
-     * Retrieves the registered {@link LootItemConditionType} for this condition.
+     * Retrieves the registered {@link MapCodec} for this condition.
      *
-     * @return The {@link LootItemConditionTypes#CASTER_HOSTILE} condition type.
+     * @return The {@link LootItemConditionTypes#CASTER_HOSTILE} condition codec.
      */
     @Override
-    public @NotNull LootItemConditionType getType() {
-        return LootItemConditionTypes.CASTER_HOSTILE.type();
+    public @NotNull MapCodec<CasterHostileCondition> codec() {
+        return CODEC;
     }
 
     /**
@@ -118,7 +117,7 @@ public record CasterHostileCondition() implements LootItemCondition {
         List<SpellFieldAnchorEntity> nearbyAnchors = level.getEntitiesOfClass(
                 SpellFieldAnchorEntity.class,
                 anchorSearchBox,
-                anchor -> anchor.isAlive() && anchor.getTags().contains(angryTag)
+                anchor -> anchor.isAlive() && anchor.entityTags().contains(angryTag)
         );
         if (!nearbyAnchors.isEmpty()) {
             return true;

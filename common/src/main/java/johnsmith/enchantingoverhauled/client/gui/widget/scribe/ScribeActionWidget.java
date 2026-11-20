@@ -5,7 +5,7 @@ import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGridData;
 import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -57,7 +57,7 @@ public class ScribeActionWidget {
         return -1;
     }
 
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, Font font) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, Font font) {
         int x = this.leftPos + 48;
         int y = this.topPos + 108;
         int width = 120;
@@ -77,10 +77,10 @@ public class ScribeActionWidget {
         int textX = x + (width / 2) - (font.width(text) / 2);
 
         // Render text without a drop shadow
-        guiGraphics.drawString(font, text, textX, y + 4, textColor, false);
+        guiGraphics.text(font, text, textX, y + 4, textColor, false);
     }
 
-    public void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, Font font) {
+    public void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, Font font) {
         if (this.isHovered && this.theme.actionPayload() == ScribeInput.ACTION_START) {
             List<FormattedCharSequence> tooltip = new ArrayList<>();
             tooltip.add(Component.translatable("gui.enchanting_overhauled.scribe.start_cost").withStyle(ChatFormatting.WHITE).getVisualOrderText());

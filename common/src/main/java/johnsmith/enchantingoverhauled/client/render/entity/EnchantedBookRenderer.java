@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -65,7 +65,7 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
         if (state.entity != null && RoostedBookRenderer.tryRenderRoosted(state.entity, this.bookModel, this.lecternBookModel, this.getTextureLocation(state), state.partialTick, poseStack, submitNodeCollector, state.outlineColor)) {
             this.shadowRadius = 0.0F;
             if (state.nameTag != null) {
-                this.submitNameTag(state, poseStack, submitNodeCollector, cameraRenderState);
+                this.submitNameDisplay(state, poseStack, submitNodeCollector, cameraRenderState);
             }
         } else {
             this.shadowRadius = 0.3F;

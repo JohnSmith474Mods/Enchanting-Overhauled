@@ -68,7 +68,7 @@ public record EnchantRecipe(
     public static Optional<EnchantRecipe> get(RegistryAccess registryAccess, ItemStack target) {
         return registryAccess.lookup(EnchantRecipes.RECIPE_REGISTRY_KEY).flatMap(registry -> {
             for (EnchantRecipe recipe : registry) {
-                if (recipe.input().contains(target.getItemHolder())) {
+                if (recipe.input().contains(target.typeHolder())) {
                     return Optional.of(recipe);
                 }
             }
