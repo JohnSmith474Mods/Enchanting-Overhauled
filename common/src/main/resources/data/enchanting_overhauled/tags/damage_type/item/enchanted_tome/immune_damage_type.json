@@ -50,6 +50,7 @@
     "minecraft:outside_border",
     "minecraft:generic_kill",
     "minecraft:mace_smash",
-    "minecraft:spear"
+    "minecraft:spear",
+    "minecraft:sulfur_cube_hot"
   ]
 }

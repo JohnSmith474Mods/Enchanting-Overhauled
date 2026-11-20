@@ -131,20 +131,19 @@
             },
             {
               "predicate": {
-                "type": "minecraft:trident"
+                "minecraft:entity_type": "minecraft:trident"
               },
               "entity": "this",
               "condition": "minecraft:entity_properties"
             },
             {
               "predicate": {
+                "block": {
+                  "blocks": "#minecraft:lightning_rods"
+                },
                 "can_see_sky": true
               },
               "condition": "minecraft:location_check"
-            },
-            {
-              "block": "minecraft:lightning_rod",
-              "condition": "minecraft:block_state_property"
             }
           ],
           "condition": "minecraft:all_of"
@@ -194,7 +193,7 @@
             },
             {
               "predicate": {
-                "location": {
+                "minecraft:location": {
                   "can_see_sky": true
                 }
               },
@@ -203,7 +202,7 @@
             },
             {
               "predicate": {
-                "type": "minecraft:trident"
+                "minecraft:entity_type": "minecraft:trident"
               },
               "entity": "direct_attacker",
               "condition": "minecraft:entity_properties"

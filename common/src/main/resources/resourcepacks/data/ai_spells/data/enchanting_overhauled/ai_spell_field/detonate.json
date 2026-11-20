@@ -44,7 +44,7 @@
                           "condition": "minecraft:entity_properties",
                           "entity": "this",
                           "predicate": {
-                            "type": "#enchanting_overhauled:enchanted_tome_allies"
+                            "minecraft:entity_type": "#enchanting_overhauled:enchanted_tome_allies"
                           }
                         }
                       },
@@ -54,7 +54,7 @@
                           "condition": "minecraft:entity_properties",
                           "entity": "this",
                           "predicate": {
-                            "type": "#enchanting_overhauled:enchanted_tome_neutral"
+                            "minecraft:entity_type": "#enchanting_overhauled:enchanted_tome_neutral"
                           }
                         }
                       },
@@ -64,7 +64,7 @@
                           "condition": "minecraft:entity_properties",
                           "entity": "this",
                           "predicate": {
-                            "type": "#enchanting_overhauled:enchanted_tome_avoid_collateral"
+                            "minecraft:entity_type": "#enchanting_overhauled:enchanted_tome_avoid_collateral"
                           }
                         }
                       }
@@ -82,7 +82,7 @@
                               "condition": "minecraft:entity_properties",
                               "entity": "this",
                               "predicate": {
-                                "equipment": {
+                                "minecraft:equipment": {
                                   "head": {
                                     "predicates": {
                                       "minecraft:enchantments": [
@@ -101,7 +101,7 @@
                               "condition": "minecraft:entity_properties",
                               "entity": "this",
                               "predicate": {
-                                "equipment": {
+                                "minecraft:equipment": {
                                   "chest": {
                                     "predicates": {
                                       "minecraft:enchantments": [
@@ -120,7 +120,7 @@
                               "condition": "minecraft:entity_properties",
                               "entity": "this",
                               "predicate": {
-                                "equipment": {
+                                "minecraft:equipment": {
                                   "legs": {
                                     "predicates": {
                                       "minecraft:enchantments": [
@@ -139,7 +139,7 @@
                               "condition": "minecraft:entity_properties",
                               "entity": "this",
                               "predicate": {
-                                "equipment": {
+                                "minecraft:equipment": {
                                   "feet": {
                                     "predicates": {
                                       "minecraft:enchantments": [

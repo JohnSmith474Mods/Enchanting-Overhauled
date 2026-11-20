@@ -798,7 +798,8 @@ public class MirageEntity extends Mob {
 
         if (this.clientVisualProxy == null || !rawType.equals(this.clientVisualProxyType)) {
             this.clientVisualProxyType = rawType;
-            Optional<EntityType<?>> typeOpt = EntityType.byString(rawType);
+            Identifier entityId = Identifier.tryParse(rawType);
+            Optional<EntityType<?>> typeOpt = entityId != null ? BuiltInRegistries.ENTITY_TYPE.getOptional(entityId) : Optional.empty();
             if (typeOpt.isPresent() && typeOpt.get() != johnsmith.enchantingoverhauled.entity.Entities.MIRAGE.get()) {
                 Entity created = typeOpt.get().create(level, EntitySpawnReason.MOB_SUMMONED);
                 if (created != null && !(created instanceof MirageEntity)) {

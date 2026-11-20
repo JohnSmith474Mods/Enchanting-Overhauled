@@ -22,7 +22,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -124,7 +124,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
                     // Spawn activation effects (Sound, Lightning, Particles, Glowing Effect)
                     serverLevel.playSound(null, pos, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                    LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(serverLevel, EntitySpawnReason.TRIGGERED);
+                    LightningBolt lightningBolt = EntityTypes.LIGHTNING_BOLT.create(serverLevel, EntitySpawnReason.TRIGGERED);
                     if (lightningBolt != null) {
                         lightningBolt.snapTo(Vec3.atBottomCenterOf(pos));
                         serverLevel.addFreshEntity(lightningBolt);
@@ -205,7 +205,7 @@ public class DeactivatedEnchantingTableBlock extends Block {
                             (Entity) null,
                             arcaneRetribution,
                             null,
-                            pos.getCenter(),
+                            Vec3.atCenterOf(pos),
                             5.0F,
                             true,
                             Level.ExplosionInteraction.BLOCK

@@ -6,13 +6,13 @@ import johnsmith.enchantingoverhauled.client.render.entity.model.EnchantedBookMo
 import johnsmith.enchantingoverhauled.entity.AbstractFlyingBookEntity;
 import johnsmith.enchantingoverhauled.entity.anim.BookAnimationState;
 import net.minecraft.client.model.object.book.BookModel;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,7 +44,7 @@ public final class RoostedBookRenderer {
         double entityY = Mth.lerp(partialTick, entity.yOld, entity.getY());
         double entityZ = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 
-        int blockLight = LevelRenderer.getLightCoords(entity.level(), roostPos.above());
+        int blockLight = LightCoordsUtil.getLightCoords(entity.level(), roostPos.above());
         int overlay = OverlayTexture.pack(OverlayTexture.u(0.0F), OverlayTexture.v(entity.hurtTime > 0 || entity.deathTime > 0));
 
         poseStack.pushPose();

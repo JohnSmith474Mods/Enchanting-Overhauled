@@ -89,7 +89,7 @@
           "condition": "minecraft:entity_properties",
           "entity": "this",
           "predicate": {
-            "flags": {
+            "minecraft:flags": {
               "is_on_ground": true
             }
           }

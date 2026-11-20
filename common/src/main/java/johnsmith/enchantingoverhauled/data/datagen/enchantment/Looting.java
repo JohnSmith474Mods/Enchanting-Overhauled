@@ -4,12 +4,12 @@ import johnsmith.enchantingoverhauled.data.datagen.RegistryLookup;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.EntityTypePredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.predicates.entity.EntityTypePredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -38,7 +38,7 @@ public class Looting {
                             EnchantmentTarget.ATTACKER,
                             EnchantmentTarget.VICTIM,
                             new AddValue(new PointerValue("looting.equipment_drops", new DiminishingReturnsValue(0.015F, 0.005F, 0.005F))),
-                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.PLAYER)))
+                            LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypes.PLAYER)))
                     )
                     .build(AdaptedEnchantments.LOOTING.identifier());
 }

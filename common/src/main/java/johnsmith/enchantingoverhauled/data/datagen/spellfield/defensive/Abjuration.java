@@ -18,8 +18,8 @@ import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.Consta
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.CubeShape;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.SpellFieldVolume;
 
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.item.enchantment.LevelBasedValue;

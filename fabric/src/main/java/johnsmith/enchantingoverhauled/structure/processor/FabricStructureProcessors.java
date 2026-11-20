@@ -13,7 +13,7 @@ public class FabricStructureProcessors {
             Registry.register(
                     BuiltInRegistries.STRUCTURE_PROCESSOR,
                     Identifier.fromNamespaceAndPath(Constants.MOD_ID, processorEnum.getSerializedName()),
-                    processorEnum.build()
+                    processorEnum.codec()
             );
         }
     }

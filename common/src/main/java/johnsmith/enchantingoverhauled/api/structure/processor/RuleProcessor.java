@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,7 @@ import java.util.List;
  * ({@code blockInfoOut.pos()}) rather than the structure pivot, supporting property copying
  * (such as stair facing/half or slab type), and supporting constant, weighted, and spatial gradient outputs.
  */
-public class RuleProcessor extends StructureProcessor {
+public class RuleProcessor implements StructureProcessor {
 
     /**
      * The {@link MapCodec} for serializing and deserializing a {@link RuleProcessor} from JSON.
@@ -59,32 +58,31 @@ public class RuleProcessor extends StructureProcessor {
      * The first matching rule whose probability check succeeds determines the output {@link BlockState},
      * optionally copying compatible block state properties from {@code blockInfoOut.state()}.
      *
-     * @param level        The level reader.
-     * @param offset       The template offset position.
-     * @param pivot        The structure pivot position.
-     * @param blockInfoIn  The unrotated original block info from the template (local coordinates).
-     * @param blockInfoOut The transformed block info in world coordinates (absolute coordinates).
-     * @param settings     The structure placement settings.
+     * @param level               The level reader.
+     * @param offset              The template offset position.
+     * @param pivot               The structure pivot position.
+     * @param templateRelativePos The unrotated template-local block position.
+     * @param blockInfoOut        The transformed block info in world coordinates (absolute coordinates).
+     * @param settings            The structure placement settings.
      * @return The modified {@link StructureTemplate.StructureBlockInfo}, or {@code blockInfoOut} if no rule matched.
      */
     @Nullable
     @Override
-    public StructureTemplate.StructureBlockInfo processBlock(LevelReader level, BlockPos offset, BlockPos pivot, StructureTemplate.StructureBlockInfo blockInfoIn, StructureTemplate.StructureBlockInfo blockInfoOut, StructurePlaceSettings settings) {
+    public StructureTemplate.StructureBlockInfo processBlock(LevelReader level, BlockPos offset, BlockPos pivot, BlockPos templateRelativePos, StructureTemplate.StructureBlockInfo blockInfoOut, StructurePlaceSettings settings) {
         // Fix 1: The third parameter is the structure pivot, not the block's position!
         // We must use blockInfoOut.pos() to get a deterministic random seed per block.
         RandomSource random = RandomSource.create(Mth.getSeed(blockInfoOut.pos()));
 
-        BlockState inputState = blockInfoIn.state();
-        BlockState locationState = blockInfoOut.state();
+        BlockState currentState = blockInfoOut.state();
 
         for (OverhauledRule rule : this.rules) {
             // Fix 2: Pass the correct absolute position (blockInfoOut.pos()) to the test and output
-            if (rule.test(inputState, locationState, blockInfoIn.pos(), blockInfoOut.pos(), pivot, random)) {
+            if (rule.test(currentState, currentState, templateRelativePos, blockInfoOut.pos(), pivot, random)) {
                 if (random.nextFloat() < rule.probability()) {
-                    BlockState newState = rule.output().getOutput(random, blockInfoIn.pos(), blockInfoOut.pos(), settings);
+                    BlockState newState = rule.output().getOutput(random, templateRelativePos, blockInfoOut.pos(), settings);
 
                     if (rule.copyProperties()) {
-                        newState = copyProperties(locationState, newState);
+                        newState = copyProperties(currentState, newState);
                     }
 
                     return new StructureTemplate.StructureBlockInfo(blockInfoOut.pos(), newState, blockInfoOut.nbt());
@@ -125,12 +123,12 @@ public class RuleProcessor extends StructureProcessor {
     }
 
     /**
-     * Retrieves the registered {@link StructureProcessorType} for this processor.
+     * Retrieves the {@link MapCodec} for this processor.
      *
-     * @return {@link StructureProcessors#RULE}.
+     * @return {@link #CODEC}.
      */
     @Override
-    protected @NotNull StructureProcessorType<?> getType() {
-        return StructureProcessors.RULE.get();
+    public @NotNull MapCodec<RuleProcessor> codec() {
+        return CODEC;
     }
 }

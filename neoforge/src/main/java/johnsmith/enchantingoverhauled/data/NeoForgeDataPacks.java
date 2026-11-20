@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.BuiltInPackSource;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.neoforged.fml.ModList;
@@ -64,8 +63,9 @@ public final class NeoForgeDataPacks {
                 }
             };
 
-            Pack.ResourcesSupplier resourcesSupplier = BuiltInPackSource.fromName(
-                    locationInfo -> new JarContentsPackResources(locationInfo, contents, prefix)
+            Pack.ResourcesSupplier resourcesSupplier = new JarContentsPackResources.JarContentsResourcesSupplier(
+                    contents,
+                    prefix
             );
             PackLocationInfo info = new PackLocationInfo(
                     namespace + ":" + directory,

@@ -192,7 +192,7 @@
             {
               "term": {
                 "predicate": {
-                  "vehicle": {}
+                  "minecraft:vehicle": {}
                 },
                 "entity": "this",
                 "condition": "minecraft:entity_properties"
@@ -201,7 +201,7 @@
             },
             {
               "predicate": {
-                "flags": {
+                "minecraft:flags": {
                   "is_fall_flying": false
                 }
               },
@@ -210,7 +210,7 @@
             },
             {
               "predicate": {
-                "flags": {
+                "minecraft:flags": {
                   "is_in_water": false
                 }
               },

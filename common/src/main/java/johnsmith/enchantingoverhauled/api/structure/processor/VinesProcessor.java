@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
 /**
@@ -26,7 +25,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
  * Iterates through non-air blocks in the structure. If a block has a sturdy horizontal face adjacent
  * to an air block, it randomly places a vine in the adjacent air space oriented back toward the solid face.
  */
-public class VinesProcessor extends StructureProcessor {
+public class VinesProcessor implements StructureProcessor {
 
     /**
      * The {@link MapCodec} for serializing and deserializing a {@link VinesProcessor} from JSON.
@@ -53,12 +52,12 @@ public class VinesProcessor extends StructureProcessor {
      * Processes a single block during structure placement, attempting to attach vines to adjacent
      * horizontal air blocks if the current block is solid.
      *
-     * @param levelReader       The level reader.
-     * @param pos               The template offset position.
-     * @param pivot             The structure pivot position.
-     * @param originalBlockInfo The unrotated original block info from the template.
-     * @param currentBlockInfo  The transformed block info in world coordinates.
-     * @param data              The structure placement settings.
+     * @param levelReader         The level reader.
+     * @param pos                 The template offset position.
+     * @param pivot               The structure pivot position.
+     * @param templateRelativePos The unrotated template-relative block position.
+     * @param currentBlockInfo    The transformed block info in world coordinates.
+     * @param data                The structure placement settings.
      * @return The unmodified {@code currentBlockInfo}.
      */
     @Nullable
@@ -67,7 +66,7 @@ public class VinesProcessor extends StructureProcessor {
             @NotNull LevelReader levelReader,
             @NotNull BlockPos pos,
             @NotNull BlockPos pivot,
-            @NotNull StructureTemplate.StructureBlockInfo originalBlockInfo,
+            @NotNull BlockPos templateRelativePos,
             StructureTemplate.StructureBlockInfo currentBlockInfo,
             @NotNull StructurePlaceSettings data
     ) {
@@ -111,12 +110,12 @@ public class VinesProcessor extends StructureProcessor {
     }
 
     /**
-     * Retrieves the registered {@link StructureProcessorType} for this processor.
+     * Retrieves the {@link MapCodec} for this processor.
      *
-     * @return {@link StructureProcessors#ADD_VINES}.
+     * @return {@link #CODEC}.
      */
     @Override
-    protected @NotNull StructureProcessorType<?> getType() {
-        return StructureProcessors.ADD_VINES.get();
+    public @NotNull MapCodec<VinesProcessor> codec() {
+        return CODEC;
     }
 }

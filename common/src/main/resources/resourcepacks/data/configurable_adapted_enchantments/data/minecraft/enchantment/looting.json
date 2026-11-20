@@ -126,7 +126,7 @@
         },
         "requirements": {
           "predicate": {
-            "type": "minecraft:player"
+            "minecraft:entity_type": "minecraft:player"
           },
           "entity": "attacker",
           "condition": "minecraft:entity_properties"

@@ -16,7 +16,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "#minecraft:impact_projectiles"
+              "minecraft:entity_type": "#minecraft:impact_projectiles"
             }
           },
           {
@@ -25,7 +25,7 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "type": "enchanting_overhauled:magic_missile"
+                "minecraft:entity_type": "enchanting_overhauled:magic_missile"
               }
             }
           }

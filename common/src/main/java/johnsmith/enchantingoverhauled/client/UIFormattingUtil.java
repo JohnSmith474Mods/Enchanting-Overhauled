@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EnchantmentTags;
@@ -113,8 +114,7 @@ public class UIFormattingUtil {
      */
     public static int getColor(Holder<Enchantment> enchantment, ColoringMode mode) {
         if (enchantment.is(EnchantmentTags.CURSE) && mode == ColoringMode.ENCHANTMENT) {
-            Integer color = ChatFormatting.RED.getColor();
-            return color != null ? color : 0xFFFF0000;
+            return TextColor.RED.getValue();
         }
 
         Minecraft client = Minecraft.getInstance();
@@ -130,8 +130,7 @@ public class UIFormattingUtil {
             }
         }
 
-        Integer color = ChatFormatting.GRAY.getColor();
-        return color != null ? color : 0xFFAAAAAA;
+        return TextColor.GRAY.getValue();
     }
 
     /**
@@ -139,12 +138,11 @@ public class UIFormattingUtil {
      */
     public static int getLevelColor(Holder<Enchantment> enchantment, int level, ColoringMode mode) {
         if (enchantment.is(EnchantmentTags.CURSE) && mode == ColoringMode.ENCHANTMENT) {
-            Integer color = ChatFormatting.RED.getColor();
-            return color != null ? color : 0xFFFF5555;
+            return TextColor.RED.getValue();
         }
 
-        Integer color = getFormattingForLevel(level, enchantment.value().definition()).getColor();
-        return color != null ? color | 0xFF000000 : 0xFFAAAAAA;
+        TextColor color = TextColor.fromLegacyFormat(getFormattingForLevel(level, enchantment.value().definition()));
+        return color != null ? color.getValue() | 0xFF000000 : 0xFFAAAAAA;
     }
 
     /**

@@ -6,7 +6,7 @@ import johnsmith.enchantingoverhauled.menu.enchant.model.EnchantSlot;
 import johnsmith.enchantingoverhauled.api.tag.Tags;
 import johnsmith.enchantingoverhauled.api.lib.EnchantmentLib;
 
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;

@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * A sealed interface defining the concrete mutation operations that can be performed
@@ -233,7 +234,7 @@ public sealed interface ScribeAction permits
                             (Entity) null,
                             arcaneRetribution,
                             null,
-                            pos.getCenter(),
+                            Vec3.atCenterOf(pos),
                             5.0F,
                             true,
                             Level.ExplosionInteraction.BLOCK

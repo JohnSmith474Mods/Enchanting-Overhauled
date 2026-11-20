@@ -204,7 +204,7 @@
         },
         "requirements": {
           "predicate": {
-            "flags": {
+            "minecraft:flags": {
               "is_on_ground": true
             }
           },

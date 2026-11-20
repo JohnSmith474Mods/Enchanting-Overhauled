@@ -31,7 +31,7 @@
                 "condition": "minecraft:entity_properties",
                 "entity": "this",
                 "predicate": {
-                  "vehicle": {}
+                  "minecraft:vehicle": {}
                 }
               }
             },
@@ -49,7 +49,7 @@
                       "condition": "minecraft:entity_properties",
                       "entity": "this",
                       "predicate": {
-                        "flags": {
+                        "minecraft:flags": {
                           "is_flying": false
                         }
                       }
@@ -61,7 +61,7 @@
                           "condition": "minecraft:entity_properties",
                           "entity": "this",
                           "predicate": {
-                            "movement_affected_by": {
+                            "minecraft:movement_affected_by": {
                               "block": {
                                 "blocks": "#minecraft:soul_speed_blocks"
                               }
@@ -72,7 +72,7 @@
                           "condition": "minecraft:entity_properties",
                           "entity": "this",
                           "predicate": {
-                            "flags": {
+                            "minecraft:flags": {
                               "is_on_ground": false
                             }
                           }
@@ -92,10 +92,10 @@
                       "condition": "minecraft:entity_properties",
                       "entity": "this",
                       "predicate": {
-                        "flags": {
+                        "minecraft:flags": {
                           "is_flying": false
                         },
-                        "movement_affected_by": {
+                        "minecraft:movement_affected_by": {
                           "block": {
                             "blocks": "#minecraft:soul_speed_blocks"
                           }
@@ -125,7 +125,7 @@
           "condition": "minecraft:entity_properties",
           "entity": "this",
           "predicate": {
-            "movement_affected_by": {
+            "minecraft:movement_affected_by": {
               "block": {
                 "blocks": "#minecraft:soul_speed_blocks"
               }
@@ -160,10 +160,10 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "flags": {
+                "minecraft:flags": {
                   "is_on_ground": true
                 },
-                "movement_affected_by": {
+                "minecraft:movement_affected_by": {
                   "block": {
                     "blocks": "#minecraft:soul_speed_blocks"
                   }
@@ -200,21 +200,21 @@
           "condition": "minecraft:entity_properties",
           "entity": "this",
           "predicate": {
-            "flags": {
+            "minecraft:flags": {
               "is_flying": false,
               "is_on_ground": true
             },
-            "movement": {
+            "minecraft:movement": {
               "horizontal_speed": {
-                "min": 9.999999747378752E-6
+                "min": 9.999999747378752e-06
               }
             },
-            "movement_affected_by": {
+            "minecraft:movement_affected_by": {
               "block": {
                 "blocks": "#minecraft:soul_speed_blocks"
               }
             },
-            "periodic_tick": 5
+            "minecraft:periodic_tick": 5
           }
         }
       },
@@ -240,21 +240,21 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "flags": {
+                "minecraft:flags": {
                   "is_flying": false,
                   "is_on_ground": true
                 },
-                "movement": {
+                "minecraft:movement": {
                   "horizontal_speed": {
-                    "min": 9.999999747378752E-6
+                    "min": 9.999999747378752e-06
                   }
                 },
-                "movement_affected_by": {
+                "minecraft:movement_affected_by": {
                   "block": {
                     "blocks": "#minecraft:soul_speed_blocks"
                   }
                 },
-                "periodic_tick": 5
+                "minecraft:periodic_tick": 5
               }
             }
           ]

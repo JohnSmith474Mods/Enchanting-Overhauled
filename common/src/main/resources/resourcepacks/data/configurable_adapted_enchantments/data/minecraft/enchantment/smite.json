@@ -125,7 +125,7 @@
         },
         "requirements": {
           "predicate": {
-            "type": "#minecraft:sensitive_to_smite"
+            "minecraft:entity_type": "#minecraft:sensitive_to_smite"
           },
           "entity": "this",
           "condition": "minecraft:entity_properties"

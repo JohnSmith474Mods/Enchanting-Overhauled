@@ -131,7 +131,7 @@
             {
               "term": {
                 "predicate": {
-                  "vehicle": {}
+                  "minecraft:vehicle": {}
                 },
                 "entity": "this",
                 "condition": "minecraft:entity_properties"
@@ -148,7 +148,7 @@
                     },
                     {
                       "predicate": {
-                        "flags": {
+                        "minecraft:flags": {
                           "is_flying": false
                         }
                       },
@@ -159,7 +159,7 @@
                       "terms": [
                         {
                           "predicate": {
-                            "movement_affected_by": {
+                            "minecraft:movement_affected_by": {
                               "block": {
                                 "blocks": "#minecraft:soul_speed_blocks"
                               }
@@ -170,7 +170,7 @@
                         },
                         {
                           "predicate": {
-                            "flags": {
+                            "minecraft:flags": {
                               "is_on_ground": false
                             }
                           },
@@ -191,12 +191,12 @@
                     },
                     {
                       "predicate": {
-                        "movement_affected_by": {
+                        "minecraft:movement_affected_by": {
                           "block": {
                             "blocks": "#minecraft:soul_speed_blocks"
                           }
                         },
-                        "flags": {
+                        "minecraft:flags": {
                           "is_flying": false
                         }
                       },
@@ -227,7 +227,7 @@
         },
         "requirements": {
           "predicate": {
-            "movement_affected_by": {
+            "minecraft:movement_affected_by": {
               "block": {
                 "blocks": "#minecraft:soul_speed_blocks"
               }
@@ -261,12 +261,12 @@
             },
             {
               "predicate": {
-                "movement_affected_by": {
+                "minecraft:movement_affected_by": {
                   "block": {
                     "blocks": "#minecraft:soul_speed_blocks"
                   }
                 },
-                "flags": {
+                "minecraft:flags": {
                   "is_on_ground": true
                 }
               },
@@ -302,19 +302,19 @@
         },
         "requirements": {
           "predicate": {
-            "periodic_tick": 5,
-            "movement_affected_by": {
+            "minecraft:periodic_tick": 5,
+            "minecraft:movement_affected_by": {
               "block": {
                 "blocks": "#minecraft:soul_speed_blocks"
               }
             },
-            "flags": {
+            "minecraft:flags": {
               "is_flying": false,
               "is_on_ground": true
             },
-            "movement": {
+            "minecraft:movement": {
               "horizontal_speed": {
-                "min": 9.999999747378752E-6
+                "min": 9.999999747378752e-06
               }
             }
           },
@@ -341,19 +341,19 @@
             },
             {
               "predicate": {
-                "periodic_tick": 5,
-                "movement_affected_by": {
+                "minecraft:periodic_tick": 5,
+                "minecraft:movement_affected_by": {
                   "block": {
                     "blocks": "#minecraft:soul_speed_blocks"
                   }
                 },
-                "flags": {
+                "minecraft:flags": {
                   "is_flying": false,
                   "is_on_ground": true
                 },
-                "movement": {
+                "minecraft:movement": {
                   "horizontal_speed": {
-                    "min": 9.999999747378752E-6
+                    "min": 9.999999747378752e-06
                   }
                 }
               },

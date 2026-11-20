@@ -1,7 +1,7 @@
 package johnsmith.enchantingoverhauled.advancement;
 
 import johnsmith.enchantingoverhauled.Constants;
-import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;

@@ -15,7 +15,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
 /**
@@ -25,7 +24,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
  * If the floor block is Oak Planks, a Bookshelf, or Obsidian, it has a configurable {@link #probability}
  * to place persistent Jungle Leaves at the current air position.
  */
-public class OvergrowthProcessor extends StructureProcessor {
+public class OvergrowthProcessor implements StructureProcessor {
 
     /**
      * The {@link MapCodec} for serializing and deserializing an {@link OvergrowthProcessor} from JSON.
@@ -52,12 +51,12 @@ public class OvergrowthProcessor extends StructureProcessor {
      * Processes a single block during structure template placement, potentially placing persistent
      * Jungle Leaves in air spaces above eligible floor blocks.
      *
-     * @param world             The level reader.
-     * @param pos               The template offset position.
-     * @param pivot             The structure pivot position.
-     * @param originalBlockInfo The unrotated original block info from the template.
-     * @param currentBlockInfo  The transformed block info in world coordinates.
-     * @param data              The structure placement settings.
+     * @param world               The level reader.
+     * @param pos                 The template offset position.
+     * @param pivot               The structure pivot position.
+     * @param templateRelativePos The unrotated template-relative block position.
+     * @param currentBlockInfo    The transformed block info in world coordinates.
+     * @param data                The structure placement settings.
      * @return The resulting {@link StructureTemplate.StructureBlockInfo}.
      */
     @Nullable
@@ -66,7 +65,7 @@ public class OvergrowthProcessor extends StructureProcessor {
             @NotNull LevelReader world,
             @NotNull BlockPos pos,
             @NotNull BlockPos pivot,
-            @NotNull StructureTemplate.StructureBlockInfo originalBlockInfo,
+            @NotNull BlockPos templateRelativePos,
             StructureTemplate.StructureBlockInfo currentBlockInfo,
             @NotNull StructurePlaceSettings data
     ) {
@@ -101,12 +100,12 @@ public class OvergrowthProcessor extends StructureProcessor {
     }
 
     /**
-     * Retrieves the registered {@link StructureProcessorType} for this processor.
+     * Retrieves the {@link MapCodec} for this processor.
      *
-     * @return {@link StructureProcessors#OVERGROWTH}.
+     * @return {@link #CODEC}.
      */
     @Override
-    protected @NotNull StructureProcessorType<?> getType() {
-        return StructureProcessors.OVERGROWTH.get();
+    public @NotNull MapCodec<OvergrowthProcessor> codec() {
+        return CODEC;
     }
 }

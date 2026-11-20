@@ -125,7 +125,7 @@
         },
         "requirements": {
           "predicate": {
-            "type": "#minecraft:arrows"
+            "minecraft:entity_type": "#minecraft:arrows"
           },
           "entity": "direct_attacker",
           "condition": "minecraft:entity_properties"

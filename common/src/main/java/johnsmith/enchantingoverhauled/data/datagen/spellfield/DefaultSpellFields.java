@@ -15,13 +15,13 @@ import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.Consta
 import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.LinearScalingFunction;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.SpellFieldVolume;
 
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.DataComponentMatchers;
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.advancements.criterion.EntityEquipmentPredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.DataComponentMatchers;
+import net.minecraft.advancements.predicates.EnchantmentPredicate;
+import net.minecraft.advancements.predicates.entity.EntityEquipmentPredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -34,6 +34,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
@@ -150,7 +151,7 @@ public class DefaultSpellFields {
             InvertedLootItemCondition.invert(
                     LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
-                            EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.PLAYER)
+                            EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypes.PLAYER)
                     )
             ).build()
     );
@@ -158,7 +159,7 @@ public class DefaultSpellFields {
     public static final Function<BootstrapContext<?>, ContextAwarePredicate> PLAYER_ONLY_FILTER = context -> ContextAwarePredicate.create(
             LootItemEntityPropertyCondition.hasProperties(
                     LootContext.EntityTarget.THIS,
-                    EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityType.PLAYER)
+                    EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypes.PLAYER)
             ).build()
     );
 

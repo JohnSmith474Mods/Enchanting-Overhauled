@@ -2,7 +2,7 @@ package johnsmith.enchantingoverhauled.advancement;
 
 import johnsmith.enchantingoverhauled.Constants;
 
-import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 
 import net.minecraftforge.eventbus.api.bus.BusGroup;
