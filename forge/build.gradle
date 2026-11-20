@@ -73,7 +73,7 @@ dependencies {
     // Forge's hack fix
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
     implementation fg.deobf("maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-forge")
-    implementation fg.deobf("johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-forge")
+    implementation fg.deobf("maven.modrinth:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-forge")
 }
 
 tasks.named('jar', Jar).configure {

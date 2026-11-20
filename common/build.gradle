@@ -19,7 +19,7 @@ dependencies {
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
     compileOnly "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-neoforge"
-    compileOnly "johnsmith.enchantmentcore:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-neoforge"
+    compileOnly "maven.modrinth:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-neoforge"
 }
 
 configurations {
