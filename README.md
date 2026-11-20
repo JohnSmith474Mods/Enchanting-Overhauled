@@ -38,6 +38,8 @@ Here is a quick overview of our current branches, their support status, and the 
 
 | Branch                                                                                              | Game Version Range | Support Status | Latest Mod Version |
 | ----------------------------------------------------------------------------------------------------- | ------------------ | -------------- | ---------------- |
+| unavailable | 1.18.1             | Abandoned      | 1.06               |
+| unavailable | 1.18.2             | Abandoned      | 1.1.1              |
 | [deprecated-1.20.6](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/deprecated-1.20.6) | 1.20.6           |   Abandoned    | 2.0.4              | 
 | [1.21](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21)                         | 1.21 - 1.21.1      | Life Support   | 3.0.0              |
 | [1.21.2](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.2)                     | 1.21.2 - 1.21.3    | Life Support   | 3.0.0              |
