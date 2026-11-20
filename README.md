@@ -32,17 +32,22 @@ Please note that all contributions require a signed Contributor License Agreemen
 
 Here is a quick overview of our current branches, their support status, and the latest mod version available for each:
 
-| Branch                                                                            | Game Version Range | Support Status | Latest Mod Version |
-| --------------------------------------------------------------------------------- | ------------------ | -------------- | ------------------ |
-| [1.21](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21)       | 1.21 - 1.21.1      | Life Support   | 3.0.0              |
-| [1.21.2](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.2)   | 1.21.2 - 1.21.3    | Life Support   | 3.0.0              |
-| [1.21.4](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.4)   | 1.21.4             | Life Support   | 3.0.0              |
-| [1.21.5](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.5)   | 1.21.5             | Life Support   | 3.0.0              |
-| [1.21.6](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.6)   | 1.21.6 - 1.21.8    | Life Support   | 3.0.0              |
-| [1.21.9](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.9)   | 1.21.9 - 1.21.10   | Life Support   | 3.0.0              |
-| [1.21.11](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.11) | 1.21.11            | Life Support   | 3.0.0              |
-| [26.1](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/26.1)       | 26.1 - 26.1.2      | Active         | 3.0.0              |
-| [26.2](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/26.2)       | 26.2               | Active         | 3.0.0              |
+- **Active:** Under full active development—receiving new features, bug fixes, and occasional API changes.
+- **Life Support:** Maintenance mode—receiving critical bug fixes only, with no new features or structural changes planned.
+- **Abandoned:** End of life—no longer maintained and will not receive any further updates.
+
+| Branch                                                                                              | Game Version Range | Support Status | Latest Mod Version |
+| ----------------------------------------------------------------------------------------------------- | ------------------ | -------------- | ---------------- |
+| [deprecated-1.20.6](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/deprecated-1.20.6) | 1.20.6           |   Abandoned    | 2.0.4              | 
+| [1.21](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21)                         | 1.21 - 1.21.1      | Life Support   | 3.0.0              |
+| [1.21.2](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.2)                     | 1.21.2 - 1.21.3    | Life Support   | 3.0.0              |
+| [1.21.4](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.4)                     | 1.21.4             | Life Support   | 3.0.0              |
+| [1.21.5](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.5)                     | 1.21.5             | Life Support   | 3.0.0              |
+| [1.21.6](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.6)                     | 1.21.6 - 1.21.8    | Life Support   | 3.0.0              |
+| [1.21.9](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.9)                     | 1.21.9 - 1.21.10   | Life Support   | 3.0.0              |
+| [1.21.11](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/1.21.11)                   | 1.21.11            | Life Support   | 3.0.0              |
+| [26.1](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/26.1)                         | 26.1 - 26.1.2      | Active         | 3.0.0              |
+| [26.2](https://github.com/JohnSmith474Mods/Enchanting-Overhauled/tree/26.2)                         | 26.2               | Active         | 3.0.0              |
 
 ## Third-Party Licenses & Credits
 
