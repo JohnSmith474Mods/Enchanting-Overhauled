@@ -306,9 +306,8 @@ public class EnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> 
     /**
      * Delegates mouse click events to child components (reroll widget, enchantment slots, pagination).
      *
-     * @param mouseX The X coordinate of the mouse.
-     * @param mouseY The Y coordinate of the mouse.
-     * @param button The mouse button being clicked.
+     * @param event         The mouse button event.
+     * @param isDoubleClick The mouse button being clicked.
      * @return true if the event was consumed, false otherwise.
      */
     @Override
