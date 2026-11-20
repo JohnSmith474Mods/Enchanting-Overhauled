@@ -34,8 +34,12 @@ configurations {
 }
 
 artifacts {
-    commonJava sourceSets.main.java.sourceDirectories.singleFile
-    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+    sourceSets.main.java.srcDirs.each { dir ->
+        add('commonJava', dir)
+    }
+    sourceSets.main.resources.srcDirs.each { dir ->
+        add('commonResources', dir)
+    }
 }
 
 // Implement mcgradleconventions loader attribute
