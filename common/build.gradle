@@ -45,7 +45,10 @@ sourceSets {
 }
 
 artifacts {
-    // Expose directory elements to platform projects
-    commonJava sourceSets.main.java.sourceDirectories.elements
-    commonResources sourceSets.main.resources.sourceDirectories.elements
+    sourceSets.main.java.srcDirs.each { dir ->
+        add('commonJava', dir)
+    }
+    sourceSets.main.resources.srcDirs.each { dir ->
+        add('commonResources', dir)
+    }
 }
