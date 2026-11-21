@@ -61,21 +61,21 @@ publishMods {
 
         // Modrinth-specific naming
         displayName = "${rootProject.mod_name} ${rootProject.version}"
-        version = "${rootProject.version}+${rootProject.minecraft_version}-${project.name}"
+        version = "${rootProject.version}+${targetMcVer}-${project.name}"
 
         minecraftVersionRange {
-            start = rootProject.minecraft_version
+            start = targetMcVer
             end = rootProject.minecraft_version_supremum
         }
 
         requires {
             id = rootProject.config_overhauled_project_id
-            version = "${rootProject.config_overhauled_version}+${rootProject.minecraft_version}-${project.name}"
+            version = "${rootProject.config_overhauled_version}+${targetMcVer}-${project.name}"
         }
 
         requires {
             id = rootProject.enchantment_core_project_id
-            version = "${rootProject.enchantment_core_version}+${rootProject.minecraft_version}-${project.name}"
+            version = "${rootProject.enchantment_core_version}+${targetMcVer}-${project.name}"
         }
 
         additionalFile(javadocJar) {
@@ -91,11 +91,11 @@ publishMods {
         projectId = System.getenv("CURSEFORGE_PROJECT_ID") ?: "mock_id"
 
         // CurseForge-specific naming
-        displayName = "${rootProject.version}+${rootProject.minecraft_version}-${project.name}"
+        displayName = "${rootProject.version}+${targetMcVer}-${project.name}"
         version = "${rootProject.mod_name} ${rootProject.version}"
 
         minecraftVersionRange {
-            start = rootProject.minecraft_version
+            start = targetMcVer
             end = rootProject.minecraft_version_supremum
         }
 
