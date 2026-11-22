@@ -9,6 +9,8 @@ mixin {
     config("${mod_id}.forge.mixins.json")
 }
 
+jarJar.enable()
+
 // Forge does not have a version for 1.21.2, so we are forced to accomodate their version jump to 1.21.3
 base {
     archivesName = project.mod_name_normalized
@@ -70,11 +72,11 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version_forge}-${forge_version}"
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
-    // Add MixinExtras to resolve @WrapOperation and @Local
-    compileOnly "io.github.llamalad7:mixinextras-common:0.3.5"
-    annotationProcessor "io.github.llamalad7:mixinextras-common:0.3.5"
-    // Forge requires the platform-specific implementation at runtime
-    implementation "io.github.llamalad7:mixinextras-forge:0.3.5"
+    // Add MixinExtras to resolve @WrapOperation and @Local, and bundle via Jar-in-Jar on Forge
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
+        jarJar.ranged(it, "[0.5.0,)")
+    }
 
     // Forge's hack fix
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
@@ -82,12 +84,36 @@ dependencies {
     implementation fg.deobf("maven.modrinth:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version_forge}-forge")
 }
 
+def forgeManifestAttributes = [
+        'Specification-Title'   : mod_name,
+        'Specification-Vendor'  : mod_author,
+        'Specification-Version' : project.version,
+        'Implementation-Title'  : project.name,
+        'Implementation-Version': project.version,
+        'Implementation-Vendor' : mod_author,
+        'Built-On-Minecraft'    : minecraft_version,
+        'MixinConfigs'          : "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
+]
+
 tasks.named('jar', Jar).configure {
+    archiveClassifier.set('slim')
     manifest {
-        attributes([
-                'MixinConfigs': "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
-        ])
+        attributes(forgeManifestAttributes)
     }
+}
+
+tasks.named('jarJar').configure {
+    archiveClassifier.set('')
+    from(rootProject.file("LICENSE")) {
+        rename { "${it}_${mod_name}" }
+    }
+    manifest {
+        attributes(forgeManifestAttributes)
+    }
+}
+
+tasks.named('build').configure {
+    dependsOn(tasks.named('jarJar'))
 }
 
 publishing {
@@ -99,7 +125,7 @@ publishing {
 }
 
 publishMods {
-    file = jar.archiveFile
+    file = tasks.named('jarJar').flatMap { it.archiveFile }
 }
 
 sourceSets.each {
