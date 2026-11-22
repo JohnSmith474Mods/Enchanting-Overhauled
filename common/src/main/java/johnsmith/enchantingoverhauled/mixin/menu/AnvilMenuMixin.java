@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
 import johnsmith.enchantingoverhauled.Config;
+import johnsmith.enchantingoverhauled.api.accessor.AnvilMenuAccessor;
 import johnsmith.enchantingoverhauled.api.enchantment.recipe.EnchantRecipe;
 import johnsmith.enchantingoverhauled.api.enchantment.recipe.EnchantmentAttachment;
 import johnsmith.enchantingoverhauled.api.lib.EnchantmentLib;
@@ -37,9 +38,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Mixin(AnvilMenu.class)
-public class AnvilMenuMixin extends ItemCombinerMenuMixin {
+public class AnvilMenuMixin extends ItemCombinerMenuMixin implements AnvilMenuAccessor {
 
     @Shadow
     @Final
@@ -169,55 +171,6 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin {
             return ItemStack.EMPTY;
         }
         return itemStack;
-    }
-
-    // Check enchantment applicability against the working output item (itemstack1) or active EnchantRecipe.
-    @WrapOperation(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/enchantment/Enchantment;canEnchant(Lnet/minecraft/world/item/ItemStack;)Z"
-            )
-    )
-    private boolean enchanting_overhauled$checkCanEnchantWorkingStack(
-            Enchantment enchantment,
-            ItemStack originalTarget,
-            Operation<Boolean> original,
-            @Local(ordinal = 1) ItemStack workingStack
-    ) {
-        EnchantRecipe recipe = this.enchanting_overhauled$activeRecipe;
-        if (recipe != null) {
-            if (recipe.attachment() == EnchantmentAttachment.VOID
-                    || recipe.attachment() == EnchantmentAttachment.STORED) {
-                return true;
-            }
-            return original.call(enchantment, workingStack);
-        }
-        if (workingStack.has(DataComponents.STORED_ENCHANTMENTS)) {
-            return true;
-        }
-        return original.call(enchantment, workingStack);
-    }
-
-    // Target ONLY ordinal 1 of ItemStack.is(Item) (itemstack.is(Items.ENCHANTED_BOOK) on line 154)
-    // and check the working target stack (itemstack1) rather than slot 1!
-    @ModifyExpressionValue(
-            method = "createResult",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z",
-                    ordinal = 1
-            )
-    )
-    private boolean enchanting_overhauled$allowArbitraryEnchantmentStorage(
-            final boolean state,
-            @Local(ordinal = 1) ItemStack workingStack
-    ) {
-        EnchantRecipe recipe = this.enchanting_overhauled$activeRecipe;
-        if (recipe != null && (recipe.attachment() == EnchantmentAttachment.STORED || recipe.attachment() == EnchantmentAttachment.VOID)) {
-            return true;
-        }
-        return state || workingStack.has(DataComponents.STORED_ENCHANTMENTS);
     }
 
     // Prevent Creative mode (instabuild) from bypassing canEnchant on raw unenchantable items (like plain books).
@@ -390,5 +343,24 @@ public class AnvilMenuMixin extends ItemCombinerMenuMixin {
             return Collections.emptyIterator();
         }
         return iterator;
+    }
+
+    @Override
+    public boolean enchanting_overhauled$canEnchantWorkingStack(
+            ItemStack workingStack,
+            Predicate<ItemStack> defaultCheck
+    ) {
+        EnchantRecipe recipe = this.enchanting_overhauled$activeRecipe;
+        if (recipe != null) {
+            if (recipe.attachment() == EnchantmentAttachment.VOID
+                    || recipe.attachment() == EnchantmentAttachment.STORED) {
+                return true;
+            }
+            return defaultCheck.test(workingStack);
+        }
+        if (workingStack.has(DataComponents.STORED_ENCHANTMENTS)) {
+            return true;
+        }
+        return defaultCheck.test(workingStack);
     }
 }
