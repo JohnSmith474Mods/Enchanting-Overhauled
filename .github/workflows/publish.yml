@@ -14,6 +14,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
+      - name: Set up JDK 8
+        id: java8
+        uses: actions/setup-java@v6
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          set-default: false
+
       - name: Set up JDK 25
         uses: actions/setup-java@v6
         with:
@@ -24,6 +32,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
         with:
           cache-read-only: false
+
+      - name: Configure JDK 8 for ForgeGradle
+        run: |
+          echo "JDK8=${{ steps.java8.outputs.path }}" >> "$GITHUB_ENV"
+          rm -f "$HOME/.gradle/caches/minecraftforge/forgegradle/mavenizer/caches/"OpenJDK8U*.tar.gz
 
       - name: Validate Release (Dry Run)
         if: ${{ inputs.dry_run }}
