@@ -11,25 +11,28 @@
       {
         "type": "enchantment_core:impulse",
         "direction": "radial",
-        "entity_filter": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "#minecraft:impact_projectiles"
-            }
-          },
-          {
-            "condition": "minecraft:inverted",
-            "term": {
-              "condition": "minecraft:entity_properties",
+        "entity_filter": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "minecraft:entity_type": "enchanting_overhauled:magic_missile"
+                "minecraft:entity_type": "#minecraft:impact_projectiles"
+              }
+            },
+            {
+              "type": "minecraft:inverted",
+              "term": {
+                "type": "minecraft:entity_properties",
+                "entity": "this",
+                "predicate": {
+                  "minecraft:entity_type": "enchanting_overhauled:magic_missile"
+                }
               }
             }
-          }
-        ],
+          ]
+        },
         "strength": 2.0
       }
     ],

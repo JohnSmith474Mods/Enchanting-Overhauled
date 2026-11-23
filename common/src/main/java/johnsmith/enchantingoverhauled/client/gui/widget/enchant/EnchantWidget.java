@@ -9,6 +9,7 @@ import johnsmith.enchantingoverhauled.api.config.type.FormatApplicationMode;
 import johnsmith.enchantingoverhauled.api.config.type.ObfuscationLevel;
 import johnsmith.enchantingoverhauled.menu.enchant.model.EnchantRenderState;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -206,7 +207,7 @@ public sealed abstract class EnchantWidget permits
      * @return true if the click was consumed, false otherwise.
      */
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isHovered && button == 0) {
+        if (this.isHovered && button == InputConstants.MOUSE_BUTTON_LEFT) {
             this.onPressAction.run();
             return true;
         }

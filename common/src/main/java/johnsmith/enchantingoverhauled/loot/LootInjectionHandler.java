@@ -14,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ConstantValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +49,14 @@ public class LootInjectionHandler {
                     List<LootPool> newPools = new ArrayList<>(existingPools);
 
                     for (ResourceKey<LootTable> injectedKey : injection.injections()) {
-                        LootPool pool = LootPool.lootPool()
-                                .setRolls(ConstantValue.exactly(1.0F))
-                                .add(NestedLootTable.lootTableReference(injectedKey))
-                                .build();
-                        newPools.add(pool);
+                        Optional<Holder.Reference<LootTable>> injectedHolder = lootTableRegistry.get(injectedKey);
+                        if (injectedHolder.isPresent()) {
+                            LootPool pool = LootPool.lootPool()
+                                    .setRolls(Holder.direct(new ConstantValue(1)))
+                                    .add(NestedLootTable.lootTableReference(injectedHolder.get()))
+                                    .build();
+                            newPools.add(pool);
+                        }
                     }
 
                     accessor.enchanting_overhauled$setPools(List.copyOf(newPools));

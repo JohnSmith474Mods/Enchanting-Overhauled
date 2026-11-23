@@ -49,7 +49,7 @@ public class FrostWalker {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE_IMMUNITY,
                             DamageImmunity.INSTANCE,
-                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.BURN_FROM_STEPPING)).tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
+                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.BURN_FROM_STEPPING)).tag(TagPredicate.isNot(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
                     .withEffect(
                             EnchantmentEffectComponents.LOCATION_CHANGED,
@@ -63,7 +63,7 @@ public class FrostWalker {
                                             BlockPredicate.matchesFluids(Fluids.WATER),
                                             BlockPredicate.unobstructed()
                                     )),
-                                    BlockStateProvider.simple(Blocks.FROSTED_ICE),
+                                    BlockStateProvider.holderOf(Blocks.FROSTED_ICE),
                                     Optional.of(GameEvent.BLOCK_PLACE)
                             ),
                             LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnGround(true)))

@@ -18,13 +18,15 @@ import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.Consta
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.CubeShape;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.SpellFieldVolume;
 
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.List;
@@ -33,15 +35,17 @@ import java.util.function.Function;
 
 public class Abjuration {
 
-    public static final Function<BootstrapContext<AiSpellField>, ContextAwarePredicate> DEFLECTABLE_PROJECTILE_FILTER = context -> ContextAwarePredicate.create(
-            LootItemEntityPropertyCondition.hasProperties(
-                    LootContext.EntityTarget.THIS,
-                    EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.IMPACT_PROJECTILES)
-            ).build(),
-            InvertedLootItemCondition.invert(
+    public static final Function<BootstrapContext<AiSpellField>, Holder<LootItemCondition>> DEFLECTABLE_PROJECTILE_FILTER = context -> Holder.direct(
+            AllOfCondition.allOf(
                     LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
-                            EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), Entities.MAGIC_MISSILE.get())
+                            EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypeTags.IMPACT_PROJECTILES)
+                    ),
+                    InvertedLootItemCondition.invert(
+                            LootItemEntityPropertyCondition.hasProperties(
+                                    LootContext.EntityTarget.THIS,
+                                    EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), Entities.MAGIC_MISSILE.get())
+                            )
                     )
             ).build()
     );

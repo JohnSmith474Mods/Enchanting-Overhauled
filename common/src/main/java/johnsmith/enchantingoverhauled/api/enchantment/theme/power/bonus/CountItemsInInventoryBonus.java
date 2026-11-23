@@ -5,8 +5,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.world.item.Item;
 
 /**
@@ -28,11 +28,11 @@ public record CountItemsInInventoryBonus(
     /**
      * The codec responsible for serializing and deserializing instances of this record from JSON.
      * <p>
-     * Uses {@link RegistryCodecs#homogeneousList} to handle the {@link HolderSet} of items.
+     * Uses {@link RegistryCodecs#holderSet} to handle the {@link HolderSet} of items.
      */
     public static final MapCodec<CountItemsInInventoryBonus> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
-                    RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(CountItemsInInventoryBonus::items),
+                    RegistryCodecs.holderSet(Registries.ITEM).fieldOf("items").forGetter(CountItemsInInventoryBonus::items),
                     Codec.INT.fieldOf("bonus_per_item").forGetter(CountItemsInInventoryBonus::bonusPerItem)
             ).apply(instance, CountItemsInInventoryBonus::new)
     );

@@ -73,8 +73,8 @@ public record OverhauledRule(
      * @return {@code true} if at least one input predicate, at least one location predicate, and the position predicate all match; {@code false} otherwise.
      */
     public boolean test(BlockState inputState, BlockState locationState, BlockPos localPos, BlockPos absolutePos, BlockPos pivot, RandomSource random) {
-        boolean inputMatches = this.inputPredicates.stream().anyMatch(predicate -> predicate.test(inputState, random));
-        boolean locationMatches = this.locationPredicates.stream().anyMatch(predicate -> predicate.test(locationState, random));
+        boolean inputMatches = this.inputPredicates.stream().anyMatch(predicate -> predicate.test(inputState, absolutePos, random));
+        boolean locationMatches = this.locationPredicates.stream().anyMatch(predicate -> predicate.test(locationState, absolutePos, random));
 
         return inputMatches
                 && locationMatches

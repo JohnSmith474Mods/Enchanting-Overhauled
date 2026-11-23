@@ -33,7 +33,7 @@ public class Protection {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE_PROTECTION,
                             new AddValue(new PointerValue("protection.damage_protection", new DiminishingReturnsValue(3.F, 1.F, 1.F))),
-                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
+                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.isNot(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
                     .build(AdaptedEnchantments.PROTECTION.identifier());
 }

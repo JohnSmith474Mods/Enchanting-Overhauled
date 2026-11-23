@@ -6,7 +6,7 @@
         "input_predicate": {
           "predicate_type": "minecraft:blockstate_match",
           "block_state": {
-            "Name": "minecraft:polished_andesite"
+            "id": "minecraft:polished_andesite"
           }
         },
         "probability": 0.78,
@@ -20,17 +20,17 @@
           },
           "states": [
             {
-              "Name": "minecraft:polished_andesite"
+              "id": "minecraft:polished_andesite"
             },
             {
-              "Name": "minecraft:andesite_slab",
-              "Properties": {
+              "id": "minecraft:andesite_slab",
+              "properties": {
                 "type": "double"
               }
             },
             {
-              "Name": "minecraft:stone_slab",
-              "Properties": {
+              "id": "minecraft:stone_slab",
+              "properties": {
                 "type": "double"
               }
             }
@@ -41,7 +41,7 @@
         "input_predicate": {
           "predicate_type": "minecraft:blockstate_match",
           "block_state": {
-            "Name": "minecraft:polished_andesite_slab"
+            "id": "minecraft:polished_andesite_slab"
           }
         },
         "copy_properties": true,
@@ -56,13 +56,13 @@
           },
           "states": [
             {
-              "Name": "minecraft:polished_andesite_slab"
+              "id": "minecraft:polished_andesite_slab"
             },
             {
-              "Name": "minecraft:andesite_slab"
+              "id": "minecraft:andesite_slab"
             },
             {
-              "Name": "minecraft:stone_slab"
+              "id": "minecraft:stone_slab"
             }
           ]
         }
@@ -84,13 +84,13 @@
           },
           "states": [
             {
-              "Name": "minecraft:polished_andesite_stairs"
+              "id": "minecraft:polished_andesite_stairs"
             },
             {
-              "Name": "minecraft:andesite_stairs"
+              "id": "minecraft:andesite_stairs"
             },
             {
-              "Name": "minecraft:stone_stairs"
+              "id": "minecraft:stone_stairs"
             }
           ]
         }

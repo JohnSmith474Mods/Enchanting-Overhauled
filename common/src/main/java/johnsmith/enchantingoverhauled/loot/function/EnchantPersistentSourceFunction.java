@@ -8,8 +8,8 @@ import johnsmith.enchantingoverhauled.item.EnchantedTomeItem;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -27,7 +27,7 @@ public class EnchantPersistentSourceFunction extends LootItemConditionalFunction
 
     public static final MapCodec<EnchantPersistentSourceFunction> CODEC = RecordCodecBuilder.mapCodec(inst ->
             commonFields(inst).and(inst.group(
-                    RegistryCodecs.homogeneousList(Registries.ENCHANTMENT).optionalFieldOf("options").forGetter(f -> f.options),
+                    RegistryCodecs.holderSet(Registries.ENCHANTMENT).optionalFieldOf("options").forGetter(f -> f.options),
                     Codec.BOOL.optionalFieldOf("treasure", false).forGetter(f -> f.treasure)
             )).apply(inst, EnchantPersistentSourceFunction::new)
     );
@@ -35,8 +35,8 @@ public class EnchantPersistentSourceFunction extends LootItemConditionalFunction
     private final Optional<HolderSet<Enchantment>> options;
     private final boolean treasure;
 
-    protected EnchantPersistentSourceFunction(List<LootItemCondition> conditions, Optional<HolderSet<Enchantment>> options, boolean treasure) {
-        super(conditions);
+    protected EnchantPersistentSourceFunction(Optional<Holder<LootItemCondition>> condition, Optional<HolderSet<Enchantment>> options, boolean treasure) {
+        super(condition);
         this.options = options;
         this.treasure = treasure;
     }

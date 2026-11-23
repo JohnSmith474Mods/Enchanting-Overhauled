@@ -3,9 +3,10 @@ package johnsmith.enchantingoverhauled.advancement;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.Codec;
 
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -43,14 +44,14 @@ public class ActivateAltarTrigger extends SimpleCriterionTrigger<ActivateAltarTr
          * Currently, this trigger only checks the standard player predicate, as the specific
          * activation logic is handled by the block interaction event.
          */
-        public record Conditions(Optional<ContextAwarePredicate> player) implements SimpleInstance {
+        public record Conditions(Optional<Holder<LootItemCondition>> player) implements SimpleInstance {
 
             /**
              * The codec for serializing these conditions to and from JSON.
              */
             public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(
                     instance -> instance.group(
-                            ContextAwarePredicate.CODEC.optionalFieldOf("player").forGetter(Conditions::player)
+                            LootItemCondition.CODEC.optionalFieldOf("player").forGetter(Conditions::player)
                     ).apply(instance, Conditions::new)
             );
 
@@ -60,7 +61,7 @@ public class ActivateAltarTrigger extends SimpleCriterionTrigger<ActivateAltarTr
              * @return An Optional containing the player predicate.
              */
             @Override
-            public @NotNull Optional<ContextAwarePredicate> player() {
+            public @NotNull Optional<Holder<LootItemCondition>> player() {
                 return this.player;
             }
 

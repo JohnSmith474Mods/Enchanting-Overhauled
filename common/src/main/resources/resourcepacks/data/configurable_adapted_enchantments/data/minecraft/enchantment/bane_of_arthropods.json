@@ -128,7 +128,7 @@
             "minecraft:entity_type": "#minecraft:sensitive_to_bane_of_arthropods"
           },
           "entity": "this",
-          "condition": "minecraft:entity_properties"
+          "type": "minecraft:entity_properties"
         }
       }
     ],
@@ -229,16 +229,16 @@
                 "minecraft:entity_type": "#minecraft:sensitive_to_bane_of_arthropods"
               },
               "entity": "this",
-              "condition": "minecraft:entity_properties"
+              "type": "minecraft:entity_properties"
             },
             {
               "predicate": {
                 "is_direct": true
               },
-              "condition": "minecraft:damage_source_properties"
+              "type": "minecraft:damage_source_properties"
             }
           ],
-          "condition": "minecraft:all_of"
+          "type": "minecraft:all_of"
         }
       }
     ]

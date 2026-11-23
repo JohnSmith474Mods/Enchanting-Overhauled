@@ -116,7 +116,7 @@
           "predicate": {
             "items": "#enchanting_overhauled:all_ammunition"
           },
-          "condition": "minecraft:match_tool"
+          "type": "minecraft:match_tool"
         }
       }
     ]

@@ -11,11 +11,12 @@ import johnsmith.enchantmentcore.api.enchantment.spellfield.math.GlobalVolume;
 import johnsmith.enchantmentcore.api.registry.LevelBasedKeyProvider;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.entity.SpellFieldAnchorEntity;
 
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
 
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +44,7 @@ public record SummonMirageEffect(
         LevelBasedValue duration,
         LevelBasedValue radius,
         boolean redirectAggro,
-        Optional<ContextAwarePredicate> entityFilter
+        Optional<Holder<LootItemCondition>> entityFilter
 ) implements SpellFieldEntityEffect, SpellFieldVolumeEffect {
 
     /**
@@ -89,7 +90,7 @@ public record SummonMirageEffect(
             LevelBasedValue.CODEC.optionalFieldOf(DURATION, LevelBasedValue.constant((float) MirageEntity.DEFAULT_MAX_LIFETIME_TICKS)).forGetter(SummonMirageEffect::duration),
             LevelBasedValue.CODEC.optionalFieldOf(RADIUS, LevelBasedValue.constant(0.0F)).forGetter(SummonMirageEffect::radius),
             Codec.BOOL.optionalFieldOf(REDIRECT_AGGRO, true).forGetter(SummonMirageEffect::redirectAggro),
-            ContextAwarePredicate.CODEC.optionalFieldOf(ENTITY_FILTER).forGetter(SummonMirageEffect::entityFilter)
+            LootItemCondition.CODEC.optionalFieldOf(ENTITY_FILTER).forGetter(SummonMirageEffect::entityFilter)
     ).apply(instance, SummonMirageEffect::new));
 
     /**
@@ -137,7 +138,7 @@ public record SummonMirageEffect(
             return;
         }
         if (this.entityFilter.isPresent()
-                && !this.entityFilter.get().matches(SpellFieldEntityEffect.createLootContext(level, victim, enchantmentLevel))) {
+                && !this.entityFilter.get().value().test(SpellFieldEntityEffect.createLootContext(level, victim, enchantmentLevel))) {
             return;
         }
         this.spawnMirageFormation(level, enchantmentLevel, victim, volumeScalar);
@@ -168,7 +169,7 @@ public record SummonMirageEffect(
             return;
         }
         if (this.entityFilter.isPresent()
-                && !this.entityFilter.get().matches(SpellFieldEntityEffect.createLootContext(level, subject, enchantmentLevel))) {
+                && !this.entityFilter.get().value().test(SpellFieldEntityEffect.createLootContext(level, subject, enchantmentLevel))) {
             return;
         }
         this.spawnMirageFormation(level, enchantmentLevel, subject, 1.0F);

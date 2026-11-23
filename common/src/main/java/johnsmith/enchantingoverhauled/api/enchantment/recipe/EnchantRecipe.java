@@ -6,9 +6,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,7 +40,7 @@ public record EnchantRecipe(
      */
     public static final Codec<EnchantRecipe> CODEC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(instance ->
             instance.group(
-                    RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("input").forGetter(EnchantRecipe::input),
+                    RegistryCodecs.holderSet(Registries.ITEM).fieldOf("input").forGetter(EnchantRecipe::input),
                     BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("output").forGetter(EnchantRecipe::output),
                     EnchantmentAttachment.CODEC.fieldOf("attachment").forGetter(EnchantRecipe::attachment),
                     Codec.INT.optionalFieldOf("enchantability", 1).forGetter(EnchantRecipe::enchantability)

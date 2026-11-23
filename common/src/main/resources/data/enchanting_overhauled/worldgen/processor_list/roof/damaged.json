@@ -6,7 +6,7 @@
         "input_predicate": {
           "predicate_type": "minecraft:blockstate_match",
           "block_state": {
-            "Name": "minecraft:polished_deepslate"
+            "id": "minecraft:polished_deepslate"
           }
         },
         "probability": 0.78,
@@ -15,13 +15,13 @@
           "outputs": [
             {
               "data": {
-                "Name": "minecraft:deepslate_tiles"
+                "id": "minecraft:deepslate_tiles"
               },
               "weight": 3
             },
             {
               "data": {
-                "Name": "minecraft:cracked_deepslate_tiles"
+                "id": "minecraft:cracked_deepslate_tiles"
               },
               "weight": 2
             }
@@ -32,7 +32,7 @@
         "input_predicate": {
           "predicate_type": "minecraft:blockstate_match",
           "block_state": {
-            "Name": "minecraft:polished_deepslate_stairs"
+            "id": "minecraft:polished_deepslate_stairs"
           }
         },
         "copy_properties": true,
@@ -40,7 +40,7 @@
         "output": {
           "type": "constant",
           "state": {
-            "Name": "minecraft:deepslate_tile_stairs"
+            "id": "minecraft:deepslate_tile_stairs"
           }
         }
       },
@@ -48,7 +48,7 @@
         "input_predicate": {
           "predicate_type": "minecraft:blockstate_match",
           "block_state": {
-            "Name": "minecraft:polished_deepslate_slab"
+            "id": "minecraft:polished_deepslate_slab"
           }
         },
         "copy_properties": true,
@@ -56,7 +56,7 @@
         "output": {
           "type": "constant",
           "state": {
-            "Name": "minecraft:deepslate_tile_slab"
+            "id": "minecraft:deepslate_tile_slab"
           }
         }
       },
@@ -64,7 +64,7 @@
         "input_predicate": {
           "predicate_type": "minecraft:blockstate_match",
           "block_state": {
-            "Name": "minecraft:polished_deepslate_wall"
+            "id": "minecraft:polished_deepslate_wall"
           }
         },
         "copy_properties": true,
@@ -72,7 +72,7 @@
         "output": {
           "type": "constant",
           "state": {
-            "Name": "minecraft:deepslate_tile_wall"
+            "id": "minecraft:deepslate_tile_wall"
           }
         }
       }

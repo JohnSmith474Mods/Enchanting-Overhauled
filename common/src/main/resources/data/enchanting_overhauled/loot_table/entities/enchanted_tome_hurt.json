@@ -12,11 +12,9 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:paper",
-          "functions": [
-            {
-              "function": "enchanting_overhauled:enchant_randomly"
-            }
-          ]
+          "modifier": {
+            "type": "enchanting_overhauled:enchant_randomly"
+          }
         }
       ]
     }

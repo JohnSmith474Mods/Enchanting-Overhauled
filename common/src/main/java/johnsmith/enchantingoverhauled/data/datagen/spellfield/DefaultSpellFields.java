@@ -15,7 +15,6 @@ import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.Consta
 import johnsmith.enchantmentcore.api.enchantment.spellfield.math.function.LinearScalingFunction;
 import johnsmith.enchantmentcore.api.enchantment.spellfield.shape.SpellFieldVolume;
 
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.DataComponentMatchers;
 import net.minecraft.advancements.predicates.EnchantmentPredicate;
 import net.minecraft.advancements.predicates.entity.EntityEquipmentPredicate;
@@ -69,7 +68,7 @@ public class DefaultSpellFields {
      * Use this for {@code entity_filter} on {@code SpellFieldEntityEffect}s (e.g., {@code ApplyPotionEffect},
      * {@code AbsoluteStasisEffect}, {@code DamageEffect}, {@code ImpulseEffect}).
      */
-    public static final Function<BootstrapContext<?>, ContextAwarePredicate> CAN_HARM = context -> ContextAwarePredicate.create(
+    public static final Function<BootstrapContext<?>, Holder<LootItemCondition>> CAN_HARM = context -> Holder.direct(
             canHarmCondition(RegistryLookup.ENTITY_TYPE.apply(context)).build()
     );
 
@@ -82,7 +81,7 @@ public class DefaultSpellFields {
      * </ul>
      * Use this for {@code ExplosionDefinition}'s immunity predicate where {@code true} grants immunity.
      */
-    public static final Function<BootstrapContext<?>, ContextAwarePredicate> DO_NOT_HARM = context -> ContextAwarePredicate.create(
+    public static final Function<BootstrapContext<?>, Holder<LootItemCondition>> DO_NOT_HARM = context -> Holder.direct(
             InvertedLootItemCondition.invert(canHarmCondition(RegistryLookup.ENTITY_TYPE.apply(context))).build()
     );
 
@@ -95,7 +94,7 @@ public class DefaultSpellFields {
                         Tags.ENCHANTED_TOME_AVOID_COLLATERAL
                 ),
                 AnyOfCondition.anyOf(
-                        () -> new InvertedLootItemCondition(hasEnchantedArmor()),
+                        InvertedLootItemCondition.invert(Holder.direct(hasEnchantedArmor())),
                         CasterHostileCondition.builder()
                 )
         );
@@ -147,7 +146,7 @@ public class DefaultSpellFields {
         ).build();
     }
 
-    public static final Function<BootstrapContext<?>, ContextAwarePredicate> NON_PLAYER_FILTER = context -> ContextAwarePredicate.create(
+    public static final Function<BootstrapContext<?>, Holder<LootItemCondition>> NON_PLAYER_FILTER = context -> Holder.direct(
             InvertedLootItemCondition.invert(
                     LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
@@ -156,7 +155,7 @@ public class DefaultSpellFields {
             ).build()
     );
 
-    public static final Function<BootstrapContext<?>, ContextAwarePredicate> PLAYER_ONLY_FILTER = context -> ContextAwarePredicate.create(
+    public static final Function<BootstrapContext<?>, Holder<LootItemCondition>> PLAYER_ONLY_FILTER = context -> Holder.direct(
             LootItemEntityPropertyCondition.hasProperties(
                     LootContext.EntityTarget.THIS,
                     EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypes.PLAYER)

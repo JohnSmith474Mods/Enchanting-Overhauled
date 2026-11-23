@@ -127,16 +127,16 @@
           "predicate": {
             "tags": [
               {
-                "id": "minecraft:is_fall",
+                "id": "#minecraft:is_fall",
                 "expected": true
               },
               {
-                "id": "minecraft:bypasses_invulnerability",
+                "id": "#minecraft:bypasses_invulnerability",
                 "expected": false
               }
             ]
           },
-          "condition": "minecraft:damage_source_properties"
+          "type": "minecraft:damage_source_properties"
         }
       }
     ]

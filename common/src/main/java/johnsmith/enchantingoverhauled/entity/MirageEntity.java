@@ -694,11 +694,12 @@ public class MirageEntity extends Mob {
             this.yBodyRotO = livingCaster.yBodyRotO;
             this.yHeadRot = livingCaster.yHeadRot;
             this.yHeadRotO = livingCaster.yHeadRotO;
-            this.swinging = livingCaster.swinging;
-            this.swingTime = livingCaster.swingTime;
-            this.swingingArm = livingCaster.swingingArm;
-            this.attackAnim = livingCaster.attackAnim;
-            this.oAttackAnim = livingCaster.oAttackAnim;
+            if (livingCaster.isSwinging() && !this.isSwinging()) {
+                LivingEntity.SwingDescription swing = livingCaster.getCurrentSwing();
+                if (swing != null) {
+                    this.swing(swing.hand(), swing.animation(), false);
+                }
+            }
             this.walkAnimation.setSpeed(livingCaster.walkAnimation.speed());
         } else {
             this.yBodyRot = caster.getYRot();
@@ -723,11 +724,12 @@ public class MirageEntity extends Mob {
             livingProxy.yBodyRotO = this.yBodyRotO;
             livingProxy.yHeadRot = this.yHeadRot;
             livingProxy.yHeadRotO = this.yHeadRotO;
-            livingProxy.swinging = this.swinging;
-            livingProxy.swingTime = this.swingTime;
-            livingProxy.swingingArm = this.swingingArm;
-            livingProxy.attackAnim = this.attackAnim;
-            livingProxy.oAttackAnim = this.oAttackAnim;
+            if (this.isSwinging() && !livingProxy.isSwinging()) {
+                LivingEntity.SwingDescription swing = this.getCurrentSwing();
+                if (swing != null) {
+                    livingProxy.swing(swing.hand(), swing.animation(), false);
+                }
+            }
             livingProxy.walkAnimation.setSpeed(this.walkAnimation.speed());
         }
     }

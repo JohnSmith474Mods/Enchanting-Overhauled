@@ -18,7 +18,7 @@ dependencies {
     api "maven.modrinth:${project.config_overhauled_project_name}:${project.config_overhauled_version}+${project.minecraft_version}-fabric"
     implementation "maven.modrinth:${project.enchantment_core_project_name}:${project.enchantment_core_version}+${project.minecraft_version}-fabric"
 
-    implementation "maven.modrinth:modmenu:18.0.1"
+    implementation "maven.modrinth:modmenu:21.0.1"
 
     // Explicitly add Night Config for the development environment runtime
     implementation "com.electronwill.night-config:toml:3.8.3"

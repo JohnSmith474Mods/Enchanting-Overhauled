@@ -5,6 +5,7 @@ import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.client.gui.screen.enchant.MenuLayoutConfig;
 import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -123,7 +124,7 @@ public class PageNavigationWidget {
      * @return true if the event was consumed, false otherwise.
      */
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button != 0) return false;
+        if (button != InputConstants.MOUSE_BUTTON_LEFT) return false;
         int totalEnchants = this.menu.getActiveContexts().size();
         if (totalEnchants <= layout.pageSize()) return false;
         boolean hasTargetItem = !this.menu.getEnchantmentTarget().isEmpty();

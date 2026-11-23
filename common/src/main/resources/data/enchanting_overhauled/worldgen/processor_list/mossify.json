@@ -7,19 +7,19 @@
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             }
           },
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             }
           },
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:cobblestone"
+              "id": "minecraft:cobblestone"
             }
           }
         ],
@@ -33,19 +33,19 @@
           },
           "states": [
             {
-              "Name": "minecraft:mossy_stone_bricks"
+              "id": "minecraft:mossy_stone_bricks"
             },
             {
-              "Name": "minecraft:mossy_cobblestone"
+              "id": "minecraft:mossy_cobblestone"
             },
             {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             {
-              "Name": "minecraft:cobblestone"
+              "id": "minecraft:cobblestone"
             }
           ]
         }
@@ -55,13 +55,13 @@
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:stone_brick_slab"
+              "id": "minecraft:stone_brick_slab"
             }
           },
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:cobblestone_slab"
+              "id": "minecraft:cobblestone_slab"
             }
           }
         ],
@@ -76,16 +76,16 @@
           },
           "states": [
             {
-              "Name": "minecraft:mossy_stone_brick_slab"
+              "id": "minecraft:mossy_stone_brick_slab"
             },
             {
-              "Name": "minecraft:mossy_cobblestone_slab"
+              "id": "minecraft:mossy_cobblestone_slab"
             },
             {
-              "Name": "minecraft:stone_brick_slab"
+              "id": "minecraft:stone_brick_slab"
             },
             {
-              "Name": "minecraft:cobblestone_slab"
+              "id": "minecraft:cobblestone_slab"
             }
           ]
         }
@@ -95,13 +95,13 @@
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:stone_brick_stairs"
+              "id": "minecraft:stone_brick_stairs"
             }
           },
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:cobblestone_stairs"
+              "id": "minecraft:cobblestone_stairs"
             }
           }
         ],
@@ -116,16 +116,16 @@
           },
           "states": [
             {
-              "Name": "minecraft:mossy_stone_brick_stairs"
+              "id": "minecraft:mossy_stone_brick_stairs"
             },
             {
-              "Name": "minecraft:mossy_cobblestone_stairs"
+              "id": "minecraft:mossy_cobblestone_stairs"
             },
             {
-              "Name": "minecraft:stone_brick_stairs"
+              "id": "minecraft:stone_brick_stairs"
             },
             {
-              "Name": "minecraft:cobblestone_stairs"
+              "id": "minecraft:cobblestone_stairs"
             }
           ]
         }

@@ -69,9 +69,9 @@ public class MagicMissileRenderer extends EntityRenderer<MagicMissileEntity, Mag
 
         poseStack.pushPose();
         poseStack.translate(0.0F, state.boundingBoxHeight * 0.5F, 0.0F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot - 90.0F));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(state.xRot));
-        poseStack.mulPose(Axis.XP.rotationDegrees(ageInTicks * 24.0F));
+        poseStack.rotateDegrees(Axis.YP, state.yRot - 90.0F);
+        poseStack.rotateDegrees(Axis.ZP, state.xRot);
+        poseStack.rotateDegrees(Axis.XP, ageInTicks * 24.0F);
         poseStack.scale(pulse, pulse, pulse);
 
         submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) -> {

@@ -7,12 +7,10 @@
           "type": "minecraft:item",
           "name": "enchanting_overhauled:enchanted_tome",
           "weight": 1,
-          "functions": [
-            {
-              "function": "enchanting_overhauled:enchant_randomly",
-              "treasure": true
-            }
-          ]
+          "modifier": {
+            "type": "enchanting_overhauled:enchant_randomly",
+            "treasure": true
+          }
         },
         {
           "type": "minecraft:empty",

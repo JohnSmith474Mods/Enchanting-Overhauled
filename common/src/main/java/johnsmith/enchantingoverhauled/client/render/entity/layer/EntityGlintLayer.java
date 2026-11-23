@@ -29,13 +29,12 @@ public class EntityGlintLayer<S extends LivingEntityRenderState, M extends Entit
                 this.getParentModel(),
                 renderState,
                 poseStack,
-                RenderTypes.entityGlint(),
+                RenderTypes.patternedShieldGlint(),
                 packedLight,
                 OverlayTexture.NO_OVERLAY,
                 0xFFFFFFFF,
                 null,
-                renderState.outlineColor,
-                null
+                renderState.outlineColor
         );
     }
 }

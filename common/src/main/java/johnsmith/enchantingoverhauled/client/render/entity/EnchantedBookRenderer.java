@@ -132,7 +132,7 @@ public class EnchantedBookRenderer extends MobRenderer<EnchantedBookEntity, Flyi
         float oy = centerY + Mth.sin(bobTicks * 0.15F) * 0.08F;
 
         poseStack.translate(ox, oy, oz);
-        poseStack.mulPose(Axis.YP.rotation(-angle + (float) (Math.PI * 0.5D)));
+        poseStack.rotate(Axis.YP, -angle + (float) (Math.PI * 0.5D));
         poseStack.scale(0.45F, 0.45F, 0.45F);
 
         itemRenderState.submit(poseStack, submitNodeCollector, packedLight, OverlayTexture.NO_OVERLAY, outlineColor);

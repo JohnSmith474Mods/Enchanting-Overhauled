@@ -144,7 +144,7 @@
             },
             "type": "minecraft:enchantment_level"
           },
-          "condition": "minecraft:random_chance"
+          "type": "minecraft:random_chance"
         }
       }
     ],

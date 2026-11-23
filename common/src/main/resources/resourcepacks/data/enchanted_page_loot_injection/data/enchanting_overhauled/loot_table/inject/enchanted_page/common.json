@@ -1,4 +1,3 @@
-
 {
   "pools": [
     {
@@ -8,12 +7,10 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:paper",
-          "functions": [
-            {
-              "function": "enchanting_overhauled:enchant_randomly",
-              "treasure": true
-            }
-          ]
+          "modifier": {
+            "type": "enchanting_overhauled:enchant_randomly",
+            "treasure": true
+          }
         }
       ]
     }

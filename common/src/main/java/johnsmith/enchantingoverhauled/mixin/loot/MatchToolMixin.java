@@ -36,7 +36,7 @@ public class MatchToolMixin {
         // 1. If vanilla check failed, or we have no predicate, do nothing.
         if (!cir.getReturnValue() || this.predicate.isEmpty()) return;
 
-        ItemInstance tool = context.getOptionalParameter(LootContextParams.TOOL);
+        ItemInstance tool = context.getOptional(LootContextParams.TOOL);
         if (tool == null || tool.count() <= 0) return;
 
         // 2. Check for Silk Touch Effect

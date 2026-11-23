@@ -127,16 +127,16 @@
           "predicate": {
             "tags": [
               {
-                "id": "minecraft:is_projectile",
+                "id": "#minecraft:is_projectile",
                 "expected": true
               },
               {
-                "id": "minecraft:bypasses_invulnerability",
+                "id": "#minecraft:bypasses_invulnerability",
                 "expected": false
               }
             ]
           },
-          "condition": "minecraft:damage_source_properties"
+          "type": "minecraft:damage_source_properties"
         }
       }
     ]

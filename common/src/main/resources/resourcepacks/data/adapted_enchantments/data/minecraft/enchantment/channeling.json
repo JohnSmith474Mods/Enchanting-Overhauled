@@ -22,7 +22,7 @@
           ]
         },
         "requirements": {
-          "condition": "minecraft:all_of",
+          "type": "minecraft:all_of",
           "terms": [
             {
               "chance": {
@@ -38,21 +38,21 @@
                   }
                 }
               },
-              "condition": "minecraft:random_chance"
+              "type": "minecraft:random_chance"
             },
             {
-              "condition": "minecraft:weather_check",
+              "type": "minecraft:weather_check",
               "thundering": true
             },
             {
-              "condition": "minecraft:entity_properties",
+              "type": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
                 "minecraft:entity_type": "minecraft:trident"
               }
             },
             {
-              "condition": "minecraft:location_check",
+              "type": "minecraft:location_check",
               "predicate": {
                 "block": {
                   "blocks": "#minecraft:lightning_rods"
@@ -84,7 +84,7 @@
         },
         "enchanted": "attacker",
         "requirements": {
-          "condition": "minecraft:all_of",
+          "type": "minecraft:all_of",
           "terms": [
             {
               "chance": {
@@ -100,14 +100,14 @@
                   }
                 }
               },
-              "condition": "minecraft:random_chance"
+              "type": "minecraft:random_chance"
             },
             {
-              "condition": "minecraft:weather_check",
+              "type": "minecraft:weather_check",
               "thundering": true
             },
             {
-              "condition": "minecraft:entity_properties",
+              "type": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
                 "minecraft:location": {
@@ -116,7 +116,7 @@
               }
             },
             {
-              "condition": "minecraft:entity_properties",
+              "type": "minecraft:entity_properties",
               "entity": "direct_attacker",
               "predicate": {
                 "minecraft:entity_type": "minecraft:trident"

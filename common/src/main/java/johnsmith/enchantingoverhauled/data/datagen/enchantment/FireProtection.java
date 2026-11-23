@@ -19,7 +19,6 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.AddValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
-import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.DamageSourceCondition;
 
 import java.util.function.Function;
@@ -52,9 +51,7 @@ public class FireProtection {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE_PROTECTION,
                             new AddValue(new PointerValue("fire_protection.damage_protection", new DiminishingReturnsValue(6.F, 2.F, 2.F))),
-                            AllOfCondition.allOf(
-                                    DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE)).tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
-                            )
+                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.IS_FIRE)).tag(TagPredicate.isNot(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, FireProtection.EFFECT)
                     .build(AdaptedEnchantments.FIRE_PROTECTION.identifier());

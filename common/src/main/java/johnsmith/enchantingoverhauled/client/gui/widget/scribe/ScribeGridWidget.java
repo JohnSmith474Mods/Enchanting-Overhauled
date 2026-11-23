@@ -3,6 +3,7 @@ package johnsmith.enchantingoverhauled.client.gui.widget.scribe;
 import johnsmith.enchantingoverhauled.Config;
 import johnsmith.enchantingoverhauled.Constants;
 import johnsmith.enchantingoverhauled.menu.scribe.model.ScribeGridData;
+import com.mojang.blaze3d.platform.InputConstants;
 import johnsmith.enchantingoverhauled.menu.scribe.controller.ScribeInput;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -80,12 +81,12 @@ public class ScribeGridWidget {
             boolean isFlagged = this.gridData.isFlagged(cellX, cellY);
 
             // Right Click / Flag Interaction
-            if (button == 1) {
+            if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (isRevealed) return -1; // Cannot flag revealed cells
                 return new ScribeInput(cellX, cellY, ScribeInput.ACTION_FLAG).encode();
             }
             // Left Click / Reveal & Chord Interaction
-            else if (button == 0) {
+            else if (button == InputConstants.MOUSE_BUTTON_LEFT) {
                 if (isFlagged) return -1; // Cannot directly reveal flagged cells
 
                 // If it's already revealed, we evaluate it as a Chord attempt

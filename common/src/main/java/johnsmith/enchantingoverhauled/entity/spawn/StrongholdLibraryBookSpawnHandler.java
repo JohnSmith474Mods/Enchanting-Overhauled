@@ -8,6 +8,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -26,8 +28,7 @@ public final class StrongholdLibraryBookSpawnHandler {
     private static final Weighted<MobSpawnSettings.SpawnerData> TOME_SPAWNER = new Weighted<>(
             new MobSpawnSettings.SpawnerData(
                     Entities.ENCHANTED_TOME.get(),
-                    1,
-                    1
+                    ConstantInt.of(1)
             ),
             2
     );
@@ -35,8 +36,7 @@ public final class StrongholdLibraryBookSpawnHandler {
     private static final Weighted<MobSpawnSettings.SpawnerData> BOOK_SPAWNER = new Weighted<>(
             new MobSpawnSettings.SpawnerData(
                     Entities.ENCHANTED_BOOK.get(),
-                    1,
-                    3
+                    UniformInt.of(1, 3)
             ),
             12
     );
@@ -90,11 +90,11 @@ public final class StrongholdLibraryBookSpawnHandler {
             }
         }
 
-        return BlockPos.findClosestMatch(
-                pos,
-                8,
-                5,
-                checkPos -> level.getBlockState(checkPos).is(Tags.ENCHANTED_BOOK_IDLE_TARGET)
-        ).isPresent();
+        for (BlockPos checkPos : BlockPos.withinBoxByManhattanDistance(pos, 8, 5, 8)) {
+            if (level.getBlockState(checkPos).is(Tags.ENCHANTED_BOOK_IDLE_TARGET)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

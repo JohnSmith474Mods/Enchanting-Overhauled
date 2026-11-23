@@ -11,7 +11,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.EnchantTableRenderer;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -48,7 +47,7 @@ public class EnchantTableRendererMixin {
             method = "submit(Lnet/minecraft/client/renderer/blockentity/state/EnchantTableRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;IIILnet/minecraft/client/resources/model/sprite/SpriteId;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
+                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;IIILnet/minecraft/client/resources/model/sprite/SpriteId;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;I)V"
             )
     )
     private <S> void wrapSubmitModel(
@@ -62,13 +61,12 @@ public class EnchantTableRendererMixin {
             SpriteId spriteId,
             SpriteGetter sprites,
             int outlineColor,
-            ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
             Operation<Void> original
     ) {
         RenderType tomeRenderType = ClientConstants.ENCHANTED_TOME_MATERIAL.renderType(RenderTypes::entityCutout);
         TextureAtlasSprite tomeSprite = sprites.get(ClientConstants.ENCHANTED_TOME_MATERIAL);
-        collector.submitModel(model, modelState, poseStack, tomeRenderType, packedLight, packedOverlay, tintedColor, tomeSprite, outlineColor, crumblingOverlay);
+        collector.submitModel(model, modelState, poseStack, tomeRenderType, packedLight, packedOverlay, tintedColor, tomeSprite, outlineColor);
 
-        collector.order(1).submitModel(model, modelState, poseStack, RenderTypes.entityGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor, crumblingOverlay);
+        collector.order(1).submitModel(model, modelState, poseStack, RenderTypes.patternedShieldGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor);
     }
 }

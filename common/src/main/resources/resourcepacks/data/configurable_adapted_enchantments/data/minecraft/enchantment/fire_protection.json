@@ -148,24 +148,19 @@
           "type": "minecraft:add"
         },
         "requirements": {
-          "terms": [
-            {
-              "predicate": {
-                "tags": [
-                  {
-                    "id": "minecraft:is_fire",
-                    "expected": true
-                  },
-                  {
-                    "id": "minecraft:bypasses_invulnerability",
-                    "expected": false
-                  }
-                ]
+          "predicate": {
+            "tags": [
+              {
+                "id": "#minecraft:is_fire",
+                "expected": true
               },
-              "condition": "minecraft:damage_source_properties"
-            }
-          ],
-          "condition": "minecraft:all_of"
+              {
+                "id": "#minecraft:bypasses_invulnerability",
+                "expected": false
+              }
+            ]
+          },
+          "type": "minecraft:damage_source_properties"
         }
       }
     ]

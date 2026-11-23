@@ -6,9 +6,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
+import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 
@@ -33,12 +33,12 @@ public record PowerProvider(
     /**
      * The codec responsible for serializing and deserializing instances of this record from JSON.
      * <p>
-     * Uses {@link RegistryCodecs#homogeneousList} to handle the {@link HolderSet} of blocks.
+     * Uses {@link RegistryCodecs#holderSet} to handle the {@link HolderSet} of blocks.
      * The {@code bonuses} field defaults to an empty list if omitted.
      */
     public static final Codec<PowerProvider> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(PowerProvider::blocks),
+                    RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("blocks").forGetter(PowerProvider::blocks),
                     Codec.INT.fieldOf("power").forGetter(PowerProvider::power),
                     PowerBonus.CODEC.listOf().optionalFieldOf("bonuses", List.of()).forGetter(PowerProvider::bonuses)
             ).apply(instance, PowerProvider::new)

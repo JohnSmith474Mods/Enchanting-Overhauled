@@ -83,14 +83,14 @@ public record CasterHostileCondition() implements LootItemCondition {
      */
     @Override
     public boolean test(LootContext context) {
-        Entity entity = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
+        Entity entity = context.getOptional(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof LivingEntity target) || !target.isAlive()) {
             return false;
         }
 
         Entity caster = MirageEntity.getCurrentCasterContext();
         if (caster == null || caster == target) {
-            caster = context.getOptionalParameter(LootContextParams.ATTACKING_ENTITY);
+            caster = context.getOptional(LootContextParams.ATTACKING_ENTITY);
         }
         if (caster instanceof Projectile projectile && projectile.getOwner() != null) {
             caster = projectile.getOwner();

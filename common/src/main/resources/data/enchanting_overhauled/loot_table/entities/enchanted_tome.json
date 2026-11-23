@@ -8,11 +8,9 @@
         {
           "type": "minecraft:item",
           "name": "enchanting_overhauled:enchanted_tome",
-          "functions": [
-            {
-              "function": "enchanting_overhauled:enchant_randomly"
-            }
-          ]
+          "modifier": {
+            "type": "enchanting_overhauled:enchant_randomly"
+          }
         }
       ]
     }

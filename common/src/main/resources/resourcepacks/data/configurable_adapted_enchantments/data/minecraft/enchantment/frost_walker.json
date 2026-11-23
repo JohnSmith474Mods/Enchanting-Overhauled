@@ -98,16 +98,16 @@
           "predicate": {
             "tags": [
               {
-                "id": "minecraft:burn_from_stepping",
+                "id": "#minecraft:burn_from_stepping",
                 "expected": true
               },
               {
-                "id": "minecraft:bypasses_invulnerability",
+                "id": "#minecraft:bypasses_invulnerability",
                 "expected": false
               }
             ]
           },
-          "condition": "minecraft:damage_source_properties"
+          "type": "minecraft:damage_source_properties"
         }
       }
     ],
@@ -140,13 +140,10 @@
             "type": "minecraft:all_of"
           },
           "block_state": {
-            "state": {
-              "Properties": {
-                "age": "0"
-              },
-              "Name": "minecraft:frosted_ice"
-            },
-            "type": "minecraft:simple_state_provider"
+            "id": "minecraft:frosted_ice",
+            "properties": {
+              "age": "0"
+            }
           },
           "trigger_game_event": "minecraft:block_place",
           "radius": {
@@ -209,7 +206,7 @@
             }
           },
           "entity": "this",
-          "condition": "minecraft:entity_properties"
+          "type": "minecraft:entity_properties"
         }
       }
     ]

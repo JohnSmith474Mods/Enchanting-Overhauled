@@ -195,9 +195,9 @@
                   "minecraft:vehicle": {}
                 },
                 "entity": "this",
-                "condition": "minecraft:entity_properties"
+                "type": "minecraft:entity_properties"
               },
-              "condition": "minecraft:inverted"
+              "type": "minecraft:inverted"
             },
             {
               "predicate": {
@@ -206,7 +206,7 @@
                 }
               },
               "entity": "this",
-              "condition": "minecraft:entity_properties"
+              "type": "minecraft:entity_properties"
             },
             {
               "predicate": {
@@ -215,10 +215,10 @@
                 }
               },
               "entity": "this",
-              "condition": "minecraft:entity_properties"
+              "type": "minecraft:entity_properties"
             }
           ],
-          "condition": "minecraft:all_of"
+          "type": "minecraft:all_of"
         }
       }
     ]

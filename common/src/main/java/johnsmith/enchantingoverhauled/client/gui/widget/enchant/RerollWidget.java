@@ -8,6 +8,7 @@ import johnsmith.enchantingoverhauled.client.gui.screen.enchant.MenuLayoutConfig
 import johnsmith.enchantingoverhauled.api.lib.EnchantmentLib;
 import johnsmith.enchantingoverhauled.menu.enchant.EnchantmentMenu;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -188,7 +189,7 @@ public class RerollWidget {
      * @return true if the click was consumed, false otherwise.
      */
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isHovered && button == 0) {
+        if (this.isHovered && button == InputConstants.MOUSE_BUTTON_LEFT) {
             this.onPress.run();
             return true;
         }

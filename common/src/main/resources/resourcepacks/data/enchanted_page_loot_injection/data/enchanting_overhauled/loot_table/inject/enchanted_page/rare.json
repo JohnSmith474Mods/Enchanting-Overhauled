@@ -2,6 +2,7 @@
   "pools": [
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 2,
         "max": 4
       },
@@ -10,12 +11,10 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:paper",
-          "functions": [
-            {
-              "function": "enchanting_overhauled:enchant_randomly",
-              "treasure": true
-            }
-          ]
+          "modifier": {
+            "type": "enchanting_overhauled:enchant_randomly",
+            "treasure": true
+          }
         }
       ]
     }

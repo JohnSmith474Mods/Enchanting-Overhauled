@@ -109,7 +109,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
     ) {
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.02F, 0.0F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-ageInTicks * 2.5F));
+        poseStack.rotateDegrees(Axis.YP, -ageInTicks * 2.5F);
 
         int light = LightCoordsUtil.FULL_BRIGHT;
         submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(texture), (pose, consumer) -> {
@@ -132,14 +132,14 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
     ) {
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.05F, 0.0F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-ageInTicks * 3.0F));
+        poseStack.rotateDegrees(Axis.YP, -ageInTicks * 3.0F);
         submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) ->
                 drawRing(pose.pose(), consumer, 1.0F, 0.06F, 24, r, g, b, 180));
         poseStack.popPose();
 
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.08F, 0.0F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(ageInTicks * 4.5F));
+        poseStack.rotateDegrees(Axis.YP, ageInTicks * 4.5F);
         submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) ->
                 drawRing(pose.pose(), consumer, 0.65F, 0.045F, 20, 255, 255, 255, 210));
         poseStack.popPose();
@@ -159,8 +159,8 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
             poseStack.pushPose();
             poseStack.translate(0.0F, 0.8F, 0.0F);
             poseStack.scale(pulse, pulse, pulse);
-            poseStack.mulPose(Axis.YP.rotationDegrees(ageInTicks * (2.5F + i) + i * 60.0F));
-            poseStack.mulPose(Axis.XP.rotationDegrees(45.0F + i * 45.0F));
+            poseStack.rotateDegrees(Axis.YP, ageInTicks * (2.5F + i) + i * 60.0F);
+            poseStack.rotateDegrees(Axis.XP, 45.0F + i * 45.0F);
             submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) ->
                     drawRing(pose.pose(), consumer, 0.85F, 0.05F, 24, r, g, b, 160));
             poseStack.popPose();
@@ -176,7 +176,7 @@ public class AnchorModelRenderer extends EntityRenderer<SpellFieldAnchorEntity, 
             int b
     ) {
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(ageInTicks * 4.0F));
+        poseStack.rotateDegrees(Axis.YP, ageInTicks * 4.0F);
         submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.lightning(), (pose, consumer) -> {
             Matrix4f matrix = pose.pose();
             int sides = 12;

@@ -263,7 +263,7 @@ public sealed interface ScribeAction permits
                     LecternBlock.resetBookState(player, level, pos, level.getBlockState(pos), false);
 
                     if (!player.getInventory().add(book)) {
-                        player.drop(book, false);
+                        player.drop(book, false, net.minecraft.util.Prediction.PREDICTED);
                     }
                     if (player instanceof ServerPlayer sp) {
                         sp.closeContainer();

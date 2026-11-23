@@ -7,6 +7,7 @@ import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 import net.minecraft.advancements.predicates.BlockPredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -24,7 +25,7 @@ import net.minecraft.world.item.enchantment.effects.PlaySoundEffect;
 import net.minecraft.world.item.enchantment.effects.SummonEntityEffect;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
-import net.minecraft.world.level.storage.loot.providers.number.EnchantmentLevelProvider;
+import net.minecraft.world.level.storage.loot.providers.number.floats.EnchantmentLevelProvider;
 
 import java.util.List;
 import java.util.function.Function;
@@ -54,9 +55,9 @@ public class Channeling {
                             ),
                             AllOfCondition.allOf(
                                     LootItemRandomChanceCondition.randomChance(
-                                            EnchantmentLevelProvider.forEnchantmentLevel(
+                                            Holder.direct(new EnchantmentLevelProvider(
                                                     new PointerValue("channeling.post_attack_chance", new DiminishingReturnsValue(0.45F, 0.15F, 0.1F))
-                                            )
+                                            ))
                                     ),
                                     WeatherCheck.weather().setThundering(true),
                                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().located(LocationPredicate.Builder.location().setCanSeeSky(true))),
@@ -70,9 +71,9 @@ public class Channeling {
                             ),
                             AllOfCondition.allOf(
                                     LootItemRandomChanceCondition.randomChance(
-                                            EnchantmentLevelProvider.forEnchantmentLevel(
+                                            Holder.direct(new EnchantmentLevelProvider(
                                                     new PointerValue("channeling.hit_block_chance", new DiminishingReturnsValue(0.45F, 0.15F, 0.1F))
-                                            )
+                                            ))
                                     ),
                                     WeatherCheck.weather().setThundering(true),
                                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(RegistryLookup.ENTITY_TYPE.apply(context), EntityTypes.TRIDENT)),

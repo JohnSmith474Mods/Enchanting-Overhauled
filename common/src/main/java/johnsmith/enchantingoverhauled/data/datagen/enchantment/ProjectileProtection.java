@@ -33,7 +33,7 @@ public class ProjectileProtection {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE_PROTECTION,
                             new AddValue(new PointerValue("projectile_protection.damage_protection", new DiminishingReturnsValue(6.F, 2.F, 2.F))),
-                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_PROJECTILE)).tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
+                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.IS_PROJECTILE)).tag(TagPredicate.isNot(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
                     .build(AdaptedEnchantments.PROJECTILE_PROTECTION.identifier());
 }

@@ -19,7 +19,7 @@ import johnsmith.enchantmentcore.api.registry.EnchantmentCoreEntities;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
@@ -83,7 +83,7 @@ public record AiSpellField(
             CastType.CODEC.optionalFieldOf("cast_type").forGetter(field -> Optional.of(field.castType())),
             DifficultyGate.CODEC.optionalFieldOf("difficulty_gate", DifficultyGate.EASY).forGetter(AiSpellField::difficultyGate),
             Codec.BOOL.optionalFieldOf("griefing", false).forGetter(AiSpellField::griefing),
-            RegistryCodecs.homogeneousList(MagicSchools.REGISTRY_KEY).optionalFieldOf("schools").forGetter(AiSpellField::schools),
+            RegistryCodecs.holderSet(MagicSchools.REGISTRY_KEY).optionalFieldOf("schools").forGetter(AiSpellField::schools),
             ResourceKey.codec(EnchantmentThemes.THEME_REGISTRY_KEY).optionalFieldOf("theme", EnchantmentThemes.COMMON).forGetter(AiSpellField::theme),
             AnchorPayload.CODEC.optionalFieldOf("anchor").forGetter(AiSpellField::anchor),
             Codec.lazyInitialized(() -> SpellFieldComponent.CODEC.codec()).fieldOf("spell_field").forGetter(AiSpellField::spellField)

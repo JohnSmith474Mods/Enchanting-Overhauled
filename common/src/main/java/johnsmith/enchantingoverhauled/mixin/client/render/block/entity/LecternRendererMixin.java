@@ -79,7 +79,7 @@ public class LecternRendererMixin {
             method = "submit(Lnet/minecraft/client/renderer/blockentity/state/LecternRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;IIILnet/minecraft/client/resources/model/sprite/SpriteId;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;ILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
+                    target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;IIILnet/minecraft/client/resources/model/sprite/SpriteId;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;I)V"
             )
     )
     @SuppressWarnings("unchecked")
@@ -94,7 +94,6 @@ public class LecternRendererMixin {
             SpriteId spriteId,
             SpriteGetter sprites,
             int outlineColor,
-            ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
             Operation<Void> original,
             @Local(argsOnly = true) LecternRenderState renderState
     ) {
@@ -117,13 +116,13 @@ public class LecternRendererMixin {
         if (customSpriteId != null) {
             RenderType renderTypeToUse = customSpriteId.renderType(RenderTypes::entityCutout);
             TextureAtlasSprite spriteToUse = sprites.get(customSpriteId);
-            collector.submitModel(modelToUse, modelState, poseStack, renderTypeToUse, packedLight, packedOverlay, tintedColor, spriteToUse, outlineColor, crumblingOverlay);
+            collector.submitModel(modelToUse, modelState, poseStack, renderTypeToUse, packedLight, packedOverlay, tintedColor, spriteToUse, outlineColor);
         } else {
-            original.call(collector, modelToUse, modelState, poseStack, packedLight, packedOverlay, tintedColor, spriteId, sprites, outlineColor, crumblingOverlay);
+            original.call(collector, modelToUse, modelState, poseStack, packedLight, packedOverlay, tintedColor, spriteId, sprites, outlineColor);
         }
 
         if (hasFoil) {
-            collector.order(1).submitModel(modelToUse, modelState, poseStack, RenderTypes.entityGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor, crumblingOverlay);
+            collector.order(1).submitModel(modelToUse, modelState, poseStack, RenderTypes.patternedShieldGlint(), packedLight, packedOverlay, tintedColor, null, outlineColor);
         }
     }
 }

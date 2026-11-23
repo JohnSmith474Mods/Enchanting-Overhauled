@@ -88,8 +88,8 @@ public final class RoostedBookRenderer {
         }
 
         float interpolatedRot = entity.altarORot + deltaRot * partialTick;
-        poseStack.mulPose(Axis.YP.rotation(-interpolatedRot));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(80.0F));
+        poseStack.rotate(Axis.YP, -interpolatedRot);
+        poseStack.rotateDegrees(Axis.ZP, 80.0F);
 
         float flip = Mth.lerp(partialTick, entity.altarOFlip, entity.altarFlip);
         float rightPageFlip = Mth.clamp(Mth.frac(flip + 0.25F) * 1.6F - 0.3F, 0.0F, 1.0F);
@@ -106,20 +106,18 @@ public final class RoostedBookRenderer {
                 packedOverlay,
                 0xFFFFFFFF,
                 null,
-                outlineColor,
-                null
+                outlineColor
         );
         submitNodeCollector.order(1).submitModel(
                 bookModel,
                 bookState,
                 poseStack,
-                RenderTypes.entityGlint(),
+                RenderTypes.patternedShieldGlint(),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,
                 null,
-                outlineColor,
-                null
+                outlineColor
         );
     }
 
@@ -141,8 +139,8 @@ public final class RoostedBookRenderer {
 
         poseStack.translate(0.5F, 1.0625F, 0.5F);
         float yRot = facing.getClockWise().toYRot();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-yRot));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(67.5F));
+        poseStack.rotateDegrees(Axis.YP, -yRot);
+        poseStack.rotateDegrees(Axis.ZP, 67.5F);
         poseStack.translate(0.0F, -0.125F, 0.0F);
 
         BookModel.State bookState = BookModel.State.forAnimation(0.0F, 0.1F, 0.9F, 1.2F);
@@ -155,20 +153,18 @@ public final class RoostedBookRenderer {
                 packedOverlay,
                 0xFFFFFFFF,
                 null,
-                outlineColor,
-                null
+                outlineColor
         );
         submitNodeCollector.order(1).submitModel(
                 bookModel,
                 bookState,
                 poseStack,
-                RenderTypes.entityGlint(),
+                RenderTypes.patternedShieldGlint(),
                 packedLight,
                 packedOverlay,
                 0xFFFFFFFF,
                 null,
-                outlineColor,
-                null
+                outlineColor
         );
     }
 }

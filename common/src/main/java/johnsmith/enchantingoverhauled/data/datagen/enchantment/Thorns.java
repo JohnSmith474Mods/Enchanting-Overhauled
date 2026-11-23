@@ -3,6 +3,7 @@ package johnsmith.enchantingoverhauled.data.datagen.enchantment;
 import johnsmith.enchantmentcore.api.enchantment.value.DiminishingReturnsValue;
 import johnsmith.enchantmentcore.api.enchantment.value.PointerValue;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.ItemTags;
@@ -16,7 +17,7 @@ import net.minecraft.world.item.enchantment.effects.AllOf;
 import net.minecraft.world.item.enchantment.effects.ChangeItemDamage;
 import net.minecraft.world.item.enchantment.effects.DamageEntity;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.EnchantmentLevelProvider;
+import net.minecraft.world.level.storage.loot.providers.number.floats.EnchantmentLevelProvider;
 
 import java.util.function.Function;
 
@@ -44,7 +45,7 @@ public class Thorns {
                                                      context.lookup(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.THORNS)),
                                     new ChangeItemDamage(new PointerValue("thorns.post_attack.damage_item", LevelBasedValue.constant(2.0F)))
                             ),
-                            LootItemRandomChanceCondition.randomChance(EnchantmentLevelProvider.forEnchantmentLevel(new PointerValue("thorns.random_chance", new DiminishingReturnsValue(0.20F, 0.05F, 0.00F))))
+                            LootItemRandomChanceCondition.randomChance(Holder.direct(new EnchantmentLevelProvider(new PointerValue("thorns.random_chance", new DiminishingReturnsValue(0.20F, 0.05F, 0.00F)))))
                     )
                     .build(AdaptedEnchantments.THORNS.identifier());
 }

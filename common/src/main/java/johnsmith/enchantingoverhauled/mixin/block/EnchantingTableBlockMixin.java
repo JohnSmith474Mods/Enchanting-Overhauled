@@ -97,7 +97,7 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
             @NotNull Player player
     ) {
         if (Config.ENABLE_MINEABLE_ENCHANTING_TABLE.get()) {
-            this.spawnDestroyParticles(level, player, blockPos, blockState);
+            this.spawnDestroyParticles(level, blockPos, blockState);
             if (blockState.is(BlockTags.GUARDED_BY_PIGLINS) && level instanceof ServerLevel serverlevel) {
                 PiglinAi.angerNearbyPiglins(serverlevel, player, false);
             }
@@ -113,8 +113,8 @@ public abstract class EnchantingTableBlockMixin extends BaseEntityBlock {
 
     @Override
     public void playerDestroy(
-            @NotNull Level level,
-            @NotNull Player player,
+            @NotNull ServerLevel level,
+            @NotNull net.minecraft.server.level.ServerPlayer player,
             @NotNull BlockPos blockPos,
             @NotNull BlockState blockState,
             BlockEntity blockEntity,

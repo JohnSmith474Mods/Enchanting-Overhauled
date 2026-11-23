@@ -6,8 +6,8 @@
         "location_predicate": {
           "predicate_type": "minecraft:blockstate_match",
           "block_state": {
-            "Name": "minecraft:stone_slab",
-            "Properties": {
+            "id": "minecraft:stone_slab",
+            "properties": {
               "type": "double"
             }
           }
@@ -23,26 +23,26 @@
           },
           "states": [
             {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             {
-              "Name": "minecraft:cobblestone"
+              "id": "minecraft:cobblestone"
             },
             {
-              "Name": "minecraft:gravel"
+              "id": "minecraft:gravel"
             },
             {
-              "Name": "minecraft:andesite_slab",
-              "Properties": {
+              "id": "minecraft:andesite_slab",
+              "properties": {
                 "type": "double"
               }
             },
             {
-              "Name": "minecraft:stone_slab",
-              "Properties": {
+              "id": "minecraft:stone_slab",
+              "properties": {
                 "type": "double"
               }
             }
@@ -54,8 +54,8 @@
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:stone_slab",
-              "Properties": {
+              "id": "minecraft:stone_slab",
+              "properties": {
                 "type": "top"
               }
             }
@@ -63,8 +63,8 @@
           {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "Name": "minecraft:stone_slab",
-              "Properties": {
+              "id": "minecraft:stone_slab",
+              "properties": {
                 "type": "bottom"
               }
             }
@@ -82,16 +82,16 @@
           },
           "states": [
             {
-              "Name": "minecraft:stone_brick_slab"
+              "id": "minecraft:stone_brick_slab"
             },
             {
-              "Name": "minecraft:cobblestone_slab"
+              "id": "minecraft:cobblestone_slab"
             },
             {
-              "Name": "minecraft:andesite_slab"
+              "id": "minecraft:andesite_slab"
             },
             {
-              "Name": "minecraft:stone_slab"
+              "id": "minecraft:stone_slab"
             }
           ]
         }
@@ -113,16 +113,16 @@
           },
           "states": [
             {
-              "Name": "minecraft:stone_brick_stairs"
+              "id": "minecraft:stone_brick_stairs"
             },
             {
-              "Name": "minecraft:cobblestone_stairs"
+              "id": "minecraft:cobblestone_stairs"
             },
             {
-              "Name": "minecraft:andesite_stairs"
+              "id": "minecraft:andesite_stairs"
             },
             {
-              "Name": "minecraft:stone_stairs"
+              "id": "minecraft:stone_stairs"
             }
           ]
         }

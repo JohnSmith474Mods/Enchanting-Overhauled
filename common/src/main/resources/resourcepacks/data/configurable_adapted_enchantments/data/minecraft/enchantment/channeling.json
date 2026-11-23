@@ -123,18 +123,18 @@
                 },
                 "type": "minecraft:enchantment_level"
               },
-              "condition": "minecraft:random_chance"
+              "type": "minecraft:random_chance"
             },
             {
               "thundering": true,
-              "condition": "minecraft:weather_check"
+              "type": "minecraft:weather_check"
             },
             {
               "predicate": {
                 "minecraft:entity_type": "minecraft:trident"
               },
               "entity": "this",
-              "condition": "minecraft:entity_properties"
+              "type": "minecraft:entity_properties"
             },
             {
               "predicate": {
@@ -143,10 +143,10 @@
                 },
                 "can_see_sky": true
               },
-              "condition": "minecraft:location_check"
+              "type": "minecraft:location_check"
             }
           ],
-          "condition": "minecraft:all_of"
+          "type": "minecraft:all_of"
         }
       }
     ],
@@ -185,11 +185,11 @@
                 },
                 "type": "minecraft:enchantment_level"
               },
-              "condition": "minecraft:random_chance"
+              "type": "minecraft:random_chance"
             },
             {
               "thundering": true,
-              "condition": "minecraft:weather_check"
+              "type": "minecraft:weather_check"
             },
             {
               "predicate": {
@@ -198,17 +198,17 @@
                 }
               },
               "entity": "this",
-              "condition": "minecraft:entity_properties"
+              "type": "minecraft:entity_properties"
             },
             {
               "predicate": {
                 "minecraft:entity_type": "minecraft:trident"
               },
               "entity": "direct_attacker",
-              "condition": "minecraft:entity_properties"
+              "type": "minecraft:entity_properties"
             }
           ],
-          "condition": "minecraft:all_of"
+          "type": "minecraft:all_of"
         }
       }
     ]

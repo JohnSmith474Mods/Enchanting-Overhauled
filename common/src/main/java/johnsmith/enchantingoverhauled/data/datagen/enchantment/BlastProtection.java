@@ -48,7 +48,7 @@ public class BlastProtection {
                     .withEffect(
                             EnchantmentEffectComponents.DAMAGE_PROTECTION,
                             new AddValue(new PointerValue("blast_protection.damage_protection", new DiminishingReturnsValue(6.F, 2.F, 2.F))),
-                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_EXPLOSION)).tag(TagPredicate.isNot(DamageTypeTags.BYPASSES_INVULNERABILITY)))
+                            DamageSourceCondition.hasDamageSource(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.IS_EXPLOSION)).tag(TagPredicate.isNot(context.lookup(Registries.DAMAGE_TYPE), DamageTypeTags.BYPASSES_INVULNERABILITY)))
                     )
                     .withEffect(EnchantmentEffectComponents.ATTRIBUTES, BlastProtection.EFFECT)
                     .build(AdaptedEnchantments.BLAST_PROTECTION.identifier());

@@ -10,6 +10,7 @@ import net.minecraft.advancements.predicates.MinMaxBounds.Doubles;
 import net.minecraft.advancements.predicates.entity.EntityFlagsPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.predicates.entity.MovementPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -31,7 +32,7 @@ import net.minecraft.world.item.enchantment.effects.PlaySoundEffect;
 import net.minecraft.world.item.enchantment.effects.SpawnParticlesEffect;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
-import net.minecraft.world.level.storage.loot.providers.number.EnchantmentLevelProvider;
+import net.minecraft.world.level.storage.loot.providers.number.floats.EnchantmentLevelProvider;
 
 import java.util.function.Function;
 
@@ -98,7 +99,7 @@ public class SoulSpeed {
                             EnchantmentEffectComponents.LOCATION_CHANGED,
                             new ChangeItemDamage(new PointerValue("soul_speed.damage_item", LevelBasedValue.constant(1.0F))),
                             AllOfCondition.allOf(
-                                    LootItemRandomChanceCondition.randomChance(EnchantmentLevelProvider.forEnchantmentLevel(new PointerValue("soul_speed.damage_item", LevelBasedValue.constant(0.04F)))),
+                                    LootItemRandomChanceCondition.randomChance(Holder.direct(new EnchantmentLevelProvider(new PointerValue("soul_speed.damage_item", LevelBasedValue.constant(0.04F))))),
                                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().flags(EntityFlagsPredicate.Builder.flags().setOnGround(true)).movementAffectedBy(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(RegistryLookup.BLOCK.apply(context), BlockTags.SOUL_SPEED_BLOCKS))))
                             )
                     )
